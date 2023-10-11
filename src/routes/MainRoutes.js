@@ -18,6 +18,13 @@ const Typography = Loadable(lazy(() => import('pages/components-overview/Typogra
 const Color = Loadable(lazy(() => import('pages/components-overview/Color')));
 const Shadow = Loadable(lazy(() => import('pages/components-overview/Shadow')));
 const AntIcons = Loadable(lazy(() => import('pages/components-overview/AntIcons')));
+// render - user information page
+const UserInformation = Loadable(lazy(() => import('pages/UserInformation')));
+
+//render - Main Manager page
+const QueryUserInformation = Loadable(lazy(() => import('pages/QueryUserInformation')));
+
+//render - Attendance Manager page
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -59,6 +66,21 @@ const MainRoutes = {
       element: <AntIcons />
     },
     {
+      path: 'userInformation',
+      element: <UserInformation />
+    },
+    {
+      path: 'queryUserInformation',
+      element: <QueryUserInformation />
+    },
+    {
+      path: 'settingAccess',
+      element: <UserInformation />
+    },
+    {
+      path: 'settingAuthority',
+      element: <UserInformation />
+    },
       path: 'calendar',
       element: <Calendar />
     }

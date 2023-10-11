@@ -29,7 +29,7 @@ import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
-const AuthLogin = () => {
+const LoginForm = () => {
   const [checked, setChecked] = React.useState(false);
 
   const [showPassword, setShowPassword] = React.useState(false);
@@ -162,4 +162,4 @@ const AuthLogin = () => {
   );
 };
 
-export default AuthLogin;
+export default LoginForm;
