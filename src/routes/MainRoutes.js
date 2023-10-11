@@ -5,6 +5,9 @@ import Loadable from 'components/Loadable';
 import MainLayout from 'layout/MainLayout';
 
 // render - dashboard
+const Calendar = Loadable(lazy(() => import('pages/Calendar')));
+
+// render - dashboard
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
 
 // render - sample page
@@ -54,6 +57,10 @@ const MainRoutes = {
     {
       path: 'icons/ant',
       element: <AntIcons />
+    },
+    {
+      path: 'calendar',
+      element: <Calendar />
     }
   ]
 };
