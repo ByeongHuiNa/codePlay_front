@@ -161,26 +161,38 @@ const RegistrationForm = () => {
                   )}
                 </Stack>
               </Grid>
+              {/* TODO mui grid 쪽 찾아서 공부한후 수정할것 */}
               <Grid item xs={12}>
-                <Stack spacing={1}>
-                  <InputLabel htmlFor="email-signup">이메일 주소</InputLabel>
-                  <OutlinedInput
-                    fullWidth
-                    error={Boolean(touched.email && errors.email)}
-                    id="email-login"
-                    type="email"
-                    value={values.email}
-                    name="email"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    placeholder="gdhong@douzon.com"
-                    inputProps={{}}
-                  />
-                  {touched.email && errors.email && (
-                    <FormHelperText error id="helper-text-email-signup">
-                      {errors.email}
-                    </FormHelperText>
-                  )}
+                <Stack>
+                  <Stack direction="row" justifyContent="space-between" alignItems="flex-end">
+                  <Grid item xs={6}>
+                    <InputLabel htmlFor="email-signup">이메일 주소</InputLabel>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Button disableElevation color="primary">
+                      중복확인
+                    </Button>
+                  </Grid>
+                  </Stack>
+                  <Grid item xs={12}>
+                    <OutlinedInput
+                      fullWidth
+                      error={Boolean(touched.email && errors.email)}
+                      id="email-login"
+                      type="email"
+                      value={values.email}
+                      name="email"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      placeholder="gdhong@douzon.com"
+                      inputProps={{}}
+                    />
+                    {touched.email && errors.email && (
+                      <FormHelperText error id="helper-text-email-signup">
+                        {errors.email}
+                      </FormHelperText>
+                    )}
+                  </Grid>
                 </Stack>
               </Grid>
               <Grid item xs={12}>
@@ -286,7 +298,7 @@ const RegistrationForm = () => {
             </Grid>
           </form>
         )}
-      </Formik>
+      </Formik >
     </>
   );
 };
