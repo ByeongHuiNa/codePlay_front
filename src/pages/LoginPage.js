@@ -4,12 +4,12 @@ import { Link } from 'react-router-dom';
 import { Grid, Stack, Typography } from '@mui/material';
 
 // project import
-import AuthLogin from './auth-forms/AuthLogin';
-import AuthWrapper from './AuthWrapper';
+import AuthLogin from '../components/Form/LoginForm';
+import AuthWrapper from '../components/Layout/AuthWrapper';
 
 // ================================|| LOGIN ||================================ //
 
-const Login = () => (
+const LoginPage = () => (
   <AuthWrapper>
     <Grid container spacing={3}>
       <Grid item xs={12}>
@@ -27,4 +27,4 @@ const Login = () => (
   </AuthWrapper>
 );
 
-export default Login;
+export default LoginPage;
