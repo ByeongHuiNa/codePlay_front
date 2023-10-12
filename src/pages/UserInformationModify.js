@@ -3,20 +3,39 @@ import { Typography, Button, Grid, Avatar } from '@mui/material';
 
 // project import
 import MainCard from 'components/MainCard';
+import { Stack, TextField } from '../../node_modules/@mui/material/index';
 
-// ==============================|| 유저 정보 PAGE ||============================== //
+// ==============================|| 유저정보 수정 PAGE ||============================== //
+let url = 'null';
 
-const UserInformation = () => (
+const UserInformationModify = () => (
   <>
     <Grid container direction="row" justifyContent="space-between" alignItems="flex-end">
       <Typography variant="h2">프로필</Typography>
-      <Button variant="contained">사용자 정보 변경</Button>
+      <Stack direction="row" spacing={2}>
+        <Button variant="contained">변경사항 저장</Button>
+        <Button variant="contained">변경취소</Button>
+      </Stack>
     </Grid>
     <MainCard>
       <Grid container direction="column" xs={12}>
-        <Grid item container direction="row" xs={12}>
-          <Grid item xs={5}>
-            <Avatar sx={{ width: 250, height: 250 }}>프로필 사진</Avatar>
+        <Grid item container direction="row" xs={12} justifyContent="space-between">
+          <Grid item>
+            <Stack direction="row" spacing={4}>
+              <Avatar sx={{ width: 150, height: 150 }}>프로필 사진</Avatar>
+              <Grid container direction="column" justifyContent="center">
+                <Grid item>
+                  {url == null ? (
+                    <Button variant="contained">프로필 사진 추가</Button>
+                  ) : (
+                    <Stack spacing={4}>
+                      <Button variant="contained">프로필 사진 변경</Button>
+                      <Button variant="contained">프로필 사진 삭제</Button>
+                    </Stack>
+                  )}
+                </Grid>
+              </Grid>
+            </Stack>
           </Grid>
           <Grid item container direction="column" justifyContent="space-around" xs={7}>
             <Grid item container direction="row">
@@ -57,21 +76,15 @@ const UserInformation = () => (
             </Grid>
           </Grid>
         </Grid>
-        <Grid item>
-          <Typography variant="body2">전화번호</Typography>
+        <Grid item mt={3}>
+          <TextField label="전화번호" variant="filled" value="010-0000-0000" size="small"></TextField>
         </Grid>
-        <Grid item>
-          <Typography variant="body2">010-0000-0000</Typography>
-        </Grid>
-        <Grid item>
-          <Typography variant="body2">주소</Typography>
-        </Grid>
-        <Grid item>
-          <Typography variant="body2">서울특별시 종로구 창경궁로 254</Typography>
+        <Grid item mt={3}>
+          <TextField label="주소" fullWidth variant="filled" value="서울특별시 종로구 창경궁로 254" size="small"></TextField>
         </Grid>
       </Grid>
     </MainCard>
   </>
 );
 
-export default UserInformation;
+export default UserInformationModify;
