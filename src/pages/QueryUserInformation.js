@@ -8,7 +8,7 @@ import MainCard from 'components/MainCard';
 import { TreeItem, TreeView } from '../../node_modules/@mui/lab/index';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { Grid, Pagination} from '../../node_modules/@mui/material/index';
+import { Grid } from '../../node_modules/@mui/material/index';
 import QueryUserTable from 'components/Table/QueryUserTable';
 import InputSeach from 'components/Input/InputSearch';
 
@@ -40,9 +40,8 @@ const QueryUserInformation = () => (
       <Grid item xs={9}>
         <MainCard>
           <Typography variant="h4">사용자명으로 검색</Typography>
-          <InputSeach></InputSeach>
+          <InputSeach isPersonIcon={true}></InputSeach>
           <QueryUserTable></QueryUserTable>
-          <Pagination count={10} variant="outlined" shape="rounded" />
         </MainCard>
       </Grid>
     </Grid>
