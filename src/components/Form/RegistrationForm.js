@@ -161,15 +161,14 @@ const RegistrationForm = () => {
                   )}
                 </Stack>
               </Grid>
-              {/* TODO mui grid 쪽 찾아서 공부한후 수정할것 */}
               <Grid item xs={12}>
                 <Stack>
                   <Stack direction="row" justifyContent="space-between" alignItems="flex-end">
                   <Grid item xs={6}>
                     <InputLabel htmlFor="email-signup">이메일 주소</InputLabel>
                   </Grid>
-                  <Grid item xs={6}>
-                    <Button disableElevation color="primary">
+                  <Grid item>
+                    <Button variant="contained">
                       중복확인
                     </Button>
                   </Grid>
