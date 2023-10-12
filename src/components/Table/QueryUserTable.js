@@ -1,31 +1,19 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 
 // material-ui
-import { Box, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 // third-party
-import NumberFormat from 'react-number-format';
+import { Button, Pagination, Stack } from '../../../node_modules/@mui/material/index';
 
-// project import
-import Dot from 'components/@extended/Dot';
-
-function createData(trackingNo, name, fat, carbs, protein) {
-  return { trackingNo, name, fat, carbs, protein };
+function createData(url, dept, name, position, brith, button) {
+  return { url, dept, name, position, brith, button };
 }
 
 const rows = [
-  createData(84564564, 'Camera Lens', 40, 2, 40570),
-  createData(98764564, 'Laptop', 300, 0, 180139),
-  createData(98756325, 'Mobile', 355, 1, 90989),
-  createData(98652366, 'Handset', 50, 1, 10239),
-  createData(13286564, 'Computer Accessories', 100, 1, 83348),
-  createData(86739658, 'TV', 99, 0, 410780),
-  createData(13256498, 'Keyboard', 125, 2, 70999),
-  createData(98753263, 'Mouse', 89, 2, 10570),
-  createData(98753275, 'Desktop', 185, 1, 98063),
-  createData(98753291, 'Chair', 100, 0, 14001)
+  createData('프로필주소', '개발팀', '홍길동', '연구원', 101010, ''),
+  createData('프로필주소', '개발팀', '홍길동', '연구원', 101010, '')
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -58,36 +46,41 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: 'trackingNo',
+    id: 'profileImage',
     align: 'left',
     disablePadding: false,
-    label: 'Tracking No.'
+    label: '프로필사진'
+  },
+  {
+    id: 'dept',
+    align: 'left',
+    disablePadding: false,
+    label: '부서명'
   },
   {
     id: 'name',
-    align: 'left',
+    align: 'right',
     disablePadding: true,
-    label: 'Product Name'
+    label: '이름'
   },
   {
-    id: 'fat',
-    align: 'right',
-    disablePadding: false,
-    label: 'Total Order'
-  },
-  {
-    id: 'carbs',
+    id: 'position',
     align: 'left',
     disablePadding: false,
-
-    label: 'Status'
+    label: '직책'
   },
   {
-    id: 'protein',
+    id: 'brith',
     align: 'right',
     disablePadding: false,
-    label: 'Total Amount'
-  }
+    label: '생년월일'
+  },
+  {
+    id: 'button',
+    align: 'center',
+    disablePadding: false,
+    label: '버튼'
+  },
 ];
 
 // ==============================|| ORDER TABLE - HEADER ||============================== //
@@ -116,42 +109,6 @@ OrderTableHead.propTypes = {
   orderBy: PropTypes.string
 };
 
-// ==============================|| ORDER TABLE - STATUS ||============================== //
-
-const OrderStatus = ({ status }) => {
-  let color;
-  let title;
-
-  switch (status) {
-    case 0:
-      color = 'warning';
-      title = 'Pending';
-      break;
-    case 1:
-      color = 'success';
-      title = 'Approved';
-      break;
-    case 2:
-      color = 'error';
-      title = 'Rejected';
-      break;
-    default:
-      color = 'primary';
-      title = 'None';
-  }
-
-  return (
-    <Stack direction="row" spacing={1} alignItems="center">
-      <Dot color={color} />
-      <Typography>{title}</Typography>
-    </Stack>
-  );
-};
-
-OrderStatus.propTypes = {
-  status: PropTypes.number
-};
-
 // ==============================|| ORDER TABLE ||============================== //
 
 export default function OrderTable() {
@@ -162,63 +119,65 @@ export default function OrderTable() {
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
 
   return (
-    <Box>
-      <TableContainer
-        sx={{
-          width: '100%',
-          overflowX: 'auto',
-          position: 'relative',
-          display: 'block',
-          maxWidth: '100%',
-          '& td, & th': { whiteSpace: 'nowrap' }
-        }}
-      >
-        <Table
-          aria-labelledby="tableTitle"
+    <>
+      <Box>
+        <TableContainer
           sx={{
-            '& .MuiTableCell-root:first-of-type': {
-              pl: 2
-            },
-            '& .MuiTableCell-root:last-of-type': {
-              pr: 3
-            }
+            width: '100%',
+            overflowX: 'auto',
+            position: 'relative',
+            display: 'block',
+            maxWidth: '100%',
+            '& td, & th': { whiteSpace: 'nowrap' }
           }}
         >
-          <OrderTableHead order={order} orderBy={orderBy} />
-          <TableBody>
-            {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
-              const isItemSelected = isSelected(row.trackingNo);
-              const labelId = `enhanced-table-checkbox-${index}`;
+          <Table
+            aria-labelledby="tableTitle"
+            sx={{
+              '& .MuiTableCell-root:first-of-type': {
+                pl: 2
+              },
+              '& .MuiTableCell-root:last-of-type': {
+                pr: 3
+              }
+            }}
+          >
+            <OrderTableHead order={order} orderBy={orderBy} />
+            <TableBody>
+              {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
+                const isItemSelected = isSelected(row.trackingNo);
+                const labelId = `enhanced-table-checkbox-${index}`;
 
-              return (
-                <TableRow
-                  hover
-                  role="checkbox"
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                  aria-checked={isItemSelected}
-                  tabIndex={-1}
-                  key={row.trackingNo}
-                  selected={isItemSelected}
-                >
-                  <TableCell component="th" id={labelId} scope="row" align="left">
-                    <Link color="secondary" component={RouterLink} to="">
-                      {row.trackingNo}
-                    </Link>
-                  </TableCell>
-                  <TableCell align="left">{row.name}</TableCell>
-                  <TableCell align="right">{row.fat}</TableCell>
-                  <TableCell align="left">
-                    <OrderStatus status={row.carbs} />
-                  </TableCell>
-                  <TableCell align="right">
-                    <NumberFormat value={row.protein} displayType="text" thousandSeparator prefix="$" />
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Box>
+                return (
+                  <TableRow
+                    hover
+                    role="checkbox"
+                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    aria-checked={isItemSelected}
+                    tabIndex={-1}
+                    key={row.trackingNo}
+                    selected={isItemSelected}
+                  >
+                    <TableCell component="th" id={labelId} scope="row" align="left">
+                      {row.url}
+                    </TableCell>
+                    <TableCell align="left">{row.dept}</TableCell>
+                    <TableCell align="right">{row.name}</TableCell>
+                    <TableCell align="left">{row.position}</TableCell>
+                    <TableCell align="right">{row.brith}</TableCell>
+                    <TableCell align="right">
+                      <Button> 사용자 정보 변경</Button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
+      <Stack alignItems="center" mt={2}>
+          <Pagination count={5} variant="outlined" shape="rounded" />
+      </Stack>
+    </>
   );
 }
