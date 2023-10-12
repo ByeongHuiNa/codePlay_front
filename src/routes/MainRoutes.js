@@ -12,7 +12,7 @@ const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
 
 // render - sample page
 const SamplePage = Loadable(lazy(() => import('pages/extra-pages/SamplePage')));
-
+// render - TotalAttendance page
 const TotalAttendance = Loadable(lazy(() => import('pages/TotalAttendance')));
 
 // render - utilities
