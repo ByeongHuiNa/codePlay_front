@@ -23,6 +23,7 @@ const AntIcons = Loadable(lazy(() => import('pages/components-overview/AntIcons'
 
 // render - user information page
 const UserInformation = Loadable(lazy(() => import('pages/UserInformation')));
+const UserInformationModify = Loadable(lazy(() => import('pages/UserInformationModify')));
 
 //render - Main Manager page
 const QueryUserInformation = Loadable(lazy(() => import('pages/QueryUserInformation')));
@@ -77,6 +78,10 @@ const MainRoutes = {
     {
       path: 'userInformation',
       element: <UserInformation />
+    },
+    {
+      path: 'userInformationModify',
+      element: <UserInformationModify />
     },
     {
       path: 'queryUserInformation',
