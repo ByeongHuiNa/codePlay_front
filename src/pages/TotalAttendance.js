@@ -1,6 +1,6 @@
 // material-ui
 import { Typography, Grid, Tabs, Tab, Box } from '@mui/material';
-//import AnalyticEcommerce from 'components/cards/statistics/AnalyticEcommerce';
+import AnalyticEcommerce from 'components/cards/statistics/AnalyticEcommerce';
 
 // project import
 import MainCard from 'components/MainCard';
@@ -13,7 +13,11 @@ import { useTheme } from '@mui/material/styles';
 import ReactApexChart from 'react-apexcharts';
 import BasicTab from 'components/tab/BasicTab';
 import ComponentSkeleton from './components-overview/ComponentSkeleton';
-import OrderTable from './dashboard/OrdersTable';
+//import OrderTable from './dashboard/OrdersTable';
+import AttendanceTable from 'components/table/AttendanceTable';
+import { FormControl, InputLabel, MenuItem } from '../../node_modules/@mui/material/index';
+import Select from '@mui/material/Select';
+
 
 
 // ==============================|| SAMPLE PAGE ||============================== //
@@ -96,6 +100,12 @@ const TotalAttendancePage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [primary, info, secondary]);
 
+  const [age, setAge] = useState(0);
+
+  const handleChange2 = (event) => {
+    setAge(event.target.value);
+  };
+
   return(
     <ComponentSkeleton>
      
@@ -110,12 +120,29 @@ const TotalAttendancePage = () => {
     {/* row 1 */}
     <BasicTab value={value} index={0}>
     <Grid item xs={12} sx={{ mb: 5 }}>
-      <Typography variant="h5">근태현황조회페이지</Typography>
+      <Typography variant="h5">휴가현황조회페이지</Typography>
     </Grid>
     <Grid container rowSpacing={4} columnSpacing={2.75}>
       {/* row 2 */}
       <Grid item xs={12} sm={6} md={5} lg={7}>
         <MainCard title="결재진행중">
+          <Box sx={{ minWidth: 40 }}>
+            <FormControl>
+              <InputLabel id="demo-simple-select-label">월</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={age}
+                label="month"
+                onChange={handleChange2}
+              >
+                <MenuItem value={10}>10월</MenuItem>
+                <MenuItem value={9}>9월</MenuItem>
+                <MenuItem value={8}>8월</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+
           <Typography variant="body2">
             2023.10.23 연차
           </Typography>
@@ -125,6 +152,22 @@ const TotalAttendancePage = () => {
       {/* row 2 - 결재완료 그리드 */}
       <Grid item xs={12} sm={6} md={5} lg={7}>
         <MainCard title="결재완료">
+        <Box sx={{ minWidth: 40 }}>
+            <FormControl>
+              <InputLabel id="demo-simple-select-label">월</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={age}
+                label="month"
+                onChange={handleChange2}
+              >
+                <MenuItem value={10}>10월</MenuItem>
+                <MenuItem value={9}>9월</MenuItem>
+                <MenuItem value={8}>8월</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
           <Typography variant="body2">
           2023.10.23 연차
           </Typography>
@@ -143,13 +186,47 @@ const TotalAttendancePage = () => {
     <BasicTab value={value} index={1}>
 
     <Grid item xs={12} sx={{ mb: 5 }}>
-      <Typography variant="h5">근태현황조회페이지</Typography>
+      <Typography variant="h5">출/퇴근현황조회페이지</Typography>
     </Grid>
     <Grid container rowSpacing={4} columnSpacing={2.75}>
       {/* row 2 */}
       <Grid item xs={8} >
         <MainCard title="출/퇴근 현황">
-          <OrderTable/>
+        <Box sx={{ minWidth: 40 }}>
+            <FormControl>
+              <InputLabel id="demo-simple-select-label">월</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={age}
+                label="month"
+                onChange={handleChange2}
+              >
+                <MenuItem value={10}>10월</MenuItem>
+                <MenuItem value={9}>9월</MenuItem>
+                <MenuItem value={8}>8월</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+        <Grid container rowSpacing={4} columnSpacing={2.75}>
+          <Grid item xs={3}>
+            <AnalyticEcommerce title="전체" count="7"  />
+          </Grid>
+          <Grid item xs={3}>
+            <AnalyticEcommerce title="정상" count="7"  />
+          </Grid>
+          <Grid item xs={3}>
+            <AnalyticEcommerce title="근태이상" count="0"  />
+          </Grid>
+          <Grid item xs={3}>
+            <AnalyticEcommerce title="휴가" count="0"  />
+          </Grid>
+          </Grid>
+          
+          
+          
+          
+          <AttendanceTable/>
         </MainCard>
       </Grid>
     
@@ -157,11 +234,12 @@ const TotalAttendancePage = () => {
   
       {/* row 3 - 근태현황 그리드 */}
         <Grid item xs={4}>
-          <MainCard title="근태현황" >
-            <ReactApexChart options={options} series={series} type="pie" height={365} />
-          </MainCard>
+            <MainCard title="근태현황" >
+              <ReactApexChart options={options} series={series} type="pie" height={365} />
+            </MainCard>
+          </Grid>
         </Grid>
-      </Grid>
+        
 
 
     </BasicTab>
