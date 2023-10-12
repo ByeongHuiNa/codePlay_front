@@ -167,7 +167,7 @@ const RegistrationForm = () => {
                   <Grid item xs={6}>
                     <InputLabel htmlFor="email-signup">이메일 주소</InputLabel>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item>
                     <Button variant="contained">
                       중복확인
                     </Button>
