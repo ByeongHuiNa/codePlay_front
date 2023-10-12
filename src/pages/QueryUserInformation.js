@@ -1,7 +1,5 @@
 // material-ui
-import {
-  Typography,
-} from '@mui/material';
+import { Typography } from '@mui/material';
 
 // project import
 import MainCard from 'components/MainCard';
@@ -12,7 +10,7 @@ import { Grid } from '../../node_modules/@mui/material/index';
 import QueryUserTable from 'components/Table/QueryUserTable';
 import InputSeach from 'components/Input/InputSearch';
 
-// ==============================|| 유저 정보 조회 PAGE ||============================== //
+// ==============================|| 관리자 유저정보조회 PAGE ||============================== //
 
 const QueryUserInformation = () => (
   <>
@@ -20,11 +18,7 @@ const QueryUserInformation = () => (
     <Grid container xs={12} direction="row">
       <Grid item xs={3}>
         <MainCard>
-          <TreeView
-            aria-label="file system navigator"
-            defaultCollapseIcon={<ExpandMoreIcon />}
-            defaultExpandIcon={<ChevronRightIcon />}
-          >
+          <TreeView aria-label="file system navigator" defaultCollapseIcon={<ExpandMoreIcon />} defaultExpandIcon={<ChevronRightIcon />}>
             <TreeItem nodeId="1" label="Applications">
               <TreeItem nodeId="2" label="Calendar" />
             </TreeItem>

@@ -80,7 +80,7 @@ const headCells = [
     align: 'center',
     disablePadding: false,
     label: '버튼'
-  },
+  }
 ];
 
 // ==============================|| ORDER TABLE - HEADER ||============================== //
@@ -176,7 +176,7 @@ export default function OrderTable() {
         </TableContainer>
       </Box>
       <Stack alignItems="center" mt={2}>
-          <Pagination count={5} variant="outlined" shape="rounded" />
+        <Pagination count={5} variant="outlined" shape="rounded" />
       </Stack>
     </>
   );

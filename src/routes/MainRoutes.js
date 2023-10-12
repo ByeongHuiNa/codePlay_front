@@ -26,9 +26,10 @@ const UserInformation = Loadable(lazy(() => import('pages/UserInformation')));
 
 //render - Main Manager page
 const QueryUserInformation = Loadable(lazy(() => import('pages/QueryUserInformation')));
+const SettingAccess = Loadable(lazy(() => import('pages/SettingAccess')));
 
 // render - user attendance
-const UserAttendance = Loadable(lazy(()=>import('pages/UserAttendance')));
+const UserAttendance = Loadable(lazy(() => import('pages/UserAttendance')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -83,7 +84,7 @@ const MainRoutes = {
     },
     {
       path: 'settingAccess',
-      element: <UserInformation />
+      element: <SettingAccess />
     },
     {
       path: 'settingAuthority',
@@ -93,9 +94,9 @@ const MainRoutes = {
       path: 'calendar',
       element: <Calendar />
     },
-    {  
+    {
       path: 'userattendance',
-      element: <UserAttendance/>
+      element: <UserAttendance />
     }
   ]
 };
