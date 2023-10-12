@@ -8,8 +8,9 @@ import MainCard from 'components/MainCard';
 import { TreeItem, TreeView } from '../../node_modules/@mui/lab/index';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import { Grid, InputAdornment, Pagination, TextField } from '../../node_modules/@mui/material/index';
+import { Grid, Pagination} from '../../node_modules/@mui/material/index';
+import QueryUserTable from 'components/Table/QueryUserTable';
+import InputSeach from 'components/Input/InputSearch';
 
 // ==============================|| 유저 정보 조회 PAGE ||============================== //
 
@@ -39,14 +40,8 @@ const QueryUserInformation = () => (
       <Grid item xs={9}>
         <MainCard>
           <Typography variant="h4">사용자명으로 검색</Typography>
-          <TextField id="outlined-search" type="search" size="normal" margin = "normal" InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <AccountCircle onClick={()=>console.log('test')}/>
-            </InputAdornment>
-          ),
-        }}/>
-          <Typography variant="h4">데이터 그리드 만들기</Typography>          
+          <InputSeach></InputSeach>
+          <QueryUserTable></QueryUserTable>
           <Pagination count={10} variant="outlined" shape="rounded" />
         </MainCard>
       </Grid>
