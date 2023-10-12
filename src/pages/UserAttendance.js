@@ -11,7 +11,7 @@ import MainCard from 'components/MainCard';
 import { Avatar, Box, Button, Chip, Tab, Tabs } from '../../node_modules/@mui/material/index';
 import BasicTab from 'components/tab/BasicTab';
 import React, { useState } from 'react';
-import RecentAttendTable from '../components/table/RecentAttendTable';
+import RecentAttendTable from '../components/Table/RecentAttendTable';
 import AttendChart from 'components/chart/AttendChart';
 
 // ===============================|| Shadow-Box ||=============================== //
