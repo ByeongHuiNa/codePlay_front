@@ -88,6 +88,7 @@ const MainRoutes = {
       path: 'settingAuthority',
       element: <UserInformation />
     },
+    {
       path: 'calendar',
       element: <Calendar />
     }
