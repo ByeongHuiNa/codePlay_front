@@ -1,4 +1,5 @@
 import SearchIcon from '@mui/icons-material/Search';
+import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import {IconButton, InputAdornment, TextField } from '@mui/material/index';
 /*
   input 요소옆에 돋보기 단추가 추가된 InputSearch 공용으로 사용가능한 컴포넌트
@@ -8,7 +9,7 @@ import {IconButton, InputAdornment, TextField } from '@mui/material/index';
   input id : {search}-input, button id : {search}-button
 */
 
-const InputSearch = ({id, onClick}) => (
+const InputSearch = ({id, onClick, isPersonIcon}) => (
 <TextField id={`${id}-input`} type="search" size="normal" margin="normal" InputProps={{
     endAdornment: (
       <InputAdornment position="end">
@@ -16,7 +17,7 @@ const InputSearch = ({id, onClick}) => (
           id={`${id}-button`}
           onClick={onClick}
         >
-          <SearchIcon />
+          {isPersonIcon? <PersonSearchIcon/>:<SearchIcon />}
         </IconButton>
       </InputAdornment>
     ),
@@ -25,5 +26,6 @@ const InputSearch = ({id, onClick}) => (
 
 InputSearch.defaultProps = {
   id : "search",
+  isPersonIcon : false
 }
 export default InputSearch;
