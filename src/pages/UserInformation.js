@@ -9,7 +9,7 @@ import {
 // project import
 import MainCard from 'components/MainCard';
 
-// ==============================|| SAMPLE PAGE ||============================== //
+// ==============================|| 유저 정보 PAGE ||============================== //
 
 const UserInformation = () => (
   <>
