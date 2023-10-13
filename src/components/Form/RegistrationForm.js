@@ -26,7 +26,7 @@ import { strengthColor, strengthIndicator } from 'utils/password-strength';
 // assets
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 
-// ============================|| FIREBASE - REGISTER ||============================ //
+// ============================|| REGISTRATION FORM ||============================ //
 
 const RegistrationForm = () => {
   const [level, setLevel] = useState();
@@ -164,14 +164,12 @@ const RegistrationForm = () => {
               <Grid item xs={12}>
                 <Stack>
                   <Stack direction="row" justifyContent="space-between" alignItems="flex-end">
-                  <Grid item xs={6}>
-                    <InputLabel htmlFor="email-signup">이메일 주소</InputLabel>
-                  </Grid>
-                  <Grid item>
-                    <Button variant="contained">
-                      중복확인
-                    </Button>
-                  </Grid>
+                    <Grid item xs={6}>
+                      <InputLabel htmlFor="email-signup">이메일 주소</InputLabel>
+                    </Grid>
+                    <Grid item>
+                      <Button variant="contained">중복확인</Button>
+                    </Grid>
                   </Stack>
                   <Grid item xs={12}>
                     <OutlinedInput
@@ -297,7 +295,7 @@ const RegistrationForm = () => {
             </Grid>
           </form>
         )}
-      </Formik >
+      </Formik>
     </>
   );
 };
