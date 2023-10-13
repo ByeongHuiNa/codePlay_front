@@ -27,7 +27,7 @@ import AnimateButton from 'components/@extended/AnimateButton';
 // assets
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 
-// ============================|| FIREBASE - LOGIN ||============================ //
+// ============================|| LOGIN FORM ||============================ //
 
 const LoginForm = () => {
   const [checked, setChecked] = React.useState(false);

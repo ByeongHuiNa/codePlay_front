@@ -13,8 +13,11 @@ const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
 
 // render - sample page
 const SamplePage = Loadable(lazy(() => import('pages/extra-pages/SamplePage')));
-// render - TotalAttendance page
-const TotalAttendance = Loadable(lazy(() => import('pages/TotalAttendance')));
+
+// render - UserAttendanceTotal page
+const UserAttendanceTotal = Loadable(lazy(() => import('pages/UserAttendanceTotal')));
+// render - SeeAllAttendance page
+const SeeAllAttendance = Loadable(lazy(() => import('pages/SeeAllAttendance')));
 
 // render - utilities
 const Typography = Loadable(lazy(() => import('pages/components-overview/Typography')));
@@ -29,6 +32,7 @@ const UserInformationModify = Loadable(lazy(() => import('pages/UserInformationM
 //render - Main Manager page
 const QueryUserInformation = Loadable(lazy(() => import('pages/QueryUserInformation')));
 const SettingAccess = Loadable(lazy(() => import('pages/SettingAccess')));
+const SettingAuthority = Loadable(lazy(() => import('pages/SettingAuthority')));
 
 // render - user attendance
 const UserAttendance = Loadable(lazy(() => import('pages/UserAttendance')));
@@ -61,8 +65,12 @@ const MainRoutes = {
       element: <SamplePage />
     },
     {
-      path: 'totalAttendance',
-      element: <TotalAttendance />
+      path: 'userAttendanceTotal',
+      element: <UserAttendanceTotal />
+    },
+    {
+      path: 'seeAllAttendance',
+      element: <SeeAllAttendance />
     },
     {
       path: 'shadow',
@@ -94,7 +102,7 @@ const MainRoutes = {
     },
     {
       path: 'settingAuthority',
-      element: <UserInformation />
+      element: <SettingAuthority />
     },
     {
       path: 'calendar',
