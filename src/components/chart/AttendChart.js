@@ -3,15 +3,15 @@ import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 
-import useChart from './useChart';
-import Chart from './chart';
+import UseChart from './UseChart';
+import Chart from './Chart';
 
 // ----------------------------------------------------------------------
 
 export default function AttendChart({ chart, ...other }) {
     const { labels, colors, series, options } = chart;
 
-    const chartOptions = useChart({
+    const chartOptions = UseChart({
         colors,
         plotOptions: {
             bar: {
@@ -38,7 +38,6 @@ export default function AttendChart({ chart, ...other }) {
         tooltip: {
             shared: true,
             intersect: false,
-            
             y: {
                 formatter: (value) => {
                     if (typeof value !== 'undefined') {
@@ -61,7 +60,7 @@ export default function AttendChart({ chart, ...other }) {
                 <Chart
                     series={series}
                     options={chartOptions}
-                    width="100%"
+                    width="95%"
                     height={270}
                 />
             </Box>
