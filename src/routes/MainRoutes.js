@@ -23,12 +23,14 @@ const AntIcons = Loadable(lazy(() => import('pages/components-overview/AntIcons'
 
 // render - user information page
 const UserInformation = Loadable(lazy(() => import('pages/UserInformation')));
+const UserInformationModify = Loadable(lazy(() => import('pages/UserInformationModify')));
 
 //render - Main Manager page
 const QueryUserInformation = Loadable(lazy(() => import('pages/QueryUserInformation')));
+const SettingAccess = Loadable(lazy(() => import('pages/SettingAccess')));
 
 // render - user attendance
-const UserAttendance = Loadable(lazy(()=>import('pages/UserAttendance')));
+const UserAttendance = Loadable(lazy(() => import('pages/UserAttendance')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -78,12 +80,16 @@ const MainRoutes = {
       element: <UserInformation />
     },
     {
+      path: 'userInformationModify',
+      element: <UserInformationModify />
+    },
+    {
       path: 'queryUserInformation',
       element: <QueryUserInformation />
     },
     {
       path: 'settingAccess',
-      element: <UserInformation />
+      element: <SettingAccess />
     },
     {
       path: 'settingAuthority',
@@ -93,9 +99,9 @@ const MainRoutes = {
       path: 'calendar',
       element: <Calendar />
     },
-    {  
+    {
       path: 'userattendance',
-      element: <UserAttendance/>
+      element: <UserAttendance />
     }
   ]
 };
