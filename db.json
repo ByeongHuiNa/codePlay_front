@@ -5,5 +5,22 @@
     "comments": [
       { "id": 1, "body": "some comment", "postId": 1 }
     ],
-    "profile": { "name": "typicode" }
+    "profile": { "name": "typicode" },
+    "get_authority_number" : [
+      { "id":"user", "name": "사용자", "number" : 200 },
+      { "id":"attendanceManager", "name": "근태담당자", "number" : 30 },
+      { "id":"userManager", "name": "관리자", "number" : 10 },
+      { "id":"mainManager", "name": "메인관리자", "number" : 2 },
+      { "id":"custom", "name" : "맞춤", "number" : 5}
+    ],
+    "get_user_authority_list" : [
+      { "id":0, "url": "https://picsum.photos/id/1/200/300","dept":"인사팀", "position":"사원", 
+      "role": "ROLE_USER", "authority_date":"2023-10-13","number" : 200 },
+      { "id":1, "url": "https://picsum.photos/id/1/200/300","dept":"인사팀", "position":"사원", 
+      "role": "ROLE_attendanceManager", "authority_date":"2023-10-13","number" : 200 },
+      { "id":2, "url": "https://picsum.photos/id/1/200/300","dept":"인사팀", "position":"사원", 
+      "role": "ROLE_userManager", "authority_date":"2023-10-13","number" : 200 },
+      { "id":3, "url": "https://picsum.photos/id/1/200/300","dept":"인사팀", "position":"사원", 
+      "role": "ROLE_USER", "authority_date":"2023-10-13","number" : 200 }
+    ]
   }
