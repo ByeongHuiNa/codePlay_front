@@ -12,8 +12,11 @@ const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
 
 // render - sample page
 const SamplePage = Loadable(lazy(() => import('pages/extra-pages/SamplePage')));
-// render - TotalAttendance page
-const TotalAttendance = Loadable(lazy(() => import('pages/TotalAttendance')));
+
+// render - UserAttendanceTotal page
+const UserAttendanceTotal = Loadable(lazy(() => import('pages/UserAttendanceTotal')));
+// render - SeeAllAttendance page
+const SeeAllAttendance = Loadable(lazy(() => import('pages/SeeAllAttendance')));
 
 // render - utilities
 const Typography = Loadable(lazy(() => import('pages/components-overview/Typography')));
@@ -61,8 +64,12 @@ const MainRoutes = {
       element: <SamplePage />
     },
     {
-      path: 'totalAttendance',
-      element: <TotalAttendance />
+      path: 'userAttendanceTotal',
+      element: <UserAttendanceTotal />
+    },
+    {
+      path: 'seeAllAttendance',
+      element: <SeeAllAttendance />
     },
     {
       path: 'shadow',
