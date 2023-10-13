@@ -6,14 +6,14 @@ import MainCard from 'components/MainCard';
 import InputSeach from 'components/Input/InputSearch';
 import SettingAccessTable from 'components/Table/SettingAccessTable';
 import { Box, Tab, Tabs } from '../../node_modules/@mui/material/index';
-import { useState } from 'react';
+import { useTabState } from 'store/module';
 
 // ==============================|| 관리자 접근관리 PAGE ||============================== //
 
 const SettingAccess = () => {
-  const [value, setValue] = useState(0);
+  const { index, setIndex } = useTabState();
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    setIndex(newValue);
   };
 
   let personNumber = {
@@ -28,7 +28,7 @@ const SettingAccess = () => {
         <Typography variant="h4">사용자명으로 검색</Typography>
         <InputSeach isPersonIcon={true}></InputSeach>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+          <Tabs value={index} onChange={handleChange} aria-label="basic tabs example">
             <Tab label={`기본(${personNumber.default})`} />
             <Tab label={`맞춤(${personNumber.custom})`} />
           </Tabs>
