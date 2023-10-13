@@ -23,10 +23,10 @@ const projectMenu = {
       breadcrumbs: false
     },
     {
-      id: 'totalAttendance',
+      id: 'userAttendanceTotal',
       title: '근태현황조회',
       type: 'item',
-      url: '/totalAttendance',
+      url: '/userAttendanceTotal',
       icon: icons.PieChartOutlined,
       breadcrumbs: false
     }
