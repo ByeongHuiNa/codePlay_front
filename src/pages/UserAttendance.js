@@ -1,23 +1,25 @@
 import PropTypes from 'prop-types';
 
 // material-ui
-import { useTheme } from '@mui/material/styles';
 import { Grid, Stack, Typography } from '@mui/material';
 
 // project import
 import ComponentSkeleton from './components-overview/ComponentSkeleton';
 import BasicContainer from 'components/container/BasicContainer';
 import MainCard from 'components/MainCard';
-import { Avatar, Box, Button, Chip, Tab, Tabs } from '../../node_modules/@mui/material/index';
+import { Avatar, Box, Button, FormControl, FormControlLabel, Radio, RadioGroup, Tab, Tabs, TextField } from '../../node_modules/@mui/material/index';
 import BasicTab from 'components/tab/BasicTab';
 import React, { useState } from 'react';
 import RecentAttendTable from '../components/Table/RecentAttendTable';
 import AttendChart from 'components/chart/AttendChart';
+import { CarryOutFilled, ProfileFilled, FormOutlined } from '@ant-design/icons';
+import AttendUpdateModal from '../components/Modal/AttendUpdateModal';
+import UpdateAttendTable from 'components/Table/UpdateAttendTable';
+import BasicDatePicker from 'components/DatePicker/BasicDatePicker';
 
 // ===============================|| Shadow-Box ||=============================== //
 
 function ShadowBox({ shadow, label, color, bgcolor }) {
-
     return (
         <MainCard border={false} sx={{ bgcolor: bgcolor || 'inherit', boxShadow: shadow }}>
             <Stack spacing={1} justifyContent="center" alignItems="center">
@@ -39,25 +41,40 @@ ShadowBox.propTypes = {
 // ============================|| COMPONENT - SHADOW ||============================ //
 
 const UserAttendance = () => {
-    const theme = useTheme();
     const [value, setValue] = useState(0);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
 
+    // 모달창 설정
+    // 수정
+    const [openUpdate, setOpenUpdate] = React.useState(false);
+    const handleOpenUpdate = () => setOpenUpdate(true);
+    const handleCloseUpdate = () => setOpenUpdate(false);
+
+    // 수정 목록 상세 조회
+    const [openRead, setOpenRead] = React.useState(false);
+    const handleOpenRead = () => setOpenRead(true);
+    const handleCloseRead = () => setOpenRead(false);
+
     return (
         <ComponentSkeleton>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                    <Tab label="출/퇴근 기록" />
-                    <Tab label="정정 요청 목록" />
+                    <Tab label="출/퇴근 기록" icon={<CarryOutFilled />} />
+                    <Tab label="정정 요청 목록" icon={<ProfileFilled />} />
                 </Tabs>
             </Box>
             <BasicTab value={value} index={0}>
                 <Box clone mx={1} pb={1}>
                     <Stack direction='row' justifyContent='flex-end' spacing={1}>
-                        <Button variant="contained">수정요청</Button>
+                        <Button variant="contained" onClick={handleOpenUpdate}>
+                            <FormOutlined />
+                            <Box clone pl={1}>
+                                수정요청
+                            </Box>
+                        </Button>
                     </Stack>
                 </Box>
                 <Box clone mx={1} pt={1}>
@@ -85,41 +102,37 @@ const UserAttendance = () => {
                             </Grid>
                             <Grid item xs={4} sm={4} md={4} lg={4}>
                                 <Typography align="center" variant="h5">오늘의 출/퇴근 기록</Typography>
-                                <Box clone mt={4} mb={4} ml={6}>
+                                <Box clone mt={4} mb={4} ml={3}>
                                     <Grid container justifyContent="center" spacing={1}>
                                         <Grid item xs={3} sm={3} md={3} lg={3}>
                                             <Typography align="center" color="text.secondary">
                                                 출근 시간
                                             </Typography>
                                         </Grid>
-                                        <Grid item xs={8} sm={8} md={8} lg={8} sx={{ marginLeft: 2 }}>
-                                            <Typography variant="text" sx={{ fontSize: 14 }} >
+                                        <Grid item xs={8} sm={8} md={8} lg={8} sx={{ paddingRight: 5 }} align="right">
+                                            <Typography variant="text" align="right" sx={{ fontSize: 15 }} >
                                                 2023년 10월 12일 목요일
-                                            </Typography>
-                                            <br />
-                                            {/* <Typography variant="h4">
+                                                <br />
                                                 오전 11 : 30 : 12
-                                            </Typography> */}
-                                            <Chip label="오전 11 : 30 : 12" variant="outlined" />
+                                            </Typography>
+                                            {/* <Chip label="오전 11 : 30 : 12" variant="outlined" /> */}
                                         </Grid>
                                     </Grid>
                                 </Box>
-                                <Box clone my={4} ml={6}>
+                                <Box clone my={4} ml={3}>
                                     <Grid container justifyContent="center" spacing={1}>
                                         <Grid item xs={3} sm={3} md={3} lg={3}>
                                             <Typography align="center" color="text.secondary">
                                                 퇴근 시간
                                             </Typography>
                                         </Grid>
-                                        <Grid item xs={8} sm={8} md={8} lg={8} sx={{ marginLeft: 2 }}>
-                                            <Typography variant="text" sx={{ fontSize: 14 }} >
+                                        <Grid item xs={8} sm={8} md={8} lg={8} sx={{ paddingRight: 5 }} align="right">
+                                            <Typography variant="text" sx={{ fontSize: 15 }} >
                                                 2023년 10월 12일 목요일
-                                            </Typography>
-                                            <br />
-                                            {/* <Typography variant="h4">
+                                                <br />
                                                 오전 11 : 30 : 12
-                                            </Typography> */}
-                                            <Chip label="오전 11 : 30 : 12" variant="outlined" />
+                                            </Typography>
+                                            {/* <Chip label="오전 11 : 30 : 12" variant="outlined" /> */}
                                         </Grid>
                                     </Grid>
                                 </Box>
@@ -181,6 +194,59 @@ const UserAttendance = () => {
                         </Grid>
                     </BasicContainer>
                 </Box>
+
+                {/* 수정 모달창 */}
+                <AttendUpdateModal
+                    open={openUpdate}
+                    handleClose={handleCloseUpdate}
+                >
+                    <Box
+                        component="form"
+                        sx={{
+                            '& .MuiTextField-root': { m: 1, width: '25ch' },
+                        }}
+                        autoComplete="off"
+                    >
+                        <TextField
+                            label="제목"
+                            id="title"
+                            size="small"
+                        />
+                        <TextField
+                            label="결재자"
+                            id="approval"
+                            size="small"
+                        />
+                        <TextField
+                            label="날짜"
+                            id="date"
+                            size="small"
+                        />
+                        <FormControl>
+                            <RadioGroup
+                                row
+                                aria-labelledby="demo-row-radio-buttons-group-label"
+                                name="row-radio-buttons-group"
+                            >
+                                <FormControlLabel value="start" control={<Radio />} label="출근" />
+                                <FormControlLabel value="end" control={<Radio />} label="퇴근" />
+                            </RadioGroup>
+                        </FormControl>
+                        <Grid container justifyContent="right" spacing={1}>
+                            <Grid item>
+                                <Button variant="outlined" size="small" onClick={handleCloseUpdate}>
+                                    닫기
+                                </Button>
+                            </Grid>
+                            <Grid item>
+                                <Button variant="contained" size="small">
+                                    완료
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Box>
+                </AttendUpdateModal>
+
                 <Box clone mx={1} my={1} pb={2}>
                     <BasicContainer>
                         <Grid item xs={12} md={7} lg={8}>
@@ -188,10 +254,9 @@ const UserAttendance = () => {
                                 <Grid item>
                                     <Typography variant="h5">최근 출근 기록</Typography>
                                 </Grid>
-                                <Grid item />
                             </Grid>
                             <MainCard sx={{ mt: 2 }} content={false}>
-                                <RecentAttendTable />
+                                <RecentAttendTable handleOpenUpdate={handleOpenUpdate} />
                             </MainCard>
                         </Grid>
                     </BasicContainer>
@@ -199,21 +264,54 @@ const UserAttendance = () => {
             </BasicTab>
             <BasicTab value={value} index={1}>
                 {/* <Container maxWidth="lg"> */}
-                <Box clone mx={1} my={1} pb={1}>
-                    <Stack direction='row' justifyContent='flex-end' spacing={1}>
-                        <Button variant="contained">수정요청</Button>
-                    </Stack>
-                </Box>
                 <Box clone mx={1} my={1} pb={2}>
-                    <BasicContainer title="정정요청목록" codeHighlight>
-                        <Grid container spacing={1}>
-                            <Grid item xs={12} sm={12} md={12} lg={12}>
-                                <ShadowBox shadow={theme.customShadows.z1} label="z1" color="inherit" />
+                    <BasicContainer>
+                        <Grid container>
+                            <Grid item xs={6} md={6} lg={6}>
+                                <Typography variant="h5">출/퇴근 정정 요청 목록</Typography>
+                            </Grid>
+                            <Grid item xs={6} md={6} lg={6}>
+                                <Grid container justifyContent="right" spacing={1}>
+                                    <Grid item sx={{ mt: 0.3 }}>
+                                        <Button variant="contained" color="secondary">
+                                            전체
+                                        </Button>
+                                    </Grid>
+                                    <Grid item sx={{ mt: 0.3 }}>
+                                        <Button variant="contained" color="secondary">
+                                            결재대기
+                                        </Button>
+                                    </Grid>
+                                    <Grid item sx={{ mt: 0.3 }}>
+                                        <Button variant="contained" color="secondary">
+                                            결재완료
+                                        </Button>
+                                    </Grid>
+                                    <Grid item>
+                                        <BasicDatePicker />
+                                    </Grid>
+                                </Grid>
                             </Grid>
                         </Grid>
+                        <MainCard sx={{ mt: 2 }} content={false}>
+                            <UpdateAttendTable handleOpenRead={handleOpenRead} />
+                        </MainCard>
                     </BasicContainer>
                 </Box>
-                {/* </Container> */}
+                {/* 수정 조회 모달창 */}
+                <AttendUpdateModal
+                    open={openRead}
+                    handleClose={handleCloseRead}
+                >
+                    모달창
+                    <Grid container justifyContent="right" spacing={1}>
+                        <Grid item>
+                            <Button variant="contained" size="small" onClick={handleCloseRead}>
+                                닫기
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </AttendUpdateModal>
             </BasicTab>
         </ComponentSkeleton>
     );
