@@ -3,6 +3,7 @@ import { lazy } from 'react';
 // project import
 import Loadable from 'components/Loadable';
 import MainLayout from 'layout/MainLayout';
+import UserLeave from 'pages/UserLeave';
 
 // render - dashboard
 const Calendar = Loadable(lazy(() => import('pages/Calendar')));
@@ -102,6 +103,10 @@ const MainRoutes = {
     {
       path: 'userattendance',
       element: <UserAttendance />
+    },
+    {
+      path: 'userleave',
+      element: <UserLeave />
     }
   ]
 };
