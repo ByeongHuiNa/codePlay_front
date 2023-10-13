@@ -29,6 +29,14 @@ const projectMenu = {
       url: '/userAttendanceTotal',
       icon: icons.PieChartOutlined,
       breadcrumbs: false
+    },
+    {
+      id: 'seeAllAttendance',
+      title: '근태현황조회(담당자)',
+      type: 'item',
+      url: '/seeAllAttendance',
+      icon: icons.PieChartOutlined,
+      breadcrumbs: false
     }
   ]
 };

@@ -19,7 +19,7 @@ import IncompleteTable from 'components/Table/IncompleteTable';
 import { Button, FormControl, InputLabel, MenuItem, Modal } from '../../node_modules/@mui/material/index';
 import Select from '@mui/material/Select';
 
-// ==============================|| SAMPLE PAGE ||============================== //
+
 // chart options
 const barChartOptions = {
   chart: {
@@ -128,6 +128,7 @@ const UserAttendanceTotalPage = () => {
         </Tabs>
       </Box>
 
+      {/* tab 1 */}
       {/* row 1 */}
       <BasicTab value={value} index={0}>
         <Grid item xs={12} sx={{ mb: 5 }}>
@@ -339,6 +340,7 @@ const UserAttendanceTotalPage = () => {
         </Grid>
       </BasicTab>
 
+      {/* tab 2 */}
       <BasicTab value={value} index={1}>
         <Grid item xs={12} sx={{ mb: 5 }}>
           <Typography variant="h5">출/퇴근현황조회페이지</Typography>
