@@ -6,6 +6,7 @@ import { Typography, Grid, Tabs, Tab, Box } from '@mui/material';
 import MainCard from 'components/MainCard';
 import { useEffect, useState } from 'react';
 
+
 // material-ui
 import { useTheme } from '@mui/material/styles';
 
@@ -15,7 +16,7 @@ import ComponentSkeleton from './components-overview/ComponentSkeleton';
 //import OrderTable from './dashboard/OrdersTable';
 import AttendanceTable from 'components/Table/AttendanceTable';
 import IncompleteTable from 'components/Table/IncompleteTable';
-import { FormControl, InputLabel, MenuItem } from '../../node_modules/@mui/material/index';
+import { Button, FormControl, InputLabel, MenuItem, Modal } from '../../node_modules/@mui/material/index';
 import Select from '@mui/material/Select';
 
 // ==============================|| SAMPLE PAGE ||============================== //
@@ -54,7 +55,24 @@ const barChartOptions = {
   }
 };
 
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 900,
+  height: 1000,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+
 const TotalAttendancePage = () => {
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   const newCategories = ['새로운 항목 1', '새로운 항목 2'];
   const series = [12, 3]; // 예시 데이터
   const [options, setOptions] = useState(barChartOptions);
@@ -147,6 +165,23 @@ const TotalAttendancePage = () => {
                 </FormControl>
               </Box>
               <IncompleteTable />
+              <Button onClick={handleOpen}>Open modal</Button>
+              <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+              >
+                <Box sx={style}>
+                 
+                  <Typography id="modal-modal-title" variant="h3" component="h3" sx={{ textAlign: 'center' }}>
+                    휴가신청서
+                  </Typography>
+                  <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                  
+                  </Typography>
+                </Box>
+              </Modal>
             </MainCard>
           </Grid>
 
