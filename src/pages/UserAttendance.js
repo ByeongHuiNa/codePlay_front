@@ -17,6 +17,7 @@ import AttendChart from 'components/chart/AttendChart';
 // ===============================|| Shadow-Box ||=============================== //
 
 function ShadowBox({ shadow, label, color, bgcolor }) {
+
     return (
         <MainCard border={false} sx={{ bgcolor: bgcolor || 'inherit', boxShadow: shadow }}>
             <Stack spacing={1} justifyContent="center" alignItems="center">
