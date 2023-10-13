@@ -1,10 +1,10 @@
 // assets
-import { CalendarOutlined } from '@ant-design/icons';
-
+import { CalendarOutlined, PieChartOutlined } from '@ant-design/icons';
 
 // icons
 const icons = {
-  CalendarOutlined
+  CalendarOutlined,
+  PieChartOutlined
 };
 
 // ==============================|| MENU ITEMS - DASHBOARD ||============================== //
@@ -20,6 +20,14 @@ const projectMenu = {
       type: 'item',
       url: '/calendar',
       icon: icons.CalendarOutlined,
+      breadcrumbs: false
+    },
+    {
+      id: 'totalAttendance',
+      title: '근태현황조회',
+      type: 'item',
+      url: '/totalAttendance',
+      icon: icons.PieChartOutlined,
       breadcrumbs: false
     }
   ]
