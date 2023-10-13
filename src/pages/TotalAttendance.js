@@ -15,6 +15,7 @@ import BasicTab from 'components/tab/BasicTab';
 import ComponentSkeleton from './components-overview/ComponentSkeleton';
 //import OrderTable from './dashboard/OrdersTable';
 import AttendanceTable from 'components/table/AttendanceTable';
+import IncompleteTable from 'components/table/IncompleteTable';
 import { FormControl, InputLabel, MenuItem } from '../../node_modules/@mui/material/index';
 import Select from '@mui/material/Select';
 
@@ -143,9 +144,7 @@ const TotalAttendancePage = () => {
             </FormControl>
           </Box>
 
-          <Typography variant="body2">
-            2023.10.23 연차
-          </Typography>
+          <IncompleteTable/>
         </MainCard>
       </Grid>
     
@@ -168,9 +167,7 @@ const TotalAttendancePage = () => {
               </Select>
             </FormControl>
           </Box>
-          <Typography variant="body2">
-          2023.10.23 연차
-          </Typography>
+          <IncompleteTable/>
         </MainCard>
       </Grid>
   
