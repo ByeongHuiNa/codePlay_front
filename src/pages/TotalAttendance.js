@@ -14,8 +14,8 @@ import ReactApexChart from 'react-apexcharts';
 import BasicTab from 'components/tab/BasicTab';
 import ComponentSkeleton from './components-overview/ComponentSkeleton';
 //import OrderTable from './dashboard/OrdersTable';
-import AttendanceTable from 'components/table/AttendanceTable';
-import IncompleteTable from 'components/table/IncompleteTable';
+import AttendanceTable from 'components/Table/AttendanceTable';
+import IncompleteTable from 'components/Table/IncompleteTable';
 import { FormControl, InputLabel, MenuItem } from '../../node_modules/@mui/material/index';
 import Select from '@mui/material/Select';
 

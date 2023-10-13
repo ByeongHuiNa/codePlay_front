@@ -2,12 +2,14 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 
 // material-ui
-import { Box, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
-
+import { Box, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 // project import
+import { Button, Typography } from '../../../node_modules/@mui/material/index';
+
+// 아이콘
+import { FormOutlined } from '@ant-design/icons';
 import Dot from 'components/@extended/Dot';
-import { Button } from '../../../node_modules/@mui/material/index';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -143,7 +145,7 @@ OrderStatus.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function OrderTable() {
+export default function RecentAttendTable({handleOpenUpdate}) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
@@ -210,7 +212,12 @@ export default function OrderTable() {
                     <OrderStatus status={data.status} />
                   </TableCell>
                   <TableCell align="center">
-                    <Button variant="contained">수정요청</Button>
+                  <Button variant="contained" onClick={handleOpenUpdate}>
+                            <FormOutlined />
+                            <Box clone pl={1}>
+                                수정요청
+                            </Box>
+                        </Button>
                   </TableCell>
                 </TableRow>
               );
