@@ -1,6 +1,8 @@
 
 import { Typography, Box, Grid, Tab, Tabs } from '@mui/material';
 import ComponentSkeleton from './components-overview/ComponentSkeleton';
+import { FormControl, InputLabel, MenuItem } from '../../node_modules/@mui/material/index';
+import Select from '@mui/material/Select';
 
 import BasicTab from 'components/tab/BasicTab';
 
@@ -10,6 +12,10 @@ import MainCard from 'components/MainCard';
 
 
 const SeeAllAttendance = () => {
+    const [dept, setDept] = useState('');
+    const handleChange2 = (event) => {
+      setDept(event.target.value);
+    };
     const [value, setValue] = useState(0);
 
     const handleChange = (event, newValue) => {
@@ -31,7 +37,17 @@ const SeeAllAttendance = () => {
           <Typography variant="h5">휴가현황조회페이지</Typography>
         </Grid>
         <Grid item xs={12} sm={6} md={5} lg={7}>
-            <MainCard title="휴가보유 현황">
+            <MainCard title="00부서 휴가보유 현황" style={{ display: 'flex', justifyContent: 'center' }}>
+              <FormControl sx={{ minWidth: 100 }}>
+                <InputLabel id="demo-simple-select-label" >부서</InputLabel>
+                <Select labelId="demo-simple-select-label" id="demo-simple-select" value={dept} label="month" onChange={handleChange2}>
+                  <MenuItem value={10}>개발</MenuItem>
+                  <MenuItem value={9}>인사</MenuItem>
+                  <MenuItem value={8}>회계</MenuItem>
+                </Select>
+              </FormControl>
+              
+             
                 
             </MainCard>
 
