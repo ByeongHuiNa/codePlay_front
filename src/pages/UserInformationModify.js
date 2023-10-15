@@ -22,7 +22,7 @@ const UserInformationModify = () => (
         <Grid item container direction="row" xs={12} justifyContent="space-between">
           <Grid item>
             <Stack direction="row" spacing={4}>
-              <Avatar sx={{ width: 150, height: 150 }}>프로필 사진</Avatar>
+              <Avatar sx={{ width: 150, height: 150, margin: 'auto' }}>프로필 사진</Avatar>
               <Grid container direction="column" justifyContent="center">
                 <Grid item>
                   {url == null ? (
