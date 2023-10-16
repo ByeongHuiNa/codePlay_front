@@ -3,6 +3,9 @@ import ComponentSkeleton from './components-overview/ComponentSkeleton';
 import { FormControl, IconButton, InputLabel, MenuItem, TextField } from '../../node_modules/@mui/material/index';
 import Select from '@mui/material/Select';
 import VacationCountTable from 'components/Table/VacationCountTable';
+import AttendanceDayTable from 'components/Table/AttendanceDayTable';
+import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
+import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 
 import BasicTab from 'components/tab/BasicTab';
 import SearchIcon from '@mui/icons-material/Search';
@@ -26,6 +29,20 @@ const SeeAllAttendance = () => {
     setValue2(newValue);
   };
 
+  const [date, setDate] = useState(new Date('2023-10-11'));
+
+  const handlePrevDay = () => {
+    const newDate = new Date(date);
+    newDate.setDate(newDate.getDate() - 1);
+    setDate(newDate);
+  };
+
+  const handleNextDay = () => {
+    const newDate = new Date(date);
+    newDate.setDate(newDate.getDate() + 1);
+    setDate(newDate);
+  };
+
   return (
     <ComponentSkeleton>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -36,11 +53,15 @@ const SeeAllAttendance = () => {
       </Box>
 
       <BasicTab value={value} index={0}>
-        
         <Grid item xs={12} sm={6} md={5} lg={7}>
-        <MainCard title={<Typography variant="h5" sx={{ textAlign: 'center' }}>{dept ? `${dept} 부서 휴가보유 현황` : '00부서 휴가보유 현황'}</Typography>}>
-
-            <FormControl sx={{ minWidth: 100, }}>
+          <MainCard
+            title={
+              <Typography variant="h5" sx={{ textAlign: 'center' }}>
+                {dept ? `${dept} 부서 휴가보유 현황` : '00부서 휴가보유 현황'}
+              </Typography>
+            }
+          >
+            <FormControl sx={{ minWidth: 100 }}>
               <InputLabel id="demo-simple-select-label">부서</InputLabel>
               <Select labelId="demo-simple-select-label" id="demo-simple-select" value={dept} label="month" onChange={handleChange2}>
                 <MenuItem value={'개발'}>개발</MenuItem>
@@ -48,10 +69,10 @@ const SeeAllAttendance = () => {
                 <MenuItem value={'회계'}>회계</MenuItem>
               </Select>
             </FormControl>
-            
+
             <TextField id="outlined-basic" label="직책명" variant="outlined" />
             <TextField id="outlined-basic" label="사원명" variant="outlined" />
-            <IconButton type="submit" sx={{ p: "10px" }} aria-label="search">
+            <IconButton type="submit" sx={{ p: '10px' }} aria-label="search">
               <SearchIcon />
             </IconButton>
             <VacationCountTable />
@@ -68,35 +89,113 @@ const SeeAllAttendance = () => {
         </Box>
         <BasicTab value={value2} index={0}>
           <Grid item xs={12} sm={6} md={5} lg={7}>
-            <MainCard title="2023.10.10 출/퇴근 현황" style={{ display: 'flex', justifyContent: 'center' }}>
-              <FormControl sx={{ minWidth: 100 }}>
-                <InputLabel id="demo-simple-select-label">부서</InputLabel>
-                <Select labelId="demo-simple-select-label" id="demo-simple-select" value={dept} label="month" onChange={handleChange2}>
-                  <MenuItem value={10}>개발</MenuItem>
-                  <MenuItem value={9}>인사</MenuItem>
-                  <MenuItem value={8}>회계</MenuItem>
-                </Select>
-              </FormControl>
+            <MainCard>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <IconButton onClick={handlePrevDay} aria-label="이전 날짜">
+                  <ArrowBackIosNewOutlinedIcon />
+                </IconButton>
+
+                <Typography variant="h5" sx={{ textAlign: 'center', flexGrow: 1 }}>
+                  {dept ? `${dept} 부서 휴가보유 현황` : '개발 부서 출/퇴근 현황 '}
+                  {date.toLocaleDateString()}
+                </Typography>
+                <FormControl sx={{ minWidth: 100 }}>
+                  <InputLabel id="demo-simple-select-label">부서</InputLabel>
+                  <Select labelId="demo-simple-select-label" id="demo-simple-select" value={dept} label="month" onChange={handleChange2}>
+                    <MenuItem value={'개발'}>개발</MenuItem>
+                    <MenuItem value={'인사'}>인사</MenuItem>
+                    <MenuItem value={'회계'}>회계</MenuItem>
+                  </Select>
+                </FormControl>
+
+                <IconButton onClick={handleNextDay} aria-label="다음 날짜">
+                  <ArrowForwardIosOutlinedIcon />
+                </IconButton>
+              </div>
+              <Grid container rowSpacing={4} columnSpacing={2.75}>
+                <Grid item xs={2.5}>
+                  <MainCard>
+                    <Typography variant="h4" align="center">전체</Typography>
+                    <Typography variant="h4" align="center">5</Typography>
+                  </MainCard>
+                </Grid>
+                <Grid item xs={2.5}>
+                  <MainCard>
+                    <Typography variant="h4" align="center">정상</Typography>
+                    <Typography variant="h4" align="center">1</Typography>
+                  </MainCard>
+                </Grid>
+                <Grid item xs={2.5}>
+                  <MainCard>
+                    <Typography variant="h4" align="center">근태이상</Typography>
+                    <Typography variant="h4" align="center">3</Typography>
+                  </MainCard>
+                </Grid>
+                <Grid item xs={2.5}>
+                  <MainCard>
+                    <Typography variant="h4" align="center">휴가</Typography>
+                    <Typography variant="h4" align="center">1</Typography>
+                  </MainCard>
+                </Grid>
+              </Grid>
+              <AttendanceDayTable />
             </MainCard>
           </Grid>
         </BasicTab>
         <BasicTab value={value2} index={1}>
         <Grid item xs={12} sm={6} md={5} lg={7}>
-            <MainCard title="2023.10월 첫째주" style={{ display: 'flex', justifyContent: 'center' }}>
-              <FormControl sx={{ minWidth: 100 }}>
-                <InputLabel id="demo-simple-select-label" >부서</InputLabel>
-                <Select labelId="demo-simple-select-label" id="demo-simple-select" value={dept} label="month" onChange={handleChange2}>
-                  <MenuItem value={10}>개발</MenuItem>
-                  <MenuItem value={9}>인사</MenuItem>
-                  <MenuItem value={8}>회계</MenuItem>
-                </Select>
-              </FormControl>
-              
-             
-                
-            </MainCard>
+            <MainCard>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <IconButton onClick={handlePrevDay} aria-label="이전 날짜">
+                  <ArrowBackIosNewOutlinedIcon />
+                </IconButton>
 
-        </Grid>
+                <Typography variant="h5" sx={{ textAlign: 'center', flexGrow: 1 }}>
+                  {dept ? `${dept} 부서 휴가보유 현황` : '개발 부서 출/퇴근 현황 '}
+                  {date.toLocaleDateString()}
+                </Typography>
+                <FormControl sx={{ minWidth: 100 }}>
+                  <InputLabel id="demo-simple-select-label">부서</InputLabel>
+                  <Select labelId="demo-simple-select-label" id="demo-simple-select" value={dept} label="month" onChange={handleChange2}>
+                    <MenuItem value={'개발'}>개발</MenuItem>
+                    <MenuItem value={'인사'}>인사</MenuItem>
+                    <MenuItem value={'회계'}>회계</MenuItem>
+                  </Select>
+                </FormControl>
+
+                <IconButton onClick={handleNextDay} aria-label="다음 날짜">
+                  <ArrowForwardIosOutlinedIcon />
+                </IconButton>
+              </div>
+              <Grid container rowSpacing={4} columnSpacing={2.75}>
+                <Grid item xs={2.5}>
+                  <MainCard>
+                    <Typography variant="h4" align="center">전체</Typography>
+                    <Typography variant="h4" align="center">5</Typography>
+                  </MainCard>
+                </Grid>
+                <Grid item xs={2.5}>
+                  <MainCard>
+                    <Typography variant="h4" align="center">정상</Typography>
+                    <Typography variant="h4" align="center">1</Typography>
+                  </MainCard>
+                </Grid>
+                <Grid item xs={2.5}>
+                  <MainCard>
+                    <Typography variant="h4" align="center">근태이상</Typography>
+                    <Typography variant="h4" align="center">3</Typography>
+                  </MainCard>
+                </Grid>
+                <Grid item xs={2.5}>
+                  <MainCard>
+                    <Typography variant="h4" align="center">휴가</Typography>
+                    <Typography variant="h4" align="center">1</Typography>
+                  </MainCard>
+                </Grid>
+              </Grid>
+              <AttendanceDayTable />
+            </MainCard>
+          </Grid>
         </BasicTab>
       </BasicTab>
     </ComponentSkeleton>
