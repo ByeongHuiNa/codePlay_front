@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { Avatar } from '../../node_modules/@mui/material/index';
 
 import ApprovalWaitTable from 'components/Table/ApprovalWaitTable';
+import ApprovalConfirmTable from 'components/Table/ApprovalConfirmTable';
 
 
 const SeeUserAttendance = () => {
@@ -42,31 +43,32 @@ const SeeUserAttendance = () => {
                 <Grid item container direction="column" justifyContent="space-around" xs={4}>
                   <Grid item container direction="row">
                     <Grid item xs={3}>
-                      <Typography variant="body2">부서</Typography>
+                      <Typography variant="h5">부서</Typography>
                     </Grid>
                     <Grid item xs={3}>
-                      <Typography variant="body2">개발팀</Typography>
-                    </Grid>
-                  </Grid>
-                  <Grid item container direction="row">
-                    <Grid item xs={3}>
-                      <Typography variant="body2">직책</Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                      <Typography variant="body2">연구원</Typography>
+                      <Typography variant="h5">개발팀</Typography>
                     </Grid>
                   </Grid>
                   <Grid item container direction="row">
                     <Grid item xs={3}>
-                      <Typography variant="body2">이름</Typography>
+                      <Typography variant="h5">직책</Typography>
                     </Grid>
                     <Grid item xs={3}>
-                      <Typography variant="body2">홍길동</Typography>
+                      <Typography variant="h5">연구원</Typography>
+                    </Grid>
+                  </Grid>
+                  <Grid item container direction="row">
+                    <Grid item xs={3}>
+                      <Typography variant="h5">이름</Typography>
+                    </Grid>
+                    <Grid item xs={3}>
+                      <Typography variant="h5">홍길동</Typography>
                     </Grid>
                   </Grid>
                 </Grid>
                 <Grid item container direction="column" xs={5}>
-                  <MainCard title="결재대기내역">
+                  <MainCard >
+                  <Typography variant="h5">결재대기내역</Typography>
                     <ApprovalWaitTable/>
                     
                     
@@ -86,6 +88,7 @@ const SeeUserAttendance = () => {
         <BasicTab value={value2} index={0}>
           <Grid item xs={12}>
             <MainCard>
+              <ApprovalConfirmTable/>
 
             </MainCard>
           </Grid>
