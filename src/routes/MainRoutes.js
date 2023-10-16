@@ -17,6 +17,8 @@ const SamplePage = Loadable(lazy(() => import('pages/extra-pages/SamplePage')));
 const UserAttendanceTotal = Loadable(lazy(() => import('pages/UserAttendanceTotal')));
 // render - SeeAllAttendance page
 const SeeAllAttendance = Loadable(lazy(() => import('pages/SeeAllAttendance')));
+// render - SeeUserAttendance page
+const SeeUserAttendance = Loadable(lazy(() => import('pages/SeeUserAttendance')));
 
 // render - utilities
 const Typography = Loadable(lazy(() => import('pages/components-overview/Typography')));
@@ -70,6 +72,10 @@ const MainRoutes = {
     {
       path: 'seeAllAttendance',
       element: <SeeAllAttendance />
+    },
+    {
+      path: 'seeUserAttendance',
+      element: <SeeUserAttendance />
     },
     {
       path: 'shadow',

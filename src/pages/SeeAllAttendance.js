@@ -4,13 +4,14 @@ import { FormControl, IconButton, InputLabel, MenuItem, TextField } from '../../
 import Select from '@mui/material/Select';
 import VacationCountTable from 'components/Table/VacationCountTable';
 import AttendanceDayTable from 'components/Table/AttendanceDayTable';
+import AttendanceWeekTable from 'components/Table/AttendanceWeekTable';
 import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 
 import BasicTab from 'components/tab/BasicTab';
 import SearchIcon from '@mui/icons-material/Search';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import MainCard from 'components/MainCard';
 
 const SeeAllAttendance = () => {
@@ -29,7 +30,10 @@ const SeeAllAttendance = () => {
     setValue2(newValue);
   };
 
-  const [date, setDate] = useState(new Date('2023-10-11'));
+  const [date, setDate] = useState(new Date('2023-10-16'));
+  const [currentDate, setCurrentDate] = useState(new Date('2023-10-16'));
+ 
+  const [currentWeek, setCurrentWeek] = useState(0);
 
   const handlePrevDay = () => {
     const newDate = new Date(date);
@@ -42,6 +46,33 @@ const SeeAllAttendance = () => {
     newDate.setDate(newDate.getDate() + 1);
     setDate(newDate);
   };
+
+  const handlePrevWeek = () => {
+    const newDate = new Date(currentDate);
+    newDate.setDate(newDate.getDate() - 7); // 7일을 빼면 1주를 뺀다
+    setCurrentDate(newDate);
+
+    // 주차를 갱신
+    setCurrentWeek(currentWeek - 1);
+  };
+
+  const handleNextWeek = () => {
+    const newDate = new Date(currentDate);
+    newDate.setDate(newDate.getDate() + 7); // 7일을 더하면 1주를 더한다
+    setCurrentDate(newDate);
+
+    // 주차를 갱신
+    setCurrentWeek(currentWeek + 1);
+
+    
+  };
+  useEffect(() => {
+    // 현재 날짜를 가져오고 그 날짜의 주차를 계산
+    const now = new Date();
+    const startOfYear = new Date(now.getFullYear(), 0, 1);
+    const weekNumber = Math.ceil(((now - startOfYear) / 86400000 + 1) / 7);
+    setCurrentWeek(weekNumber);
+  }, []);
 
   return (
     <ComponentSkeleton>
@@ -96,7 +127,7 @@ const SeeAllAttendance = () => {
                 </IconButton>
 
                 <Typography variant="h5" sx={{ textAlign: 'center', flexGrow: 1 }}>
-                  {dept ? `${dept} 부서 휴가보유 현황` : '개발 부서 출/퇴근 현황 '}
+                  {dept ? `${dept} 부서 출/퇴근 현황` : '개발 부서 출/퇴근 현황 '}
                   {date.toLocaleDateString()}
                 </Typography>
                 <FormControl sx={{ minWidth: 100 }}>
@@ -116,25 +147,25 @@ const SeeAllAttendance = () => {
                 <Grid item xs={2.5}>
                   <MainCard>
                     <Typography variant="h4" align="center">전체</Typography>
-                    <Typography variant="h4" align="center">5</Typography>
+                    <Typography variant="h4" align="center">5건</Typography>
                   </MainCard>
                 </Grid>
                 <Grid item xs={2.5}>
                   <MainCard>
                     <Typography variant="h4" align="center">정상</Typography>
-                    <Typography variant="h4" align="center">1</Typography>
+                    <Typography variant="h4" align="center">1건</Typography>
                   </MainCard>
                 </Grid>
                 <Grid item xs={2.5}>
                   <MainCard>
                     <Typography variant="h4" align="center">근태이상</Typography>
-                    <Typography variant="h4" align="center">3</Typography>
+                    <Typography variant="h4" align="center">3건</Typography>
                   </MainCard>
                 </Grid>
                 <Grid item xs={2.5}>
                   <MainCard>
                     <Typography variant="h4" align="center">휴가</Typography>
-                    <Typography variant="h4" align="center">1</Typography>
+                    <Typography variant="h4" align="center">1건</Typography>
                   </MainCard>
                 </Grid>
               </Grid>
@@ -146,13 +177,13 @@ const SeeAllAttendance = () => {
         <Grid item xs={12} sm={6} md={5} lg={7}>
             <MainCard>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <IconButton onClick={handlePrevDay} aria-label="이전 날짜">
+                <IconButton onClick={handlePrevWeek} aria-label="이전 날짜">
                   <ArrowBackIosNewOutlinedIcon />
                 </IconButton>
 
                 <Typography variant="h5" sx={{ textAlign: 'center', flexGrow: 1 }}>
-                  {dept ? `${dept} 부서 휴가보유 현황` : '개발 부서 출/퇴근 현황 '}
-                  {date.toLocaleDateString()}
+                {dept ? `${dept} 부서 출/퇴근 현황` : '개발 부서 출/퇴근 현황 '}
+                {currentDate.toLocaleDateString()} {currentWeek}주
                 </Typography>
                 <FormControl sx={{ minWidth: 100 }}>
                   <InputLabel id="demo-simple-select-label">부서</InputLabel>
@@ -163,7 +194,7 @@ const SeeAllAttendance = () => {
                   </Select>
                 </FormControl>
 
-                <IconButton onClick={handleNextDay} aria-label="다음 날짜">
+                <IconButton onClick={handleNextWeek} aria-label="다음 날짜">
                   <ArrowForwardIosOutlinedIcon />
                 </IconButton>
               </div>
@@ -189,11 +220,11 @@ const SeeAllAttendance = () => {
                 <Grid item xs={2.5}>
                   <MainCard>
                     <Typography variant="h4" align="center">휴가</Typography>
-                    <Typography variant="h4" align="center">1</Typography>
+                    <Typography variant="h4" align="center">1건</Typography>
                   </MainCard>
                 </Grid>
               </Grid>
-              <AttendanceDayTable />
+              <AttendanceWeekTable />
             </MainCard>
           </Grid>
         </BasicTab>

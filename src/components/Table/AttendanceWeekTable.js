@@ -12,16 +12,17 @@ import { Box, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHea
 import Dot from 'components/@extended/Dot';
 import { Pagination } from '../../../node_modules/@mui/material/index';
 
-function createData(name, position, start, end, hours, status) {
-  return { name, position, start, end, hours, status };
+function createData(name, position, mon, tues, wednes, thurs, fri, weekhours) {
+  return { name, position, mon, tues, wednes, thurs, fri, weekhours };
 }
 
 const rows = [
-  createData('나병희', '주임', '09:00', '18:00', 8, 0),
-  createData('홍길동', '연구원', '10:00', '18:00', 7, 2),
-  createData('이순신', '팀장', '09:00', '18:00', 8, 1),
-  createData('아무개', '주임', '09:00', '14:00', 4, 3),
-  createData('나병희', '주임', '00:00', '00:00', 0, 4)
+  createData('나병희', '연구원', 0, 0, 0, 0, 0, 40),
+  createData('홍길동', '선임', 0, 1, 1, 0, 0, 40),
+  createData('이순신', '주임', 0, 1, 1, 0, 0, 40),
+  createData('아무개', '팀장', 0, 1, 1, 0, 0, 40),
+  createData('팀쿡', '사장', 0, 1, 1, 1, 2, 40),
+  
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -66,34 +67,46 @@ const headCells = [
     label: '직책'
   },
   {
-    id: 'start',
+    id:  'mon',
     align: 'right',
     disablePadding: false,
-    label: '출근시간'
+    label: '월'
   },
   {
-    id: 'end',
+    id:  'tues',
     align: 'right',
     disablePadding: false,
-    label: '퇴근시간'
+    label: '화'
   },
   {
-    id: 'hours',
+    id:  'wednes',
     align: 'right',
     disablePadding: false,
-    label: '근무시간'
+    label: '수'
   },
   {
-    id: 'status',
-    align: 'center',
+    id:  'thurs',
+    align: 'right',
     disablePadding: false,
-    label: '근태상태'
+    label: '목'
+  },
+  {
+    id:  'fri',
+    align: 'right',
+    disablePadding: false,
+    label: '금'
+  },
+  {
+    id: 'weekhours',
+    align: 'right',
+    disablePadding: false,
+    label: '주간근무시간'
   }
 ];
 
 // ==============================|| ORDER TABLE - HEADER ||============================== //
 
-function AttendanceDayTableHead({ order, orderBy }) {
+function AttendanceWeekTableHead({ order, orderBy }) {
   return (
     <TableHead>
       <TableRow>
@@ -112,14 +125,14 @@ function AttendanceDayTableHead({ order, orderBy }) {
   );
 }
 
-AttendanceDayTableHead.propTypes = {
+AttendanceWeekTableHead.propTypes = {
   order: PropTypes.string,
   orderBy: PropTypes.string
 };
 
 // ==============================|| ORDER TABLE - STATUS ||============================== //
 
-const AttendanceDayStatus = ({ status }) => {
+const AttendanceWeekStatus = ({ status }) => {
   let color;
   let title;
 
@@ -159,13 +172,13 @@ const AttendanceDayStatus = ({ status }) => {
   );
 };
 
-AttendanceDayStatus.propTypes = {
+AttendanceWeekStatus.propTypes = {
   status: PropTypes.number
 };
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function AttendanceDayTable() {
+export default function AttendanceWeekTable() {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
@@ -195,7 +208,7 @@ export default function AttendanceDayTable() {
             }
           }}
         >
-          <AttendanceDayTableHead order={order} orderBy={orderBy} />
+          <AttendanceWeekTableHead order={order} orderBy={orderBy} />
           <TableBody>
             {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
               const isItemSelected = isSelected(row.date);
@@ -217,12 +230,25 @@ export default function AttendanceDayTable() {
                     </Link>
                   </TableCell>
                   <TableCell align="left">{row.position}</TableCell>
-                  <TableCell align="right">{row.start}</TableCell>
-                  <TableCell align="right">{row.end}</TableCell>
-                  <TableCell align="right">{row.hours}</TableCell>
                   <TableCell align="right">
-                    <AttendanceDayStatus status={row.status} />
+                    <AttendanceWeekStatus status={row.mon} />
                   </TableCell>
+                  <TableCell align="right">
+                    <AttendanceWeekStatus status={row.tues} />
+                  </TableCell>
+                  <TableCell align="right">
+                    <AttendanceWeekStatus status={row.wednes} />
+                  </TableCell>
+                  <TableCell align="right">
+                    <AttendanceWeekStatus status={row.thurs} />
+                  </TableCell>
+                  <TableCell align="right">
+                    <AttendanceWeekStatus status={row.fri} />
+                  </TableCell>
+                  <TableCell align="right">
+                    40시간
+                  </TableCell>
+                  
                 </TableRow>
               );
             })}

@@ -362,22 +362,22 @@ const UserAttendanceTotalPage = () => {
               <Grid container rowSpacing={4} columnSpacing={2.75}>
                 <Grid item xs={3}>
                   <MainCard title="전체">
-                    <Typography variant="h4">7</Typography>
+                    <Typography variant="h4">7건</Typography>
                   </MainCard>
                 </Grid>
                 <Grid item xs={3}>
                   <MainCard title="정상">
-                    <Typography variant="h4">7</Typography>
+                    <Typography variant="h4">7건</Typography>
                   </MainCard>
                 </Grid>
                 <Grid item xs={3}>
                   <MainCard title="근태이상">
-                    <Typography variant="h4">0</Typography>
+                    <Typography variant="h4">0건</Typography>
                   </MainCard>
                 </Grid>
                 <Grid item xs={3}>
                   <MainCard title="휴가">
-                    <Typography variant="h4">0</Typography>
+                    <Typography variant="h4">0건</Typography>
                   </MainCard>
                 </Grid>
               </Grid>
