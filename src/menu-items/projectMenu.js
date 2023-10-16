@@ -8,7 +8,8 @@ import {
   SecurityScanOutlined,
   FileProtectOutlined,
   TeamOutlined,
-  FormOutlined
+  FormOutlined,
+  ReconciliationOutlined
 } from '@ant-design/icons';
 
 // icons
@@ -21,7 +22,8 @@ const icons = {
   SecurityScanOutlined,
   FileProtectOutlined,
   TeamOutlined,
-  FormOutlined
+  FormOutlined,
+  ReconciliationOutlined
 };
 
 // ==============================|| MENU ITEMS - DASHBOARD ||============================== //
@@ -108,6 +110,14 @@ const projectMenu = {
       type: 'item',
       url: '/settingAttendancePolicy',
       icon: icons.FormOutlined,
+      breadcrumbs: false
+    },
+    {
+      id: 'approvalAttendance',
+      title: '전자결재',
+      type: 'item',
+      url: '/approvalattendance',
+      icon: icons.ReconciliationOutlined,
       breadcrumbs: false
     }
   ]
