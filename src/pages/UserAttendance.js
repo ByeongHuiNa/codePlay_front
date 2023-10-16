@@ -277,6 +277,9 @@ const UserAttendance = () => {
                                             전체
                                         </Button>
                                     </Grid>
+                                    <Grid item>
+                                        <BasicDatePicker />
+                                    </Grid>
                                     <Grid item sx={{ mt: 0.3 }}>
                                         <Button variant="contained" color="secondary">
                                             결재대기
@@ -286,9 +289,6 @@ const UserAttendance = () => {
                                         <Button variant="contained" color="secondary">
                                             결재완료
                                         </Button>
-                                    </Grid>
-                                    <Grid item>
-                                        <BasicDatePicker />
                                     </Grid>
                                 </Grid>
                             </Grid>
