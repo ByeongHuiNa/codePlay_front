@@ -33,6 +33,7 @@ const UserInformationModify = Loadable(lazy(() => import('pages/UserInformationM
 const QueryUserInformation = Loadable(lazy(() => import('pages/QueryUserInformation')));
 const SettingAccess = Loadable(lazy(() => import('pages/SettingAccess')));
 const SettingAuthority = Loadable(lazy(() => import('pages/SettingAuthority')));
+const SettingAttendancePolicy = Loadable(lazy(() => import('pages/SettingAttendancePolicy')));
 
 // render - user attendance
 const UserAttendance = Loadable(lazy(() => import('pages/UserAttendance')));
@@ -115,6 +116,10 @@ const MainRoutes = {
     {
       path: 'userleave',
       element: <UserLeave />
+    },
+    {
+      path: 'settingAttendancePolicy',
+      element: <SettingAttendancePolicy />
     }
   ]
 };
