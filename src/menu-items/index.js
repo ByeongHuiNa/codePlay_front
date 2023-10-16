@@ -8,7 +8,7 @@ import projectMenu from './projectMenu';
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
-  items: [projectMenu,dashboard, pages, utilities, support]
+  items: [projectMenu, dashboard, pages, utilities, support]
 };
 
 export default menuItems;

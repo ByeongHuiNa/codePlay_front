@@ -29,11 +29,29 @@ export const useTableListState = create(
   }))
 );
 
-export const Criteria = create(
+export const useOrganizationChartState = create(
   devtools((set) => ({
-    pagenation: {},
-    search: {},
-    setPagenation: (newPagenation) => set(() => ({ pagenation: newPagenation })),
+    OrganizationChart: [],
+    setOrganizationChartList: (newTableContentList) => set(() => ({ OrganizationChart: newTableContentList }))
+  }))
+);
+
+export const useUserTableListState = create(
+  devtools((set) => ({
+    tableContentList: {},
+    totalCount: 0,
+    setTableList: (newTableContentList) => set(() => ({ tableContentList: newTableContentList })),
+    setTotalCount: (newTotalCount) => set(() => ({ totalCount: newTotalCount })),
+    addTableContent: (newTableContent) => set(() => tableContentList.push(newTableContent))
+  }))
+);
+
+export const useCriteria = create(
+  devtools((set) => ({
+    now_page: 1,
+    limit: 10,
+    search: '',
+    setPage: (new_Page) => set(() => ({ now_page: new_Page })),
     setSearch: (newSearch) => set(() => ({ search: newSearch }))
   }))
 );

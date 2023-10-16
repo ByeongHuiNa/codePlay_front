@@ -71,6 +71,15 @@ const projectMenu = {
       type: 'item',
       url: '/seeAllAttendance',
       icon: icons.PieChartOutlined,
+      breadcrumbs: false
+    },
+    {
+      id: 'seeUserAttendance',
+      title: '사용자별근태현황조회(담당자)',
+      type: 'item',
+      url: '/seeUserAttendance',
+      icon: icons.PieChartOutlined,
+      breadcrumbs: false
     },
     {
       id: 'userInformation',
