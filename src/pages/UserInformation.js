@@ -16,7 +16,7 @@ const UserInformation = () => (
       <Grid container direction="column" xs={12}>
         <Grid item container direction="row" xs={12}>
           <Grid item xs={5}>
-            <Avatar sx={{ width: 250, height: 250 }}>프로필 사진</Avatar>
+            <Avatar sx={{ width: 250, height: 250, margin: 'auto' }}>프로필 사진</Avatar>
           </Grid>
           <Grid item container direction="column" justifyContent="space-around" xs={7}>
             <Grid item container direction="row">
