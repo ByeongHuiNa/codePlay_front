@@ -29,6 +29,14 @@ const pages = {
       url: '/register',
       icon: icons.ProfileOutlined,
       target: true
+    },
+    {
+      id: 'forgotPassword1',
+      title: 'ForgotPassword',
+      type: 'item',
+      url: '/forgotPassword',
+      icon: icons.ProfileOutlined,
+      target: true
     }
   ]
 };
