@@ -1,9 +1,10 @@
 import { Typography, Box, Grid, Tab, Tabs } from '@mui/material';
 import ComponentSkeleton from './components-overview/ComponentSkeleton';
-import { FormControl, InputLabel, MenuItem } from '../../node_modules/@mui/material/index';
+import { FormControl, IconButton, InputLabel, MenuItem, TextField } from '../../node_modules/@mui/material/index';
 import Select from '@mui/material/Select';
 
 import BasicTab from 'components/tab/BasicTab';
+import SearchIcon from '@mui/icons-material/Search';
 
 import { useState } from 'react';
 import MainCard from 'components/MainCard';
@@ -38,7 +39,8 @@ const SeeAllAttendance = () => {
           <Typography variant="h5">휴가현황조회페이지</Typography>
         </Grid>
         <Grid item xs={12} sm={6} md={5} lg={7}>
-          <MainCard title="00부서 휴가보유 현황" style={{ display: 'flex', justifyContent: 'center' }}>
+        <MainCard title={<Typography variant="h5" sx={{ textAlign: 'center' }}>00부서 휴가보유 현황</Typography>}>
+
             <FormControl sx={{ minWidth: 100 }}>
               <InputLabel id="demo-simple-select-label">부서</InputLabel>
               <Select labelId="demo-simple-select-label" id="demo-simple-select" value={dept} label="month" onChange={handleChange2}>
@@ -47,6 +49,12 @@ const SeeAllAttendance = () => {
                 <MenuItem value={8}>회계</MenuItem>
               </Select>
             </FormControl>
+            
+            <TextField id="outlined-basic" label="직책명" variant="outlined" />
+            <TextField id="outlined-basic" label="사원명" variant="outlined" />
+            <IconButton type="submit" sx={{ p: "10px" }} aria-label="search">
+              <SearchIcon />
+            </IconButton>
           </MainCard>
         </Grid>
       </BasicTab>

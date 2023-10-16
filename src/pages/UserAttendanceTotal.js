@@ -137,8 +137,8 @@ const UserAttendanceTotalPage = () => {
         <Grid container rowSpacing={4} columnSpacing={2.75}>
           {/* row 2 */}
           <Grid item xs={12} sm={6} md={5} lg={7}>
-            <MainCard title="결재진행중" >
-              <Box sx={{ minWidth: 40 }}>
+            <MainCard title="결재진행중">
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <FormControl >
                   <InputLabel id="demo-simple-select-label">월</InputLabel>
                   <Select labelId="demo-simple-select-label" id="demo-simple-select" value={age} label="month" onChange={handleChange2}>
@@ -164,7 +164,7 @@ const UserAttendanceTotalPage = () => {
                     <MenuItem value={9}>9월</MenuItem>
                     <MenuItem value={8}>8월</MenuItem>
                   </Select>
-                </FormControl>
+                </FormControl> 
               </Box>
               <IncompleteTable />
               <Button onClick={handleOpen}>Open modal</Button>
