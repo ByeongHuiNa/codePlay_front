@@ -6,8 +6,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
 import { INITIAL_EVENTS, createEventId } from './event-utils';
 
-
-const Calendar = () => {
+const Calendar = React.memo(() => {
   //이벤트에 표기될 정보
   function renderEventContent(eventInfo) {
     return (
@@ -41,6 +40,7 @@ const Calendar = () => {
   function handleEventClick(clickInfo) {
     if (confirm(`해당 이벤트를 삭제 하시겠습니까? '${clickInfo.event.title}'`)) {
       clickInfo.event.remove();
+      // clickInfo.view.calendar.gotoDate('2023-11-12');
     }
   }
 
@@ -63,6 +63,6 @@ const Calendar = () => {
       dayMaxEventRows={true}
     />
   );
-};
+});
 
 export default Calendar;

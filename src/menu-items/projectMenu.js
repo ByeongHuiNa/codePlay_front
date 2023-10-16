@@ -33,7 +33,7 @@ const projectMenu = {
   children: [
     {
       id: 'Calendar',
-      title: 'Calendar',
+      title: '캘린더',
       type: 'item',
       url: '/calendar',
       icon: icons.CalendarOutlined,
