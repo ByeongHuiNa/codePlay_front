@@ -90,7 +90,7 @@ const PersonalCalendar = () => {
             </Item>
           </Grid>
 
-          <Grid item xs={3} justifyContent="flex-start">
+          <Grid item xs={3} container direction="column" justifyContent="space-between" alignItems="stretch">
             <Grid item>
               <Item>
                 <Grid container direction="row" justifyContent="space-between" alignItems="flex-start">

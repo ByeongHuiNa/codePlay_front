@@ -5,6 +5,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Checkbox from '@mui/material/Checkbox';
+import { Chip } from '../../../node_modules/@mui/material/index';
 
 export default function CalendarList() {
   const [checked, setChecked] = React.useState([0]);
@@ -24,7 +25,7 @@ export default function CalendarList() {
 
   return (
     <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-      {[0, 1, 2, 3, 4].map((value) => {
+      {[0, 1, 2, 3, 100].map((value) => {
         const labelId = `checkbox-list-label-${value}`;
 
         return (
@@ -39,7 +40,8 @@ export default function CalendarList() {
                   inputProps={{ 'aria-labelledby': labelId }}
                 />
               </ListItemIcon>
-              <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
+              <ListItemText id={labelId} primary={`개인 일정 ${value + 1}`} />
+              <Chip label={value == 0 ? 'Today' : `${value} day`} color="primary" size="small" variant={value !== 0 ? 'outlined' : ''} />
             </ListItemButton>
           </ListItem>
         );

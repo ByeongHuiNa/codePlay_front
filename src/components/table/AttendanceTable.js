@@ -21,14 +21,13 @@ const rows = [
   createData(20231010, '일반', '09:00', '강촌', '18:00', '강촌'),
   createData(20231009, '일반', '09:00', '강촌', '18:00', '강촌'),
   createData(20231008, '일반', '09:00', '강촌', '18:00', '강촌'),
-  createData(20231007, '일반', '09:00', '강촌', '18:00', '강촌'),
-//   createData(98764564, 'Laptop', 300, 0, 180139),
-//   createData(98756325, 'Mobile', 355, 1, 90989),
-//   createData(98652366, 'Handset', 50, 1, 10239),
-//   createData(13286564, 'Computer Accessories', 100, 1, 83348),
-//   createData(86739658, 'TV', 99, 0, 410780),
-//   createData(13256498, 'Keyboard', 125, 2, 70999),
-  
+  createData(20231007, '일반', '09:00', '강촌', '18:00', '강촌')
+  //   createData(98764564, 'Laptop', 300, 0, 180139),
+  //   createData(98756325, 'Mobile', 355, 1, 90989),
+  //   createData(98652366, 'Handset', 50, 1, 10239),
+  //   createData(13286564, 'Computer Accessories', 100, 1, 83348),
+  //   createData(86739658, 'TV', 99, 0, 410780),
+  //   createData(13256498, 'Keyboard', 125, 2, 70999),
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -218,8 +217,6 @@ export default function AttendanceTable() {
                   <TableCell align="right">{row.wherestart}</TableCell>
                   <TableCell align="right">{row.end}</TableCell>
                   <TableCell align="right">{row.whereend}</TableCell>
-                  
-                  
                 </TableRow>
               );
             })}
