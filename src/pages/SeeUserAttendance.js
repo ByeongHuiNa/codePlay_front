@@ -10,7 +10,6 @@ import { Avatar } from '../../node_modules/@mui/material/index';
 import ApprovalWaitTable from 'components/Table/ApprovalWaitTable';
 import ApprovalConfirmTable from 'components/Table/ApprovalConfirmTable';
 
-
 const SeeUserAttendance = () => {
   const [value, setValue] = useState(0);
   const [value2, setValue2] = useState(0);
@@ -67,11 +66,9 @@ const SeeUserAttendance = () => {
                   </Grid>
                 </Grid>
                 <Grid item container direction="column" xs={5}>
-                  <MainCard >
-                  <Typography variant="h5">결재대기내역</Typography>
-                    <ApprovalWaitTable/>
-                    
-                    
+                  <MainCard>
+                    <Typography variant="h5">결재대기내역</Typography>
+                    <ApprovalWaitTable />
                   </MainCard>
                 </Grid>
               </Grid>
@@ -80,7 +77,6 @@ const SeeUserAttendance = () => {
         </Grid>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={value2} onChange={handleChange3} aria-label="basic tabs example">
-
             <Tab label="승인" />
             <Tab label="반려" />
           </Tabs>
@@ -88,15 +84,14 @@ const SeeUserAttendance = () => {
         <BasicTab value={value2} index={0}>
           <Grid item xs={12}>
             <MainCard>
-              <ApprovalConfirmTable/>
-
+              <ApprovalConfirmTable />
             </MainCard>
           </Grid>
         </BasicTab>
         <BasicTab value={value2} index={1}>
           <Grid item xs={12}>
             <MainCard>
-            <ApprovalConfirmTable/>
+              <ApprovalConfirmTable />
             </MainCard>
           </Grid>
         </BasicTab>
