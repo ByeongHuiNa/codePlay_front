@@ -4,23 +4,25 @@ import { Typography } from '@mui/material';
 // project import
 import MainCard from 'components/MainCard';
 import InputSeach from 'components/Input/InputSearch';
-import SettingAccessTable from 'components/Table/SettingAccessTable';
-import { Avatar, Box, Grid, IconButton, MenuItem, Stack, Tab, Tabs, TextField } from '../../node_modules/@mui/material/index';
+import { Box, Grid, Tab, Tabs } from '../../node_modules/@mui/material/index';
 
 //icon import
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
-import { useTabState, useTableListState } from 'store/module';
+
+import { useDetailCardState, useTabState, useTableListState } from 'store/module';
 import { useEffect } from 'react';
 import axios from '../../node_modules/axios/index';
+import SettingAuthorityTable from 'components/Table/SettingAuthorityTable';
+import AuthorityDetailCard from 'components/Card/AuthorityDetailCard';
 
 //zustand import
 
 // ==============================|| 관리자 권한관리 PAGE ||============================== //
 
 const SettingAuthority = () => {
+  //zustand로 관리할 값들
   const { index, setIndex, tabNum, setTabNum } = useTabState();
   const { setTableList } = useTableListState();
+  const { view } = useDetailCardState();
   const endPoints = ['http://localhost:8000/get_authority_number', 'http://localhost:8000/get_user_authority_list?role=ROLE_USER'];
 
   useEffect(() => {
@@ -32,7 +34,6 @@ const SettingAuthority = () => {
         temptabNum[i.id] = i.number;
       }
       setTabNum(temptabNum);
-      console.log(result[1]);
       setTableList(result[1].data);
     }
     get();
@@ -42,31 +43,11 @@ const SettingAuthority = () => {
     setIndex(newValue);
   };
 
-  //권한 고정(사용자, 근태담당자, 관리자, 메인관리자 추가 불가능)
-  const authority = [
-    {
-      value: 'user',
-      label: '사용자'
-    },
-    {
-      value: 'attendanceManager',
-      label: '근태담당자'
-    },
-    {
-      value: 'userManager',
-      label: '관리자'
-    },
-    {
-      value: 'mainManager',
-      label: '메인관리자'
-    }
-  ];
-
   return (
     <>
       <Typography variant="h2">권한관리</Typography>
       <Grid container xs={12} direction="row">
-        <Grid item xs={index == 1 ? 8 : 12}>
+        <Grid item xs={view == 1 ? 8 : 12}>
           <MainCard>
             <Typography variant="h4">사용자명으로 검색</Typography>
             <InputSeach isPersonIcon={true}></InputSeach>
@@ -79,47 +60,11 @@ const SettingAuthority = () => {
                 {tabNum.custom == 0 ? '' : <Tab label={`맞춤접근사용자(${tabNum.custom})`} />}
               </Tabs>
             </Box>
-            <SettingAccessTable />
+            <SettingAuthorityTable />
           </MainCard>
         </Grid>
-        <Grid item xs={4} hidden={index == 1 ? '' : 'disable'}>
-          <MainCard>
-            <Stack direction="row" justifyContent="center" mb={3}>
-              <Avatar src="https://picsum.photos/id/1/200/300" sx={{ width: 150, height: 150 }}></Avatar>
-            </Stack>
-            <Stack direction="column" spacing={1}>
-              <Stack direction="row" justifyContent="space-around">
-                <Typography variant="h4">홍길동</Typography>
-              </Stack>
-              <Stack direction="row" justifyContent="space-around">
-                <Typography variant="body2">개발팀/연구원</Typography>
-              </Stack>
-              <Stack direction="row" justifyContent="space-around" alignItems="center">
-                <TextField select size="normal" sx={{ width: '8rem' }}>
-                  {authority.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                <IconButton>
-                  <AddIcon />
-                </IconButton>
-              </Stack>
-              <Stack direction="row" justifyContent="space-around" alignItems="center">
-                <TextField select size="normal" sx={{ width: '8rem' }}>
-                  {authority.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                <IconButton>
-                  <RemoveIcon />
-                </IconButton>
-              </Stack>
-            </Stack>
-          </MainCard>
+        <Grid item xs={4} hidden={view == 1 ? '' : 'disable'}>
+          <AuthorityDetailCard></AuthorityDetailCard>
         </Grid>
       </Grid>
     </>

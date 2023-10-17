@@ -46,7 +46,7 @@ const QueryUserInformation = () => {
       {/* 조직도 내 직책별 정렬 필요 */}
       <Typography variant="h2">조직도</Typography>
       <Grid container xs={12} direction="row" spacing={3}>
-        <Grid item xs={3}>
+        <Grid item xs={2}>
           <MainCard>
             <TreeView defaultCollapseIcon={<ExpandMoreIcon />} defaultExpandIcon={<ChevronRightIcon />}>
               {Object.keys(OrganizationChart).map((dept, index) => {
@@ -62,7 +62,7 @@ const QueryUserInformation = () => {
             </TreeView>
           </MainCard>
         </Grid>
-        <Grid item xs={9}>
+        <Grid item xs={10}>
           <MainCard>
             <Typography variant="h4">사용자명으로 검색</Typography>
             <InputSeach isPersonIcon={true} onClick={() => search_user(search, limit)}></InputSeach>
