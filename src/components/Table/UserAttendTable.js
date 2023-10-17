@@ -3,7 +3,8 @@ import { useState } from 'react';
 
 // material-ui
 import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import { Chip, Stack } from '../../../node_modules/@mui/material/index';
+import { Stack, Typography } from '../../../node_modules/@mui/material/index';
+import Dot from 'components/@extended/Dot';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -35,34 +36,28 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: 'leaveUser',
+    id: 'date',
     align: 'center',
     disablePadding: false,
-    label: '휴가신청자'
+    label: '날짜'
   },
   {
-    id: 'leaveKind',
+    id: 'startTime',
     align: 'center',
     disablePadding: false,
-    label: '휴가종류'
+    label: '출근시간'
   },
   {
-    id: 'leaveStart',
+    id: 'endTime',
     align: 'center',
     disablePadding: false,
-    label: '휴가시작일'
-  },
-  {
-    id: 'leaveEnd',
-    align: 'center',
-    disablePadding: false,
-    label: '휴가종료일'
+    label: '퇴근시간'
   },
   {
     id: 'status',
     align: 'center',
     disablePadding: false,
-    label: '결재상태'
+    label: '근태상태'
   }
 ];
 
@@ -94,38 +89,52 @@ OrderTableHead.propTypes = {
 
 // ==============================|| ORDER TABLE - STATUS ||============================== //
 
-// eslint-disable-next-line react/prop-types
 const OrderStatus = ({ status }) => {
   let color;
   let title;
 
-  // 0 : 결재완료(승인)
-  // 1 : 결재완료(반려)
-  // 2 : 결재대기
+  // 0 : 정상출근
+  // 1 : 휴가(연차,반차,공가)
+  // 2 : 지각
+  // 3 : 조퇴(조기퇴근)
+  // 4 : 결근(출근 혹은 퇴근누락))
   switch (status) {
     case 0:
       color = 'success';
-      title = '결재승인';
+      title = '정상';
       break;
     case 1:
-      color = 'error';
-      title = '결재반려';
+      color = 'primary';
+      title = '휴가';
       break;
     case 2:
-      color = 'primary';
-      title = '결재대기';
+      color = 'secondary';
+      title = '지각';
+      break;
+    case 3:
+      color = 'warning';
+      title = '조퇴';
+      break;
+    case 4:
+      color = 'error';
+      title = '결근';
   }
 
   return (
     <Stack direction="row" alignItems="center" justifyContent="center" spacing={1}>
-      <Chip label={title} color={color} />
+      <Dot color={color} />
+      <Typography>{title}</Typography>
     </Stack>
   );
 };
 
+OrderStatus.propTypes = {
+  status: PropTypes.number
+};
+
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function AdminAppLeaveTable({ appLeaveStatus, datas, setSelectLeaveData }) {
+export default function UserAttendTable({ datas, setSelectAttendData }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
@@ -162,12 +171,6 @@ export default function AdminAppLeaveTable({ appLeaveStatus, datas, setSelectLea
               const isItemSelected = isSelected(data.date);
               const labelId = `enhanced-table-checkbox-${index}`;
 
-              if (appLeaveStatus === 0 && (data.status === 0 || data.status === 1)) {
-                return;
-              } else if (appLeaveStatus === 1 && data.status === 2) {
-                return;
-              }
-
               return (
                 <TableRow
                   hover
@@ -177,14 +180,13 @@ export default function AdminAppLeaveTable({ appLeaveStatus, datas, setSelectLea
                   tabIndex={-1}
                   key={data.date}
                   selected={isItemSelected}
-                  onClick={() => setSelectLeaveData(data)}
+                  onClick={() => setSelectAttendData(data)}
                 >
                   <TableCell component="th" id={labelId} scope="data" align="center">
-                    {data.leaveUser}
+                    {data.date}
                   </TableCell>
-                  <TableCell align="center">{data.leaveKind}</TableCell>
-                  <TableCell align="center">{data.leaveStart}</TableCell>
-                  <TableCell align="center">{data.leaveEnd}</TableCell>
+                  <TableCell align="center">{data.startTime}</TableCell>
+                  <TableCell align="center">{data.endTime}</TableCell>
                   <TableCell align="center">
                     <OrderStatus status={data.status} />
                   </TableCell>

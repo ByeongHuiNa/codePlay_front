@@ -3,8 +3,6 @@ import { lazy } from 'react';
 // project import
 import Loadable from 'components/Loadable';
 import MainLayout from 'layout/MainLayout';
-import UserLeave from 'pages/UserLeave';
-import ApprovalAttendance from 'pages/ApprovalAttendance';
 
 // render - dashboard
 const CalendarPage = Loadable(lazy(() => import('pages/CalendarPage')));
@@ -21,6 +19,8 @@ const UserAttendanceTotal = Loadable(lazy(() => import('pages/UserAttendanceTota
 const SeeAllAttendance = Loadable(lazy(() => import('pages/SeeAllAttendance')));
 // render - SeeUserAttendance page
 const SeeUserAttendance = Loadable(lazy(() => import('pages/SeeUserAttendance')));
+//render - Main page
+const Main = Loadable(lazy(() => import('pages/Main')));
 
 // render - utilities
 const Typography = Loadable(lazy(() => import('pages/components-overview/Typography')));
@@ -40,6 +40,12 @@ const SettingAttendancePolicy = Loadable(lazy(() => import('pages/SettingAttenda
 
 // render - user attendance
 const UserAttendance = Loadable(lazy(() => import('pages/UserAttendance')));
+// render - user leave
+const UserLeave = Loadable(lazy(() => import('pages/UserLeave')));
+// render - approval attendance
+const ApprovalAttendance = Loadable(lazy(() => import('pages/ApprovalAttendance')));
+// render - modify attendance
+const ModifyAttendance = Loadable(lazy(() => import('pages/ModifyAttendance')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -79,6 +85,10 @@ const MainRoutes = {
     {
       path: 'seeUserAttendance',
       element: <SeeUserAttendance />
+    },
+    {
+      path: 'main',
+      element: <Main />
     },
     {
       path: 'shadow',
@@ -131,6 +141,10 @@ const MainRoutes = {
     {
       path: 'settingAttendancePolicy',
       element: <SettingAttendancePolicy />
+    },
+    {
+      path: 'modifyattendance',
+      element: <ModifyAttendance />
     }
   ]
 };

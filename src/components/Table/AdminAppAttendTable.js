@@ -35,28 +35,22 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: 'leaveUser',
+    id: 'attendUser',
     align: 'center',
     disablePadding: false,
-    label: '휴가신청자'
+    label: '수정신청자'
   },
   {
-    id: 'leaveKind',
+    id: 'attendDate',
     align: 'center',
     disablePadding: false,
-    label: '휴가종류'
+    label: '수정신청일'
   },
   {
-    id: 'leaveStart',
+    id: 'attendKind',
     align: 'center',
     disablePadding: false,
-    label: '휴가시작일'
-  },
-  {
-    id: 'leaveEnd',
-    align: 'center',
-    disablePadding: false,
-    label: '휴가종료일'
+    label: '수정사항'
   },
   {
     id: 'status',
@@ -94,7 +88,6 @@ OrderTableHead.propTypes = {
 
 // ==============================|| ORDER TABLE - STATUS ||============================== //
 
-// eslint-disable-next-line react/prop-types
 const OrderStatus = ({ status }) => {
   let color;
   let title;
@@ -125,7 +118,7 @@ const OrderStatus = ({ status }) => {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function AdminAppLeaveTable({ appLeaveStatus, datas, setSelectLeaveData }) {
+export default function AdminAppAttendTable({ appAttendStatus, datas, setSelectAttendData }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
@@ -162,9 +155,9 @@ export default function AdminAppLeaveTable({ appLeaveStatus, datas, setSelectLea
               const isItemSelected = isSelected(data.date);
               const labelId = `enhanced-table-checkbox-${index}`;
 
-              if (appLeaveStatus === 0 && (data.status === 0 || data.status === 1)) {
+              if (appAttendStatus === 0 && (data.status === 0 || data.status === 1)) {
                 return;
-              } else if (appLeaveStatus === 1 && data.status === 2) {
+              } else if (appAttendStatus === 1 && data.status === 2) {
                 return;
               }
 
@@ -177,14 +170,13 @@ export default function AdminAppLeaveTable({ appLeaveStatus, datas, setSelectLea
                   tabIndex={-1}
                   key={data.date}
                   selected={isItemSelected}
-                  onClick={() => setSelectLeaveData(data)}
+                  onClick={() => setSelectAttendData(data)}
                 >
                   <TableCell component="th" id={labelId} scope="data" align="center">
-                    {data.leaveUser}
+                    {data.attendUser}
                   </TableCell>
-                  <TableCell align="center">{data.leaveKind}</TableCell>
-                  <TableCell align="center">{data.leaveStart}</TableCell>
-                  <TableCell align="center">{data.leaveEnd}</TableCell>
+                  <TableCell align="center">{data.attendDate}</TableCell>
+                  <TableCell align="center">{data.attendKind}</TableCell>
                   <TableCell align="center">
                     <OrderStatus status={data.status} />
                   </TableCell>

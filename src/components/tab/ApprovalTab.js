@@ -7,21 +7,16 @@ function ApprovalTab(props) {
   const { children, value, index, ...other } = props;
 
   return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
+    <div role="tabpanel" hidden={value !== index} id={`simple-tabpanel-${index}`} aria-labelledby={`simple-tab-${index}`} {...other}>
       {value === index && (
-        <Box sx={{ 
-            p: 3, 
-            border:"1px solid #e6ebf1",
-            height: "500px",
-            borderBottomLeftRadius: "8px",
-            borderBottomRightRadius: "8px"
-        }}>
+        <Box
+          sx={{
+            p: 3,
+            border: '1px solid #e6ebf1',
+            borderBottomLeftRadius: '8px',
+            borderBottomRightRadius: '8px'
+          }}
+        >
           <Typography>{children}</Typography>
         </Box>
       )}
@@ -32,7 +27,7 @@ function ApprovalTab(props) {
 ApprovalTab.propTypes = {
   children: PropTypes.node,
   index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired
 };
 
 export default ApprovalTab;

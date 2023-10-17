@@ -14,8 +14,10 @@ export const useTabState = create(
   devtools((set) => ({
     index: 0,
     tabNum: {},
+    tab: {},
     setIndex: (newIndex) => set(() => ({ index: newIndex })),
-    setTabNum: (newtabNum) => set(() => ({ tabNum: newtabNum }))
+    setTabNum: (newtabNum) => set(() => ({ tabNum: newtabNum })),
+    setTab: (newtabNum) => set(() => ({ tab: newtabNum }))
   }))
 );
 

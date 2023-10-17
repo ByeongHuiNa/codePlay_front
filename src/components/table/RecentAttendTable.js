@@ -145,7 +145,6 @@ OrderStatus.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-// eslint-disable-next-line react/prop-types
 export default function RecentAttendTable({ handleOpenUpdate }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
