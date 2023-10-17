@@ -13,7 +13,6 @@ function ApprovalTab(props) {
           sx={{
             p: 3,
             border: '1px solid #e6ebf1',
-            height: '500px',
             borderBottomLeftRadius: '8px',
             borderBottomRightRadius: '8px'
           }}
