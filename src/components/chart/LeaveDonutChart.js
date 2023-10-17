@@ -6,7 +6,7 @@ export default function LeaveDonutChart({ series }) {
   const chartOptions = {
     options: {
       chart: {
-        type: 'donut',
+        type: 'donut'
       },
       legend: {
         position: 'bottom'
@@ -27,17 +27,17 @@ export default function LeaveDonutChart({ series }) {
               value: {
                 fontSize: '22px',
                 show: true,
-                color: 'black',
+                color: 'black'
               }
-            },
+            }
           }
         }
       },
       dataLabels: {
         enabled: true,
         formatter: function (val, opts) {
-          return `${opts.w.config.series[opts.seriesIndex]}일`
-        },
+          return `${opts.w.config.series[opts.seriesIndex]}일`;
+        }
         // formatter: function (val, opts) {
         //   const originalData = opts.originalData;
         //   const originalValue = originalData[opts.seriesIndex][opts.dataPointIndex];
@@ -45,24 +45,17 @@ export default function LeaveDonutChart({ series }) {
         // },
       },
       // colors: ["#ffeb9b", "#c5f2ba"],
-      labels: ["사용연차", "잔여연차"],
+      labels: ['사용연차', '잔여연차'],
       series: series,
       title: {
         text: '나의 휴가 현황',
         align: 'center',
         style: {
-          fontSize: '16px' 
+          fontSize: '16px'
+        }
       }
-      },
     }
-  }
+  };
 
-return(
-  <ReactApexChart
-    options = { chartOptions.options }
-    series = { series }
-    type = "donut"
-    width = "400"
-        />
-)
-  }
+  return <ReactApexChart options={chartOptions.options} series={series} type="donut" width="400" />;
+}
