@@ -186,7 +186,7 @@ const Profile = () => {
                           </Tabs>
                         </Box>
                         <TabPanel value={value} index={0} dir={theme.direction}>
-                          <ProfileTab handleLogout={handleLogout} />
+                          <ProfileTab handleLogout={handleLogout} handleToggle={handleToggle} />
                         </TabPanel>
                         <TabPanel value={value} index={1} dir={theme.direction}>
                           <SettingTab />
