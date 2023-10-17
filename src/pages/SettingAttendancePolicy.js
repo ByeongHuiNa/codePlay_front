@@ -4,61 +4,34 @@ import { Typography } from '@mui/material';
 // project import
 import MainCard from 'components/MainCard';
 import InputSeach from 'components/Input/InputSearch';
-import SettingAccessTable from 'components/Table/SettingAccessTable';
-import { Avatar, Box, Grid, MenuItem, Stack, Tab, Tabs, TextField } from '../../node_modules/@mui/material/index';
+import { Grid } from '../../node_modules/@mui/material/index';
 
 //icon import
 import { useTabState, useTableListState } from 'store/module';
 import { useEffect } from 'react';
 import axios from '../../node_modules/axios/index';
+import SettingAttendancePolicyTable from 'components/Table/SettingAttendancePolicyTable';
+import SettingTab from 'components/tab/SettingTab';
+import AttendancePolicyDetailCard from 'components/Card/AttendancePolicyDetailCard';
 
 //zustand import
 
 // ==============================|| 관리자 권한관리 PAGE ||============================== //
 
 const SettingAttendancePolicy = () => {
-  const { index, setIndex, tabNum, setTabNum } = useTabState();
+  const { setIndex, setTab } = useTabState();
   const { setTableList } = useTableListState();
-  const endPoints = ['http://localhost:8000/get_authority_number', 'http://localhost:8000/get_user_authority_list?role=ROLE_USER'];
+  const endPoints = ['http://localhost:8000/get_policy_number', 'http://localhost:8000/get_user_authority_list?role=ROLE_USER'];
 
   useEffect(() => {
     setIndex(0);
     async function get() {
       const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
-      const temptabNum = {};
-      for (let i of result[0].data) {
-        temptabNum[i.id] = i.number;
-      }
-      setTabNum(temptabNum);
-      console.log(result[1]);
+      setTab(result[0].data);
       setTableList(result[1].data);
     }
     get();
   }, []);
-
-  const handleChange = (event, newValue) => {
-    setIndex(newValue);
-  };
-
-  //권한 고정(사용자, 근태담당자, 관리자, 메인관리자 추가 불가능)
-  const authority = [
-    {
-      value: 'user',
-      label: '사용자'
-    },
-    {
-      value: 'attendanceManager',
-      label: '근태담당자'
-    },
-    {
-      value: 'userManager',
-      label: '관리자'
-    },
-    {
-      value: 'mainManager',
-      label: '메인관리자'
-    }
-  ];
 
   return (
     <>
@@ -68,55 +41,12 @@ const SettingAttendancePolicy = () => {
           <MainCard>
             <Typography variant="h4">사용자명으로 검색</Typography>
             <InputSeach isPersonIcon={true}></InputSeach>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-              <Tabs value={index} onChange={handleChange} aria-label="basic tabs example">
-                <Tab label={`사용자(${tabNum.user})`} />
-                <Tab label={`근태담당자(${tabNum.attendanceManager})`} />
-                <Tab label={`관리자(${tabNum.userManager})`} />
-                <Tab label={`메인관리자(${tabNum.mainManager})`} />
-                {tabNum.custom == 0 ? '' : <Tab label={`맞춤접근사용자(${tabNum.custom})`} />}
-              </Tabs>
-            </Box>
-            <SettingAccessTable />
+            <SettingTab></SettingTab>
+            <SettingAttendancePolicyTable />
           </MainCard>
         </Grid>
         <Grid item xs={4}>
-          <MainCard>
-            <Stack direction="column" spacing={2}>
-              <TextField select size="normal" sx={{ width: 'auto' }}>
-                {authority.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-              <Stack direction="row" justifyContent="center" mb={3}>
-                <Avatar src="https://picsum.photos/id/1/200/300" sx={{ width: 150, height: 150 }}></Avatar>
-              </Stack>
-              <Stack direction="row" justifyContent="space-around">
-                <Typography variant="h4">홍길동</Typography>
-              </Stack>
-              <Stack direction="row" justifyContent="space-around">
-                <Typography variant="body2">개발팀/연구원</Typography>
-              </Stack>
-              <Stack direction="row" justifyContent="space-around" alignItems="center">
-                <TextField select size="normal" sx={{ width: '8rem' }}>
-                  {authority.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-                <TextField select size="normal" sx={{ width: '8rem' }}>
-                  {authority.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Stack>
-            </Stack>
-          </MainCard>
+          <AttendancePolicyDetailCard></AttendancePolicyDetailCard>
         </Grid>
       </Grid>
     </>
