@@ -3,8 +3,6 @@ import { lazy } from 'react';
 // project import
 import Loadable from 'components/Loadable';
 import MainLayout from 'layout/MainLayout';
-import UserLeave from 'pages/UserLeave';
-import ApprovalAttendance from 'pages/ApprovalAttendance';
 
 // render - dashboard
 const CalendarPage = Loadable(lazy(() => import('pages/CalendarPage')));
@@ -40,6 +38,12 @@ const SettingAttendancePolicy = Loadable(lazy(() => import('pages/SettingAttenda
 
 // render - user attendance
 const UserAttendance = Loadable(lazy(() => import('pages/UserAttendance')));
+// render - user leave
+const UserLeave = Loadable(lazy(() => import('pages/UserLeave')));
+// render - approval attendance
+const ApprovalAttendance = Loadable(lazy(() => import('pages/ApprovalAttendance')));
+// render - modify attendance
+const ModifyAttendance = Loadable(lazy(() => import('pages/ModifyAttendance')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -126,11 +130,15 @@ const MainRoutes = {
     },
     {
       path: 'approvalattendance',
-      element: <ApprovalAttendance/>
+      element: <ApprovalAttendance />
     },
     {
       path: 'settingAttendancePolicy',
       element: <SettingAttendancePolicy />
+    },
+    {
+      path: 'modifyattendance',
+      element: <ModifyAttendance />
     }
   ]
 };
