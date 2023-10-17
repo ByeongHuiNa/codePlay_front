@@ -47,7 +47,7 @@ export default function CalendarChart() {
   const [options, setOptions] = useState(barChartOptions);
   const theme = useTheme();
   const { primary, secondary } = theme.palette.text;
-  const info = theme.palette.info.light;
+  const info = theme.palette.primary.light;
 
   useEffect(() => {
     setOptions((prevState) => ({
@@ -57,7 +57,7 @@ export default function CalendarChart() {
         labels: {
           categories: newCategories,
           style: {
-            colors: [secondary, secondary]
+            colors: [primary, secondary]
           }
         }
       },

@@ -32,7 +32,7 @@ const SeeAllAttendance = () => {
 
   const [date, setDate] = useState(new Date('2023-10-16'));
   const [currentDate, setCurrentDate] = useState(new Date('2023-10-16'));
- 
+
   const [currentWeek, setCurrentWeek] = useState(0);
 
   const handlePrevDay = () => {
@@ -63,8 +63,6 @@ const SeeAllAttendance = () => {
 
     // 주차를 갱신
     setCurrentWeek(currentWeek + 1);
-
-    
   };
   useEffect(() => {
     // 현재 날짜를 가져오고 그 날짜의 주차를 계산
@@ -146,26 +144,42 @@ const SeeAllAttendance = () => {
               <Grid container rowSpacing={4} columnSpacing={2.75}>
                 <Grid item xs={2.5}>
                   <MainCard>
-                    <Typography variant="h4" align="center">전체</Typography>
-                    <Typography variant="h4" align="center">5건</Typography>
+                    <Typography variant="h4" align="center">
+                      전체
+                    </Typography>
+                    <Typography variant="h4" align="center">
+                      5건
+                    </Typography>
                   </MainCard>
                 </Grid>
                 <Grid item xs={2.5}>
                   <MainCard>
-                    <Typography variant="h4" align="center">정상</Typography>
-                    <Typography variant="h4" align="center">1건</Typography>
+                    <Typography variant="h4" align="center">
+                      정상
+                    </Typography>
+                    <Typography variant="h4" align="center">
+                      1건
+                    </Typography>
                   </MainCard>
                 </Grid>
                 <Grid item xs={2.5}>
                   <MainCard>
-                    <Typography variant="h4" align="center">근태이상</Typography>
-                    <Typography variant="h4" align="center">3건</Typography>
+                    <Typography variant="h4" align="center">
+                      근태이상
+                    </Typography>
+                    <Typography variant="h4" align="center">
+                      3건
+                    </Typography>
                   </MainCard>
                 </Grid>
                 <Grid item xs={2.5}>
                   <MainCard>
-                    <Typography variant="h4" align="center">휴가</Typography>
-                    <Typography variant="h4" align="center">1건</Typography>
+                    <Typography variant="h4" align="center">
+                      휴가
+                    </Typography>
+                    <Typography variant="h4" align="center">
+                      1건
+                    </Typography>
                   </MainCard>
                 </Grid>
               </Grid>
@@ -174,7 +188,7 @@ const SeeAllAttendance = () => {
           </Grid>
         </BasicTab>
         <BasicTab value={value2} index={1}>
-        <Grid item xs={12} sm={6} md={5} lg={7}>
+          <Grid item xs={12} sm={6} md={5} lg={7}>
             <MainCard>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <IconButton onClick={handlePrevWeek} aria-label="이전 날짜">
@@ -182,8 +196,8 @@ const SeeAllAttendance = () => {
                 </IconButton>
 
                 <Typography variant="h5" sx={{ textAlign: 'center', flexGrow: 1 }}>
-                {dept ? `${dept} 부서 출/퇴근 현황` : '개발 부서 출/퇴근 현황 '}
-                {currentDate.toLocaleDateString()} {currentWeek}주
+                  {dept ? `${dept} 부서 출/퇴근 현황` : '개발 부서 출/퇴근 현황 '}
+                  {currentDate.toLocaleDateString()} {currentWeek}주
                 </Typography>
                 <FormControl sx={{ minWidth: 100 }}>
                   <InputLabel id="demo-simple-select-label">부서</InputLabel>
@@ -201,26 +215,42 @@ const SeeAllAttendance = () => {
               <Grid container rowSpacing={4} columnSpacing={2.75}>
                 <Grid item xs={2.5}>
                   <MainCard>
-                    <Typography variant="h4" align="center">전체</Typography>
-                    <Typography variant="h4" align="center">5</Typography>
+                    <Typography variant="h4" align="center">
+                      전체
+                    </Typography>
+                    <Typography variant="h4" align="center">
+                      5
+                    </Typography>
                   </MainCard>
                 </Grid>
                 <Grid item xs={2.5}>
                   <MainCard>
-                    <Typography variant="h4" align="center">정상</Typography>
-                    <Typography variant="h4" align="center">1</Typography>
+                    <Typography variant="h4" align="center">
+                      정상
+                    </Typography>
+                    <Typography variant="h4" align="center">
+                      1
+                    </Typography>
                   </MainCard>
                 </Grid>
                 <Grid item xs={2.5}>
                   <MainCard>
-                    <Typography variant="h4" align="center">근태이상</Typography>
-                    <Typography variant="h4" align="center">3</Typography>
+                    <Typography variant="h4" align="center">
+                      근태이상
+                    </Typography>
+                    <Typography variant="h4" align="center">
+                      3
+                    </Typography>
                   </MainCard>
                 </Grid>
                 <Grid item xs={2.5}>
                   <MainCard>
-                    <Typography variant="h4" align="center">휴가</Typography>
-                    <Typography variant="h4" align="center">1건</Typography>
+                    <Typography variant="h4" align="center">
+                      휴가
+                    </Typography>
+                    <Typography variant="h4" align="center">
+                      1건
+                    </Typography>
                   </MainCard>
                 </Grid>
               </Grid>

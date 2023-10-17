@@ -94,6 +94,7 @@ OrderTableHead.propTypes = {
 
 // ==============================|| ORDER TABLE - STATUS ||============================== //
 
+// eslint-disable-next-line react/prop-types
 const OrderStatus = ({ status }) => {
   let color;
   let title;

@@ -2,6 +2,7 @@ import ReactApexChart from 'react-apexcharts';
 
 // ----------------------------------------------------------------------
 
+// eslint-disable-next-line react/prop-types
 export default function LeaveDonutChart({ series }) {
   const chartOptions = {
     options: {

@@ -9,7 +9,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
 import { INITIAL_EVENTS, createEventId } from './event-utils';
-import CalendarDepWortList from './CalendarDepWorkList';
+import CalendarDepWorkListTab from './CalendarDepWorkListTab';
 
 const PublicCalendar = () => {
   const Item = styled(Paper)(({ theme }) => ({
@@ -90,7 +90,7 @@ const PublicCalendar = () => {
             <Grid item>
               <Item>
                 <Grid container direction="row" justifyContent="space-between" alignItems="flex-start">
-                  <CalendarDepWortList></CalendarDepWortList>
+                  <CalendarDepWorkListTab></CalendarDepWorkListTab>
                 </Grid>
               </Item>
             </Grid>
