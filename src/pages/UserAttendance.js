@@ -9,6 +9,7 @@ import BasicContainer from 'components/container/BasicContainer';
 import MainCard from 'components/MainCard';
 import {
   Avatar,
+  // Avatar,
   Box,
   Button,
   FormControl,
@@ -23,7 +24,7 @@ import BasicTab from 'components/tab/BasicTab';
 import React, { useState } from 'react';
 import RecentAttendTable from '../components/Table/RecentAttendTable';
 import AttendChart from 'components/chart/AttendChart';
-import { CarryOutFilled, ProfileFilled, FormOutlined } from '@ant-design/icons';
+import { FormOutlined } from '@ant-design/icons';
 import AttendUpdateModal from '../components/Modal/AttendUpdateModal';
 import UpdateAttendTable from 'components/Table/UpdateAttendTable';
 import BasicDatePicker from 'components/DatePicker/BasicDatePicker';
@@ -73,8 +74,8 @@ const UserAttendance = () => {
     <ComponentSkeleton>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="출/퇴근 기록" icon={<CarryOutFilled />} />
-          <Tab label="정정 요청 목록" icon={<ProfileFilled />} />
+          <Tab label="출/퇴근 기록"/>
+          <Tab label="정정 요청 목록"/>
         </Tabs>
       </Box>
       <BasicTab value={value} index={0}>
@@ -124,7 +125,6 @@ const UserAttendance = () => {
                         <br />
                         오전 11 : 30 : 12
                       </Typography>
-                      {/* <Chip label="오전 11 : 30 : 12" variant="outlined" /> */}
                     </Grid>
                   </Grid>
                 </Box>
@@ -141,7 +141,6 @@ const UserAttendance = () => {
                         <br />
                         오전 11 : 30 : 12
                       </Typography>
-                      {/* <Chip label="오전 11 : 30 : 12" variant="outlined" /> */}
                     </Grid>
                   </Grid>
                 </Box>
