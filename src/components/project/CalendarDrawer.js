@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import { Grid } from '../../../node_modules/@mui/material/index';
 
 export default function CalendarDrawer() {
-  const [state, setState] = React.useState(false);
+  const [state, setState] = React.useState(true);
 
   const toggleDrawer = (open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {

@@ -7,7 +7,7 @@ import UserLeave from 'pages/UserLeave';
 import ApprovalAttendance from 'pages/ApprovalAttendance';
 
 // render - dashboard
-const Calendar = Loadable(lazy(() => import('pages/Calendar')));
+const CalendarPage = Loadable(lazy(() => import('pages/CalendarPage')));
 
 // render - dashboard
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
@@ -114,7 +114,7 @@ const MainRoutes = {
     },
     {
       path: 'calendar',
-      element: <Calendar />
+      element: <CalendarPage />
     },
     {
       path: 'userattendance',
