@@ -1,45 +1,51 @@
-import { Box, Tab, Tabs } from '../../../node_modules/@mui/material/index';
-import { useState } from 'react';
+import * as React from 'react';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import Divider from '@mui/material/Divider';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Avatar from '@mui/material/Avatar';
+import Typography from '@mui/material/Typography';
+import { Grid } from '../../../node_modules/@mui/material/index';
 
-function CustomTabPanel(props) {
-  const { children, value, index, ...other } = props;
-
+export default function CalendarDepWorkList() {
   return (
-    <div role="tabpanel" hidden={value !== index} id={`simple-tabpanel-${index}`} aria-labelledby={`simple-tab-${index}`} {...other}>
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-    </div>
+    <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+      <ListItem alignItems="flex-start" sx={{ p: 1 }}>
+        <Grid justifyContent="space-between" alignItems="center">
+          <ListItemAvatar>
+            <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ width: 28, height: 28 }} />
+          </ListItemAvatar>
+          <ListItemText primary="이이름" />
+          <ListItemText primary="일정 제목1" />
+          <React.Fragment>
+            <Typography component="span" variant="body2" color="text.primary">
+              시작일
+            </Typography>
+            <Typography component="span" variant="body2" color="text.primary">
+              종료일
+            </Typography>
+          </React.Fragment>
+        </Grid>
+      </ListItem>
+      <Divider variant="inset" component="li" />
+      <ListItem alignItems="flex-start">
+        <ListItemAvatar>
+          <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" />
+        </ListItemAvatar>
+        <ListItemText
+          primary="일정 제목2"
+          secondary={
+            <React.Fragment>
+              <Typography sx={{ display: 'inline' }} component="span" variant="body2" color="text.primary">
+                to Scott, Alex, Jennifer
+              </Typography>
+              {" — Wish I could come, but I'm out of town this…"}
+            </React.Fragment>
+          }
+        />
+      </ListItem>
+      <Divider variant="inset" component="li" />
+    </List>
   );
 }
-
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`
-  };
-}
-
-const CalendarDepWortList = () => {
-  const [value, setValue] = useState(0);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
-  return (
-    <Box sx={{ width: '100%' }}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="일정 목록" {...a11yProps(0)} />
-          <Tab label="휴가 목록" {...a11yProps(1)} />
-        </Tabs>
-      </Box>
-      <CustomTabPanel value={value} index={0}>
-        Item One
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
-        Item Two
-      </CustomTabPanel>
-    </Box>
-  );
-};
-export default CalendarDepWortList;

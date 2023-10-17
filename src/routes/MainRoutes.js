@@ -132,7 +132,7 @@ const MainRoutes = {
     },
     {
       path: 'approvalattendance',
-      element: <ApprovalAttendance/>
+      element: <ApprovalAttendance />
     },
     {
       path: 'settingAttendancePolicy',
