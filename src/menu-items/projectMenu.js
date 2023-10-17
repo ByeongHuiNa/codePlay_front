@@ -80,6 +80,14 @@ const projectMenu = {
       breadcrumbs: false
     },
     {
+      id: 'main',
+      title: '메인페이지',
+      type: 'item',
+      url: '/main',
+      icon: icons.PieChartOutlined,
+      breadcrumbs: false
+    },
+    {
       id: 'userInformation',
       title: '사용자정보',
       type: 'item',

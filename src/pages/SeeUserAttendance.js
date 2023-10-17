@@ -96,7 +96,7 @@ const SeeUserAttendance = () => {
         <BasicTab value={value2} index={1}>
           <Grid item xs={12}>
             <MainCard>
-
+            <ApprovalConfirmTable/>
             </MainCard>
           </Grid>
         </BasicTab>
