@@ -34,6 +34,14 @@ const userMenu = {
   type: 'group',
   children: [
     {
+      id: 'main',
+      title: '메인페이지',
+      type: 'item',
+      url: '/main',
+      icon: icons.PieChartOutlined,
+      breadcrumbs: false
+    },
+    {
       id: 'Calendar',
       title: '캘린더',
       type: 'item',
