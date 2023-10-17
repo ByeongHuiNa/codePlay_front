@@ -125,8 +125,7 @@ const OrderStatus = ({ status }) => {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-// eslint-disable-next-line react/prop-types
-export default function AdminAppLeaveTable({ appStatus, datas, setSelectData }) {
+export default function AdminAppLeaveTable({ appLeaveStatus, datas, setSelectLeaveData }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
@@ -163,9 +162,9 @@ export default function AdminAppLeaveTable({ appStatus, datas, setSelectData }) 
               const isItemSelected = isSelected(data.date);
               const labelId = `enhanced-table-checkbox-${index}`;
 
-              if (appStatus === 0 && (data.status === 0 || data.status === 1)) {
+              if (appLeaveStatus === 0 && (data.status === 0 || data.status === 1)) {
                 return;
-              } else if (appStatus === 1 && data.status === 2) {
+              } else if (appLeaveStatus === 1 && data.status === 2) {
                 return;
               }
 
@@ -178,7 +177,7 @@ export default function AdminAppLeaveTable({ appStatus, datas, setSelectData }) 
                   tabIndex={-1}
                   key={data.date}
                   selected={isItemSelected}
-                  onClick={() => setSelectData(data)}
+                  onClick={() => setSelectLeaveData(data)}
                 >
                   <TableCell component="th" id={labelId} scope="data" align="center">
                     {data.leaveUser}
