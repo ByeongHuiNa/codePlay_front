@@ -11,14 +11,12 @@ export default function LeaveDonutChart({ series }) {
       legend: {
         position: 'bottom'
       },
-      responsive: [{
-        breakpoint: 480,
-      }],
       plotOptions: {
         pie: {
           donut: {
+            size: '50%',
             labels: {
-              show: false,
+              show: true,
               total: {
                 showAlways: true,
                 show: true,
@@ -36,31 +34,26 @@ export default function LeaveDonutChart({ series }) {
         }
       },
       dataLabels: {
-        enabled: false,
+        enabled: true,
+        formatter: function (val, opts) {
+          return `${opts.w.config.series[opts.seriesIndex]}일`
+        },
+        // formatter: function (val, opts) {
+        //   const originalData = opts.originalData;
+        //   const originalValue = originalData[opts.seriesIndex][opts.dataPointIndex];
+        //   return `${originalValue} (${val}%)`;
+        // },
       },
-      colors: ["#ffeb9b", "#c5f2ba"],
+      // colors: ["#ffeb9b", "#c5f2ba"],
       labels: ["사용연차", "잔여연차"],
       series: series,
       title: {
         text: '나의 휴가 현황',
-        align: 'center'
-      },
-      tooltip: {
-        enabled: true,
-        shared: false,
+        align: 'center',
         style: {
-          fontSize: '14px', // 툴팁의 글꼴 크기 설정
-          color: '#000000', // 글꼴 색상 설정
-          background: '#333', // 툴팁의 배경색 설정
-          padding: {
-            left: 10,
-            right: 10,
-            top: 5,
-            bottom: 5
-          }, // 툴팁의 안쪽 여백 설정
-          borderRadius: '5px' // 툴팁의 테두리 모서리를 둥글게 만듭니다
-        }
+          fontSize: '16px' 
       }
+      },
     }
   }
 
