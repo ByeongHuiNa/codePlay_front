@@ -4,59 +4,42 @@ import PropTypes from 'prop-types';
 import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 // third-party
-import { Button, Pagination, Stack } from '../../../node_modules/@mui/material/index';
+import { Avatar, Button, Pagination, Stack } from '../../../node_modules/@mui/material/index';
 import { useDetailCardState, useTableListState } from 'store/module';
+import { useState } from 'react';
 
 const headCells = [
   {
     id: 'profileImage',
-    align: 'left',
-    disablePadding: false,
     label: '프로필사진'
   },
   {
     id: 'dept',
-    align: 'left',
-    disablePadding: false,
     label: '부서명'
   },
   {
     id: 'name',
-    align: 'right',
-    disablePadding: true,
     label: '이름'
   },
   {
     id: 'position',
-    align: 'left',
-    disablePadding: false,
     label: '직책'
   },
   {
     id: 'brith',
-    align: 'right',
-    disablePadding: false,
-    label: '생년월일'
+    label: '권한부여일'
   },
   {
     id: 'button',
-    align: 'center',
-    disablePadding: false,
     label: '버튼'
   }
 ];
-
 function OrderTableHead({ order, orderBy }) {
   return (
     <TableHead>
       <TableRow>
         {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align={headCell.align}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
+          <TableCell key={headCell.id} align="center" padding={'normal'} sortDirection={orderBy === headCell.id ? order : false}>
             {headCell.label}
           </TableCell>
         ))}
@@ -71,8 +54,13 @@ OrderTableHead.propTypes = {
 };
 
 export default function SettingAuthorityTable() {
+  const [order] = useState('asc');
+  const [orderBy] = useState('trackingNo');
+  const [selected] = useState([]);
+
+  const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
   const { tableContentList } = useTableListState();
-  const { setView, setId } = useDetailCardState();
+  const { setView } = useDetailCardState();
 
   return (
     <>
@@ -114,15 +102,15 @@ export default function SettingAuthorityTable() {
                     key={row.trackingNo}
                     selected={isItemSelected}
                   >
-                    <TableCell component="th" id={labelId} scope="row" align="left">
-                      {row.url}
+                    <TableCell component="th" id={labelId} scope="row" align="center">
+                      <Avatar src={row.profile_url} sx={{ width: 50, height: 50, margin: 'auto' }}></Avatar>
                     </TableCell>
-                    <TableCell align="left">{row.dept}</TableCell>
-                    <TableCell align="right">{row.name}</TableCell>
-                    <TableCell align="left">{row.position}</TableCell>
-                    <TableCell align="right">{row.brith}</TableCell>
-                    <TableCell align="right">
-                      <Button> 사용자 정보 변경</Button>
+                    <TableCell align="center">{row.dept}</TableCell>
+                    <TableCell align="center">{'홍길동'}</TableCell>
+                    <TableCell align="center">{row.position}</TableCell>
+                    <TableCell align="center">{row.authority_date}</TableCell>
+                    <TableCell align="center">
+                      <Button onClick={() => setView(true)}> 권한 변경</Button>
                     </TableCell>
                   </TableRow>
                 );
