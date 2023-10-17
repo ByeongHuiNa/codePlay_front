@@ -2,10 +2,8 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 
 // material-ui
-import { Box, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-
-// project import
-import { Button, Chip } from '../../../node_modules/@mui/material/index';
+import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Chip, Stack } from '../../../node_modules/@mui/material/index';
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -37,6 +35,18 @@ function stableSort(array, comparator) {
 
 const headCells = [
     {
+        id: 'leaveUser',
+        align: 'center',
+        disablePadding: false,
+        label: '휴가신청자'
+    },
+    {
+        id: 'leaveKind',
+        align: 'center',
+        disablePadding: false,
+        label: '휴가종류'
+    },
+    {
         id: 'leaveStart',
         align: 'center',
         disablePadding: false,
@@ -49,40 +59,10 @@ const headCells = [
         label: '휴가종료일'
     },
     {
-        id: 'leaveType',
-        align: 'center',
-        disablePadding: false,
-        label: '휴가종류'
-    },
-    {
-        id: 'leaveCnt',
-        align: 'center',
-        disablePadding: false,
-        label: '휴가사용일수'
-    },
-    {
-        id: 'appDate',
-        align: 'center',
-        disablePadding: false,
-        label: '결재일'
-    },
-    {
-        id: 'approver',
-        align: 'center',
-        disablePadding: false,
-        label: '결재자'
-    },
-    {
         id: 'status',
         align: 'center',
         disablePadding: false,
         label: '결재상태'
-    },
-    {
-        id: 'cancel',
-        align: 'center',
-        disablePadding: false,
-        label: '취소신청'
     }
 ];
 
@@ -142,30 +122,15 @@ const OrderStatus = ({ status }) => {
     );
 };
 
-OrderStatus.propTypes = {
-    status: PropTypes.number
-};
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function AppLeaveTable({requestLeaveCancel}) {
+export default function AdminAppLeaveTable({appStatus, datas, setSelectData}) {
     const [order] = useState('asc');
     const [orderBy] = useState('trackingNo');
     const [selected] = useState([]);
 
     const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
-
-    function createData(leaveStart, leaveEnd, leaveType, leaveCnt, appDate, approver, status) {
-        return { leaveStart, leaveEnd, leaveType, leaveCnt, appDate, approver, status };
-    }
-
-    const datas = [
-        createData('2023/10/11', '2023/10/11', '연차', '1', '2023/10/07', '이유나 팀장', 0),
-        createData('2023/10/11', '2023/10/11', '반차(오전)', '0.5', '2023/10/07', '이유나 팀장', 0),
-        createData('2023/10/11', '2023/10/11', '연차', '1', '2023/10/07', '이유나 팀장', 1),
-        createData('2023/10/11', '2023/10/13', '연차', '3', '2023/10/07', '이유나 팀장', 0),
-        createData('2023/10/11',  '2023/10/11', '연차', '1', '2023/10/07', '이유나 팀장', 0),
-    ];
 
     return (
         <Box>
@@ -176,6 +141,7 @@ export default function AppLeaveTable({requestLeaveCancel}) {
                     position: 'relative',
                     display: 'block',
                     maxWidth: '100%',
+                    height: '420px',
                     '& td, & th': { whiteSpace: 'nowrap' }
                 }}
             >
@@ -187,7 +153,7 @@ export default function AppLeaveTable({requestLeaveCancel}) {
                         },
                         '& .MuiTableCell-root:last-of-type': {
                             pr: 3
-                        }
+                        },
                     }}
                 >
                     <OrderTableHead order={order} orderBy={orderBy} />
@@ -196,31 +162,31 @@ export default function AppLeaveTable({requestLeaveCancel}) {
                             const isItemSelected = isSelected(data.date);
                             const labelId = `enhanced-table-checkbox-${index}`;
 
+                            if(appStatus === 0 && (data.status === 0 || data.status === 1)){
+                                return;
+                            } else if(appStatus === 1 && data.status === 2){
+                                return;
+                            }
+
                             return (
                                 <TableRow
                                     hover
                                     role="checkbox"
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    sx={{ '&:last-child td, &:last-child th': { border: 0 }}}
                                     aria-checked={isItemSelected}
                                     tabIndex={-1}
                                     key={data.date}
                                     selected={isItemSelected}
+                                    onClick={() => setSelectData(data)}
                                 >
                                     <TableCell component="th" id={labelId} scope="data" align="center">
-                                        {data.leaveStart}
+                                        {data.leaveUser}
                                     </TableCell>
+                                    <TableCell align="center">{data.leaveKind}</TableCell>
+                                    <TableCell align="center">{data.leaveStart}</TableCell>
                                     <TableCell align="center">{data.leaveEnd}</TableCell>
-                                    <TableCell align="center">{data.leaveType}</TableCell>
-                                    <TableCell align="center">{data.leaveCnt}</TableCell>
-                                    <TableCell align="center">{data.appDate}</TableCell>
-                                    <TableCell align="center">{data.approver}</TableCell>
                                     <TableCell align="center">
                                         <OrderStatus status={data.status} />
-                                    </TableCell>
-                                    <TableCell align="center">
-                                        <Button variant="contained" size="small" onClick={requestLeaveCancel}>
-                                                취소신청
-                                        </Button>
                                     </TableCell>
                                 </TableRow>
                             );

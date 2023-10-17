@@ -4,9 +4,10 @@ import { lazy } from 'react';
 import Loadable from 'components/Loadable';
 import MainLayout from 'layout/MainLayout';
 import UserLeave from 'pages/UserLeave';
+import ApprovalAttendance from 'pages/ApprovalAttendance';
 
 // render - dashboard
-const Calendar = Loadable(lazy(() => import('pages/Calendar')));
+const CalendarPage = Loadable(lazy(() => import('pages/CalendarPage')));
 
 // render - dashboard
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
@@ -37,6 +38,7 @@ const UserInformationModify = Loadable(lazy(() => import('pages/UserInformationM
 const QueryUserInformation = Loadable(lazy(() => import('pages/QueryUserInformation')));
 const SettingAccess = Loadable(lazy(() => import('pages/SettingAccess')));
 const SettingAuthority = Loadable(lazy(() => import('pages/SettingAuthority')));
+const SettingAttendancePolicy = Loadable(lazy(() => import('pages/SettingAttendancePolicy')));
 
 // render - user attendance
 const UserAttendance = Loadable(lazy(() => import('pages/UserAttendance')));
@@ -118,7 +120,7 @@ const MainRoutes = {
     },
     {
       path: 'calendar',
-      element: <Calendar />
+      element: <CalendarPage />
     },
     {
       path: 'userattendance',
@@ -127,6 +129,14 @@ const MainRoutes = {
     {
       path: 'userleave',
       element: <UserLeave />
+    },
+    {
+      path: 'approvalattendance',
+      element: <ApprovalAttendance/>
+    },
+    {
+      path: 'settingAttendancePolicy',
+      element: <SettingAttendancePolicy />
     }
   ]
 };

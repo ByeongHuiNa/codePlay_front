@@ -5,11 +5,13 @@ import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 import GroupsIcon from '@mui/icons-material/Groups';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import CalendarShared from 'components/project/CalendarShared';
+import PersonalCalendar from 'components/project/PersonalCalendar';
+import PublicCalendar from 'components/project/PublicCalendar';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
 function CustomTabPanel(props) {
+  // eslint-disable-next-line react/prop-types
   const { children, value, index, ...other } = props;
 
   return (
@@ -30,7 +32,7 @@ function a11yProps(index) {
   };
 }
 
-const Calendar = () => {
+const CalendarPage = () => {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -47,14 +49,14 @@ const Calendar = () => {
       </Box>
       <CustomTabPanel value={value} index={0}>
         {/* 개인 캘린더 컴포넌트 */}
-        <CalendarShared />
+        <PersonalCalendar></PersonalCalendar>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
         {/* 공용 캘린더 컴포넌트 */}
-        <CalendarShared />
+        <PublicCalendar></PublicCalendar>
       </CustomTabPanel>
     </Box>
   );
 };
 
-export default Calendar;
+export default CalendarPage;

@@ -9,12 +9,14 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
 import { INITIAL_EVENTS, createEventId } from './event-utils';
-import CalendarChart from './CalendarChart';
-import CalendarList from './CalendarList';
+import CalendarVacationStatus from './CalendarVacationStatus';
+import CalendarWorkList from './CalendarWorkList';
+import { Stack } from '../../../node_modules/@mui/material/index';
+import { IconButton } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 
-const CalendarShared = () => {
-
-
+const PersonalCalendar = () => {
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: '#fff',
     ...theme.typography.body2,
@@ -36,7 +38,6 @@ const CalendarShared = () => {
   function handleDateSelect(selectInfo) {
     let title = prompt(`이벤트를 생성 하시겠습니까? ${selectInfo.startStr}`);
     let calendarApi = selectInfo.view.calendar;
-    console.log(selectInfo.view);
 
     calendarApi.unselect(); // clear date selection
 
@@ -92,15 +93,44 @@ const CalendarShared = () => {
           <Grid item xs={3} justifyContent="flex-start">
             <Grid item>
               <Item>
-                <h3>휴가현황</h3>
-                <CalendarChart />
+                <Grid container direction="row" justifyContent="space-between" alignItems="flex-start">
+                  <Grid pl>
+                    <h3>휴가현황</h3>
+                  </Grid>
+                  <Grid>
+                    <h4>더보기</h4>
+                  </Grid>
+                </Grid>
+                <CalendarVacationStatus />
               </Item>
             </Grid>
 
             <Grid item mt={2}>
               <Item>
-                <h3>업무 및 일정</h3>
-                <CalendarList />
+                <Grid container direction="row" justifyContent="space-between" alignItems="flex-start">
+                  <Grid pl>
+                    <h3>업무 및 일정</h3>
+                  </Grid>
+                  <Grid container justifyContent="flex-end">
+                    <Stack direction="row" spacing={1}>
+                      <IconButton
+                        onClick={() => {
+                          console.log('+');
+                        }}
+                      >
+                        <AddIcon />
+                      </IconButton>
+                      <IconButton
+                        onClick={() => {
+                          console.log('-');
+                        }}
+                      >
+                        <RemoveIcon />
+                      </IconButton>
+                    </Stack>
+                  </Grid>
+                </Grid>
+                <CalendarWorkList />
               </Item>
             </Grid>
           </Grid>
@@ -110,4 +140,4 @@ const CalendarShared = () => {
   );
 };
 
-export default CalendarShared;
+export default PersonalCalendar;
