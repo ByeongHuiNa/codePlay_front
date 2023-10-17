@@ -27,7 +27,7 @@ const headCells = [
   },
   {
     id: 'brith',
-    label: '권한부여일'
+    label: '정책지정일'
   },
   {
     id: 'button',
@@ -53,7 +53,7 @@ OrderTableHead.propTypes = {
   orderBy: PropTypes.string
 };
 
-export default function SettingAuthorityTable() {
+export default function SettingAttendancePolicyTable() {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);

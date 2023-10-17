@@ -13,6 +13,11 @@
       { "id":"mainManager", "name": "메인관리자", "number" : 2 },
       { "id":"custom", "name" : "맞춤", "number" : 5}
     ],
+    "get_policy_number" : [
+      { "id":"eightToFive", "name": "8 TO 5", "number" : 200 },
+      { "id":"nineToSix", "name": "9 TO 6", "number" : 30 },
+      { "id":"tenToSeven", "name": "10 TO 7", "number" : 10 }
+    ],
     "get_user_authority_list" : [
       { "id":0, "url": "https://picsum.photos/id/1/200/300","dept":"인사팀", "position":"사원", 
       "role": "ROLE_USER", "authority_date":"2023-10-13","number" : 200 },
