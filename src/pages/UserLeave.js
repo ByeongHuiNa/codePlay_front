@@ -23,7 +23,6 @@ import {
 } from '../../node_modules/@mui/material/index';
 import BasicTab from 'components/tab/BasicTab';
 import React, { useState } from 'react';
-import { FileTextFilled, FileAddFilled, FileExcelFilled } from '@ant-design/icons';
 import LeaveDonutChart from 'components/chart/LeaveDonutChart';
 import AppLeaveTable from 'components/Table/AppLeaveTable';
 import UnappLeaveTable from 'components/Table/UnappLeaveTable';
@@ -156,9 +155,9 @@ const UserLeave = () => {
     <ComponentSkeleton>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="휴가조회" icon={<FileTextFilled />} />
-          <Tab label="휴가신청" icon={<FileAddFilled />} />
-          <Tab label="휴가취소신청" icon={<FileExcelFilled />} />
+          <Tab label="휴가조회" />
+          <Tab label="휴가신청" />
+          <Tab label="휴가취소신청" />
         </Tabs>
       </Box>
       <BasicTab value={value} index={0}>
