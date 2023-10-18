@@ -40,8 +40,8 @@ const InputSearch = ({ id, onClick, isPersonIcon }) => {
 
 InputSearch.propTypes = {
   id: PropTypes.string,
-  onClick: PropTypes.function,
-  isPersonIcon: PropTypes.Boolean
+  onClick: PropTypes.func,
+  isPersonIcon: PropTypes.bool
 };
 
 InputSearch.defaultProps = {
