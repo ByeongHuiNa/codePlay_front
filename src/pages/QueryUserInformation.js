@@ -45,13 +45,13 @@ const QueryUserInformation = () => {
     <>
       {/* 조직도 내 직책별 정렬 필요 */}
       <Typography variant="h2">조직도</Typography>
-      <Grid container xs={12} direction="row" spacing={3}>
+      <Grid container direction="row" spacing={3}>
         <Grid item xs={2}>
           <MainCard>
             <TreeView defaultCollapseIcon={<ExpandMoreIcon />} defaultExpandIcon={<ChevronRightIcon />}>
               {Object.keys(OrganizationChart).map((dept, index) => {
                 return (
-                  <TreeItem key={index} nodeId={index} label={dept}>
+                  <TreeItem key={index+''} nodeId={index+''} label={dept}>
                     {OrganizationChart[dept] &&
                       OrganizationChart[dept].map((value, index) => {
                         return <TreeItem key={dept + index} nodeId={dept + index} label={value.name + ' ' + value.position}></TreeItem>;
