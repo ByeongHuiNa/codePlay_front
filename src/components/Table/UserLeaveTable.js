@@ -55,12 +55,6 @@ const headCells = [
         label: '휴가종료일'
     },
     {
-        id: 'leaveCnt',
-        align: 'center',
-        disablePadding: false,
-        label: '휴가사용일수'
-    },
-    {
         id: 'leaveStatus',
         align: 'center',
         disablePadding: false,
@@ -195,7 +189,7 @@ export default function UserLeaveTable() {
                                     </TableCell>
                                     <TableCell align="center">{data.leaveStart}</TableCell>
                                     <TableCell align="center">{data.leaveEnd}</TableCell>
-                                    <TableCell align="center">{data.leaveCnt}</TableCell>
+                                    
                                     <TableCell align="center">
                                         <UserLeaveStatus status={data.leaveStatus} />
                                     </TableCell>

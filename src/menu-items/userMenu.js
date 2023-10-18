@@ -1,5 +1,6 @@
 // assets
 import {
+  HomeOutlined,
   CalendarOutlined,
   CarOutlined,
   SmileOutlined,
@@ -14,6 +15,7 @@ import {
 
 // icons
 const icons = {
+  HomeOutlined,
   CalendarOutlined,
   CarOutlined,
   SmileOutlined,
@@ -33,6 +35,14 @@ const userMenu = {
   title: '사용자메뉴',
   type: 'group',
   children: [
+    {
+      id: 'main',
+      title: '메인페이지',
+      type: 'item',
+      url: '/main',
+      icon: icons.HomeOutlined,
+      breadcrumbs: false
+    },
     {
       id: 'Calendar',
       title: '캘린더',

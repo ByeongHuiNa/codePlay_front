@@ -134,7 +134,10 @@ const UserAttendanceTotalPage = () => {
         <Grid container rowSpacing={4} columnSpacing={2.75}>
           {/* row 2 */}
           <Grid item xs={12} sm={6} md={5} lg={7}>
-            <MainCard title="결재진행중">
+            <MainCard>
+            <div>
+      <Typography variant="h6">결재진행중</Typography>
+    </div>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <FormControl>
                   <InputLabel id="demo-simple-select-label">월</InputLabel>
