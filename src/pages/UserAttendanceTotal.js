@@ -128,16 +128,12 @@ const UserAttendanceTotalPage = () => {
       {/* tab 1 */}
       {/* row 1 */}
       <BasicTab value={value} index={0}>
-        <Grid item xs={12} sx={{ mb: 5 }}>
-          <Typography variant="h5">휴가현황조회페이지</Typography>
-        </Grid>
         <Grid container rowSpacing={4} columnSpacing={2.75}>
           {/* row 2 */}
           <Grid item xs={12} sm={6} md={5} lg={7}>
             <MainCard>
-            <div>
-      <Typography variant="h6">결재진행중</Typography>
-    </div>
+                <Typography variant="h5">결재대기내역</Typography>
+              
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <FormControl>
                   <InputLabel id="demo-simple-select-label">월</InputLabel>
@@ -155,7 +151,8 @@ const UserAttendanceTotalPage = () => {
 
           {/* row 2 - 결재완료 그리드 */}
           <Grid item xs={12} sm={6} md={5} lg={7}>
-            <MainCard title="결재완료">
+            <MainCard>
+            <Typography variant="h5">결재대기내역</Typography>
               <Box sx={{ minWidth: 40 }}>
                 <FormControl>
                   <InputLabel id="demo-simple-select-label">월</InputLabel>
@@ -298,7 +295,7 @@ const UserAttendanceTotalPage = () => {
 
           {/* row 3 - 휴가현황 그리드 */}
           <Grid item xs={12} sm={7} md={5} lg={4}>
-            <MainCard title="휴가현황" sx={{ marginTop: -36 }}>
+            <MainCard title="휴가현황">
               <ReactApexChart options={options} series={series} type="donut" height={365} />
               <Grid container rowSpacing={4} columnSpacing={2.75}>
                 <Grid item xs={4}>
