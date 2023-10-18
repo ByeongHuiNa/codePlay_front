@@ -1,5 +1,6 @@
 // assets
 import {
+  HomeOutlined,
   CalendarOutlined,
   CarOutlined,
   SmileOutlined,
@@ -14,6 +15,7 @@ import {
 
 // icons
 const icons = {
+  HomeOutlined,
   CalendarOutlined,
   CarOutlined,
   SmileOutlined,
@@ -38,7 +40,7 @@ const userMenu = {
       title: '메인페이지',
       type: 'item',
       url: '/main',
-      icon: icons.PieChartOutlined,
+      icon: icons.HomeOutlined,
       breadcrumbs: false
     },
     {
