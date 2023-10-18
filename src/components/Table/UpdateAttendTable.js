@@ -112,7 +112,7 @@ const OrderStatus = ({ status }) => {
       title = '결재승인';
       break;
     case 1:
-      color = "error";
+      color = 'error';
       title = '결재반려';
       break;
     case 2:
@@ -133,7 +133,7 @@ OrderStatus.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function UpdateAttendTable({handleOpenRead}) {
+export default function UpdateAttendTable({ handleOpenRead }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
@@ -153,7 +153,7 @@ export default function UpdateAttendTable({handleOpenRead}) {
     createData('2023/10/07', '이유나/231005/출근', '2023/10/05', '출근', 0),
     createData('2023/10/07', '이유나/231005/출근', '2023/10/05', '출근', 2),
     createData('2023/10/07', '이유나/231005/출근', '2023/10/05', '출근', 2),
-    createData('2023/10/07', '이유나/231005/출근', '2023/10/05', '출근', 0),
+    createData('2023/10/07', '이유나/231005/출근', '2023/10/05', '출근', 0)
   ];
 
   return (
@@ -203,7 +203,7 @@ export default function UpdateAttendTable({handleOpenRead}) {
                   <TableCell align="center">{data.updateDate}</TableCell>
                   <TableCell align="center">{data.updateItem}</TableCell>
                   <TableCell align="center">
-                    <OrderStatus status={data.status}  handleOpenRead={handleOpenRead} />
+                    <OrderStatus status={data.status} handleOpenRead={handleOpenRead} />
                   </TableCell>
                 </TableRow>
               );
