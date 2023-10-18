@@ -56,6 +56,14 @@ const attendanceManagerMenu = {
       url: '/approvalattendance',
       icon: icons.ReconciliationOutlined,
       breadcrumbs: false
+    },
+    {
+      id: 'modifyAttendance',
+      title: '근태현황수정',
+      type: 'item',
+      url: '/modifyattendance',
+      icon: icons.ReconciliationOutlined,
+      breadcrumbs: false
     }
   ]
 };
