@@ -8,7 +8,6 @@ import ComponentSkeleton from './components-overview/ComponentSkeleton';
 import BasicContainer from 'components/container/BasicContainer';
 import MainCard from 'components/MainCard';
 import {
-  Avatar,
   Box,
   Button,
   FormControl,
