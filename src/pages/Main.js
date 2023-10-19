@@ -14,11 +14,13 @@ const Main = () => (
   <Grid container xs={12} spacing={2}>
     <Grid item xs={4} sm={4} md={4} lg={4}>
       <MainCard sx={{ height: '350px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px' }}>
-        <Typography align="left" variant="h5">
-          내 정보
-        </Typography>
-        <Link href="/userInformation" variant="h5">더보기</Link>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px' }}>
+          <Typography align="left" variant="h5">
+            내 정보
+          </Typography>
+          <Link href="/userInformation" variant="h5">
+            더보기
+          </Link>
         </div>
         <Box clone my={2} align="center" sx={{ marginBottom: 5 }}>
           <Avatar alt="프로필" src="" sx={{ width: 150, height: 150 }} />
@@ -125,11 +127,13 @@ const Main = () => (
 
     <Grid item xs={4}>
       <MainCard>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px' }}>
-        <Typography align="left" variant="h5">
-          휴가신청목록
-        </Typography>
-        <Link href="/userleave" variant="h5">더보기</Link>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px' }}>
+          <Typography align="left" variant="h5">
+            휴가신청목록
+          </Typography>
+          <Link href="/userleave" variant="h5">
+            더보기
+          </Link>
         </div>
         <UserLeaveTable />
       </MainCard>
@@ -137,11 +141,13 @@ const Main = () => (
 
     <Grid item xs={4}>
       <MainCard sx={{ height: '100%' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px' , marginBottom: '30px'}}>
-        <Typography align="left" variant="h5" >
-          휴가현황
-        </Typography>
-        <Link href="/userleave" variant="h5">더보기</Link>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px', marginBottom: '30px' }}>
+          <Typography align="left" variant="h5">
+            휴가현황
+          </Typography>
+          <Link href="/userleave" variant="h5">
+            더보기
+          </Link>
         </div>
         <VacationDonutChart />
       </MainCard>
