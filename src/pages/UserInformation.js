@@ -6,6 +6,8 @@ import { useNavigate } from '../../node_modules/react-router-dom/dist/index';
 import MainCard from 'components/MainCard';
 import { Avatar } from '../../node_modules/@mui/material/index';
 import { useProfileState } from 'store/module';
+import { useEffect } from 'react';
+import axios from '../../node_modules/axios/index';
 
 // ==============================|| 유저 정보 PAGE ||============================== //
 
@@ -17,7 +19,17 @@ const UserInformation = () => {
   }
 
   //화면 초기값 셋팅
-  const { profile } = useProfileState();
+  const { profile, setProfile } = useProfileState();
+  //TODO: 로그인한 사용자의 user_no 가져올것.
+  const endPoints = ['http://localhost:8000/user_information?user_no=0'];
+
+  useEffect(() => {
+    async function get() {
+      const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
+      setProfile(result[0].data);
+    }
+    get();
+  }, []);
 
   return (
     <>
@@ -68,7 +80,7 @@ const UserInformation = () => {
                     <Typography variant="h4">이메일주소</Typography>
                   </Grid>
                   <Grid item xs={9}>
-                    <Typography variant="h4">{profile.email}</Typography>
+                    <Typography variant="h4">{profile.user_email}</Typography>
                   </Grid>
                 </Grid>
               </Grid>
