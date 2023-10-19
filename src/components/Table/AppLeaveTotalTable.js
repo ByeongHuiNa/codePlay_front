@@ -1,28 +1,12 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 
 // material-ui
-import { Box, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
-
-// // third-party
-// import NumberFormat from 'react-number-format';
+import { Box, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 // project import
-import Dot from 'components/@extended/Dot';
-import { Pagination } from '../../../node_modules/@mui/material/index';
-
-function createData(name, position, start, end, hours, status) {
-  return { name, position, start, end, hours, status };
-}
-
-const rows = [
-  createData('나병희', '주임', '09:00', '18:00', 8, 0),
-  createData('홍길동', '연구원', '10:00', '18:00', 7, 2),
-  createData('이순신', '팀장', '09:00', '18:00', 8, 1),
-  createData('아무개', '주임', '09:00', '14:00', 4, 3),
-  createData('나병희', '주임', '00:00', '00:00', 0, 4)
-];
+import { Button, Chip, Pagination } from '../../../node_modules/@mui/material/index';
+import LeaveModal from 'components/Modal/LeaveModal';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -54,46 +38,58 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: 'name',
+    id: 'leaveStart',
     align: 'center',
     disablePadding: false,
-    label: '이름'
+    label: '휴가시작일'
   },
   {
-    id: 'position',
-    align: 'center',
-    disablePadding: true,
-    label: '직책'
-  },
-  {
-    id: 'start',
+    id: 'leaveEnd',
     align: 'center',
     disablePadding: false,
-    label: '출근시간'
+    label: '휴가종료일'
   },
   {
-    id: 'end',
+    id: 'leaveType',
     align: 'center',
     disablePadding: false,
-    label: '퇴근시간'
+    label: '휴가종류'
   },
   {
-    id: 'hours',
+    id: 'leaveCnt',
     align: 'center',
     disablePadding: false,
-    label: '근무시간'
+    label: '휴가사용일수'
+  },
+  {
+    id: 'appDate',
+    align: 'center',
+    disablePadding: false,
+    label: '결재일'
+  },
+  {
+    id: 'approver',
+    align: 'center',
+    disablePadding: false,
+    label: '결재자'
   },
   {
     id: 'status',
     align: 'center',
     disablePadding: false,
-    label: '근태상태'
+    label: '결재상태'
+  },
+  {
+    id: 'cancel',
+    align: 'center',
+    disablePadding: false,
+    label: '취소신청'
   }
 ];
 
 // ==============================|| ORDER TABLE - HEADER ||============================== //
 
-function AttendanceDayTableHead({ order, orderBy }) {
+function OrderTableHead({ order, orderBy }) {
   return (
     <TableHead>
       <TableRow>
@@ -112,65 +108,74 @@ function AttendanceDayTableHead({ order, orderBy }) {
   );
 }
 
-AttendanceDayTableHead.propTypes = {
+OrderTableHead.propTypes = {
   order: PropTypes.string,
   orderBy: PropTypes.string
 };
 
 // ==============================|| ORDER TABLE - STATUS ||============================== //
 
-const AttendanceDayStatus = ({ status }) => {
+const OrderStatus = ({ status }) => {
   let color;
   let title;
 
-  // 0 : 정상출근
-  // 1 : 휴가(연차,반차,공가)
-  // 2 : 지각
-  // 3 : 조퇴(조기퇴근)
-  // 4 : 결근(출근 혹은 퇴근누락))
-
+  // 0 : 결재완료(승인)
+  // 1 : 결재완료(반려)
+  // 2 : 결재대기
   switch (status) {
     case 0:
       color = 'success';
-      title = '정상';
+      title = '결재승인';
       break;
     case 1:
-      color = 'primary';
-      title = '휴가';
+      color = 'error';
+      title = '결재반려';
       break;
     case 2:
-      color = 'secondary';
-      title = '지각';
-      break;
-    case 3:
-      color = 'warning';
-      title = '조퇴';
-      break;
-    case 4:
-      color = 'error';
-      title = '결근';
+      color = 'primary';
+      title = '결재대기';
   }
 
   return (
     <Stack direction="row" alignItems="center" justifyContent="center" spacing={1}>
-      <Dot color={color} />
-      <Typography>{title}</Typography>
+      <Chip label={title} color={color} />
     </Stack>
   );
 };
 
-AttendanceDayStatus.propTypes = {
+OrderStatus.propTypes = {
   status: PropTypes.number
 };
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function AttendanceDayTable() {
+export default function AppLeaveTotalTable({ requestLeaveCancel }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleOpen = () => {
+    setModalOpen(true);
+  };
+
+  const handleClose = () => {
+    setModalOpen(false);
+  };
 
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
+
+  function createData(leaveStart, leaveEnd, leaveType, leaveCnt, appDate, approver, status) {
+    return { leaveStart, leaveEnd, leaveType, leaveCnt, appDate, approver, status };
+  }
+
+  const datas = [
+    createData('2023/10/11', '2023/10/11', '연차', '1', '2023/10/07', '이유나 팀장', 0),
+    createData('2023/10/11', '2023/10/11', '반차(오전)', '0.5', '2023/10/07', '이유나 팀장', 0),
+    createData('2023/10/11', '2023/10/11', '연차', '1', '2023/10/07', '이유나 팀장', 1),
+    createData('2023/10/11', '2023/10/13', '연차', '3', '2023/10/07', '이유나 팀장', 0),
+    createData('2023/10/11', '2023/10/11', '연차', '1', '2023/10/07', '이유나 팀장', 0)
+  ];
 
   return (
     <Box>
@@ -195,10 +200,10 @@ export default function AttendanceDayTable() {
             }
           }}
         >
-          <AttendanceDayTableHead order={order} orderBy={orderBy} />
+          <OrderTableHead order={order} orderBy={orderBy} />
           <TableBody>
-            {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
-              const isItemSelected = isSelected(row.date);
+            {stableSort(datas, getComparator(order, orderBy)).map((data, index) => {
+              const isItemSelected = isSelected(data.date);
               const labelId = `enhanced-table-checkbox-${index}`;
 
               return (
@@ -208,20 +213,29 @@ export default function AttendanceDayTable() {
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   aria-checked={isItemSelected}
                   tabIndex={-1}
-                  key={row.trackingNo}
+                  key={data.date}
                   selected={isItemSelected}
+                  onClick={handleOpen}
+                
+                  
+                  
                 >
-                  <TableCell component="th" id={labelId} scope="row" align="center">
-                    <Link color="secondary" component={RouterLink} to="">
-                      {row.name}
-                    </Link>
+                  {modalOpen && <LeaveModal open={handleOpen} handleClose={handleClose} />}
+                  <TableCell component="th" id={labelId} scope="data" align="center">
+                    {data.leaveStart}
                   </TableCell>
-                  <TableCell align="center">{row.position}</TableCell>
-                  <TableCell align="center">{row.start}</TableCell>
-                  <TableCell align="center">{row.end}</TableCell>
-                  <TableCell align="center">{row.hours}</TableCell>
+                  <TableCell align="center">{data.leaveEnd}</TableCell>
+                  <TableCell align="center">{data.leaveType}</TableCell>
+                  <TableCell align="center">{data.leaveCnt}</TableCell>
+                  <TableCell align="center">{data.appDate}</TableCell>
+                  <TableCell align="center">{data.approver}</TableCell>
                   <TableCell align="center">
-                    <AttendanceDayStatus status={row.status} />
+                    <OrderStatus status={data.status} />
+                  </TableCell>
+                  <TableCell align="center">
+                    <Button variant="contained" size="small" onClick={requestLeaveCancel}>
+                      취소신청
+                    </Button>
                   </TableCell>
                 </TableRow>
               );
@@ -229,8 +243,8 @@ export default function AttendanceDayTable() {
           </TableBody>
         </Table>
       </TableContainer>
-      <Stack alignItems="center" mt={2}>
-        <Pagination count={5} variant="outlined" shape="rounded" />
+      <Stack alignItems="center" mt={3}>
+          <Pagination count={5} variant="outlined" shape="rounded" />
       </Stack>
     </Box>
   );
