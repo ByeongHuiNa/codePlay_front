@@ -1,738 +1,1689 @@
 {
-"user_information" : {
-  "user_profile": "https://picsum.photos/200",
-  "dept_name": "개발팀",
-  "user_name": "Dylan",
-  "user_position": "연구원",
-  "user_birth_date": "1960-01-24",
-  "user_email": "dylan@douzon.com",
-  "user_phone" : "010-0000-0000",
-  "user_address" : "서울특별시 종로구 창경궁로 254"
-},
-"role_count" : [
-  { "role_level":"0", "role_name": "사용자", "count" : 200 },
-  { "role_level":"1", "role_name": "근태담당자", "count" : 30 },
-  { "role_level":"2", "role_name": "관리자", "count" : 10 },
-  { "role_level":"3", "role_name": "메인관리자", "count" : 2 },
-  { "role_level":"4", "role_name" : "맞춤", "count" : 5}
+  "role_query_user_detail":{
+    "user_no": 0,
+    "user_profile": "https://picsum.photos/200",
+    "dept_name": "개발팀",
+    "user_name": "Dylan",
+    "user_position": "연구원",
+    "role" : [{
+      "role_level": 0,
+      "role_name": "사용자",
+      "role_designated_date": "1960-01-24"
+    },{
+      "role_level": 1,
+      "role_name": "근태담당자",
+      "role_designated_date": "1960-01-24"
+    }  ]
+  },
+  "user_information": {
+    "user_no": 0,
+    "user_profile": "https://picsum.photos/200",
+    "dept_name": "개발팀",
+    "user_name": "Dylan",
+    "user_position": "연구원",
+    "user_birth_date": "1960-01-24",
+    "user_email": "dylan@douzon.com",
+    "user_phone": "010-5698-5321",
+    "user_address": "서울특별시 종로구 창경궁로 254"
+  },
+  "role_count": [
+    {
+      "role_level": "0",
+      "role_name": "사용자",
+      "count": 200
+    },
+    {
+      "role_level": "1",
+      "role_name": "근태담당자",
+      "count": 30
+    },
+    {
+      "role_level": "2",
+      "role_name": "관리자",
+      "count": 10
+    },
+    {
+      "role_level": "3",
+      "role_name": "메인관리자",
+      "count": 2
+    },
+    {
+      "role_level": "4",
+      "role_name": "맞춤",
+      "count": 5
+    }
   ],
-"policy_count" : [
-  { "policy_no":"0", "policy_name": "8 TO 5", "count" : 200 },
-  { "policy_no":"1", "policy_name": "9 TO 6", "count" : 30 },
-  { "policy_no":"2", "policy_name": "10 TO 7", "count" : 10 }
-],
-"get_user_authority_list" : [
-  { "id":0, "url": "https://picsum.photos/id/1/200/300","dept":"인사팀", "position":"사원", 
-  "role": "ROLE_USER", "authority_date":"2023-10-13","number" : 200 },
-  { "id":1, "url": "https://picsum.photos/id/1/200/300","dept":"인사팀", "position":"사원", 
-  "role": "ROLE_attendanceManager", "authority_date":"2023-10-13","number" : 200 },
-  { "id":2, "url": "https://picsum.photos/id/1/200/300","dept":"인사팀", "position":"사원", 
-  "role": "ROLE_userManager", "authority_date":"2023-10-13","number" : 200 },
-  { "id":3, "url": "https://picsum.photos/id/1/200/300","dept":"인사팀", "position":"사원", 
-  "role": "ROLE_USER", "authority_date":"2023-10-13","number" : 200 }
-],
-"get_query_user" : [
-{
-        "profile_url": "https://picsum.photos/200",
-        "dept": "개발팀",
-        "name": "Dylan",
-        "position": "연구원",
-        "date_of_birth": "1960-01-24"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "개발팀",
-        "name": "Christian",
-        "position": "연구원",
-        "date_of_birth": "1998-07-22"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "개발팀",
-        "name": "Bryson",
-        "position": "연구원",
-        "date_of_birth": "1973-04-27"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "개발팀",
-        "name": "Damian",
-        "position": "연구원",
-        "date_of_birth": "1983-02-15"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "개발팀",
-        "name": "Andrea",
-        "position": "연구원",
-        "date_of_birth": "1986-11-23"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "개발팀",
-        "name": "Aubrey",
-        "position": "연구원",
-        "date_of_birth": "1988-08-25"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "개발팀",
-        "name": "Brandon",
-        "position": "연구원",
-        "date_of_birth": "1986-05-09"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "개발팀",
-        "name": "Camila",
-        "position": "연구원",
-        "date_of_birth": "1986-08-18"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "개발팀",
-        "name": "Amelia",
-        "position": "연구원",
-        "date_of_birth": "1974-03-16"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "개발팀",
-        "name": "Isabella",
-        "position": "연구원",
-        "date_of_birth": "1992-01-07"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "개발팀",
-        "name": "Taylor",
-        "position": "연구원",
-        "date_of_birth": "1971-04-02"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "개발팀",
-        "name": "Caleb",
-        "position": "연구원",
-        "date_of_birth": "1985-04-08"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "개발팀",
-        "name": "Dylan",
-        "position": "연구원",
-        "date_of_birth": "1961-08-01"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "개발팀",
-        "name": "Skylar",
-        "position": "연구원",
-        "date_of_birth": "1993-11-23"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "개발팀",
-        "name": "John",
-        "position": "연구원",
-        "date_of_birth": "1985-09-09"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "개발팀",
-        "name": "Camila",
-        "position": "연구원",
-        "date_of_birth": "1962-12-01"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "개발팀",
-        "name": "Christian",
-        "position": "수석연구원",
-        "date_of_birth": "1987-09-03"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "개발팀",
-        "name": "Maya",
-        "position": "수석연구원",
-        "date_of_birth": "1962-02-14"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "개발팀",
-        "name": "Aria",
-        "position": "수석연구원",
-        "date_of_birth": "1972-07-27"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "개발팀",
-        "name": "Annabelle",
-        "position": "수석연구원",
-        "date_of_birth": "1972-01-09"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "개발팀",
-        "name": "Morgan",
-        "position": "수석연구원",
-        "date_of_birth": "1983-10-20"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "개발팀",
-        "name": "Cooper",
-        "position": "수석연구원",
-        "date_of_birth": "1972-07-16"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "개발팀",
-        "name": "Hunter",
-        "position": "수석연구원",
-        "date_of_birth": "1958-09-03"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "개발팀",
-        "name": "Aiden",
-        "position": "책임연구원",
-        "date_of_birth": "1998-12-06"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "개발팀",
-        "name": "Sarah",
-        "position": "책임연구원",
-        "date_of_birth": "2000-08-24"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "개발팀",
-        "name": "London",
-        "position": "책임연구원",
-        "date_of_birth": "1992-11-24"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "개발팀",
-        "name": "Emily",
-        "position": "책임연구원",
-        "date_of_birth": "1972-09-20"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "개발팀",
-        "name": "Wyatt",
-        "position": "책임연구원",
-        "date_of_birth": "1964-12-01"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "개발팀",
-        "name": "Ava",
-        "position": "책임연구원",
-        "date_of_birth": "1964-09-13"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "인사팀",
-        "name": "Jordan",
-        "position": "사원",
-        "date_of_birth": "1996-06-28"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "인사팀",
-        "name": "Bailey",
-        "position": "사원",
-        "date_of_birth": "1995-03-02"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "인사팀",
-        "name": "Reagan",
-        "position": "사원",
-        "date_of_birth": "1998-12-12"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "인사팀",
-        "name": "Grace",
-        "position": "사원",
-        "date_of_birth": "1972-12-05"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "인사팀",
-        "name": "Alexandra",
-        "position": "사원",
-        "date_of_birth": "2002-04-18"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "인사팀",
-        "name": "Hannah",
-        "position": "사원",
-        "date_of_birth": "1958-04-23"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "인사팀",
-        "name": "Maya",
-        "position": "사원",
-        "date_of_birth": "1965-02-23"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "인사팀",
-        "name": "Olivia",
-        "position": "사원",
-        "date_of_birth": "1997-10-21"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "인사팀",
-        "name": "Tristan",
-        "position": "사원",
-        "date_of_birth": "1962-07-07"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "인사팀",
-        "name": "Damian",
-        "position": "사원",
-        "date_of_birth": "1987-08-04"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "인사팀",
-        "name": "Luke",
-        "position": "사원",
-        "date_of_birth": "1957-12-22"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "인사팀",
-        "name": "Samuel",
-        "position": "사원",
-        "date_of_birth": "1977-11-08"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "인사팀",
-        "name": "Evan",
-        "position": "사원",
-        "date_of_birth": "1973-10-28"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "인사팀",
-        "name": "Aaron",
-        "position": "사원",
-        "date_of_birth": "1995-10-12"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "인사팀",
-        "name": "Dominic",
-        "position": "사원",
-        "date_of_birth": "1961-07-07"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "인사팀",
-        "name": "Adrian",
-        "position": "사원",
-        "date_of_birth": "1970-11-08"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "인사팀",
-        "name": "Jacob",
-        "position": "부장",
-        "date_of_birth": "1996-12-14"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "인사팀",
-        "name": "Taylor",
-        "position": "차장",
-        "date_of_birth": "2002-04-02"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "인사팀",
-        "name": "Tyler",
-        "position": "부장",
-        "date_of_birth": "1965-03-06"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "인사팀",
-        "name": "Adam",
-        "position": "차장",
-        "date_of_birth": "1967-03-01"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "인사팀",
-        "name": "Christopher",
-        "position": "부장",
-        "date_of_birth": "1968-04-26"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "인사팀",
-        "name": "Alex",
-        "position": "차장",
-        "date_of_birth": "1966-04-28"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "사업팀",
-        "name": "Hailey",
-        "position": "사원",
-        "date_of_birth": "1976-03-02"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "사업팀",
-        "name": "Aaron",
-        "position": "사원",
-        "date_of_birth": "1957-11-26"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "사업팀",
-        "name": "Anthony",
-        "position": "사원",
-        "date_of_birth": "1984-04-29"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "사업팀",
-        "name": "Charles",
-        "position": "사원",
-        "date_of_birth": "1995-03-04"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "사업팀",
-        "name": "Gabriella",
-        "position": "사원",
-        "date_of_birth": "1966-12-03"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "사업팀",
-        "name": "Jose",
-        "position": "차장",
-        "date_of_birth": "1983-03-26"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "사업팀",
-        "name": "Jeremiah",
-        "position": "차장",
-        "date_of_birth": "1990-01-25"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "사업팀",
-        "name": "Alex",
-        "position": "차장",
-        "date_of_birth": "1979-10-31"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "사업팀",
-        "name": "Andrea",
-        "position": "차장",
-        "date_of_birth": "1991-08-23"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "사업팀",
-        "name": "Nicholas",
-        "position": "차장",
-        "date_of_birth": "1976-02-07"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "사업팀",
-        "name": "Autumn",
-        "position": "부장",
-        "date_of_birth": "1994-02-13"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "사업팀",
-        "name": "Lillian",
-        "position": "부장",
-        "date_of_birth": "1957-12-06"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "사업팀",
-        "name": "Addison",
-        "position": "부장",
-        "date_of_birth": "1975-07-10"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "사업팀",
-        "name": "Mason",
-        "position": "부장",
-        "date_of_birth": "1996-08-02"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "사업팀",
-        "name": "Juan",
-        "position": "부장",
-        "date_of_birth": "1992-07-21"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "사업팀",
-        "name": "Robert",
-        "position": "부장",
-        "date_of_birth": "1969-09-13"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "사업팀",
-        "name": "Isaiah",
-        "position": "부장",
-        "date_of_birth": "1976-03-12"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "사업팀",
-        "name": "Landon",
-        "position": "부장",
-        "date_of_birth": "1987-06-01"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "사업팀",
-        "name": "Ava",
-        "position": "부장",
-        "date_of_birth": "1999-11-11"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "사업팀",
-        "name": "Eva",
-        "position": "부장",
-        "date_of_birth": "1983-11-24"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "사업팀",
-        "name": "Daniel",
-        "position": "대리",
-        "date_of_birth": "1994-09-25"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "사업팀",
-        "name": "Jocelyn",
-        "position": "대리",
-        "date_of_birth": "1959-12-02"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "사업팀",
-        "name": "Samuel",
-        "position": "대리",
-        "date_of_birth": "1964-08-17"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "사업팀",
-        "name": "Madison",
-        "position": "대리",
-        "date_of_birth": "1963-01-01"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "사업팀",
-        "name": "Blake",
-        "position": "대리",
-        "date_of_birth": "1975-07-02"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "사업팀",
-        "name": "Robert",
-        "position": "대리",
-        "date_of_birth": "1981-04-25"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "사업팀",
-        "name": "Arianna",
-        "position": "대리",
-        "date_of_birth": "1998-10-10"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "영업팀",
-        "name": "Daniel",
-        "position": "대리",
-        "date_of_birth": "1995-06-14"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "영업팀",
-        "name": "London",
-        "position": "대리",
-        "date_of_birth": "1970-01-14"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "영업팀",
-        "name": "Kennedy",
-        "position": "대리",
-        "date_of_birth": "1985-10-29"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "영업팀",
-        "name": "Austin",
-        "position": "대리",
-        "date_of_birth": "1959-10-05"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "영업팀",
-        "name": "Aria",
-        "position": "대리",
-        "date_of_birth": "1981-05-30"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "영업팀",
-        "name": "Layla",
-        "position": "대리",
-        "date_of_birth": "1997-01-24"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "영업팀",
-        "name": "Skylar",
-        "position": "대리",
-        "date_of_birth": "1978-01-14"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "영업팀",
-        "name": "Stella",
-        "position": "대리",
-        "date_of_birth": "1962-08-08"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "영업팀",
-        "name": "Isaac",
-        "position": "대리",
-        "date_of_birth": "1963-08-15"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "영업팀",
-        "name": "Amelia",
-        "position": "대리",
-        "date_of_birth": "1977-11-28"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "영업팀",
-        "name": "Claire",
-        "position": "부장",
-        "date_of_birth": "1984-04-27"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "영업팀",
-        "name": "Grace",
-        "position": "부장",
-        "date_of_birth": "1998-03-10"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "영업팀",
-        "name": "Savannah",
-        "position": "부장",
-        "date_of_birth": "1991-12-20"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "영업팀",
-        "name": "Austin",
-        "position": "차장",
-        "date_of_birth": "1996-01-19"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "영업팀",
-        "name": "Jocelyn",
-        "position": "차장",
-        "date_of_birth": "1996-11-04"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "영업팀",
-        "name": "Landon",
-        "position": "차장",
-        "date_of_birth": "1979-07-17"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "영업팀",
-        "name": "Savannah",
-        "position": "차장",
-        "date_of_birth": "1995-04-29"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "영업팀",
-        "name": "Hailey",
-        "position": "차장",
-        "date_of_birth": "1967-10-02"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "영업팀",
-        "name": "Hailey",
-        "position": "차장",
-        "date_of_birth": "1962-01-02"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "영업팀",
-        "name": "David",
-        "position": "차장",
-        "date_of_birth": "1963-12-13"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "영업팀",
-        "name": "Julia",
-        "position": "부장",
-        "date_of_birth": "1961-12-04"
-      },
-      {
-        "profile_url": "https://picsum.photos/200",
-        "dept": "영업팀",
-        "name": "Connor",
-        "position": "부장",
-        "date_of_birth": "1996-06-27"
-      }
-]
-  
-
+  "policy_count": [
+    {
+      "policy_no": "0",
+      "policy_name": "8 TO 5",
+      "count": 200
+    },
+    {
+      "policy_no": "1",
+      "policy_name": "9 TO 6",
+      "count": 30
+    },
+    {
+      "policy_no": "2",
+      "policy_name": "10 TO 7",
+      "count": 10
+    }
+  ],
+  "user_query_list": [
+    {
+      "user_no": 0,
+      "dept_name": "개발1팀",
+      "user_name": "Dylan",
+      "user_position": "연구원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "개발1팀",
+      "user_name": "Christian",
+      "user_position": "연구원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "개발1팀",
+      "user_name": "Bryson",
+      "user_position": "연구원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "개발1팀",
+      "user_name": "Damian",
+      "user_position": "연구원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "개발2팀",
+      "user_name": "Andrea",
+      "user_position": "연구원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "개발2팀",
+      "user_name": "Aubrey",
+      "user_position": "연구원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "개발2팀",
+      "user_name": "Brandon",
+      "user_position": "연구원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "개발2팀",
+      "user_name": "Camila",
+      "user_position": "연구원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "개발3팀",
+      "user_name": "Amelia",
+      "user_position": "연구원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "개발3팀",
+      "user_name": "Isabella",
+      "user_position": "연구원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "개발3팀",
+      "user_name": "Taylor",
+      "user_position": "연구원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "개발3팀",
+      "user_name": "Caleb",
+      "user_position": "연구원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "개발3팀",
+      "user_name": "Dylan",
+      "user_position": "연구원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "개발4팀",
+      "user_name": "Skylar",
+      "user_position": "연구원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "개발4팀",
+      "user_name": "John",
+      "user_position": "연구원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "개발4팀",
+      "user_name": "Camila",
+      "user_position": "연구원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "개발4팀",
+      "user_name": "Christian",
+      "user_position": "수석연구원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "개발4팀",
+      "user_name": "Maya",
+      "user_position": "수석연구원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "개발5팀",
+      "user_name": "Aria",
+      "user_position": "수석연구원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "개발5팀",
+      "user_name": "Annabelle",
+      "user_position": "수석연구원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "개발5팀",
+      "user_name": "Morgan",
+      "user_position": "수석연구원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "개발5팀",
+      "user_name": "Cooper",
+      "user_position": "수석연구원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "개발5팀",
+      "user_name": "Hunter",
+      "user_position": "수석연구원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "개발6팀",
+      "user_name": "Aiden",
+      "user_position": "책임연구원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "개발6팀",
+      "user_name": "Sarah",
+      "user_position": "책임연구원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "개발6팀",
+      "user_name": "London",
+      "user_position": "책임연구원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "개발6팀",
+      "user_name": "Emily",
+      "user_position": "책임연구원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "개발6팀",
+      "user_name": "Wyatt",
+      "user_position": "책임연구원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "개발6팀",
+      "user_name": "Ava",
+      "user_position": "책임연구원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "인사지원1팀",
+      "user_name": "Jordan",
+      "user_position": "사원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "인사지원1팀",
+      "user_name": "Bailey",
+      "user_position": "사원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "인사지원1팀",
+      "user_name": "Reagan",
+      "user_position": "사원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "인사지원1팀",
+      "user_name": "Grace",
+      "user_position": "사원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "인사지원1팀",
+      "user_name": "Alexandra",
+      "user_position": "사원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "인사지원2팀",
+      "user_name": "Hannah",
+      "user_position": "사원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "인사지원2팀",
+      "user_name": "Maya",
+      "user_position": "사원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "인사지원2팀",
+      "user_name": "Olivia",
+      "user_position": "사원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "인사지원2팀",
+      "user_name": "Tristan",
+      "user_position": "사원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "인사지원2팀",
+      "user_name": "Damian",
+      "user_position": "사원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "경영지원1팀",
+      "user_name": "Luke",
+      "user_position": "사원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "경영지원1팀",
+      "user_name": "Samuel",
+      "user_position": "사원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "경영지원1팀",
+      "user_name": "Evan",
+      "user_position": "사원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "경영지원1팀",
+      "user_name": "Aaron",
+      "user_position": "사원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "경영지원1팀",
+      "user_name": "Dominic",
+      "user_position": "사원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "경영지원2팀",
+      "user_name": "Adrian",
+      "user_position": "사원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "경영지원2팀",
+      "user_name": "Jacob",
+      "user_position": "부장"
+    },
+    {
+      "user_no": "",
+      "dept_name": "경영지원2팀",
+      "user_name": "Taylor",
+      "user_position": "차장"
+    },
+    {
+      "user_no": "",
+      "dept_name": "경영지원2팀",
+      "user_name": "Tyler",
+      "user_position": "부장"
+    },
+    {
+      "user_no": "",
+      "dept_name": "경영지원2팀",
+      "user_name": "Adam",
+      "user_position": "차장"
+    },
+    {
+      "user_no": "",
+      "dept_name": "경영지원2팀",
+      "user_name": "Christopher",
+      "user_position": "부장"
+    },
+    {
+      "user_no": "",
+      "dept_name": "경영지원2팀",
+      "user_name": "Alex",
+      "user_position": "차장"
+    },
+    {
+      "user_no": "",
+      "dept_name": "사업1팀",
+      "user_name": "Hailey",
+      "user_position": "사원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "사업1팀",
+      "user_name": "Aaron",
+      "user_position": "사원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "사업1팀",
+      "user_name": "Anthony",
+      "user_position": "사원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "사업1팀",
+      "user_name": "Charles",
+      "user_position": "사원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "사업2팀",
+      "user_name": "Gabriella",
+      "user_position": "사원"
+    },
+    {
+      "user_no": "",
+      "dept_name": "사업2팀",
+      "user_name": "Jose",
+      "user_position": "차장"
+    },
+    {
+      "user_no": "",
+      "dept_name": "사업2팀",
+      "user_name": "Jeremiah",
+      "user_position": "차장"
+    },
+    {
+      "user_no": "",
+      "dept_name": "사업2팀",
+      "user_name": "Alex",
+      "user_position": "차장"
+    },
+    {
+      "user_no": "",
+      "dept_name": "사업3팀",
+      "user_name": "Andrea",
+      "user_position": "차장"
+    },
+    {
+      "user_no": "",
+      "dept_name": "사업3팀",
+      "user_name": "Nicholas",
+      "user_position": "차장"
+    },
+    {
+      "user_no": "",
+      "dept_name": "사업3팀",
+      "user_name": "Autumn",
+      "user_position": "부장"
+    },
+    {
+      "user_no": "",
+      "dept_name": "사업3팀",
+      "user_name": "Lillian",
+      "user_position": "부장"
+    },
+    {
+      "user_no": "",
+      "dept_name": "사업3팀",
+      "user_name": "Addison",
+      "user_position": "부장"
+    },
+    {
+      "user_no": "",
+      "dept_name": "사업4팀",
+      "user_name": "Mason",
+      "user_position": "부장"
+    },
+    {
+      "user_no": "",
+      "dept_name": "사업4팀",
+      "user_name": "Juan",
+      "user_position": "부장"
+    },
+    {
+      "user_no": "",
+      "dept_name": "사업4팀",
+      "user_name": "Robert",
+      "user_position": "부장"
+    },
+    {
+      "user_no": "",
+      "dept_name": "사업4팀",
+      "user_name": "Isaiah",
+      "user_position": "부장"
+    },
+    {
+      "user_no": "",
+      "dept_name": "사업5팀",
+      "user_name": "Landon",
+      "user_position": "부장"
+    },
+    {
+      "user_no": "",
+      "dept_name": "사업5팀",
+      "user_name": "Ava",
+      "user_position": "부장"
+    },
+    {
+      "user_no": "",
+      "dept_name": "사업5팀",
+      "user_name": "Eva",
+      "user_position": "부장"
+    },
+    {
+      "user_no": "",
+      "dept_name": "사업5팀",
+      "user_name": "Daniel",
+      "user_position": "대리"
+    },
+    {
+      "user_no": "",
+      "dept_name": "사업5팀",
+      "user_name": "Jocelyn",
+      "user_position": "대리"
+    },
+    {
+      "user_no": "",
+      "dept_name": "사업6팀",
+      "user_name": "Samuel",
+      "user_position": "대리"
+    },
+    {
+      "user_no": "",
+      "dept_name": "사업6팀",
+      "user_name": "Madison",
+      "user_position": "대리"
+    },
+    {
+      "user_no": "",
+      "dept_name": "사업6팀",
+      "user_name": "Blake",
+      "user_position": "대리"
+    },
+    {
+      "user_no": "",
+      "dept_name": "사업6팀",
+      "user_name": "Robert",
+      "user_position": "대리"
+    },
+    {
+      "user_no": "",
+      "dept_name": "사업6팀",
+      "user_name": "홍길동",
+      "user_position": "대리"
+    },
+    {
+      "user_no": "",
+      "dept_name": "영업1팀",
+      "user_name": "Daniel",
+      "user_position": "대리"
+    },
+    {
+      "user_no": "",
+      "dept_name": "영업1팀",
+      "user_name": "London",
+      "user_position": "대리"
+    },
+    {
+      "user_no": "",
+      "dept_name": "영업1팀",
+      "user_name": "Kennedy",
+      "user_position": "대리"
+    },
+    {
+      "user_no": "",
+      "dept_name": "영업1팀",
+      "user_name": "Austin",
+      "user_position": "대리"
+    },
+    {
+      "user_no": "",
+      "dept_name": "영업1팀",
+      "user_name": "Aria",
+      "user_position": "대리"
+    },
+    {
+      "user_no": "",
+      "dept_name": "영업1팀",
+      "user_name": "Layla",
+      "user_position": "대리"
+    },
+    {
+      "user_no": "",
+      "dept_name": "영업1팀",
+      "user_name": "Skylar",
+      "user_position": "대리"
+    },
+    {
+      "user_no": "",
+      "dept_name": "영업1팀",
+      "user_name": "Stella",
+      "user_position": "대리"
+    },
+    {
+      "user_no": "",
+      "dept_name": "영업2팀",
+      "user_name": "Isaac",
+      "user_position": "대리"
+    },
+    {
+      "user_no": "",
+      "dept_name": "영업2팀",
+      "user_name": "Amelia",
+      "user_position": "대리"
+    },
+    {
+      "user_no": "",
+      "dept_name": "영업2팀",
+      "user_name": "Claire",
+      "user_position": "부장"
+    },
+    {
+      "user_no": "",
+      "dept_name": "영업2팀",
+      "user_name": "Grace",
+      "user_position": "부장"
+    },
+    {
+      "user_no": "",
+      "dept_name": "영업2팀",
+      "user_name": "Savannah",
+      "user_position": "부장"
+    },
+    {
+      "user_no": "",
+      "dept_name": "영업2팀",
+      "user_name": "Austin",
+      "user_position": "차장"
+    },
+    {
+      "user_no": "",
+      "dept_name": "영업3팀",
+      "user_name": "Jocelyn",
+      "user_position": "차장"
+    },
+    {
+      "user_no": "",
+      "dept_name": "영업3팀",
+      "user_name": "Landon",
+      "user_position": "차장"
+    },
+    {
+      "user_no": "",
+      "dept_name": "영업3팀",
+      "user_name": "Savannah",
+      "user_position": "차장"
+    },
+    {
+      "user_no": "",
+      "dept_name": "영업3팀",
+      "user_name": "Hailey",
+      "user_position": "차장"
+    },
+    {
+      "user_no": "",
+      "dept_name": "영업3팀",
+      "user_name": "Hailey",
+      "user_position": "차장"
+    },
+    {
+      "user_no": "",
+      "dept_name": "영업3팀",
+      "user_name": "David",
+      "user_position": "차장"
+    },
+    {
+      "user_no": "",
+      "dept_name": "영업3팀",
+      "user_name": "Julia",
+      "user_position": "부장"
+    },
+    {
+      "user_no": "",
+      "dept_name": "영업3팀",
+      "user_name": "Connor",
+      "user_position": "부장"
+    }
+  ],
+  "role_query_list": [
+    {
+      "user_no": 0,
+      "user_profile": "https://picsum.photos/200",
+      "role_level": 0,
+      "dept_name": "개발팀",
+      "role_name": "사용자",
+      "user_name": "Dylan",
+      "user_position": "연구원",
+      "role_designated_date": "1960-01-24"
+    },
+    {
+      "user_no": 1,
+      "user_profile": "https://picsum.photos/200",
+      "role_level": 0,
+      "dept_name": "개발팀",
+      "role_name": "사용자",
+      "user_name": "Christian",
+      "user_position": "연구원",
+      "role_designated_date": "1998-07-22"
+    },
+    {
+      "user_no": 2,
+      "user_profile": "https://picsum.photos/200",
+      "role_level": 0,
+      "dept_name": "개발팀",
+      "role_name": "사용자",
+      "user_name": "Bryson",
+      "user_position": "연구원",
+      "role_designated_date": "1973-04-27"
+    },
+    {
+      "user_no": 3,
+      "user_profile": "https://picsum.photos/200",
+      "role_level": 0,
+      "dept_name": "개발팀",
+      "role_name": "사용자",
+      "user_name": "Damian",
+      "user_position": "연구원",
+      "role_designated_date": "1983-02-15"
+    },
+    {
+      "user_no": 4,
+      "user_profile": "https://picsum.photos/200",
+      "role_level": 0,
+      "dept_name": "개발팀",
+      "role_name": "사용자",
+      "user_name": "Andrea",
+      "user_position": "연구원",
+      "role_designated_date": "1986-11-23"
+    },
+    {
+      "user_no": 5,
+      "user_profile": "https://picsum.photos/200",
+      "role_level": 0,
+      "dept_name": "개발팀",
+      "role_name": "사용자",
+      "user_name": "Aubrey",
+      "user_position": "연구원",
+      "role_designated_date": "1988-08-25"
+    },
+    {
+      "user_no": 6,
+      "user_profile": "https://picsum.photos/200",
+      "role_level": 0,
+      "dept_name": "개발팀",
+      "role_name": "사용자",
+      "user_name": "Brandon",
+      "user_position": "연구원",
+      "role_designated_date": "1986-05-09"
+    },
+    {
+      "user_no": 7,
+      "user_profile": "https://picsum.photos/200",
+      "role_level": 0,
+      "dept_name": "개발팀",
+      "role_name": "사용자",
+      "user_name": "Camila",
+      "user_position": "연구원",
+      "role_designated_date": "1986-08-18"
+    },
+    {
+      "user_no": 8,
+      "user_profile": "https://picsum.photos/200",
+      "role_level": 0,
+      "dept_name": "개발팀",
+      "role_name": "사용자",
+      "user_name": "Amelia",
+      "user_position": "연구원",
+      "role_designated_date": "1974-03-16"
+    },
+    {
+      "user_no": 9,
+      "user_profile": "https://picsum.photos/200",
+      "role_level": 0,
+      "dept_name": "개발팀",
+      "role_name": "사용자",
+      "user_name": "Isabella",
+      "user_position": "연구원",
+      "role_designated_date": "1992-01-07"
+    },
+    {
+      "user_no": 10,
+      "user_profile": "https://picsum.photos/200",
+      "role_level": 0,
+      "dept_name": "개발팀",
+      "role_name": "사용자",
+      "user_name": "Taylor",
+      "user_position": "연구원",
+      "role_designated_date": "1971-04-02"
+    },
+    {
+      "user_no": 11,
+      "user_profile": "https://picsum.photos/200",
+      "role_level": 0,
+      "dept_name": "개발팀",
+      "role_name": "사용자",
+      "user_name": "Caleb",
+      "user_position": "연구원",
+      "role_designated_date": "1985-04-08"
+    },
+    {
+      "user_no": 12,
+      "user_profile": "https://picsum.photos/200",
+      "role_level": 0,
+      "dept_name": "개발팀",
+      "role_name": "사용자",
+      "user_name": "Dylan",
+      "user_position": "연구원",
+      "role_designated_date": "1961-08-01"
+    },
+    {
+      "user_no": 13,
+      "user_profile": "https://picsum.photos/200",
+      "role_level": 0,
+      "dept_name": "개발팀",
+      "role_name": "사용자",
+      "user_name": "Skylar",
+      "user_position": "연구원",
+      "role_designated_date": "1993-11-23"
+    },
+    {
+      "user_no": 14,
+      "user_profile": "https://picsum.photos/200",
+      "role_level": 0,
+      "dept_name": "개발팀",
+      "role_name": "사용자",
+      "user_name": "John",
+      "user_position": "연구원",
+      "role_designated_date": "1985-09-09"
+    },
+    {
+      "user_no": 15,
+      "user_profile": "https://picsum.photos/200",
+      "role_level": 0,
+      "dept_name": "개발팀",
+      "role_name": "사용자",
+      "user_name": "Camila",
+      "user_position": "연구원",
+      "role_designated_date": "1962-12-01"
+    },
+    {
+      "user_no": 16,
+      "user_profile": "https://picsum.photos/200",
+      "role_level": 0,
+      "dept_name": "개발팀",
+      "role_name": "사용자",
+      "user_name": "Christian",
+      "user_position": "수석연구원",
+      "role_designated_date": "1987-09-03"
+    },
+    {
+      "user_no": 17,
+      "user_profile": "https://picsum.photos/200",
+      "role_level": 0,
+      "dept_name": "개발팀",
+      "role_name": "사용자",
+      "user_name": "Maya",
+      "user_position": "수석연구원",
+      "role_designated_date": "1962-02-14"
+    },
+    {
+      "user_no": 0,
+      "user_profile": "https://picsum.photos/200",
+      "role_level": 1,
+      "dept_name": "개발팀",
+      "role_name": "근태담당자",
+      "user_name": "Dylan",
+      "user_position": "연구원",
+      "role_designated_date": "1960-01-24"
+    },
+    {
+      "user_no": 1,
+      "user_profile": "https://picsum.photos/200",
+      "role_level": 2,
+      "dept_name": "개발팀",
+      "role_name": "관리자",
+      "user_name": "Christian",
+      "user_position": "연구원",
+      "role_designated_date": "1998-07-22"
+    },
+    {
+      "user_no": 2,
+      "user_profile": "https://picsum.photos/200",
+      "role_level": 3,
+      "dept_name": "개발팀",
+      "role_name": "메인관리자",
+      "user_name": "Bryson",
+      "user_position": "연구원",
+      "role_designated_date": "1973-04-27"
+    }
+  ],
+  "user_query": [
+    {
+      "user_no": 0,
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발1팀",
+      "user_name": "Dylan",
+      "user_position": "연구원",
+      "user_birth_date": "1960-01-24"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발1팀",
+      "user_name": "Christian",
+      "user_position": "연구원",
+      "user_birth_date": "1998-07-22"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발1팀",
+      "user_name": "Bryson",
+      "user_position": "연구원",
+      "user_birth_date": "1973-04-27"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발1팀",
+      "user_name": "Damian",
+      "user_position": "연구원",
+      "user_birth_date": "1983-02-15"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발2팀",
+      "user_name": "Andrea",
+      "user_position": "연구원",
+      "user_birth_date": "1986-11-23"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발2팀",
+      "user_name": "Aubrey",
+      "user_position": "연구원",
+      "user_birth_date": "1988-08-25"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발2팀",
+      "user_name": "Brandon",
+      "user_position": "연구원",
+      "user_birth_date": "1986-05-09"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발2팀",
+      "user_name": "Camila",
+      "user_position": "연구원",
+      "user_birth_date": "1986-08-18"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발3팀",
+      "user_name": "Amelia",
+      "user_position": "연구원",
+      "user_birth_date": "1974-03-16"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발3팀",
+      "user_name": "Isabella",
+      "user_position": "연구원",
+      "user_birth_date": "1992-01-07"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발3팀",
+      "user_name": "Taylor",
+      "user_position": "연구원",
+      "user_birth_date": "1971-04-02"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발3팀",
+      "user_name": "Caleb",
+      "user_position": "연구원",
+      "user_birth_date": "1985-04-08"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발3팀",
+      "user_name": "Dylan",
+      "user_position": "연구원",
+      "user_birth_date": "1961-08-01"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발4팀",
+      "user_name": "Skylar",
+      "user_position": "연구원",
+      "user_birth_date": "1993-11-23"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발4팀",
+      "user_name": "John",
+      "user_position": "연구원",
+      "user_birth_date": "1985-09-09"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발4팀",
+      "user_name": "Camila",
+      "user_position": "연구원",
+      "user_birth_date": "1962-12-01"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발4팀",
+      "user_name": "Christian",
+      "user_position": "수석연구원",
+      "user_birth_date": "1987-09-03"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발4팀",
+      "user_name": "Maya",
+      "user_position": "수석연구원",
+      "user_birth_date": "1962-02-14"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발5팀",
+      "user_name": "Aria",
+      "user_position": "수석연구원",
+      "user_birth_date": "1972-07-27"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발5팀",
+      "user_name": "Annabelle",
+      "user_position": "수석연구원",
+      "user_birth_date": "1972-01-09"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발5팀",
+      "user_name": "Morgan",
+      "user_position": "수석연구원",
+      "user_birth_date": "1983-10-20"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발5팀",
+      "user_name": "Cooper",
+      "user_position": "수석연구원",
+      "user_birth_date": "1972-07-16"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발5팀",
+      "user_name": "Hunter",
+      "user_position": "수석연구원",
+      "user_birth_date": "1958-09-03"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발6팀",
+      "user_name": "Aiden",
+      "user_position": "책임연구원",
+      "user_birth_date": "1998-12-06"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발6팀",
+      "user_name": "Sarah",
+      "user_position": "책임연구원",
+      "user_birth_date": "2000-08-24"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발6팀",
+      "user_name": "London",
+      "user_position": "책임연구원",
+      "user_birth_date": "1992-11-24"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발6팀",
+      "user_name": "Emily",
+      "user_position": "책임연구원",
+      "user_birth_date": "1972-09-20"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발6팀",
+      "user_name": "Wyatt",
+      "user_position": "책임연구원",
+      "user_birth_date": "1964-12-01"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발6팀",
+      "user_name": "Ava",
+      "user_position": "책임연구원",
+      "user_birth_date": "1964-09-13"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "인사지원1팀",
+      "user_name": "Hailey",
+      "user_position": "사원",
+      "user_birth_date": "1976-03-02"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "인사지원1팀",
+      "user_name": "Aaron",
+      "user_position": "사원",
+      "user_birth_date": "1957-11-26"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "인사지원1팀",
+      "user_name": "Anthony",
+      "user_position": "사원",
+      "user_birth_date": "1984-04-29"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "인사지원1팀",
+      "user_name": "Charles",
+      "user_position": "사원",
+      "user_birth_date": "1995-03-04"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "인사지원1팀",
+      "user_name": "Gabriella",
+      "user_position": "사원",
+      "user_birth_date": "1966-12-03"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "인사지원2팀",
+      "user_name": "Jose",
+      "user_position": "차장",
+      "user_birth_date": "1983-03-26"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "인사지원2팀",
+      "user_name": "Jeremiah",
+      "user_position": "차장",
+      "user_birth_date": "1990-01-25"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "인사지원2팀",
+      "user_name": "Alex",
+      "user_position": "차장",
+      "user_birth_date": "1979-10-31"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "인사지원2팀",
+      "user_name": "Andrea",
+      "user_position": "차장",
+      "user_birth_date": "1991-08-23"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "인사지원2팀",
+      "user_name": "Nicholas",
+      "user_position": "차장",
+      "user_birth_date": "1976-02-07"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "경영지원1팀",
+      "user_name": "Autumn",
+      "user_position": "부장",
+      "user_birth_date": "1994-02-13"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "경영지원1팀",
+      "user_name": "Lillian",
+      "user_position": "부장",
+      "user_birth_date": "1957-12-06"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "경영지원1팀",
+      "user_name": "Addison",
+      "user_position": "부장",
+      "user_birth_date": "1975-07-10"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "경영지원1팀",
+      "user_name": "Mason",
+      "user_position": "부장",
+      "user_birth_date": "1996-08-02"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "경영지원1팀",
+      "user_name": "Juan",
+      "user_position": "부장",
+      "user_birth_date": "1992-07-21"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "경영지원2팀",
+      "user_name": "Robert",
+      "user_position": "부장",
+      "user_birth_date": "1969-09-13"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "경영지원2팀",
+      "user_name": "Isaiah",
+      "user_position": "부장",
+      "user_birth_date": "1976-03-12"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "경영지원2팀",
+      "user_name": "Landon",
+      "user_position": "부장",
+      "user_birth_date": "1987-06-01"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "경영지원2팀",
+      "user_name": "Ava",
+      "user_position": "부장",
+      "user_birth_date": "1999-11-11"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "경영지원2팀",
+      "user_name": "Eva",
+      "user_position": "부장",
+      "user_birth_date": "1983-11-24"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "경영지원2팀",
+      "user_name": "Daniel",
+      "user_position": "대리",
+      "user_birth_date": "1994-09-25"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "경영지원2팀",
+      "user_name": "Jocelyn",
+      "user_position": "대리",
+      "user_birth_date": "1959-12-02"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "사업1팀",
+      "user_name": "Samuel",
+      "user_position": "대리",
+      "user_birth_date": "1964-08-17"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "사업1팀",
+      "user_name": "Madison",
+      "user_position": "대리",
+      "user_birth_date": "1963-01-01"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "사업1팀",
+      "user_name": "Blake",
+      "user_position": "대리",
+      "user_birth_date": "1975-07-02"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "사업1팀",
+      "user_name": "Robert",
+      "user_position": "대리",
+      "user_birth_date": "1981-04-25"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "사업2팀",
+      "user_name": "Arianna",
+      "user_position": "대리",
+      "user_birth_date": "1998-10-10"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "사업2팀",
+      "user_name": "Daniel",
+      "user_position": "대리",
+      "user_birth_date": "1995-06-14"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "사업2팀",
+      "user_name": "London",
+      "user_position": "대리",
+      "user_birth_date": "1970-01-14"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "사업2팀",
+      "user_name": "Kennedy",
+      "user_position": "대리",
+      "user_birth_date": "1985-10-29"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "사업3팀",
+      "user_name": "Austin",
+      "user_position": "대리",
+      "user_birth_date": "1959-10-05"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "사업3팀",
+      "user_name": "Aria",
+      "user_position": "대리",
+      "user_birth_date": "1981-05-30"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "사업3팀",
+      "user_name": "Layla",
+      "user_position": "대리",
+      "user_birth_date": "1997-01-24"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "사업3팀",
+      "user_name": "Skylar",
+      "user_position": "대리",
+      "user_birth_date": "1978-01-14"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "사업3팀",
+      "user_name": "Stella",
+      "user_position": "대리",
+      "user_birth_date": "1962-08-08"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "사업4팀",
+      "user_name": "Isaac",
+      "user_position": "대리",
+      "user_birth_date": "1963-08-15"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "사업4팀",
+      "user_name": "Amelia",
+      "user_position": "대리",
+      "user_birth_date": "1977-11-28"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "사업4팀",
+      "user_name": "Claire",
+      "user_position": "부장",
+      "user_birth_date": "1984-04-27"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "사업4팀",
+      "user_name": "Grace",
+      "user_position": "부장",
+      "user_birth_date": "1998-03-10"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "사업5팀",
+      "user_name": "Savannah",
+      "user_position": "부장",
+      "user_birth_date": "1991-12-20"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "사업5팀",
+      "user_name": "Austin",
+      "user_position": "차장",
+      "user_birth_date": "1996-01-19"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "사업5팀",
+      "user_name": "Jocelyn",
+      "user_position": "차장",
+      "user_birth_date": "1996-11-04"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "사업5팀",
+      "user_name": "Landon",
+      "user_position": "차장",
+      "user_birth_date": "1979-07-17"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "사업5팀",
+      "user_name": "Savannah",
+      "user_position": "차장",
+      "user_birth_date": "1995-04-29"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "사업6팀",
+      "user_name": "Hailey",
+      "user_position": "차장",
+      "user_birth_date": "1967-10-02"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "사업6팀",
+      "user_name": "Hailey",
+      "user_position": "차장",
+      "user_birth_date": "1962-01-02"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "사업6팀",
+      "user_name": "David",
+      "user_position": "차장",
+      "user_birth_date": "1963-12-13"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "사업6팀",
+      "user_name": "Julia",
+      "user_position": "부장",
+      "user_birth_date": "1961-12-04"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "사업6팀",
+      "user_name": "홍길동",
+      "user_position": "부장",
+      "user_birth_date": "1996-06-27"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "영업1팀",
+      "user_name": "Jordan",
+      "user_position": "사원",
+      "user_birth_date": "1996-06-28"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "영업1팀",
+      "user_name": "Bailey",
+      "user_position": "사원",
+      "user_birth_date": "1995-03-02"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "영업1팀",
+      "user_name": "Reagan",
+      "user_position": "사원",
+      "user_birth_date": "1998-12-12"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "영업1팀",
+      "user_name": "Grace",
+      "user_position": "사원",
+      "user_birth_date": "1972-12-05"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "영업1팀",
+      "user_name": "Alexandra",
+      "user_position": "사원",
+      "user_birth_date": "2002-04-18"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "영업1팀",
+      "user_name": "Hannah",
+      "user_position": "사원",
+      "user_birth_date": "1958-04-23"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "영업1팀",
+      "user_name": "Maya",
+      "user_position": "사원",
+      "user_birth_date": "1965-02-23"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "영업1팀",
+      "user_name": "Olivia",
+      "user_position": "사원",
+      "user_birth_date": "1997-10-21"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "영업2팀",
+      "user_name": "Tristan",
+      "user_position": "사원",
+      "user_birth_date": "1962-07-07"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "영업2팀",
+      "user_name": "Damian",
+      "user_position": "사원",
+      "user_birth_date": "1987-08-04"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "영업2팀",
+      "user_name": "Luke",
+      "user_position": "사원",
+      "user_birth_date": "1957-12-22"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "영업2팀",
+      "user_name": "Samuel",
+      "user_position": "사원",
+      "user_birth_date": "1977-11-08"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "영업2팀",
+      "user_name": "Evan",
+      "user_position": "사원",
+      "user_birth_date": "1973-10-28"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "영업2팀",
+      "user_name": "Aaron",
+      "user_position": "사원",
+      "user_birth_date": "1995-10-12"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "영업3팀",
+      "user_name": "Dominic",
+      "user_position": "사원",
+      "user_birth_date": "1961-07-07"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "영업3팀",
+      "user_name": "Adrian",
+      "user_position": "사원",
+      "user_birth_date": "1970-11-08"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "영업3팀",
+      "user_name": "Jacob",
+      "user_position": "부장",
+      "user_birth_date": "1996-12-14"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "영업3팀",
+      "user_name": "Taylor",
+      "user_position": "차장",
+      "user_birth_date": "2002-04-02"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "영업3팀",
+      "user_name": "Tyler",
+      "user_position": "부장",
+      "user_birth_date": "1965-03-06"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "영업3팀",
+      "user_name": "Adam",
+      "user_position": "차장",
+      "user_birth_date": "1967-03-01"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "영업3팀",
+      "user_name": "Christopher",
+      "user_position": "부장",
+      "user_birth_date": "1968-04-26"
+    },
+    {
+      "user_no": "",
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "영업3팀",
+      "user_name": "Alex",
+      "user_position": "차장",
+      "user_birth_date": "1966-04-28"
+    }
+  ]
 }
