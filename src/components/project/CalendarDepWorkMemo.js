@@ -8,7 +8,7 @@ import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import { Grid, ListItemButton, Pagination } from '../../../node_modules/@mui/material/index';
 
-export default function CalendarDepWorkList() {
+export default function CalendarDepWorkMemo() {
   // eslint-disable-next-line no-unused-vars
   const handleToggle = (value) => () => {
     // const currentIndex = checked.indexOf(value);

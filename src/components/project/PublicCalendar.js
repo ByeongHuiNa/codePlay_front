@@ -10,6 +10,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
 import { INITIAL_EVENTS, createEventId } from './event-utils';
 import CalendarDepWorkListTab from './CalendarDepWorkListTab';
+import CalendarDepWorkMemo from './CalendarDepWorkMemo';
 
 const PublicCalendar = () => {
   const Item = styled(Paper)(({ theme }) => ({
@@ -89,19 +90,21 @@ const PublicCalendar = () => {
           <Grid item xs={3} justifyContent="flex-start">
             <Grid item>
               <Item>
-                <Grid container direction="row" justifyContent="space-between" alignItems="flex-start">
+                <Grid>
                   <CalendarDepWorkListTab></CalendarDepWorkListTab>
                 </Grid>
               </Item>
             </Grid>
 
-            <Grid item mt={2}>
+            <Grid item mt={1.3}>
               <Item>
-                <Grid container direction="row" justifyContent="space-between" alignItems="flex-start">
+                <Grid container direction="column" justifyContent="space-between" alignItems="flex-start">
                   <Grid pl>
                     <h3>메모</h3>
                   </Grid>
-                  <Grid></Grid>
+                  <Grid>
+                    <CalendarDepWorkMemo></CalendarDepWorkMemo>
+                  </Grid>
                 </Grid>
               </Item>
             </Grid>
