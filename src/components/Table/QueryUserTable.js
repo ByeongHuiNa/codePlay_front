@@ -116,8 +116,8 @@ export default function OrderTable() {
   const { tableContentList, setTableList } = useUserTableListState();
   const { now_page, setPage, limit, search } = useCriteria();
 
-  async function search_user(search, now_page, limit) {
-    const result = await axios.get(`http://localhost:8000/get_query_user?name=${search}&_page=${now_page}&_limit=${limit}`);
+  async function search_user(search, page) {
+    const result = await axios.get(`http://localhost:8000/user_query?user_name=${search}&_page=${page}&_limit=${limit}`);
     setTableList(result.data);
   }
 
@@ -151,24 +151,23 @@ export default function OrderTable() {
                 stableSort(tableContentList, getComparator(order, orderBy)).map((row, index) => {
                   const isItemSelected = isSelected(row.trackingNo);
                   const labelId = `enhanced-table-checkbox-${index}`;
-
+                  // TODO: TableRow의 key 값 user_no로 변경할것.
                   return (
                     <TableRow
                       hover
                       role="checkbox"
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                      aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.trackingNo}
+                      key={index}
                       selected={isItemSelected}
                     >
                       <TableCell component="th" id={labelId} scope="row" align="center">
-                        <Avatar src={row.profile_url} sx={{ width: 50, height: 50, margin: 'auto' }}></Avatar>
+                        <Avatar src={row.user_profile} sx={{ width: 50, height: 50, margin: 'auto' }}></Avatar>
                       </TableCell>
-                      <TableCell align="center">{row.dept}</TableCell>
-                      <TableCell align="center">{row.name}</TableCell>
-                      <TableCell align="center">{row.position}</TableCell>
-                      <TableCell align="center">{row.date_of_birth}</TableCell>
+                      <TableCell align="center">{row.dept_name}</TableCell>
+                      <TableCell align="center">{row.user_name}</TableCell>
+                      <TableCell align="center">{row.user_position}</TableCell>
+                      <TableCell align="center">{row.user_birth_date}</TableCell>
                       <TableCell align="center">
                         <Button> 사용자 정보 변경</Button>
                       </TableCell>
@@ -180,13 +179,13 @@ export default function OrderTable() {
         </TableContainer>
       </Box>
       <Stack alignItems="center" mt={2}>
-        {/* count의 경우 조회한 데이터의 갯수를 불러올수 있을때 변경 */}
+        {/* TODO: count의 경우 조회한 데이터의 갯수를 불러올수 있을때 변경 */}
         <Pagination
           count={5}
           page={now_page}
           onChange={(event, page) => {
             setPage(page);
-            search_user(search, page, limit);
+            search_user(search, page);
           }}
           variant="outlined"
           shape="rounded"

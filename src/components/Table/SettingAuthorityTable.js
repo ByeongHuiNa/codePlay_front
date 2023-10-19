@@ -5,8 +5,9 @@ import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow }
 
 // third-party
 import { Avatar, Button, Pagination, Stack } from '../../../node_modules/@mui/material/index';
-import { useDetailCardState, useTableListState } from 'store/module';
+import { useCriteria, useDetailCardState, useTableListState } from 'store/module';
 import { useState } from 'react';
+import axios from '../../../node_modules/axios/index';
 
 const headCells = [
   {
@@ -60,7 +61,15 @@ export default function SettingAuthorityTable() {
 
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
   const { tableContentList } = useTableListState();
-  const { setView } = useDetailCardState();
+  const { setView, setId, setContent } = useDetailCardState();
+  const { now_page, setPage } = useCriteria();
+
+  async function clickDetailAuth(user_no) {
+    setView(true);
+    setId(user_no);
+    const result = await axios.get(`http://localhost:8000/role_query_user_detail?user_no=${user_no}`);
+    setContent(result.data);
+  }
 
   return (
     <>
@@ -99,18 +108,18 @@ export default function SettingAuthorityTable() {
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                     aria-checked={isItemSelected}
                     tabIndex={-1}
-                    key={row.trackingNo}
+                    key={row.user_no}
                     selected={isItemSelected}
                   >
                     <TableCell component="th" id={labelId} scope="row" align="center">
-                      <Avatar src={row.profile_url} sx={{ width: 50, height: 50, margin: 'auto' }}></Avatar>
+                      <Avatar src={row.user_profile} sx={{ width: 50, height: 50, margin: 'auto' }}></Avatar>
                     </TableCell>
-                    <TableCell align="center">{row.dept}</TableCell>
-                    <TableCell align="center">{'홍길동'}</TableCell>
-                    <TableCell align="center">{row.position}</TableCell>
-                    <TableCell align="center">{row.authority_date}</TableCell>
+                    <TableCell align="center">{row.dept_name}</TableCell>
+                    <TableCell align="center">{row.user_name}</TableCell>
+                    <TableCell align="center">{row.user_position}</TableCell>
+                    <TableCell align="center">{row.role_designated_date}</TableCell>
                     <TableCell align="center">
-                      <Button onClick={() => setView(true)}> 권한 변경</Button>
+                      <Button onClick={() => clickDetailAuth(row.user_no)}> 권한 변경</Button>
                     </TableCell>
                   </TableRow>
                 );
@@ -120,7 +129,15 @@ export default function SettingAuthorityTable() {
         </TableContainer>
       </Box>
       <Stack alignItems="center" mt={2}>
-        <Pagination count={5} variant="outlined" shape="rounded" />
+        <Pagination
+          count={5}
+          variant="outlined"
+          shape="rounded"
+          page={now_page}
+          onChange={(event, page) => {
+            setPage(page);
+          }}
+        />
       </Stack>
     </>
   );

@@ -18,27 +18,35 @@ import axios from '../../node_modules/axios/index';
 const QueryUserInformation = () => {
   const { setTableList } = useUserTableListState();
   const { OrganizationChart, setOrganizationChartList } = useOrganizationChartState();
-  const { search, limit, setPage } = useCriteria();
+  const { search, limit, setPage, setSearch } = useCriteria();
 
   useEffect(() => {
     async function get() {
-      const result = await axios.get('http://localhost:8000/get_query_user');
+      const result = await axios.get('http://localhost:8000/user_query_list');
       const groups = result.data.reduce(
         (groups, item) => ({
           ...groups,
-          [item.dept]: [...(groups[item.dept] || []), item]
+          [item.dept_name]: [...(groups[item.dept_name] || []), item]
         }),
         {}
       );
       setOrganizationChartList(groups);
+      setPage(1);
+      setSearch('');
     }
     get();
   }, []);
 
-  async function search_user(search, limit) {
+  async function search_user(search) {
     setPage(1);
-    const result = await axios.get(`http://localhost:8000/get_query_user?name=${search}&_page=1&_limit=${limit}`);
+    const result = await axios.get(`http://localhost:8000/user_query?user_name=${search}&_page=1&_limit=${limit}`);
     setTableList(result.data);
+  }
+
+  async function clickTreeItem(user_name) {
+    setPage(1);
+    setSearch(user_name);
+    search_user(user_name);
   }
 
   return (
@@ -51,10 +59,19 @@ const QueryUserInformation = () => {
             <TreeView defaultCollapseIcon={<ExpandMoreIcon />} defaultExpandIcon={<ChevronRightIcon />}>
               {Object.keys(OrganizationChart).map((dept, index) => {
                 return (
-                  <TreeItem key={index+''} nodeId={index+''} label={dept}>
+                  <TreeItem key={index + ''} nodeId={index + ''} label={dept}>
                     {OrganizationChart[dept] &&
                       OrganizationChart[dept].map((value, index) => {
-                        return <TreeItem key={dept + index} nodeId={dept + index} label={value.name + ' ' + value.position}></TreeItem>;
+                        return (
+                          <TreeItem
+                            key={dept + index}
+                            nodeId={dept + index}
+                            label={value.user_name + ' ' + value.user_position}
+                            onClick={() => {
+                              clickTreeItem(value.user_name);
+                            }}
+                          ></TreeItem>
+                        );
                       })}
                   </TreeItem>
                 );
@@ -65,7 +82,7 @@ const QueryUserInformation = () => {
         <Grid item xs={10}>
           <MainCard>
             <Typography variant="h4">사용자명으로 검색</Typography>
-            <InputSeach isPersonIcon={true} onClick={() => search_user(search, limit)}></InputSeach>
+            <InputSeach isPersonIcon={true} onClick={() => search_user(search)}></InputSeach>
             <QueryUserTable></QueryUserTable>
           </MainCard>
         </Grid>
