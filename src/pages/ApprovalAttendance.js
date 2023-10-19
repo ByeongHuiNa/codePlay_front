@@ -28,6 +28,7 @@ import ApprovalTab from 'components/tab/ApprovalTab';
 import styled from 'styled-components';
 import AdminAppLeaveTable from 'components/Table/AdminAppLeaveTable';
 import AdminAppAttendTable from 'components/Table/AdminAppAttendTable';
+import BasicChip from 'components/Chip/BasicChip';
 
 const ApprovalAttendance = () => {
   const [value1, setValue1] = useState(0); // 전체 Tab
@@ -170,14 +171,6 @@ const ApprovalAttendance = () => {
         : value3 === 1
         ? '0px 2px 6px rgba(0, 0, 0, 0.2)'
         : '0px 0px 0px 0px'};
-  `;
-
-  // Chip 커스텀
-  const MyChip = styled(Chip)`
-    background-color: gray;
-    color: white;
-    width: 100px;
-    margin-right: 10px;
   `;
 
   const AppChip = styled(Chip)`
@@ -361,13 +354,19 @@ const ApprovalAttendance = () => {
                     </MyTabs>
                   </Box>
                   <ApprovalTab value={value2} index={0}>
-                    <AdminAppLeaveTable appLeaveStatus={0} datas={leaveDatas} setSelectLeaveData={setSelectLeaveData} />
+                    <Box p={3}>
+                      <AdminAppLeaveTable appLeaveStatus={0} datas={leaveDatas} setSelectLeaveData={setSelectLeaveData} />
+                    </Box>
                   </ApprovalTab>
                   <ApprovalTab value={value2} index={1}>
-                    <AdminAppLeaveTable appLeaveStatus={1} datas={leaveDatas} setSelectLeaveData={setSelectLeaveData} />
+                    <Box p={3}>
+                      <AdminAppLeaveTable appLeaveStatus={1} datas={leaveDatas} setSelectLeaveData={setSelectLeaveData} />
+                    </Box>
                   </ApprovalTab>
                   <ApprovalTab value={value2} index={2}>
-                    <AdminAppLeaveTable appLeaveStatus={2} datas={leaveDatas} setSelectLeaveData={setSelectLeaveData} />
+                    <Box p={3}>
+                      <AdminAppLeaveTable appLeaveStatus={2} datas={leaveDatas} setSelectLeaveData={setSelectLeaveData} />
+                    </Box>
                   </ApprovalTab>
                 </Grid>
                 <Grid item xs={6} md={6} lg={6}>
@@ -391,7 +390,7 @@ const ApprovalAttendance = () => {
                             </Grid>
                           </Grid>
                           <Box clone mt={2}>
-                            <MyChip label="제목" />
+                            <BasicChip label="제목" color="gray" />
                             <TextField
                               size="small"
                               defaultValue={selectLeaveData.leaveTitle}
@@ -401,7 +400,7 @@ const ApprovalAttendance = () => {
                             />
                           </Box>
                           <Box clone mt={2}>
-                            <MyChip label="사용자" />
+                            <BasicChip label="사용자" color="gray" />
                             <TextField
                               size="small"
                               defaultValue={selectLeaveData.leaveUser}
@@ -411,7 +410,7 @@ const ApprovalAttendance = () => {
                             />
                           </Box>
                           <Box clone mt={2}>
-                            <MyChip label="휴가 종류" />
+                            <BasicChip label="휴가 종류" color="gray" />
                             <TextField
                               size="small"
                               defaultValue={selectLeaveData.leaveKind}
@@ -422,7 +421,7 @@ const ApprovalAttendance = () => {
                           </Box>
                           {(selectLeaveData.leaveKind == '연차' || selectLeaveData.leaveKind == '공가') && (
                             <Box clone mt={2}>
-                              <MyChip label="연차 기간" />
+                              <BasicChip label="연차 기간" color="gray" />
                               <TextField
                                 size="small"
                                 defaultValue={`${selectLeaveData.leaveStart} ~ ${selectLeaveData.leaveEnd}`}
@@ -434,7 +433,7 @@ const ApprovalAttendance = () => {
                           )}
                           {selectLeaveData.leaveKind == '반차' && (
                             <Box clone mt={2}>
-                              <MyChip label="반차 시간" />
+                              <BasicChip label="반차 시간" color="gray" />
                               <TextField
                                 size="small"
                                 defaultValue={`${selectLeaveData.leaveStart} ${selectLeaveData.halfKind == 0 ? '오전' : '오후'}`}
@@ -445,7 +444,7 @@ const ApprovalAttendance = () => {
                             </Box>
                           )}
                           <Box clone mt={2}>
-                            <MyChip label="휴가 사유" />
+                            <BasicChip label="휴가 사유" color="gray" />
                             <TextField
                               multiline
                               rows={3}
@@ -457,7 +456,7 @@ const ApprovalAttendance = () => {
                           </Box>
                           {(selectLeaveData.status == 0 || selectLeaveData.status == 1) && (
                             <Box clone mt={2}>
-                              <MyChip label="결재 상태" />
+                              <BasicChip label="결재 상태" color="gray" />
                               <TextField
                                 size="small"
                                 defaultValue={selectLeaveData.status == 0 ? '승인' : '반려'}
@@ -593,13 +592,19 @@ const ApprovalAttendance = () => {
                     </MyTabs>
                   </Box>
                   <ApprovalTab value={value3} index={0}>
-                    <AdminAppAttendTable appAttendStatus={0} datas={attendDatas} setSelectAttendData={setSelectAttendData} />
+                    <Box p={3}>
+                      <AdminAppAttendTable appAttendStatus={0} datas={attendDatas} setSelectAttendData={setSelectAttendData} />
+                    </Box>
                   </ApprovalTab>
                   <ApprovalTab value={value3} index={1}>
-                    <AdminAppAttendTable appAttendStatus={1} datas={attendDatas} setSelectAttendData={setSelectAttendData} />
+                    <Box p={3}>
+                      <AdminAppAttendTable appAttendStatus={1} datas={attendDatas} setSelectAttendData={setSelectAttendData} />
+                    </Box>
                   </ApprovalTab>
                   <ApprovalTab value={value3} index={2}>
-                    <AdminAppAttendTable appAttendStatus={2} datas={attendDatas} setSelectAttendData={setSelectAttendData} />
+                    <Box p={3}>
+                      <AdminAppAttendTable appAttendStatus={2} datas={attendDatas} setSelectAttendData={setSelectAttendData} />
+                    </Box>
                   </ApprovalTab>
                 </Grid>
                 <Grid item xs={6} md={6} lg={6}>
@@ -623,7 +628,7 @@ const ApprovalAttendance = () => {
                             </Grid>
                           </Grid>
                           <Box clone mt={2}>
-                            <MyChip label="제목" />
+                            <BasicChip label="제목" color="gray" />
                             <TextField
                               size="small"
                               defaultValue={selectAttendData.attendTitle}
@@ -633,7 +638,7 @@ const ApprovalAttendance = () => {
                             />
                           </Box>
                           <Box clone mt={2}>
-                            <MyChip label="수정 날짜" />
+                            <BasicChip label="수정 날짜" color="gray" />
                             <TextField
                               size="small"
                               defaultValue={selectAttendData.attendDate}
@@ -643,7 +648,7 @@ const ApprovalAttendance = () => {
                             />
                           </Box>
                           <Box clone mt={2}>
-                            <MyChip label="사용자" />
+                            <BasicChip label="사용자" color="gray" />
                             <TextField
                               size="small"
                               defaultValue={selectAttendData.attendUser}
@@ -653,7 +658,7 @@ const ApprovalAttendance = () => {
                             />
                           </Box>
                           <Box clone mt={2}>
-                            <MyChip label="수정 사항" />
+                            <BasicChip label="수정 사항" color="gray" />
                             <TextField
                               size="small"
                               defaultValue={selectAttendData.attendKind}
@@ -663,7 +668,7 @@ const ApprovalAttendance = () => {
                             />
                           </Box>
                           <Box clone mt={2}>
-                            <MyChip label="수정 사유" />
+                            <BasicChip label="수정 사유" color="gray" />
                             <TextField
                               multiline
                               rows={3}
@@ -676,7 +681,7 @@ const ApprovalAttendance = () => {
 
                           {(selectAttendData.status === 0 || selectAttendData.status === 1) && (
                             <Box clone mt={2}>
-                              <MyChip label="결재 상태" />
+                              <BasicChip label="결재 상태" color="gray" />
                               <TextField
                                 size="small"
                                 defaultValue={selectAttendData.status == 0 ? '승인' : '반려'}
