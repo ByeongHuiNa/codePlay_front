@@ -145,31 +145,20 @@ OrderStatus.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function RecentAttendTable({ handleOpenUpdate }) {
+export default function RecentAttendTable({ datas }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
 
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
 
-  function createData(date, startTime, endTime, status) {
-    return { date, startTime, endTime, status };
-  }
-
-  const datas = [
-    createData('2023/10/11', '08:57:10', '18:05:12', 0),
-    createData('2023/10/12', '08:59:26', '18:21:06', 1),
-    createData('2023/10/13', '08:50:13', '18:12:58', 2),
-    createData('2023/10/14', '08:06:35', '18:07:26', 3),
-    createData('2023/10/15', '08:32:57', '18:01:13', 4)
-  ];
-
   return (
     <Box>
       <TableContainer
         sx={{
           width: '100%',
-          overflowX: 'auto',
+          height: '650px',
+          overflow: 'auto',
           position: 'relative',
           display: 'block',
           maxWidth: '100%',
@@ -212,7 +201,7 @@ export default function RecentAttendTable({ handleOpenUpdate }) {
                     <OrderStatus status={data.status} />
                   </TableCell>
                   <TableCell align="center">
-                    <Button variant="contained" onClick={handleOpenUpdate}>
+                    <Button variant="contained" size="small">
                       <FormOutlined />
                       <Box clone pl={1}>
                         수정요청

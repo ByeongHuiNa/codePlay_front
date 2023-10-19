@@ -151,6 +151,7 @@ export default function UserAttendTable({ datas, setSelectAttendData }) {
           display: 'block',
           maxWidth: '100%',
           height: '492px',
+          padding: '0px',
           '& td, & th': { whiteSpace: 'nowrap' }
         }}
       >

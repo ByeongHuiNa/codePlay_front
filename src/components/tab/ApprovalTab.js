@@ -11,7 +11,6 @@ function ApprovalTab(props) {
       {value === index && (
         <Box
           sx={{
-            p: 3,
             border: '1px solid #e6ebf1',
             borderBottomLeftRadius: '8px',
             borderBottomRightRadius: '8px'
