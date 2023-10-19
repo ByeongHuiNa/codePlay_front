@@ -7,7 +7,7 @@ import InputSeach from 'components/Input/InputSearch';
 import { Grid } from '../../node_modules/@mui/material/index';
 
 //icon import
-import { useTabState, useTableListState } from 'store/module';
+import { useDetailCardState, useTabState, useTableListState } from 'store/module';
 import { useEffect } from 'react';
 import axios from '../../node_modules/axios/index';
 import SettingAttendancePolicyTable from 'components/Table/SettingAttendancePolicyTable';
@@ -21,14 +21,27 @@ import AttendancePolicyDetailCard from 'components/Card/AttendancePolicyDetailCa
 const SettingAttendancePolicy = () => {
   const { setIndex, setTab } = useTabState();
   const { setTableList } = useTableListState();
-  const endPoints = ['http://localhost:8000/get_policy_number', 'http://localhost:8000/get_user_authority_list?role=ROLE_USER'];
+  const { view, setView } = useDetailCardState();
 
+  const endPoints = ['http://localhost:8000/policy_count', 'http://localhost:8000/get_user_authority_list?role=ROLE_USER'];
+
+  //화면 초기값 셋팅
   useEffect(() => {
     setIndex(0);
     async function get() {
       const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
-      setTab(result[0].data);
+      const tabs = [];
+      for (let i of result[0].data) {
+        const tab_temp = {
+          id: i.policy_no,
+          name: i.policy_name,
+          number: i.count
+        };
+        tabs.push(tab_temp);
+      }
+      setTab(tabs);
       setTableList(result[1].data);
+      setView(false);
     }
     get();
   }, []);
@@ -36,8 +49,8 @@ const SettingAttendancePolicy = () => {
   return (
     <>
       <Typography variant="h2">정규 출/퇴근 정책</Typography>
-      <Grid container xs={12} direction="row">
-        <Grid item xs={8}>
+      <Grid container direction="row">
+        <Grid item xs={view == 1 ? 8 : 12}>
           <MainCard>
             <Typography variant="h4">사용자명으로 검색</Typography>
             <InputSeach isPersonIcon={true}></InputSeach>
@@ -45,9 +58,11 @@ const SettingAttendancePolicy = () => {
             <SettingAttendancePolicyTable />
           </MainCard>
         </Grid>
-        <Grid item xs={4}>
-          <AttendancePolicyDetailCard></AttendancePolicyDetailCard>
-        </Grid>
+        {view == 1 && (
+          <Grid item xs={4}>
+            <AttendancePolicyDetailCard></AttendancePolicyDetailCard>
+          </Grid>
+        )}
       </Grid>
     </>
   );
