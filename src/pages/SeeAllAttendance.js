@@ -40,7 +40,6 @@ const SeeAllAttendance = () => {
     newDate.setDate(newDate.getDate() - 1);
     setDate(newDate);
   };
-  
 
   const handleNextDay = () => {
     const newDate = new Date(date);
@@ -85,33 +84,34 @@ const SeeAllAttendance = () => {
       <BasicTab value={value} index={0}>
         <Grid item xs={12} sm={6} md={5} lg={7}>
           <MainCard>
-          <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Typography variant="h5">{dept}부서 휴가보유 현황</Typography>
-                <FormControl sx={{ marginLeft: 3 }}>
-                  <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                    부서
-                  </InputLabel>
-                  <NativeSelect
-                    onChange={handleChange2}
-                    inputProps={{
-                      name: 'month',
-                      id: 'uncontrolled-native'
-                    }}
-                  >
-                    <option value={'개발'}>개발부서</option>
-                    <option value={'인사'}>인사부서</option>
-                    <option value={'회계'}>회계부서</option>
-                    
-                  </NativeSelect>
-                </FormControl>
+            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <Typography variant="h5">{dept}부서 휴가보유 현황</Typography>
+              <FormControl sx={{ marginLeft: 3 }}>
+                <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                  부서
+                </InputLabel>
+                <NativeSelect
+                  onChange={handleChange2}
+                  inputProps={{
+                    name: 'month',
+                    id: 'uncontrolled-native'
+                  }}
+                >
+                  <option value={'개발'}>개발부서</option>
+                  <option value={'인사'}>인사부서</option>
+                  <option value={'회계'}>회계부서</option>
+                </NativeSelect>
+              </FormControl>
             </Grid>
 
-                
-            
-
-            <TextField id="outlined-basic" label="직책명" variant="outlined" InputLabelProps={{
+            <TextField
+              id="outlined-basic"
+              label="직책명"
+              variant="outlined"
+              InputLabelProps={{
                 shrink: true
-              }}/>
+              }}
+            />
             <TextField
               id="outlined-basic"
               label="사원명"
@@ -144,10 +144,14 @@ const SeeAllAttendance = () => {
                   <ArrowBackIosNewOutlinedIcon />
                 </IconButton>
 
-                <Typography variant="h5" sx={{ textAlign: 'center', flexGrow: 1 }}>
+                <Typography variant="h5" sx={{ textAlign: 'center' }}>
                   {dept ? `${dept} 부서 출/퇴근 현황` : '개발 부서 출/퇴근 현황 '}
+                </Typography>
+
+                <Typography variant="h5" sx={{ textAlign: 'center' }}>
                   {date.toLocaleDateString()}
                 </Typography>
+
                 <FormControl sx={{ minWidth: 100 }}>
                   <InputLabel id="demo-simple-select-label">부서</InputLabel>
                   <Select labelId="demo-simple-select-label" id="demo-simple-select" value={dept} label="month" onChange={handleChange2}>
@@ -161,48 +165,50 @@ const SeeAllAttendance = () => {
                   <ArrowForwardIosOutlinedIcon />
                 </IconButton>
               </div>
-              <Grid container rowSpacing={4} columnSpacing={2.75}>
-                <Grid item xs={2.5}>
-                  <MainCard>
-                    <Typography variant="h4" align="center">
-                      전체
-                    </Typography>
-                    <Typography variant="h4" align="center">
-                      5건
-                    </Typography>
-                  </MainCard>
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Grid container xs={9} rowSpacing={4} columnSpacing={2.75}>
+                  <Grid item xs={3}>
+                    <MainCard>
+                      <Typography variant="h4" align="center">
+                        전체
+                      </Typography>
+                      <Typography variant="h4" align="center">
+                        5건
+                      </Typography>
+                    </MainCard>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <MainCard>
+                      <Typography variant="h4" align="center">
+                        정상
+                      </Typography>
+                      <Typography variant="h4" align="center">
+                        1건
+                      </Typography>
+                    </MainCard>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <MainCard>
+                      <Typography variant="h4" align="center">
+                        근태이상
+                      </Typography>
+                      <Typography variant="h4" align="center">
+                        3건
+                      </Typography>
+                    </MainCard>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <MainCard>
+                      <Typography variant="h4" align="center">
+                        휴가
+                      </Typography>
+                      <Typography variant="h4" align="center">
+                        1건
+                      </Typography>
+                    </MainCard>
+                  </Grid>
                 </Grid>
-                <Grid item xs={2.5}>
-                  <MainCard>
-                    <Typography variant="h4" align="center">
-                      정상
-                    </Typography>
-                    <Typography variant="h4" align="center">
-                      1건
-                    </Typography>
-                  </MainCard>
-                </Grid>
-                <Grid item xs={2.5}>
-                  <MainCard>
-                    <Typography variant="h4" align="center">
-                      근태이상
-                    </Typography>
-                    <Typography variant="h4" align="center">
-                      3건
-                    </Typography>
-                  </MainCard>
-                </Grid>
-                <Grid item xs={2.5}>
-                  <MainCard>
-                    <Typography variant="h4" align="center">
-                      휴가
-                    </Typography>
-                    <Typography variant="h4" align="center">
-                      1건
-                    </Typography>
-                  </MainCard>
-                </Grid>
-              </Grid>
+              </div>
               <AttendanceDayTable />
             </MainCard>
           </Grid>
@@ -232,48 +238,50 @@ const SeeAllAttendance = () => {
                   <ArrowForwardIosOutlinedIcon />
                 </IconButton>
               </div>
-              <Grid container rowSpacing={4} columnSpacing={2.75}>
-                <Grid item xs={2.5}>
-                  <MainCard>
-                    <Typography variant="h4" align="center">
-                      전체
-                    </Typography>
-                    <Typography variant="h4" align="center">
-                      5
-                    </Typography>
-                  </MainCard>
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Grid container xs={9} rowSpacing={4} columnSpacing={2.75}>
+                  <Grid item xs={3}>
+                    <MainCard>
+                      <Typography variant="h4" align="center">
+                        전체
+                      </Typography>
+                      <Typography variant="h4" align="center">
+                        5건
+                      </Typography>
+                    </MainCard>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <MainCard>
+                      <Typography variant="h4" align="center">
+                        정상
+                      </Typography>
+                      <Typography variant="h4" align="center">
+                        1건
+                      </Typography>
+                    </MainCard>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <MainCard>
+                      <Typography variant="h4" align="center">
+                        근태이상
+                      </Typography>
+                      <Typography variant="h4" align="center">
+                        3건
+                      </Typography>
+                    </MainCard>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <MainCard>
+                      <Typography variant="h4" align="center">
+                        휴가
+                      </Typography>
+                      <Typography variant="h4" align="center">
+                        1건
+                      </Typography>
+                    </MainCard>
+                  </Grid>
                 </Grid>
-                <Grid item xs={2.5}>
-                  <MainCard>
-                    <Typography variant="h4" align="center">
-                      정상
-                    </Typography>
-                    <Typography variant="h4" align="center">
-                      1
-                    </Typography>
-                  </MainCard>
-                </Grid>
-                <Grid item xs={2.5}>
-                  <MainCard>
-                    <Typography variant="h4" align="center">
-                      근태이상
-                    </Typography>
-                    <Typography variant="h4" align="center">
-                      3
-                    </Typography>
-                  </MainCard>
-                </Grid>
-                <Grid item xs={2.5}>
-                  <MainCard>
-                    <Typography variant="h4" align="center">
-                      휴가
-                    </Typography>
-                    <Typography variant="h4" align="center">
-                      1건
-                    </Typography>
-                  </MainCard>
-                </Grid>
-              </Grid>
+              </div>
               <AttendanceWeekTable />
             </MainCard>
           </Grid>
