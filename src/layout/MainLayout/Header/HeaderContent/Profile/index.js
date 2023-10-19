@@ -26,8 +26,8 @@ import ProfileTab from './ProfileTab';
 import SettingTab from './SettingTab';
 
 // assets
-import avatar1 from 'assets/images/users/avatar-1.png';
 import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { useProfileState } from 'store/module';
 
 // tab panel wrapper
 function TabPanel({ children, value, index, ...other }) {
@@ -81,6 +81,8 @@ const Profile = () => {
 
   const iconBackColorOpen = 'grey.300';
 
+  const { profile } = useProfileState();
+
   return (
     <Box sx={{ flexShrink: 0, ml: 0.75 }}>
       <ButtonBase
@@ -96,10 +98,12 @@ const Profile = () => {
         aria-haspopup="true"
         onClick={handleToggle}
       >
-        <Stack direction="row" spacing={2} alignItems="center" sx={{ p: 0.5 }}>
-          <Avatar alt="profile user" src={avatar1} sx={{ width: 32, height: 32 }} />
-          <Typography variant="subtitle1">John Doe</Typography>
-        </Stack>
+        {Object.keys(profile).length > 0 && (
+          <Stack direction="row" spacing={2} alignItems="center" sx={{ p: 0.5 }}>
+            <Avatar src={profile.user_profile} sx={{ width: 32, height: 32 }} />
+            <Typography variant="subtitle1">{profile.user_name}</Typography>
+          </Stack>
+        )}
       </ButtonBase>
       <Popper
         placement="bottom-end"
@@ -138,15 +142,17 @@ const Profile = () => {
                     <CardContent sx={{ px: 2.5, pt: 3 }}>
                       <Grid container justifyContent="space-between" alignItems="center">
                         <Grid item>
-                          <Stack direction="row" spacing={1.25} alignItems="center">
-                            <Avatar alt="profile user" src={avatar1} sx={{ width: 32, height: 32 }} />
-                            <Stack>
-                              <Typography variant="h6">John Doe</Typography>
-                              <Typography variant="body2" color="textSecondary">
-                                UI/UX Designer
-                              </Typography>
+                          {Object.keys(profile).length > 0 && (
+                            <Stack direction="row" spacing={1.25} alignItems="center">
+                              <Avatar src={profile.user_profile} sx={{ width: 32, height: 32 }} />
+                              <Stack>
+                                <Typography variant="h6">{profile.user_name}</Typography>
+                                <Typography variant="body2" color="textSecondary">
+                                  {`${profile.dept_name}/${profile.user_position}`}
+                                </Typography>
+                              </Stack>
                             </Stack>
-                          </Stack>
+                          )}
                         </Grid>
                         <Grid item>
                           <IconButton size="large" color="secondary" onClick={handleLogout}>

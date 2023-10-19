@@ -59,7 +59,7 @@ const managerMenu = {
     },
     {
       id: 'settingAttendancePolicy',
-      title: '출퇴근시간관리',
+      title: '출퇴근정책관리',
       type: 'item',
       url: '/settingAttendancePolicy',
       icon: icons.FormOutlined,
