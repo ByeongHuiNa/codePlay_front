@@ -8,7 +8,6 @@ import { Box, Stack, Table, TableBody, TableCell, TableContainer, TableHead, Tab
 import { Button, Typography } from '../../../node_modules/@mui/material/index';
 
 // 아이콘
-import { FormOutlined } from '@ant-design/icons';
 import Dot from 'components/@extended/Dot';
 
 function descendingComparator(a, b, orderBy) {
@@ -145,7 +144,7 @@ OrderStatus.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function RecentAttendTable({ datas }) {
+export default function RecentAttendTable({ datas, handleMyCard }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
@@ -162,10 +161,21 @@ export default function RecentAttendTable({ datas }) {
           position: 'relative',
           display: 'block',
           maxWidth: '100%',
-          '& td, & th': { whiteSpace: 'nowrap' }
+          '& td, & th': { whiteSpace: 'nowrap' },
+          '&::-webkit-scrollbar': {
+            width: 5
+          },
+          '&::-webkit-scrollbar-track': {
+            backgroundColor: 'white'
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: 'gray',
+            borderRadius: 2
+          }
         }}
       >
         <Table
+          stickyHeader
           aria-labelledby="tableTitle"
           sx={{
             '& .MuiTableCell-root:first-of-type': {
@@ -201,11 +211,14 @@ export default function RecentAttendTable({ datas }) {
                     <OrderStatus status={data.status} />
                   </TableCell>
                   <TableCell align="center">
-                    <Button variant="contained" size="small">
-                      <FormOutlined />
-                      <Box clone pl={1}>
-                        수정요청
-                      </Box>
+                    <Button
+                      variant="contained"
+                      size="small"
+                      onClick={() => {
+                        handleMyCard(data);
+                      }}
+                    >
+                      <Box clone>선택</Box>
                     </Button>
                   </TableCell>
                 </TableRow>
