@@ -54,6 +54,7 @@ export const useCriteria = create(
     limit: 10,
     search: '',
     setPage: (new_Page) => set(() => ({ now_page: new_Page })),
+    setLimit: (new_limit) => set(() => ({ limit: new_limit })),
     setSearch: (newSearch) => set(() => ({ search: newSearch }))
   }))
 );
@@ -62,8 +63,10 @@ export const useDetailCardState = create(
   devtools((set) => ({
     view: false,
     id: -1,
+    content: {},
     setView: (newView) => set(() => ({ view: newView })),
-    setId: (newId) => set(() => ({ id: newId }))
+    setId: (newId) => set(() => ({ id: newId })),
+    setContent: (newContent) => set(() => ({ content: newContent }))
   }))
 );
 
@@ -71,5 +74,12 @@ export const useProfileState = create(
   devtools((set) => ({
     profile: {},
     setProfile: (newProfile) => set(() => ({ profile: newProfile }))
+  }))
+);
+
+export const useHasDrity = create(
+  devtools((set) => ({
+    hasDrity: false,
+    setHasDrity: (hasDrity) => set(() => ({ hasDrity: hasDrity }))
   }))
 );
