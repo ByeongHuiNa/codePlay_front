@@ -1,6 +1,6 @@
 import { Typography, Box, Grid, Tab, Tabs } from '@mui/material';
 import ComponentSkeleton from './components-overview/ComponentSkeleton';
-import { FormControl, IconButton, InputLabel, MenuItem, TextField } from '../../node_modules/@mui/material/index';
+import { FormControl, IconButton, InputLabel, MenuItem, NativeSelect, TextField } from '../../node_modules/@mui/material/index';
 import Select from '@mui/material/Select';
 import VacationCountTable from 'components/Table/VacationCountTable';
 import AttendanceDayTable from 'components/Table/AttendanceDayTable';
@@ -40,6 +40,7 @@ const SeeAllAttendance = () => {
     newDate.setDate(newDate.getDate() - 1);
     setDate(newDate);
   };
+  
 
   const handleNextDay = () => {
     const newDate = new Date(date);
@@ -83,24 +84,43 @@ const SeeAllAttendance = () => {
 
       <BasicTab value={value} index={0}>
         <Grid item xs={12} sm={6} md={5} lg={7}>
-          <MainCard
-            title={
-              <Typography variant="h5" sx={{ textAlign: 'center' }}>
-                {dept ? `${dept} 부서 휴가보유 현황` : '00부서 휴가보유 현황'}
-              </Typography>
-            }
-          >
-            <FormControl sx={{ minWidth: 100 }}>
-              <InputLabel id="demo-simple-select-label">부서</InputLabel>
-              <Select labelId="demo-simple-select-label" id="demo-simple-select" value={dept} label="month" onChange={handleChange2}>
-                <MenuItem value={'개발'}>개발</MenuItem>
-                <MenuItem value={'인사'}>인사</MenuItem>
-                <MenuItem value={'회계'}>회계</MenuItem>
-              </Select>
-            </FormControl>
+          <MainCard>
+          <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Typography variant="h5">{dept}부서 휴가보유 현황</Typography>
+                <FormControl sx={{ marginLeft: 3 }}>
+                  <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                    부서
+                  </InputLabel>
+                  <NativeSelect
+                    onChange={handleChange2}
+                    inputProps={{
+                      name: 'month',
+                      id: 'uncontrolled-native'
+                    }}
+                  >
+                    <option value={'개발'}>개발부서</option>
+                    <option value={'인사'}>인사부서</option>
+                    <option value={'회계'}>회계부서</option>
+                    
+                  </NativeSelect>
+                </FormControl>
+            </Grid>
 
-            <TextField id="outlined-basic" label="직책명" variant="outlined" />
-            <TextField id="outlined-basic" label="사원명" variant="outlined" />
+                
+            
+
+            <TextField id="outlined-basic" label="직책명" variant="outlined" InputLabelProps={{
+                shrink: true
+              }}/>
+            <TextField
+              id="outlined-basic"
+              label="사원명"
+              variant="outlined"
+              InputLabelProps={{
+                shrink: true
+              }}
+            />
+
             <IconButton type="submit" sx={{ p: '10px' }} aria-label="search">
               <SearchIcon />
             </IconButton>
