@@ -55,31 +55,31 @@ function stableSort(array, comparator) {
 const headCells = [
   {
     id: 'name',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     label: '이름'
   },
   {
     id: 'position',
-    align: 'left',
+    align: 'center',
     disablePadding: true,
     label: '직책'
   },
   {
     id: 'start',
-    align: 'right',
+    align: 'center',
     disablePadding: false,
     label: '출근시간'
   },
   {
     id: 'end',
-    align: 'right',
+    align: 'center',
     disablePadding: false,
     label: '퇴근시간'
   },
   {
     id: 'hours',
-    align: 'right',
+    align: 'center',
     disablePadding: false,
     label: '근무시간'
   },
@@ -211,16 +211,16 @@ export default function AttendanceDayTable() {
                   key={row.trackingNo}
                   selected={isItemSelected}
                 >
-                  <TableCell component="th" id={labelId} scope="row" align="left">
+                  <TableCell component="th" id={labelId} scope="row" align="center">
                     <Link color="secondary" component={RouterLink} to="">
                       {row.name}
                     </Link>
                   </TableCell>
-                  <TableCell align="left">{row.position}</TableCell>
-                  <TableCell align="right">{row.start}</TableCell>
-                  <TableCell align="right">{row.end}</TableCell>
-                  <TableCell align="right">{row.hours}</TableCell>
-                  <TableCell align="right">
+                  <TableCell align="center">{row.position}</TableCell>
+                  <TableCell align="center">{row.start}</TableCell>
+                  <TableCell align="center">{row.end}</TableCell>
+                  <TableCell align="center">{row.hours}</TableCell>
+                  <TableCell align="center">
                     <AttendanceDayStatus status={row.status} />
                   </TableCell>
                 </TableRow>
