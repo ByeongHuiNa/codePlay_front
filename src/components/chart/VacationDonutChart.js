@@ -10,19 +10,23 @@ import MainCard from 'components/MainCard';
 const barChartOptions = {
   chart: {
     type: 'donut',
-    height: 365,
+    
     toolbar: {
-      show: false
+      show: false,
+      name
     }
   },
   plotOptions: {
     pie: {
-      columnWidth: '45%',
-      borderRadius: 4
+      donut: {
+        labels: {
+          show:true
+        }
+      }
     }
   },
   dataLabels: {
-    enabled: false
+    enabled: true
   },
   xaxis: {
     categories: ['잔여휴가', '사용휴가'],

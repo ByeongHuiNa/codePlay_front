@@ -57,31 +57,31 @@ function stableSort(array, comparator) {
 const headCells = [
   {
     id: 'name',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     label: '이름'
   },
   {
     id: 'position',
-    align: 'left',
+    align: 'center',
     disablePadding: true,
     label: '직책'
   },
   {
     id: 'total',
-    align: 'right',
+    align: 'center',
     disablePadding: false,
     label: '총휴가일수'
   },
   {
     id: 'use',
-    align: 'right',
+    align: 'center',
     disablePadding: false,
     label: '사용일수'
   },
   {
     id: 'remain',
-    align: 'right',
+    align: 'center',
     disablePadding: false,
     label: '잔여일수'
   }
@@ -202,10 +202,10 @@ export default function VacationCountTable() {
                       {row.name}
                     </Link>
                   </TableCell>
-                  <TableCell align="left">{row.position}</TableCell>
-                  <TableCell align="right">{row.total}</TableCell>
-                  <TableCell align="right">{row.use}</TableCell>
-                  <TableCell align="right">{row.remain}</TableCell>
+                  <TableCell align="center">{row.position}</TableCell>
+                  <TableCell align="center">{row.total}</TableCell>
+                  <TableCell align="center">{row.use}</TableCell>
+                  <TableCell align="center">{row.remain}</TableCell>
                   
                   
                 </TableRow>

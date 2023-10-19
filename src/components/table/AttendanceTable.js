@@ -10,19 +10,20 @@ import { Box, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHea
 
 // project import
 import Dot from 'components/@extended/Dot';
+import { Grid, Pagination } from '../../../node_modules/@mui/material/index';
+import MainCard from 'components/MainCard';
 
-function createData(date, category, start, wherestart, end, whereend) {
-  return { date, category, start, wherestart, end, whereend };
+function createData(date, start, end, status) {
+  return { date, start, end, status };
 }
 
 const rows = [
-  createData(20231012, '일반', '09:00', '강촌', '18:00', '강촌'),
-  createData(20231011, '일반', '09:00', '강촌', '18:00', '강촌'),
-  createData(20231010, '일반', '09:00', '강촌', '18:00', '강촌'),
-  createData(20231009, '일반', '09:00', '강촌', '18:00', '강촌'),
-  createData(20231008, '일반', '09:00', '강촌', '18:00', '강촌'),
-  createData(20231007, '일반', '09:00', '강촌', '18:00', '강촌')
-  //   createData(98764564, 'Laptop', 300, 0, 180139),
+  createData(20231012, '09:00', '18:00', 1),
+  createData(20231012, '09:00', '18:00', 1),
+  createData(20231012, '09:00', '18:00', 1),
+  createData(20231012, '09:00', '18:00', 1),
+  createData(20231012, '09:00', '18:00', 1)
+
   //   createData(98756325, 'Mobile', 355, 1, 90989),
   //   createData(98652366, 'Handset', 50, 1, 10239),
   //   createData(13286564, 'Computer Accessories', 100, 1, 83348),
@@ -61,39 +62,27 @@ function stableSort(array, comparator) {
 const headCells = [
   {
     id: 'date',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     label: '날짜'
   },
   {
-    id: 'cagegory',
-    align: 'left',
-    disablePadding: true,
-    label: '유형'
-  },
-  {
     id: 'start',
-    align: 'right',
+    align: 'center',
     disablePadding: false,
     label: '출근시각'
   },
   {
-    id: 'wherestart',
-    align: 'right',
-    disablePadding: false,
-    label: '출근위치'
-  },
-  {
     id: 'end',
-    align: 'right',
+    align: 'center',
     disablePadding: false,
     label: '퇴근시각'
   },
   {
-    id: 'endstart',
-    align: 'right',
+    id: 'status',
+    align: 'center',
     disablePadding: false,
-    label: '퇴근위치'
+    label: '근태상태'
   }
 ];
 
@@ -129,26 +118,36 @@ const AttendanceStatus = ({ status }) => {
   let color;
   let title;
 
+  // 0 : 정상출근
+  // 1 : 휴가(연차,반차,공가)
+  // 2 : 지각
+  // 3 : 조퇴(조기퇴근)
+  // 4 : 결근(출근 혹은 퇴근누락))
+
   switch (status) {
     case 0:
-      color = 'warning';
-      title = 'Pending';
+      color = 'success';
+      title = '정상';
       break;
     case 1:
-      color = 'success';
-      title = 'Approved';
+      color = 'primary';
+      title = '휴가';
       break;
     case 2:
-      color = 'error';
-      title = 'Rejected';
+      color = 'secondary';
+      title = '지각';
       break;
-    default:
-      color = 'primary';
-      title = 'None';
+    case 3:
+      color = 'warning';
+      title = '조퇴';
+      break;
+    case 4:
+      color = 'error';
+      title = '결근';
   }
 
   return (
-    <Stack direction="row" spacing={1} alignItems="center">
+    <Stack direction="row" alignItems="center" justifyContent="center" spacing={1}>
       <Dot color={color} />
       <Typography>{title}</Typography>
     </Stack>
@@ -169,7 +168,51 @@ export default function AttendanceTable() {
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
 
   return (
-    <Box>
+    <Box sx={{mt:3}}>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+      <Grid container xs={9} rowSpacing={4} columnSpacing={2.75}>
+        <Grid item xs={3}>
+          <MainCard>
+            <Typography variant="h4" style={{ textAlign: 'center' }}>
+              전체
+            </Typography>
+            <Typography variant="h5" style={{ textAlign: 'center' }}>
+              7건
+            </Typography>
+          </MainCard>
+        </Grid>
+        <Grid item xs={3}>
+          <MainCard>
+            <Typography variant="h4" style={{ textAlign: 'center' }}>
+              정상
+            </Typography>
+            <Typography variant="h5" style={{ textAlign: 'center' }}>
+              7건
+            </Typography>
+          </MainCard>
+        </Grid>
+        <Grid item xs={3}>
+          <MainCard>
+            <Typography variant="h4" style={{ textAlign: 'center' }}>
+              근태이상
+            </Typography>
+            <Typography variant="h5" style={{ textAlign: 'center' }}>
+              0건
+            </Typography>
+          </MainCard>
+        </Grid>
+        <Grid item xs={3}>
+          <MainCard>
+            <Typography variant="h4" style={{ textAlign: 'center' }}>
+              휴가
+            </Typography>
+            <Typography variant="h5" style={{ textAlign: 'center' }}>
+              0건
+            </Typography>
+          </MainCard>
+        </Grid>
+      </Grid>
+      </div>
       <TableContainer
         sx={{
           width: '100%',
@@ -207,22 +250,25 @@ export default function AttendanceTable() {
                   key={row.trackingNo}
                   selected={isItemSelected}
                 >
-                  <TableCell component="th" id={labelId} scope="row" align="left">
+                  <TableCell component="th" id={labelId} scope="row" align="center">
                     <Link color="secondary" component={RouterLink} to="">
                       {row.date}
                     </Link>
                   </TableCell>
-                  <TableCell align="left">{row.category}</TableCell>
-                  <TableCell align="right">{row.start}</TableCell>
-                  <TableCell align="right">{row.wherestart}</TableCell>
-                  <TableCell align="right">{row.end}</TableCell>
-                  <TableCell align="right">{row.whereend}</TableCell>
+                  <TableCell align="center">{row.start}</TableCell>
+                  <TableCell align="center">{row.end}</TableCell>
+                  <TableCell align="center">
+                    <AttendanceStatus status={row.status} />
+                  </TableCell>
                 </TableRow>
               );
             })}
           </TableBody>
         </Table>
       </TableContainer>
+      <Stack alignItems="center" mt={3}>
+        <Pagination count={5} variant="outlined" shape="rounded" />
+      </Stack>
     </Box>
   );
 }
