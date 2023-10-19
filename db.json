@@ -16,10 +16,10 @@
   { "role_level":"3", "role_name": "메인관리자", "count" : 2 },
   { "role_level":"4", "role_name" : "맞춤", "count" : 5}
   ],
-"get_policy_number" : [
-  { "id":"eightToFive", "name": "8 TO 5", "number" : 200 },
-  { "id":"nineToSix", "name": "9 TO 6", "number" : 30 },
-  { "id":"tenToSeven", "name": "10 TO 7", "number" : 10 }
+"policy_count" : [
+  { "policy_no":"0", "policy_name": "8 TO 5", "count" : 200 },
+  { "policy_no":"1", "policy_name": "9 TO 6", "count" : 30 },
+  { "policy_no":"2", "policy_name": "10 TO 7", "count" : 10 }
 ],
 "get_user_authority_list" : [
   { "id":0, "url": "https://picsum.photos/id/1/200/300","dept":"인사팀", "position":"사원", 
