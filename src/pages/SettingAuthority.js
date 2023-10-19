@@ -24,9 +24,10 @@ const SettingAuthority = () => {
   //zustand로 관리할 값들
   const { setIndex, setTab } = useTabState();
   const { setTableList } = useTableListState();
-  const { view } = useDetailCardState();
+  const { view, setView } = useDetailCardState();
   const endPoints = ['http://localhost:8000/role_count', 'http://localhost:8000/get_user_authority_list?role=ROLE_USER'];
 
+  //화면 초기값 셋팅
   useEffect(() => {
     setIndex(0);
     async function get() {
@@ -37,11 +38,12 @@ const SettingAuthority = () => {
           id: i.role_level,
           name: i.role_name,
           number: i.count
-        }
+        };
         tabs.push(tab_temp);
       }
       setTab(tabs);
       setTableList(result[1].data);
+      setView(false);
     }
     get();
   }, []);
@@ -58,9 +60,11 @@ const SettingAuthority = () => {
             <SettingAuthorityTable />
           </MainCard>
         </Grid>
-        {view == 1 && <Grid item xs={4}>
-          <AuthorityDetailCard></AuthorityDetailCard>
-        </Grid>}
+        {view == 1 && (
+          <Grid item xs={4}>
+            <AuthorityDetailCard></AuthorityDetailCard>
+          </Grid>
+        )}
       </Grid>
     </>
   );
