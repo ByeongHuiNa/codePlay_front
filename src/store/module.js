@@ -66,3 +66,10 @@ export const useDetailCardState = create(
     setId: (newId) => set(() => ({ id: newId }))
   }))
 );
+
+export const useProfileState = create(
+  devtools((set) => ({
+    profile: {},
+    setProfile: (newProfile) => set(() => ({ profile: newProfile }))
+  }))
+);
