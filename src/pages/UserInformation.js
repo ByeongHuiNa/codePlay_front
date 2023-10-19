@@ -1,17 +1,24 @@
 // material-ui
-import { Typography, Button, Grid, Avatar } from '@mui/material';
+import { Typography, Button, Grid } from '@mui/material';
 
 // project import
-import MainCard from 'components/MainCard';
 import { useNavigate } from '../../node_modules/react-router-dom/dist/index';
+import MainCard from 'components/MainCard';
+import { Avatar } from '../../node_modules/@mui/material/index';
+import { useProfileState } from 'store/module';
 
 // ==============================|| 유저 정보 PAGE ||============================== //
 
 const UserInformation = () => {
+  //사용자 정보 변경 버튼 눌렀을때 변경 처리
   let navigate = useNavigate();
   function modifiyClick() {
     navigate('/userInformationModify');
   }
+
+  //화면 초기값 셋팅
+  const { profile } = useProfileState();
+
   return (
     <>
       <Grid container direction="row" justifyContent="space-between" alignItems="flex-end">
@@ -20,65 +27,67 @@ const UserInformation = () => {
           사용자 정보 변경
         </Button>
       </Grid>
-      <MainCard>
-        <Grid container direction="column" xs={12}>
-          <Grid item container direction="row" xs={12}>
-            <Grid item xs={5}>
-              <Avatar sx={{ width: 250, height: 250, margin: 'auto' }}>프로필 사진</Avatar>
+      {Object.keys(profile).length > 0 && (
+        <MainCard>
+          <Grid container direction="column">
+            <Grid item container direction="row" xs={12}>
+              <Grid item xs={5}>
+                <Avatar sx={{ width: 250, height: 250, margin: 'auto' }} src={profile.user_profile}></Avatar>
+              </Grid>
+              <Grid item container direction="column" justifyContent="space-around" xs={7}>
+                <Grid item container direction="row">
+                  <Grid item xs={3}>
+                    <Typography variant="h4">이름</Typography>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="h4">{profile.user_name}</Typography>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="h4">생년월일</Typography>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="h4">{profile.user_birth_date}</Typography>
+                  </Grid>
+                </Grid>
+                <Grid item container direction="row">
+                  <Grid item xs={3}>
+                    <Typography variant="h4">부서</Typography>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="h4">{profile.dept_name}</Typography>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="h4">직책</Typography>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Typography variant="h4">{profile.user_position}</Typography>
+                  </Grid>
+                </Grid>
+                <Grid item container direction="row">
+                  <Grid item xs={3}>
+                    <Typography variant="h4">이메일주소</Typography>
+                  </Grid>
+                  <Grid item xs={9}>
+                    <Typography variant="h4">{profile.email}</Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
             </Grid>
-            <Grid item container direction="column" justifyContent="space-around" xs={7}>
-              <Grid item container direction="row">
-                <Grid item xs={3}>
-                  <Typography variant="body2">이름</Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">홍길동</Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">생년월일</Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">2023-10-12</Typography>
-                </Grid>
-              </Grid>
-              <Grid item container direction="row">
-                <Grid item xs={3}>
-                  <Typography variant="body2">부서</Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">개발팀</Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">직책</Typography>
-                </Grid>
-                <Grid item xs={3}>
-                  <Typography variant="body2">연구원</Typography>
-                </Grid>
-              </Grid>
-              <Grid item container direction="row">
-                <Grid item xs={3}>
-                  <Typography variant="body2">이메일주소</Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <Typography variant="body2">honggildong@douzon.com</Typography>
-                </Grid>
-              </Grid>
+            <Grid item mt={3}>
+              <Typography variant="h4">전화번호</Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="h4">{profile.user_phone}</Typography>
+            </Grid>
+            <Grid item mt={3}>
+              <Typography variant="h4">주소</Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="h4">{profile.user_address}</Typography>
             </Grid>
           </Grid>
-          <Grid item>
-            <Typography variant="body2">전화번호</Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="body2">010-0000-0000</Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="body2">주소</Typography>
-          </Grid>
-          <Grid item>
-            <Typography variant="body2">서울특별시 종로구 창경궁로 254</Typography>
-          </Grid>
-        </Grid>
-      </MainCard>
+        </MainCard>
+      )}
     </>
   );
 };
