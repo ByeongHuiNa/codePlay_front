@@ -1,20 +1,19 @@
-import PropTypes from 'prop-types';
-
 // material-ui
-import { Grid, Stack, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 
 // project import
 import ComponentSkeleton from './components-overview/ComponentSkeleton';
 import BasicContainer from 'components/container/BasicContainer';
 import MainCard from 'components/MainCard';
 import {
-  Avatar,
   Box,
   Button,
+  Card,
   FormControl,
   FormControlLabel,
   Radio,
   RadioGroup,
+  Stack,
   Tab,
   Tabs,
   TextField
@@ -22,237 +21,200 @@ import {
 import BasicTab from 'components/tab/BasicTab';
 import React, { useState } from 'react';
 import RecentAttendTable from '../components/Table/RecentAttendTable';
-import AttendChart from 'components/chart/AttendChart';
-import { FormOutlined } from '@ant-design/icons';
 import AttendUpdateModal from '../components/Modal/AttendUpdateModal';
 import UpdateAttendTable from 'components/Table/UpdateAttendTable';
 import BasicDatePicker from 'components/DatePicker/BasicDatePicker';
-
-// ===============================|| Shadow-Box ||=============================== //
-
-function ShadowBox({ shadow, label, color, bgcolor }) {
-  return (
-    <MainCard border={false} sx={{ bgcolor: bgcolor || 'inherit', boxShadow: shadow }}>
-      <Stack spacing={1} justifyContent="center" alignItems="center">
-        <Typography variant="subtitle1" color={color}>
-          {label}
-        </Typography>
-      </Stack>
-    </MainCard>
-  );
-}
-
-ShadowBox.propTypes = {
-  shadow: PropTypes.string.isRequired,
-  color: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  bgcolor: PropTypes.string
-};
-
-// ============================|| COMPONENT - SHADOW ||============================ //
+import BasicChip from 'components/Chip/BasicChip';
+import styled from 'styled-components';
 
 const UserAttendance = () => {
   const [value, setValue] = useState(0);
+
+  // 정정 요청 목록 검색 : 시작날짜~종료날짜
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
   // 모달창 설정
-  // 수정
-  const [openUpdate, setOpenUpdate] = React.useState(false);
-  const handleOpenUpdate = () => setOpenUpdate(true);
-  const handleCloseUpdate = () => setOpenUpdate(false);
-
   // 수정 목록 상세 조회
   const [openRead, setOpenRead] = React.useState(false);
   const handleOpenRead = () => setOpenRead(true);
   const handleCloseRead = () => setOpenRead(false);
 
+  const MyCard = styled(Card)`
+    height: 50px;
+    display: flex;
+    background-color: #e6f3ff;
+    justify-content: center; // 수평 중앙 정렬
+    align-items: center; // 수직 중앙 정렬
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+    border: 1px solid #e6ebf1;
+    border-radius: 15px;
+    width: 100%;
+    margin-bottom: 30px;
+  `;
+
+  // 데이터 생성
+  function createData(date, startTime, endTime, status) {
+    return { date, startTime, endTime, status };
+  }
+
+  const datas = [
+    createData('2023/10/11', '08:57:10', '18:05:12', 0),
+    createData('2023/10/12', '08:59:26', '18:21:06', 1),
+    createData('2023/10/13', '08:50:13', '18:12:58', 2),
+    createData('2023/10/13', '08:50:13', '18:12:58', 2),
+    createData('2023/10/13', '08:50:13', '18:12:58', 2),
+    createData('2023/10/13', '08:50:13', '18:12:58', 2),
+    createData('2023/10/13', '08:50:13', '18:12:58', 2),
+    createData('2023/10/13', '08:50:13', '18:12:58', 2),
+    createData('2023/10/14', '08:06:35', '18:07:26', 3),
+    createData('2023/10/15', '08:32:57', '18:01:13', 4)
+  ];
+
   return (
     <ComponentSkeleton>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="출/퇴근 기록"/>
-          <Tab label="정정 요청 목록"/>
+          <Tab label="출/퇴근 기록" />
+          <Tab label="정정 요청 목록" />
         </Tabs>
       </Box>
       <BasicTab value={value} index={0}>
-        <Box clone mx={1} pb={1}>
-          <Stack direction="row" justifyContent="flex-end" spacing={1}>
-            <Button variant="contained" onClick={handleOpenUpdate}>
-              <FormOutlined />
-              <Box clone pl={1}>
-                수정요청
-              </Box>
-            </Button>
-          </Stack>
-        </Box>
-        <Box clone mx={1} pt={1}>
-          <BasicContainer>
-            <Grid container sx={{ mt: 2 }}>
-              <Grid item xs={3} sm={3} md={3} lg={3}>
-                <Grid sx={{ padding: 2.5 }}>
-                  <Typography align="center" sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                    사원정보
-                  </Typography>
-                  <Box clone my={2} align="center">
-                    <Avatar alt="프로필" src="" sx={{ width: 150, height: 150 }} />
-                  </Box>
-                  <Typography align="center" variant="h5" component="div">
-                    이름
-                  </Typography>
-                  <Typography align="center" color="text.secondary">
-                    직책/부서
-                  </Typography>
-                </Grid>
-              </Grid>
-              <Grid item xs={4} sm={4} md={4} lg={4}>
-                <Typography align="center" variant="h5">
-                  오늘의 출/퇴근 기록
-                </Typography>
-                <Box clone mt={4} mb={4} ml={3}>
-                  <Grid container justifyContent="center" spacing={1}>
-                    <Grid item xs={3} sm={3} md={3} lg={3}>
-                      <Typography align="center" color="text.secondary">
-                        출근 시간
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={8} sm={8} md={8} lg={8} sx={{ paddingRight: 5 }} align="right">
-                      <Typography variant="text" align="right" sx={{ fontSize: 15 }}>
-                        2023년 10월 12일 목요일
-                        <br />
-                        오전 11 : 30 : 12
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </Box>
-                <Box clone my={4} ml={3}>
-                  <Grid container justifyContent="center" spacing={1}>
-                    <Grid item xs={3} sm={3} md={3} lg={3}>
-                      <Typography align="center" color="text.secondary">
-                        퇴근 시간
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={8} sm={8} md={8} lg={8} sx={{ paddingRight: 5 }} align="right">
-                      <Typography variant="text" sx={{ fontSize: 15 }}>
-                        2023년 10월 12일 목요일
-                        <br />
-                        오전 11 : 30 : 12
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </Box>
-                <Box clone mb={2}>
-                  <Grid container justifyContent="center" spacing={1}>
-                    <Grid item>
-                      <Button variant="outlined" size="large">
-                        <Box clone mx={6}>
-                          출근
-                        </Box>
-                      </Button>
-                    </Grid>
-                    <Grid item>
-                      <Button variant="contained" size="large">
-                        <Box clone mx={6}>
-                          퇴근
-                        </Box>
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </Box>
-              </Grid>
-              <Grid item xs={5} sm={5} md={5} lg={5}>
-                <Typography align="center" variant="h5">
-                  금주 근무 시간
-                </Typography>
-                <AttendChart
-                  chart={{
-                    labels: ['10/07', '10/08', '10/09', '10/10', '10/11', '10/12', '10/13'],
-                    series: [
-                      {
-                        name: '정상근무',
-                        type: 'column',
-                        fill: 'solid',
-                        data: [0, 8, 10, 10, 4, 10, 0]
-                      },
-                      {
-                        name: '초과근무',
-                        type: 'column',
-                        fill: 'solid',
-                        data: [4, 0, 1, 1, 0, 1, 0]
-                      },
-                      {
-                        name: '휴가',
-                        type: 'column',
-                        fill: 'solid',
-                        data: [0, 0, 0, 0, 4, 0, 8]
-                      }
-                    ]
-                  }}
-                />
-              </Grid>
-            </Grid>
-          </BasicContainer>
-        </Box>
-
-        {/* 수정 모달창 */}
-        <AttendUpdateModal open={openUpdate} handleClose={handleCloseUpdate}>
-          <Box
-            component="form"
-            sx={{
-              '& .MuiTextField-root': { m: 1, width: '25ch' }
-            }}
-            autoComplete="off"
-          >
-            <TextField label="제목" id="title" size="small" />
-            <TextField label="결재자" id="approval" size="small" />
-            <TextField label="날짜" id="date" size="small" />
-            <FormControl>
-              <RadioGroup row aria-labelledby="demo-row-radio-buttons-group-label" name="row-radio-buttons-group">
-                <FormControlLabel value="start" control={<Radio />} label="출근" />
-                <FormControlLabel value="end" control={<Radio />} label="퇴근" />
-              </RadioGroup>
-            </FormControl>
-            <Grid container justifyContent="right" spacing={1}>
-              <Grid item>
-                <Button variant="outlined" size="small" onClick={handleCloseUpdate}>
-                  닫기
-                </Button>
-              </Grid>
-              <Grid item>
-                <Button variant="contained" size="small">
-                  완료
-                </Button>
-              </Grid>
-            </Grid>
-          </Box>
-        </AttendUpdateModal>
-
         <Box clone mx={1} my={1} pb={2}>
           <BasicContainer>
-            <Grid item xs={12} md={7} lg={8}>
-              <Grid container alignItems="center" justifyContent="space-between">
-                <Grid item>
-                  <Typography variant="h5">최근 출근 기록</Typography>
-                </Grid>
+            <Grid container alignItems="center" justifyContent="space-between">
+              <Grid item>
+                <Typography variant="h4">출/퇴근 정정 요청</Typography>
               </Grid>
-              <MainCard sx={{ mt: 2 }} content={false}>
-                <RecentAttendTable handleOpenUpdate={handleOpenUpdate} />
-              </MainCard>
+            </Grid>
+            <Grid container alignItems="center" justifyContent="space-between">
+              <Grid item xs={6} md={6} lg={6}>
+                <MainCard sx={{ mt: 2, mr: 1, pt: 2, pl: 2, height: '670px' }} content={false}>
+                  <Grid container spacing={1} justifyContent="center">
+                    <Grid item xs={12} sm={12} md={12} lg={12}>
+                      <MyCard>
+                        <Typography variant="h5">최근 출/퇴근</Typography>
+                      </MyCard>
+                    </Grid>
+                  </Grid>
+                  <RecentAttendTable datas={datas} />
+                </MainCard>
+              </Grid>
+              <Grid item xs={6} md={6} lg={6}>
+                <MainCard sx={{ mt: 2, pt: 2, height: '670px' }} content={false}>
+                  <Grid container spacing={1} justifyContent="center">
+                    <Grid item xs={12} sm={12} md={12} lg={12}>
+                      <MyCard>
+                        <Typography variant="h5">출/퇴근 수정</Typography>
+                      </MyCard>
+                      <Box clone mt={2}>
+                        <BasicChip label="제목" color="gray" />
+                        <TextField
+                        // size="small"
+                        // defaultValue={selectLeaveData.leaveTitle}
+                        // key={selectLeaveData.leaveTitle}
+                        // inputProps={{ readOnly: true }}
+                        // sx={{ width: '40%' }}
+                        />
+                      </Box>
+                      <Box clone mt={2}>
+                        <BasicChip label="사용자" color="gray" />
+                        <TextField
+                        // size="small"
+                        // defaultValue={selectLeaveData.leaveUser}
+                        // key={selectLeaveData.leaveUser}
+                        // inputProps={{ readOnly: true }}
+                        // sx={{ width: '20%' }}
+                        />
+                      </Box>
+                      <Box clone mt={2}>
+                        <BasicChip label="휴가 종류" color="gray" />
+                        <TextField
+                        // size="small"
+                        // defaultValue={selectLeaveData.leaveKind}
+                        // key={selectLeaveData.leaveKind}
+                        // inputProps={{ readOnly: true }}
+                        // sx={{ width: '20%' }}
+                        />
+                      </Box>
+                      <Box clone mt={2}>
+                        <BasicChip label="연차 기간" color="gray" />
+                        <TextField
+                        // size="small"
+                        // defaultValue={`${selectLeaveData.leaveStart} ~ ${selectLeaveData.leaveEnd}`}
+                        // key={selectLeaveData.leaveStart}
+                        // inputProps={{ readOnly: true }}
+                        // sx={{ width: '40%' }}
+                        />
+                      </Box>
+                      <Box clone mt={2}>
+                        <BasicChip label="반차 시간" color="gray" />
+                        <TextField
+                        // size="small"
+                        // defaultValue={`${selectLeaveData.leaveStart} ${selectLeaveData.halfKind == 0 ? '오전' : '오후'}`}
+                        // key={selectLeaveData.leaveKind}
+                        // inputProps={{ readOnly: true }}
+                        // sx={{ width: '40%' }}
+                        />
+                      </Box>
+                      <Box clone mt={2}>
+                        <BasicChip label="휴가 사유" color="gray" />
+                        <TextField
+                          multiline
+                          rows={3}
+                          // defaultValue={selectLeaveData.leaveReason}
+                          // key={selectLeaveData.leaveReason}
+                          // inputProps={{ readOnly: true }}
+                          // sx={{ width: '70%' }}
+                        />
+                      </Box>
+                      <Box clone mt={2}>
+                        <BasicChip label="결재 상태" color="gray" />
+                        <TextField
+                        // size="small"
+                        // defaultValue={selectLeaveData.status == 0 ? '승인' : '반려'}
+                        // key={selectLeaveData.status}
+                        // inputProps={{ readOnly: true }}
+                        // sx={{ width: '20%' }}
+                        />
+                      </Box>
+                      <MainCard sx={{ mt: 2, p: 1, pt: 1.5, width: '91%', justifyContent: 'center', alignItems: 'center' }} content={false}>
+                        <FormControl sx={{ ml: 1 }}>
+                          <RadioGroup
+                            row
+                            sx={{ justifyContent: 'center', alignItems: 'center' }}
+                            // value={appLeaveStatus}
+                            // onChange={handleLeaveRadioChange}
+                          >
+                            <FormControlLabel value="leaveApp" control={<Radio size="small" />} label="승인" />
+                            <FormControlLabel value="leaveUnapp" control={<Radio size="small" />} label="반려" />
+                          </RadioGroup>
+                        </FormControl>
+                        <TextField label="반려 사유" size="small" sx={{ width: '66%' }} />
+                      </MainCard>
+                      <Stack direction="row" justifyContent="flex-end" mt={1} mr={6}>
+                        <Button variant="contained">결재완료</Button>
+                      </Stack>
+                    </Grid>
+                  </Grid>
+                </MainCard>
+              </Grid>
             </Grid>
           </BasicContainer>
         </Box>
       </BasicTab>
       <BasicTab value={value} index={1}>
-        {/* <Container maxWidth="lg"> */}
         <Box clone mx={1} my={1} pb={2}>
           <BasicContainer>
             <Grid container>
-              <Grid item xs={6} md={6} lg={6}>
-                <Typography variant="h5">출/퇴근 정정 요청 목록</Typography>
+              <Grid item xs={3} md={3} lg={3}>
+                <Typography variant="h4">출/퇴근 정정 요청 목록</Typography>
               </Grid>
-              <Grid item xs={6} md={6} lg={6}>
+              <Grid item xs={9} md={9} lg={9}>
                 <Grid container justifyContent="right" spacing={1}>
                   <Grid item sx={{ mt: 0.3 }}>
                     <Button variant="contained" color="secondary">
@@ -260,16 +222,14 @@ const UserAttendance = () => {
                     </Button>
                   </Grid>
                   <Grid item>
-                    <BasicDatePicker />
+                    <BasicDatePicker label={'YYYY / MM / DD'} setDate={setStartDate} />
+                  </Grid>
+                  <Grid item>
+                    <BasicDatePicker label={'YYYY / MM / DD'} setDate={setEndDate} />
                   </Grid>
                   <Grid item sx={{ mt: 0.3 }}>
                     <Button variant="contained" color="secondary">
-                      결재대기
-                    </Button>
-                  </Grid>
-                  <Grid item sx={{ mt: 0.3 }}>
-                    <Button variant="contained" color="secondary">
-                      결재완료
+                      조회 {startDate} {endDate}
                     </Button>
                   </Grid>
                 </Grid>
@@ -280,7 +240,6 @@ const UserAttendance = () => {
             </MainCard>
           </BasicContainer>
         </Box>
-        {/* 수정 조회 모달창 */}
         <AttendUpdateModal open={openRead} handleClose={handleCloseRead}>
           모달창
           <Grid container justifyContent="right" spacing={1}>
