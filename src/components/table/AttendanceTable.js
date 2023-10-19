@@ -10,6 +10,8 @@ import { Box, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHea
 
 // project import
 import Dot from 'components/@extended/Dot';
+import { Grid, Pagination } from '../../../node_modules/@mui/material/index';
+import MainCard from 'components/MainCard';
 
 function createData(date, category, start, wherestart, end, whereend) {
   return { date, category, start, wherestart, end, whereend };
@@ -169,7 +171,30 @@ export default function AttendanceTable() {
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
 
   return (
+    
     <Box>
+       <Grid container rowSpacing={4} columnSpacing={2.75}>
+                <Grid item xs={3}>
+                  <MainCard title="전체">
+                    <Typography variant="h4">7건</Typography>
+                  </MainCard>
+                </Grid>
+                <Grid item xs={3}>
+                  <MainCard title="정상">
+                    <Typography variant="h4" alignItems>7건</Typography>
+                  </MainCard>
+                </Grid>
+                <Grid item xs={3}>
+                  <MainCard title="근태이상">
+                    <Typography variant="h4">0건</Typography>
+                  </MainCard>
+                </Grid>
+                <Grid item xs={3}>
+                  <MainCard title="휴가">
+                    <Typography variant="h4">0건</Typography>
+                  </MainCard>
+                </Grid>
+              </Grid>
       <TableContainer
         sx={{
           width: '100%',
@@ -223,6 +248,10 @@ export default function AttendanceTable() {
           </TableBody>
         </Table>
       </TableContainer>
+      <Stack alignItems="center" mt={3}>
+          <Pagination count={5} variant="outlined" shape="rounded" />
+      </Stack>
+      
     </Box>
   );
 }

@@ -16,9 +16,8 @@ import AttendanceTable from 'components/Table/AttendanceTable';
 import AppLeaveTotalTable from 'components/Table/AppLeaveTotalTable';
 import VacationDonutChart from 'components/chart/VacationDonutChart';
 import UnappLeaveTotalTable from 'components/Table/UnappLeaveTotalTable';
-import { Button, FormControl, InputLabel, MenuItem, NativeSelect } from '../../node_modules/@mui/material/index';
-import Select from '@mui/material/Select';
-
+import { Button, FormControl, InputLabel, NativeSelect } from '../../node_modules/@mui/material/index';
+import AttendChart from 'components/chart/AttendChart';
 
 const UserAttendanceTotalPage = () => {
   //결재대기 내역 이번달로 설정
@@ -54,10 +53,10 @@ const UserAttendanceTotalPage = () => {
     setMonth2(event.target.value);
   };
 
-  const [age, setAge] = useState(0);
+  const [month3, setMonth3] = useState(new Date().getMonth() + 1);
 
-  const handleChange2 = (event) => {
-    setAge(event.target.value);
+  const month3Change = (event) => {
+    setMonth3(event.target.value);
   };
 
   return (
@@ -84,7 +83,7 @@ const UserAttendanceTotalPage = () => {
           <Grid item xs={8} sm={8} md={8} lg={8}>
             <MainCard>
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <Typography variant="h5">{month1}월 결재대기내역</Typography>
+                <Typography variant="h5">{month3}월 결재대기내역</Typography>
 
                 <FormControl sx={{ marginLeft: 3 }}>
                   <InputLabel variant="standard" htmlFor="uncontrolled-native">
@@ -109,6 +108,7 @@ const UserAttendanceTotalPage = () => {
                     <option value={4}>4월</option>
                     <option value={3}>3월</option>
                     <option value={2}>2월</option>
+                    <option value={1}>1월</option>
                   </NativeSelect>
                 </FormControl>
               </div>
@@ -149,11 +149,10 @@ const UserAttendanceTotalPage = () => {
                   </NativeSelect>
                 </FormControl>
               </div>
-              <AppLeaveTotalTable />
+              <AppLeaveTotalTable handleOpen={handleOpen} handleClose={handleClose} />
 
               <Button onClick={handleOpen}>Open modal</Button>
               {modalOpen && <LeaveModal open={handleOpen} handleClose={handleClose} />}
-              
             </MainCard>
           </Grid>
         </Grid>
@@ -161,53 +160,82 @@ const UserAttendanceTotalPage = () => {
 
       {/* tab 2 */}
       <BasicTab value={value} index={1}>
-        <Grid container rowSpacing={4} columnSpacing={2.75}>
+        <Grid container rowSpacing={1} columnSpacing={1}>
           {/* row 2 */}
-          <Grid item xs={8}>
-            <MainCard title="출/퇴근 현황">
-              <Box sx={{ minWidth: 40 }}>
-                <FormControl>
-                  <InputLabel id="demo-simple-select-label">월</InputLabel>
-                  <Select labelId="demo-simple-select-label" id="demo-simple-select" value={age} label="month" onChange={handleChange2}>
-                    <MenuItem value={10}>10월</MenuItem>
-                    <MenuItem value={9}>9월</MenuItem>
-                    <MenuItem value={8}>8월</MenuItem>
-                  </Select>
-                </FormControl>
-              </Box>
-              <Grid container rowSpacing={4} columnSpacing={2.75}>
-                <Grid item xs={3}>
-                  <MainCard title="전체">
-                    <Typography variant="h4">7건</Typography>
-                  </MainCard>
-                </Grid>
-                <Grid item xs={3}>
-                  <MainCard title="정상">
-                    <Typography variant="h4">7건</Typography>
-                  </MainCard>
-                </Grid>
-                <Grid item xs={3}>
-                  <MainCard title="근태이상">
-                    <Typography variant="h4">0건</Typography>
-                  </MainCard>
-                </Grid>
-                <Grid item xs={3}>
-                  <MainCard title="휴가">
-                    <Typography variant="h4">0건</Typography>
-                  </MainCard>
-                </Grid>
-              </Grid>
+          <Grid item xs={12}>
+            <MainCard>
+              <Typography align="left" variant="h5">
+                금주 근무 시간
+              </Typography>
+              <AttendChart
+                chart={{
+                  labels: ['10/07', '10/08', '10/09', '10/10', '10/11', '10/12', '10/13'],
+                  series: [
+                    {
+                      name: '정상근무',
+                      type: 'column',
+                      fill: 'solid',
+                      data: [0, 8, 10, 10, 4, 10, 0]
+                    },
+                    {
+                      name: '초과근무',
+                      type: 'column',
+                      fill: 'solid',
+                      data: [4, 0, 1, 1, 0, 1, 0]
+                    },
+                    {
+                      name: '휴가',
+                      type: 'column',
+                      fill: 'solid',
+                      data: [0, 0, 0, 0, 4, 0, 8]
+                    }
+                  ]
+                }}
+              />
+            </MainCard>
+          </Grid>
+          <Grid item xs={12}>
+            <MainCard>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <Typography variant="h5">{month3}월 출/퇴근 현황</Typography>
 
+                <FormControl sx={{ marginLeft: 3 }}>
+                  <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                    월
+                  </InputLabel>
+                  <NativeSelect
+                    defaultValue={month3}
+                    onChange={month3Change}
+                    inputProps={{
+                      name: 'month',
+                      id: 'uncontrolled-native'
+                    }}
+                  >
+                    <option value={12}>12월</option>
+                    <option value={11}>11월</option>
+                    <option value={10}>10월</option>
+                    <option value={9}>9월</option>
+                    <option value={8}>8월</option>
+                    <option value={7}>7월</option>
+                    <option value={6}>6월</option>
+                    <option value={5}>5월</option>
+                    <option value={4}>4월</option>
+                    <option value={3}>3월</option>
+                    <option value={2}>2월</option>
+                  </NativeSelect>
+                </FormControl>
+              </div>
               <AttendanceTable />
             </MainCard>
           </Grid>
+          
 
           {/* row 3 - 근태현황 그리드 */}
-          <Grid item xs={4}>
+          {/* <Grid item xs={4}>
             <MainCard title="근태현황">
               <VacationDonutChart />
             </MainCard>
-          </Grid>
+          </Grid> */}
         </Grid>
       </BasicTab>
     </ComponentSkeleton>

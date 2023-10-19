@@ -6,6 +6,7 @@ import { Box, Stack, Table, TableBody, TableCell, TableContainer, TableHead, Tab
 
 // project import
 import { Button, Chip, Pagination } from '../../../node_modules/@mui/material/index';
+import LeaveModal from 'components/Modal/LeaveModal';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -152,6 +153,15 @@ export default function AppLeaveTotalTable({ requestLeaveCancel }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleOpen = () => {
+    setModalOpen(true);
+  };
+
+  const handleClose = () => {
+    setModalOpen(false);
+  };
 
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
 
@@ -205,9 +215,12 @@ export default function AppLeaveTotalTable({ requestLeaveCancel }) {
                   tabIndex={-1}
                   key={data.date}
                   selected={isItemSelected}
+                  onClick={handleOpen}
+                
                   
                   
                 >
+                  {modalOpen && <LeaveModal open={handleOpen} handleClose={handleClose} />}
                   <TableCell component="th" id={labelId} scope="data" align="center">
                     {data.leaveStart}
                   </TableCell>
