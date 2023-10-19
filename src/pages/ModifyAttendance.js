@@ -1,11 +1,23 @@
 import { useEffect, useState } from 'react';
 import ComponentSkeleton from './components-overview/ComponentSkeleton';
-import { Box, Chip, Grid, IconButton, InputAdornment, Tab, Tabs, TextField, Typography } from '../../node_modules/@mui/material/index';
+import {
+  Avatar,
+  Box,
+  Card,
+  Grid,
+  IconButton,
+  InputAdornment,
+  Tab,
+  Tabs,
+  TextField,
+  Typography
+} from '../../node_modules/@mui/material/index';
 import BasicContainer from 'components/container/BasicContainer';
 import ApprovalTab from 'components/tab/ApprovalTab';
-import { SearchOutlined } from '../../node_modules/@mui/icons-material/index';
 import styled from 'styled-components';
 import UserAttendTable from 'components/Table/UserAttendTable';
+import { SearchOutlined } from '../../node_modules/@mui/icons-material/index';
+import BasicChip from 'components/Chip/BasicChip';
 
 const ModifyAttendance = () => {
   const [value, setValue] = useState(0); // Tab 부분
@@ -45,14 +57,20 @@ const ModifyAttendance = () => {
     min-height: 37px;
   `;
 
-  // Chip 커스텀
-  const MyChip = styled(Chip)`
-    background-color: gray;
-    color: white;
-    width: 100px;
-    margin-right: 10px;
+  // Card 커스텀
+  const MyCard = styled(Card)`
+    height: 60px;
+    display: flex;
+    justify-content: center; // 수평 중앙 정렬
+    align-items: center; // 수직 중앙 정렬
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+    border: 1px solid #e6ebf1;
+    border-radius: 15px;
+    width: 70%;
+    padding-left: 40px;
   `;
 
+  // 데이터 생성
   function createAttendData(date, startTime, endTime, status) {
     return { date, startTime, endTime, status };
   }
@@ -82,39 +100,88 @@ const ModifyAttendance = () => {
         <BasicContainer>
           <Grid container alignItems="center" justifyContent="space-between">
             <Grid item>
-              <Typography variant="h3">근태 현황 수정</Typography>
+              <Typography variant="h4">근태 현황 수정</Typography>
             </Grid>
           </Grid>
-          <Grid item xs={12} md={12} lg={12}>
-            <Box clone mt={2}>
-              <MyChip label="사원선택" />
-              <TextField
-                label="사원선택"
-                id="searchUser"
-                type="search"
-                size="small"
+          <Grid container alignItems="center" justifyContent="space-between">
+            <Grid item xs={3} md={3} lg={3}>
+              <Box
+                clone
+                mt={2.5}
+                mb={1}
                 sx={{
-                  width: '170px'
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center'
                 }}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton id="searchApp">
-                        <SearchOutlined />
-                      </IconButton>
-                    </InputAdornment>
-                  )
-                }}
-                onClick={() => {
-                  setSelectUserData(userData);
-                }}
-              />
-            </Box>
-            <Box>
-                
-            </Box>
+              >
+                <BasicChip label="사원선택" color="gray" />
+                <TextField
+                  id="searchUser"
+                  type="search"
+                  size="medium"
+                  sx={{
+                    width: '190px',
+                    marginLeft: '5px'
+                  }}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton id="searchApp">
+                          <SearchOutlined />
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
+                  onClick={() => {
+                    setSelectUserData(userData);
+                  }}
+                />
+              </Box>
+            </Grid>
+            <Grid item xs={5} md={5} lg={5}>
+              {Object.keys(selectUserData).length !== 0 && (
+                <Box mt={1}>
+                  <MyCard>
+                    <Grid container alignItems="center" justifyContent="space-between">
+                      <Grid item xs={2} md={2} lg={2}>
+                        <Avatar alt="프로필" src="" sx={{ width: 40, height: 40 }} />
+                      </Grid>
+                      <Grid item xs={2} md={2} lg={2}>
+                        <Typography align="center" variant="text" component="span">
+                          이름
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={3} md={3} lg={3}>
+                        <Typography align="center" variant="text" component="span">
+                          부서/직책
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={5} md={5} lg={5}>
+                        <Typography align="center" variant="text" component="span">
+                          010-1234-5678
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                    {/* <Grid item xs={3} md={3} lg={3}>
+                          <Typography variant="h3">{selectUserData.name}</Typography>
+                        </Grid>
+                        <Grid item xs={3} md={3} lg={3}>
+                          <Typography variant="h3">{selectUserData.name}</Typography>
+                        </Grid>
+                        <Grid item xs={3} md={3} lg={3}>
+                          <Typography variant="h3">{selectUserData.name}</Typography>
+                        </Grid>
+                        <Grid item xs={3} md={3} lg={3}>
+                          <Typography variant="h3">{selectUserData.name}</Typography>
+                        </Grid> */}
+                  </MyCard>
+                </Box>
+              )}
+            </Grid>
+            <Grid item xs={4} md={4} lg={4}></Grid>
           </Grid>
-          <Grid item xs={12} md={12} lg={12}>
+          <Box mt={3} ml={1}>
             <Grid container alignItems="center" justifyContent="space-between">
               <Grid item xs={6} md={6} lg={6}>
                 <Box sx={{ borderBottom: 1, border: '0px' }}>
@@ -129,7 +196,7 @@ const ModifyAttendance = () => {
                 <ApprovalTab value={value} index={1}></ApprovalTab>
               </Grid>
             </Grid>
-          </Grid>
+          </Box>
         </BasicContainer>
       </Box>
     </ComponentSkeleton>
