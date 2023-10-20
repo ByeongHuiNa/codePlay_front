@@ -25,13 +25,12 @@ const SettingAuthority = () => {
   const { setIndex, setTab, index } = useTabState();
   const { setTableList } = useTableListState();
   const { view, setView } = useDetailCardState();
-  const endPoints = ['http://localhost:8000/role_count'];
   const { setPage } = useCriteria();
-
   //화면 초기값 셋팅
   useEffect(() => {
     setIndex(0);
     async function get() {
+      const endPoints = ['http://localhost:8000/role_count'];
       const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
       const tabs = [];
       for (let i of result[0].data) {
@@ -48,7 +47,7 @@ const SettingAuthority = () => {
     get();
   }, []);
 
-  //index 값 변경시 테이블 변경 셋팅
+  //index 값(탭) 변경시 테이블 변경 셋팅
   useEffect(() => {
     async function get() {
       setPage(1);
@@ -57,7 +56,7 @@ const SettingAuthority = () => {
       setView(false);
     }
     get();
-  }, [index]);
+  }, [index, setPage, setTableList, setView]);
 
   return (
     <>
