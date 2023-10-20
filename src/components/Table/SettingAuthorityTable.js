@@ -8,6 +8,7 @@ import { Avatar, Button, Pagination, Stack } from '../../../node_modules/@mui/ma
 import { useCriteria, useDetailCardState, useTableListState } from 'store/module';
 import { useState } from 'react';
 import axios from '../../../node_modules/axios/index';
+import { v4 as uuidv4 } from 'uuid';
 
 const headCells = [
   {
@@ -68,7 +69,8 @@ export default function SettingAuthorityTable() {
     setView(true);
     setId(user_no);
     const result = await axios.get(`http://localhost:8000/role_query_user_detail?user_no=${user_no}`);
-    setContent(result.data);
+    result.data[0].role.map((role) => (role['id'] = uuidv4()));
+    setContent(result.data[0]);
   }
 
   return (

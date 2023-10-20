@@ -3,11 +3,13 @@ import { Avatar, Button, IconButton, MenuItem, Stack, TextField, Typography } fr
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { useDetailCardState, useTabState } from 'store/module';
+import { v4 as uuidv4 } from 'uuid';
 
 const AuthorityDetailCard = () => {
   //권한 고정(사용자, 근태담당자, 관리자, 메인관리자 추가 불가능)
   const { setView, content, setContent } = useDetailCardState();
   const { tab } = useTabState();
+
   function getToday() {
     var date = new Date();
     var year = date.getFullYear();
@@ -17,17 +19,25 @@ const AuthorityDetailCard = () => {
     return year + '-' + month + '-' + day;
   }
 
-  const addRole = (id) => {
+  const addRole = () => {
     const temp = { ...content };
-    temp.role.push({ role_level: id + 1, role_designated_date: getToday() });
+    temp.role.push({ id: uuidv4(), role_level: 1, role_designated_date: getToday() });
     setContent(temp);
-    console.log(id);
   };
 
   const removeRole = (id) => {
-    console.log(id);
+    const temp = { ...content };
+    temp.role = temp.role.filter((role) => role.id !== id);
+    setContent(temp);
   };
 
+  const changeRole = (value, role) => {
+    const temp = { ...content };
+    role = { ...role, role_level: value, role_name: 'test' };
+    temp.role = temp.role.filter((pre) => pre.id !== role.id);
+    temp.role.push(role);
+    setContent(temp);
+  };
   return (
     <MainCard>
       <Stack direction="row" justifyContent="center" mb={3}>
@@ -44,13 +54,22 @@ const AuthorityDetailCard = () => {
           content.role.map((value, index) => {
             return (
               <Stack direction="row" justifyContent="space-around" alignItems="center" key={index}>
-                <TextField select size="normal" sx={{ width: '8rem' }} value={value.role_level}>
+                <TextField
+                  select
+                  size="normal"
+                  sx={{ width: '8rem' }}
+                  value={value.role_level}
+                  onChange={(e) => changeRole(e.target.value, value)}
+                  inputProps={index == 0 ? { readOnly: true } : {}}
+                >
                   {Object.keys(tab).length > 0 &&
-                    tab.map((tabItem) => (
-                      <MenuItem key={tabItem.id} value={tabItem.id}>
-                        {tabItem.name}
-                      </MenuItem>
-                    ))}
+                    tab
+                      .filter((value) => value.id != 4)
+                      .map((tabItem) => (
+                        <MenuItem key={tabItem.id} value={tabItem.id}>
+                          {tabItem.name}
+                        </MenuItem>
+                      ))}
                 </TextField>
                 {value.role_level == 1 ? (
                   <TextField select size="normal" sx={{ width: '8rem' }} defaultValue="1">
@@ -59,8 +78,7 @@ const AuthorityDetailCard = () => {
                 ) : (
                   ''
                 )}
-                {/* TODO: addRole 구현 */}
-                <IconButton onClick={index == 0 ? () => addRole() : () => removeRole(value.role_level)}>
+                <IconButton onClick={index == 0 ? () => addRole() : () => removeRole(value.id)}>
                   {index == 0 ? <AddIcon /> : <RemoveIcon />}
                 </IconButton>
               </Stack>
