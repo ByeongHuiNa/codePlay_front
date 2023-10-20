@@ -52,6 +52,7 @@
     "simplebar-react": "^2.4.1",
     "styled-components": "^6.1.0",
     "typescript": "4.8.3",
+    "uuid": "^9.0.1",
     "web-vitals": "^3.0.2",
     "yup": "^0.32.11",
     "zustand": "^4.4.3"
