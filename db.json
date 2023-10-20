@@ -1,463 +1,503 @@
 {
-"attendance_edit_approval" : [
-  {
-    "attendapp_no": 1,
-    "user_no": 2,
-    "attend_no": 3,
-    "attendedit_title": "이유나/230614/출근시간",
-    "attendedit_reason": "부장님 심부름으로 늦게 출근",
-    "attendedit_date": "2023.06.15.목",
-    "attendapp_status": 2,
-    "attendapp_reason": "",
-    "attendapp_date": ""
-  },
-  {
-    "attendapp_no": 2,
-    "user_no": 2,
-    "attend_no": 5,
-    "attendedit_title": "이유나/230616/퇴근시간",
-    "attendedit_reason": "실수로 잘못 눌렀음",
-    "attendedit_date": "2023.06.19.월",
-    "attendapp_status": 0,
-    "attendapp_reason": "결재완료",
-    "attendapp_date": "2023.06.20.화"
-  },
-  {
-    "attendapp_no": 3,
-    "user_no": 2,
-    "attend_no": 6,
-    "attendedit_title": "이유나/230619/출근시간",
-    "attendedit_reason": "실수로 늦게 눌렀음",
-    "attendedit_date": "2023.06.20.화",
-    "attendapp_status": 1,
-    "attendapp_reason": "증거부족",
-    "attendapp_date": "2023.06.22.목"
-  },
-  {
-    "attendapp_no": 4,
-    "user_no": 2,
-    "attend_no": 8,
-    "attendedit_title": "이유나/230621/출근시간",
-    "attendedit_reason": "컴퓨터 고장으로 늦게 눌렀음",
-    "attendedit_date": "2023.06.22.목",
-    "attendapp_status": "증거충분",
-    "attendapp_reason": "2023.06.22.목",
-    "attendapp_date": ""
-  },
-  {
-    "attendapp_no": 5,
-    "user_no": 1,
-    "attend_no": 13,
-    "attendedit_title": "김철수/230614/퇴근시간",
-    "attendedit_reason": "부장님 심부름을 위한 늦은 출근과 빠른 퇴근",
-    "attendedit_date": "2023.06.15.목",
-    "attendapp_status": 2,
-    "attendapp_reason": "",
-    "attendapp_date": ""
-  },
-  {
-    "attendapp_no": 6,
-    "user_no": 1,
-    "attend_no": 15,
-    "attendedit_title": "김철수/230616/퇴근시간",
-    "attendedit_reason": "부장님 심부름을 위한 빠른 퇴근",
-    "attendedit_date": "2023.06.19.월",
-    "attendapp_status": 0,
-    "attendapp_reason": "증거충분",
-    "attendapp_date": "2023.06.20.화"
-  },
-  {
-    "attendapp_no": 7,
-    "user_no": 1,
-    "attend_no": 16,
-    "attendedit_title": "김철수/230619/출근시간",
-    "attendedit_reason": "컴퓨터 고장으로 늦게 출근 기록",
-    "attendedit_date": "2023.06.19.월",
-    "attendapp_status": 1,
-    "attendapp_reason": "증거부족",
-    "attendapp_date": "2023.06.20.화"
-  }
-],
-"attendacne" : [
-  {
-    "attend_no": 1,
-    "user_no": 1,
-    "attend_date": "2023.06.12.월",
-    "attend_start": "09:00:00",
-    "attend_end": "18:03:30",
-    "attend_total": "08:03:30",
-    "attend_status": 0
-  },
-  {
-    "attend_no": 2,
-    "user_no": 1,
-    "attend_date": "2023.06.13.화",
-    "attend_start": "08:55:00",
-    "attend_end": "18:04:00",
-    "attend_total": "08:09:00",
-    "attend_status": 0
-  },
-  {
-    "attend_no": 3,
-    "user_no": 1,
-    "attend_date": "2023.06.14.수",
-    "attend_start": "09:10:00",
-    "attend_end": "17:55:00",
-    "attend_total": "07:45:00",
-    "attend_status": 2
-  },
-  {
-    "attend_no": 4,
-    "user_no": 1,
-    "attend_date": "2023.06.15.목",
-    "attend_start": "09:00:00",
-    "attend_end": "18:01:00",
-    "attend_total": "08:01:00",
-    "attend_status": 0
-  },
-  {
-    "attend_no": 5,
-    "user_no": 1,
-    "attend_date": "2023.06.16.금",
-    "attend_start": "09:00:00",
-    "attend_end": "17:56:00",
-    "attend_total": "07:56:00",
-    "attend_status": 4
-  },
-  {
-    "attend_no": 6,
-    "user_no": 1,
-    "attend_date": "2023.06.19.월",
-    "attend_start": "09:03:00",
-    "attend_end": "18:00:00",
-    "attend_total": "07:57:00",
-    "attend_status": 2
-  },
-  {
-    "attend_no": 7,
-    "user_no": 1,
-    "attend_date": "2023.06.20.화",
-    "attend_start": "09:00:00",
-    "attend_end": "18:00:00",
-    "attend_total": "08:00:00",
-    "attend_status": 1
-  },
-  {
-    "attend_no": 8,
-    "user_no": 1,
-    "attend_date": "2023.06.21.수",
-    "attend_start": "09:01:00",
-    "attend_end": "18:02:00",
-    "attend_total": "08:01:00",
-    "attend_status": 2
-  },
-  {
-    "attend_no": 9,
-    "user_no": 1,
-    "attend_date": "2023.06.22.목",
-    "attend_start": "08:58:00",
-    "attend_end": "17:59:00",
-    "attend_total": "09:01:00",
-    "attend_status": 4
-  },
-  {
-    "attend_no": 10,
-    "user_no": 2,
-    "attend_date": "2023.06.23.금",
-    "attend_start": "09:00:00",
-    "attend_end": "18:00:00",
-    "attend_total": "08:00:00",
-    "attend_status": 0
-  },
-  {
-    "attend_no": 11,
-    "user_no": 2,
-    "attend_date": "2023.06.12.월",
-    "attend_start": "09:00:00",
-    "attend_end": "18:03:30",
-    "attend_total": "08:03:30",
-    "attend_status": 0
-  },
-  {
-    "attend_no": 12,
-    "user_no": 2,
-    "attend_date": "2023.06.13.화",
-    "attend_start": "08:55:00",
-    "attend_end": "18:04:00",
-    "attend_total": "08:09:00",
-    "attend_status": 0
-  },
-  {
-    "attend_no": 13,
-    "user_no": 2,
-    "attend_date": "2023.06.14.수",
-    "attend_start": "09:10:00",
-    "attend_end": "17:55:00",
-    "attend_total": "07:45:00",
-    "attend_status": 2
-  },
-  {
-    "attend_no": 14,
-    "user_no": 2,
-    "attend_date": "2023.06.15.목",
-    "attend_start": "09:00:00",
-    "attend_end": "18:01:00",
-    "attend_total": "08:01:00",
-    "attend_status": 0
-  },
-  {
-    "attend_no": 15,
-    "user_no": 2,
-    "attend_date": "2023.06.16.금",
-    "attend_start": "09:00:00",
-    "attend_end": "17:56:00",
-    "attend_total": "07:56:00",
-    "attend_status": 4
-  },
-  {
-    "attend_no": 16,
-    "user_no": 2,
-    "attend_date": "2023.06.19.월",
-    "attend_start": "09:03:00",
-    "attend_end": "18:00:00",
-    "attend_total": "07:57:00",
-    "attend_status": 2
-  },
-  {
-    "attend_no": 17,
-    "user_no": 2,
-    "attend_date": "2023.06.20.화",
-    "attend_start": "09:00:00",
-    "attend_end": "18:00:00",
-    "attend_total": "08:00:00",
-    "attend_status": 0
-  },
-  {
-    "attend_no": 18,
-    "user_no": 2,
-    "attend_date": "2023.06.21.수",
-    "attend_start": "09:01:00",
-    "attend_end": "18:02:00",
-    "attend_total": "08:01:00",
-    "attend_status": 2
-  },
-  {
-    "attend_no": 19,
-    "user_no": 2,
-    "attend_date": "2023.06.22.목",
-    "attend_start": "08:58:00",
-    "attend_end": "17:59:00",
-    "attend_total": "09:01:00",
-    "attend_status": 4
-  },
-  {
-    "attend_no": 20,
-    "user_no": 2,
-    "attend_date": "2023.06.23.금",
-    "attend_start": "09:00:00",
-    "attend_end": "18:00:00",
-    "attend_total": "08:00:00",
-    "attend_status": 0
-  }
-],
-"user" : [
-  {
-    "user_no": 1,
-    "user_name": "이유나",
-    "user_position": "사장",
-    "user_email": "aaa1@aaa.com",
-    "user_phone": "010-2222-2222",
-    "user_profile": "https://picsum.photos/201"
-  },
-  {
-    "user_no": 2,
-    "user_name": "김철수",
-    "user_position": "대리",
-    "user_email": "aaa2@aaa.com",
-    "user_phone": "010-3333-3333",
-    "user_profile": "https://picsum.photos/202"
-  },
-  {
-    "user_no": 3,
-    "user_name": "박영희",
-    "user_position": "주임",
-    "user_email": "aaa3@aaa.com",
-    "user_phone": "010-4444-4444",
-    "user_profile": "https://picsum.photos/203"
-  },
-  {
-    "user_no": 4,
-    "user_name": "최민호",
-    "user_position": "부장",
-    "user_email": "aaa4@aaa.com",
-    "user_phone": "010-5555-5555",
-    "user_profile": "https://picsum.photos/204"
-  },
-  {
-    "user_no": 5,
-    "user_name": "전에스더",
-    "user_position": "회장",
-    "user_email": "aaa5@aaa.com",
-    "user_phone": "010-6666-6666",
-    "user_profile": "https://picsum.photos/205"
-  },
-  {
-    "user_no": 6,
-    "user_name": "김태영",
-    "user_position": "대리",
-    "user_email": "aaa6@aaa.com",
-    "user_phone": "010-7777-7777",
-    "user_profile": "https://picsum.photos/206"
-  },
-  {
-    "user_no": 7,
-    "user_name": "정수빈",
-    "user_position": "주임",
-    "user_email": "aaa7@aaa.com",
-    "user_phone": "010-8888-8888",
-    "user_profile": "https://picsum.photos/207"
-  },
-  {
-    "user_no": 8,
-    "user_name": "박승준",
-    "user_position": "사원",
-    "user_email": "aaa8@aaa.com",
-    "user_phone": "010-9999-9999",
-    "user_profile": "https://picsum.photos/208"
-  },
-  {
-    "user_no": 9,
-    "user_name": "김수현",
-    "user_position": "부장",
-    "user_email": "aaa9@aaa.com",
-    "user_phone": "010-1010-1010",
-    "user_profile": "https://picsum.photos/209"
-  },
-  {
-    "user_no": 10,
-    "user_name": "이서준",
-    "user_position": "이사",
-    "user_email": "aaa10@aaa.com",
-    "user_phone": "010-1111-1111",
-    "user_profile": "https://picsum.photos/210"
-  },
-  {
-    "user_no": 11,
-    "user_name": "최지우",
-    "user_position": "대리",
-    "user_email": "aaa11@aaa.com",
-    "user_phone": "010-1212-1212",
-    "user_profile": "https://picsum.photos/211"
-  },
-  {
-    "user_no": 12,
-    "user_name": "박민지",
-    "user_position": "주임",
-    "user_email": "aaa12@aaa.com",
-    "user_phone": "010-1313-1313",
-    "user_profile": "https://picsum.photos/212"
-  },
-  {
-    "user_no": 13,
-    "user_name": "김준호",
-    "user_position": "사원",
-    "user_email": "aaa13@aaa.com",
-    "user_phone": "010-1414-1414",
-    "user_profile": "https://picsum.photos/213"
-  },
-  {
-    "user_no": 14,
-    "user_name": "정윤서",
-    "user_position": "부장",
-    "user_email": "aaa14@aaa.com",
-    "user_phone": "010-1515-1515",
-    "user_profile": "https://picsum.photos/214"
-  },
-  {
-    "user_no": 15,
-    "user_name": "박민준",
-    "user_position": "이사",
-    "user_email": "aaa15@aaa.com",
-    "user_phone": "010-1616-1616",
-    "user_profile": "https://picsum.photos/215"
-  },
-  {
-    "user_no": 16,
-    "user_name": "김서영",
-    "user_position": "대리",
-    "user_email": "aaa16@aaa.com",
-    "user_phone": "010-1717-1717",
-    "user_profile": "https://picsum.photos/216"
-  },
-  {
-    "user_no": 17,
-    "user_name": "이승우",
-    "user_position": "주임",
-    "user_email": "aaa17@aaa.com",
-    "user_phone": "010-1818-1818",
-    "user_profile": "https://picsum.photos/217"
-  },
-  {
-    "user_no": 18,
-    "user_name": "임희진",
-    "user_position": "사원",
-    "user_email": "aaa18@aaa.com",
-    "user_phone": "010-1919-1919",
-    "user_profile": "https://picsum.photos/218"
-  },
-  {
-    "user_no": 19,
-    "user_name": "박지민",
-    "user_position": "부장",
-    "user_email": "aaa19@aaa.com",
-    "user_phone": "010-2020-2020",
-    "user_profile": "https://picsum.photos/219"
-  },
-  {
-    "user_no": 20,
-    "user_name": "김예은",
-    "user_position": "이사",
-    "user_email": "aaa20@aaa.com",
-    "user_phone": "010-2121-2121",
-    "user_profile": "https://picsum.photos/220"
-  }
-], 
-"role_count" : [
-  { "role_level":"0", "role_name": "사용자", "count" : 200 },
-  { "role_level":"1", "role_name": "근태담당자", "count" : 30 },
-  { "role_level":"2", "role_name": "관리자", "count" : 10 },
-  { "role_level":"3", "role_name": "메인관리자", "count" : 2 },
-  { "role_level":"4", "role_name" : "맞춤", "count" : 5}
-],
-"role_query_user_detail":[{
-    "user_no": 0,
-    "user_profile": "https://picsum.photos/200",
-    "dept_name": "개발팀",
-    "user_name": "Dylan",
-    "user_position": "연구원",
-    "role" : [{
-      "role_level": 0,
+  "attendance_edit_approval": [
+    {
+      "attendapp_no": 1,
+      "user_no": 2,
+      "attend_no": 3,
+      "attendedit_title": "이유나/230614/출근시간",
+      "attendedit_reason": "부장님 심부름으로 늦게 출근",
+      "attendedit_date": "2023.06.15.목",
+      "attendapp_status": 2,
+      "attendapp_reason": "",
+      "attendapp_date": ""
+    },
+    {
+      "attendapp_no": 2,
+      "user_no": 2,
+      "attend_no": 5,
+      "attendedit_title": "이유나/230616/퇴근시간",
+      "attendedit_reason": "실수로 잘못 눌렀음",
+      "attendedit_date": "2023.06.19.월",
+      "attendapp_status": 0,
+      "attendapp_reason": "결재완료",
+      "attendapp_date": "2023.06.20.화"
+    },
+    {
+      "attendapp_no": 3,
+      "user_no": 2,
+      "attend_no": 6,
+      "attendedit_title": "이유나/230619/출근시간",
+      "attendedit_reason": "실수로 늦게 눌렀음",
+      "attendedit_date": "2023.06.20.화",
+      "attendapp_status": 1,
+      "attendapp_reason": "증거부족",
+      "attendapp_date": "2023.06.22.목"
+    },
+    {
+      "attendapp_no": 4,
+      "user_no": 2,
+      "attend_no": 8,
+      "attendedit_title": "이유나/230621/출근시간",
+      "attendedit_reason": "컴퓨터 고장으로 늦게 눌렀음",
+      "attendedit_date": "2023.06.22.목",
+      "attendapp_status": "증거충분",
+      "attendapp_reason": "2023.06.22.목",
+      "attendapp_date": ""
+    },
+    {
+      "attendapp_no": 5,
+      "user_no": 1,
+      "attend_no": 13,
+      "attendedit_title": "김철수/230614/퇴근시간",
+      "attendedit_reason": "부장님 심부름을 위한 늦은 출근과 빠른 퇴근",
+      "attendedit_date": "2023.06.15.목",
+      "attendapp_status": 2,
+      "attendapp_reason": "",
+      "attendapp_date": ""
+    },
+    {
+      "attendapp_no": 6,
+      "user_no": 1,
+      "attend_no": 15,
+      "attendedit_title": "김철수/230616/퇴근시간",
+      "attendedit_reason": "부장님 심부름을 위한 빠른 퇴근",
+      "attendedit_date": "2023.06.19.월",
+      "attendapp_status": 0,
+      "attendapp_reason": "증거충분",
+      "attendapp_date": "2023.06.20.화"
+    },
+    {
+      "attendapp_no": 7,
+      "user_no": 1,
+      "attend_no": 16,
+      "attendedit_title": "김철수/230619/출근시간",
+      "attendedit_reason": "컴퓨터 고장으로 늦게 출근 기록",
+      "attendedit_date": "2023.06.19.월",
+      "attendapp_status": 1,
+      "attendapp_reason": "증거부족",
+      "attendapp_date": "2023.06.20.화"
+    }
+  ],
+  "attendacne": [
+    {
+      "attend_no": 1,
+      "user_no": 1,
+      "attend_date": "2023.06.12.월",
+      "attend_start": "09:00:00",
+      "attend_end": "18:03:30",
+      "attend_total": "08:03:30",
+      "attend_status": 0
+    },
+    {
+      "attend_no": 2,
+      "user_no": 1,
+      "attend_date": "2023.06.13.화",
+      "attend_start": "08:55:00",
+      "attend_end": "18:04:00",
+      "attend_total": "08:09:00",
+      "attend_status": 0
+    },
+    {
+      "attend_no": 3,
+      "user_no": 1,
+      "attend_date": "2023.06.14.수",
+      "attend_start": "09:10:00",
+      "attend_end": "17:55:00",
+      "attend_total": "07:45:00",
+      "attend_status": 2
+    },
+    {
+      "attend_no": 4,
+      "user_no": 1,
+      "attend_date": "2023.06.15.목",
+      "attend_start": "09:00:00",
+      "attend_end": "18:01:00",
+      "attend_total": "08:01:00",
+      "attend_status": 0
+    },
+    {
+      "attend_no": 5,
+      "user_no": 1,
+      "attend_date": "2023.06.16.금",
+      "attend_start": "09:00:00",
+      "attend_end": "17:56:00",
+      "attend_total": "07:56:00",
+      "attend_status": 4
+    },
+    {
+      "attend_no": 6,
+      "user_no": 1,
+      "attend_date": "2023.06.19.월",
+      "attend_start": "09:03:00",
+      "attend_end": "18:00:00",
+      "attend_total": "07:57:00",
+      "attend_status": 2
+    },
+    {
+      "attend_no": 7,
+      "user_no": 1,
+      "attend_date": "2023.06.20.화",
+      "attend_start": "09:00:00",
+      "attend_end": "18:00:00",
+      "attend_total": "08:00:00",
+      "attend_status": 1
+    },
+    {
+      "attend_no": 8,
+      "user_no": 1,
+      "attend_date": "2023.06.21.수",
+      "attend_start": "09:01:00",
+      "attend_end": "18:02:00",
+      "attend_total": "08:01:00",
+      "attend_status": 2
+    },
+    {
+      "attend_no": 9,
+      "user_no": 1,
+      "attend_date": "2023.06.22.목",
+      "attend_start": "08:58:00",
+      "attend_end": "17:59:00",
+      "attend_total": "09:01:00",
+      "attend_status": 4
+    },
+    {
+      "attend_no": 10,
+      "user_no": 2,
+      "attend_date": "2023.06.23.금",
+      "attend_start": "09:00:00",
+      "attend_end": "18:00:00",
+      "attend_total": "08:00:00",
+      "attend_status": 0
+    },
+    {
+      "attend_no": 11,
+      "user_no": 2,
+      "attend_date": "2023.06.12.월",
+      "attend_start": "09:00:00",
+      "attend_end": "18:03:30",
+      "attend_total": "08:03:30",
+      "attend_status": 0
+    },
+    {
+      "attend_no": 12,
+      "user_no": 2,
+      "attend_date": "2023.06.13.화",
+      "attend_start": "08:55:00",
+      "attend_end": "18:04:00",
+      "attend_total": "08:09:00",
+      "attend_status": 0
+    },
+    {
+      "attend_no": 13,
+      "user_no": 2,
+      "attend_date": "2023.06.14.수",
+      "attend_start": "09:10:00",
+      "attend_end": "17:55:00",
+      "attend_total": "07:45:00",
+      "attend_status": 2
+    },
+    {
+      "attend_no": 14,
+      "user_no": 2,
+      "attend_date": "2023.06.15.목",
+      "attend_start": "09:00:00",
+      "attend_end": "18:01:00",
+      "attend_total": "08:01:00",
+      "attend_status": 0
+    },
+    {
+      "attend_no": 15,
+      "user_no": 2,
+      "attend_date": "2023.06.16.금",
+      "attend_start": "09:00:00",
+      "attend_end": "17:56:00",
+      "attend_total": "07:56:00",
+      "attend_status": 4
+    },
+    {
+      "attend_no": 16,
+      "user_no": 2,
+      "attend_date": "2023.06.19.월",
+      "attend_start": "09:03:00",
+      "attend_end": "18:00:00",
+      "attend_total": "07:57:00",
+      "attend_status": 2
+    },
+    {
+      "attend_no": 17,
+      "user_no": 2,
+      "attend_date": "2023.06.20.화",
+      "attend_start": "09:00:00",
+      "attend_end": "18:00:00",
+      "attend_total": "08:00:00",
+      "attend_status": 0
+    },
+    {
+      "attend_no": 18,
+      "user_no": 2,
+      "attend_date": "2023.06.21.수",
+      "attend_start": "09:01:00",
+      "attend_end": "18:02:00",
+      "attend_total": "08:01:00",
+      "attend_status": 2
+    },
+    {
+      "attend_no": 19,
+      "user_no": 2,
+      "attend_date": "2023.06.22.목",
+      "attend_start": "08:58:00",
+      "attend_end": "17:59:00",
+      "attend_total": "09:01:00",
+      "attend_status": 4
+    },
+    {
+      "attend_no": 20,
+      "user_no": 2,
+      "attend_date": "2023.06.23.금",
+      "attend_start": "09:00:00",
+      "attend_end": "18:00:00",
+      "attend_total": "08:00:00",
+      "attend_status": 0
+    }
+  ],
+  "user": [
+    {
+      "user_no": 1,
+      "user_name": "이유나",
+      "user_position": "사장",
+      "user_email": "aaa1@aaa.com",
+      "user_phone": "010-2222-2222",
+      "user_profile": "https://picsum.photos/201"
+    },
+    {
+      "user_no": 2,
+      "user_name": "김철수",
+      "user_position": "대리",
+      "user_email": "aaa2@aaa.com",
+      "user_phone": "010-3333-3333",
+      "user_profile": "https://picsum.photos/202"
+    },
+    {
+      "user_no": 3,
+      "user_name": "박영희",
+      "user_position": "주임",
+      "user_email": "aaa3@aaa.com",
+      "user_phone": "010-4444-4444",
+      "user_profile": "https://picsum.photos/203"
+    },
+    {
+      "user_no": 4,
+      "user_name": "최민호",
+      "user_position": "부장",
+      "user_email": "aaa4@aaa.com",
+      "user_phone": "010-5555-5555",
+      "user_profile": "https://picsum.photos/204"
+    },
+    {
+      "user_no": 5,
+      "user_name": "전에스더",
+      "user_position": "회장",
+      "user_email": "aaa5@aaa.com",
+      "user_phone": "010-6666-6666",
+      "user_profile": "https://picsum.photos/205"
+    },
+    {
+      "user_no": 6,
+      "user_name": "김태영",
+      "user_position": "대리",
+      "user_email": "aaa6@aaa.com",
+      "user_phone": "010-7777-7777",
+      "user_profile": "https://picsum.photos/206"
+    },
+    {
+      "user_no": 7,
+      "user_name": "정수빈",
+      "user_position": "주임",
+      "user_email": "aaa7@aaa.com",
+      "user_phone": "010-8888-8888",
+      "user_profile": "https://picsum.photos/207"
+    },
+    {
+      "user_no": 8,
+      "user_name": "박승준",
+      "user_position": "사원",
+      "user_email": "aaa8@aaa.com",
+      "user_phone": "010-9999-9999",
+      "user_profile": "https://picsum.photos/208"
+    },
+    {
+      "user_no": 9,
+      "user_name": "김수현",
+      "user_position": "부장",
+      "user_email": "aaa9@aaa.com",
+      "user_phone": "010-1010-1010",
+      "user_profile": "https://picsum.photos/209"
+    },
+    {
+      "user_no": 10,
+      "user_name": "이서준",
+      "user_position": "이사",
+      "user_email": "aaa10@aaa.com",
+      "user_phone": "010-1111-1111",
+      "user_profile": "https://picsum.photos/210"
+    },
+    {
+      "user_no": 11,
+      "user_name": "최지우",
+      "user_position": "대리",
+      "user_email": "aaa11@aaa.com",
+      "user_phone": "010-1212-1212",
+      "user_profile": "https://picsum.photos/211"
+    },
+    {
+      "user_no": 12,
+      "user_name": "박민지",
+      "user_position": "주임",
+      "user_email": "aaa12@aaa.com",
+      "user_phone": "010-1313-1313",
+      "user_profile": "https://picsum.photos/212"
+    },
+    {
+      "user_no": 13,
+      "user_name": "김준호",
+      "user_position": "사원",
+      "user_email": "aaa13@aaa.com",
+      "user_phone": "010-1414-1414",
+      "user_profile": "https://picsum.photos/213"
+    },
+    {
+      "user_no": 14,
+      "user_name": "정윤서",
+      "user_position": "부장",
+      "user_email": "aaa14@aaa.com",
+      "user_phone": "010-1515-1515",
+      "user_profile": "https://picsum.photos/214"
+    },
+    {
+      "user_no": 15,
+      "user_name": "박민준",
+      "user_position": "이사",
+      "user_email": "aaa15@aaa.com",
+      "user_phone": "010-1616-1616",
+      "user_profile": "https://picsum.photos/215"
+    },
+    {
+      "user_no": 16,
+      "user_name": "김서영",
+      "user_position": "대리",
+      "user_email": "aaa16@aaa.com",
+      "user_phone": "010-1717-1717",
+      "user_profile": "https://picsum.photos/216"
+    },
+    {
+      "user_no": 17,
+      "user_name": "이승우",
+      "user_position": "주임",
+      "user_email": "aaa17@aaa.com",
+      "user_phone": "010-1818-1818",
+      "user_profile": "https://picsum.photos/217"
+    },
+    {
+      "user_no": 18,
+      "user_name": "임희진",
+      "user_position": "사원",
+      "user_email": "aaa18@aaa.com",
+      "user_phone": "010-1919-1919",
+      "user_profile": "https://picsum.photos/218"
+    },
+    {
+      "user_no": 19,
+      "user_name": "박지민",
+      "user_position": "부장",
+      "user_email": "aaa19@aaa.com",
+      "user_phone": "010-2020-2020",
+      "user_profile": "https://picsum.photos/219"
+    },
+    {
+      "user_no": 20,
+      "user_name": "김예은",
+      "user_position": "이사",
+      "user_email": "aaa20@aaa.com",
+      "user_phone": "010-2121-2121",
+      "user_profile": "https://picsum.photos/220"
+    }
+  ],
+  "role_count": [
+    {
+      "role_level": "0",
       "role_name": "사용자",
-      "role_designated_date": "1960-01-24"
-    },{
-      "role_level": 1,
+      "count": 200
+    },
+    {
+      "role_level": "1",
       "role_name": "근태담당자",
-      "role_designated_date": "1960-01-24"
-    }  ]
-  },{
-    "user_no": 1,
-    "user_profile": "https://picsum.photos/200",
-    "dept_name": "개발2팀",
-    "user_name": "Christian",
-    "user_position": "연구원",
-    "role" : [{
-      "role_level": 0,
-      "role_name": "사용자",
-      "role_designated_date": "1960-01-24"
-    }  ]
-  }
-
-],
+      "count": 30
+    },
+    {
+      "role_level": "2",
+      "role_name": "관리자",
+      "count": 10
+    },
+    {
+      "role_level": "3",
+      "role_name": "메인관리자",
+      "count": 2
+    },
+    {
+      "role_level": "4",
+      "role_name": "맞춤",
+      "count": 5
+    }
+  ],
+  "role_query_user_detail": [
+    {
+      "user_no": 0,
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발팀",
+      "user_name": "Dylan",
+      "user_position": "연구원",
+      "role": [
+        {
+          "role_level": 0,
+          "role_name": "사용자",
+          "role_designated_date": "1960-01-24"
+        },
+        {
+          "role_level": 1,
+          "role_name": "근태담당자",
+          "role_designated_date": "1960-01-24",
+          "attend_ma": [
+            {
+              "dept_no": 0,
+              "attend_ma_designated_date": "2023-10-20"
+            },
+            {
+              "dept_no": 1,
+              "attend_ma_designated_date": "2023-10-20"
+            },
+            {
+              "dept_no": 2,
+              "attend_ma_designated_date": "2023-10-20"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "user_no": 1,
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발2팀",
+      "user_name": "Christian",
+      "user_position": "연구원",
+      "role": [
+        {
+          "role_level": 0,
+          "role_name": "사용자",
+          "role_designated_date": "1960-01-24"
+        }
+      ]
+    }
+  ],
   "user_information": {
     "user_no": 0,
     "user_profile": "https://picsum.photos/200",
@@ -466,8 +506,8 @@
     "user_position": "연구원",
     "user_birth_date": "1960-01-24",
     "user_email": "dylan@douzon.com",
-    "user_phone": "010-5698-5321",
-    "user_address": "서울특별시 종로구 창경궁로 254"
+    "user_phone": "010-5698-0001",
+    "user_address": "서울특별시 종로구 창경궁로 254-123"
   },
   "policy_count": [
     {
