@@ -6,32 +6,6 @@ import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow }
 import { Stack, Typography } from '../../../node_modules/@mui/material/index';
 import Dot from 'components/@extended/Dot';
 
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order, orderBy) {
-  return order === 'desc' ? (a, b) => descendingComparator(a, b, orderBy) : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) {
-      return order;
-    }
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
-
 // ==============================|| ORDER TABLE - HEADER CELL ||============================== //
 
 const headCells = [
@@ -73,6 +47,7 @@ function OrderTableHead({ order, orderBy }) {
             align={headCell.align}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
+            sx={{ height: '30px', p: 1 }}
           >
             {headCell.label}
           </TableCell>
@@ -134,12 +109,9 @@ OrderStatus.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function UserAttendTable({ datas, handleMyCard }) {
+export default function UserAttendInfoTable({ data }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
-  const [selected] = useState([]);
-
-  const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
 
   return (
     <Box>
@@ -150,7 +122,7 @@ export default function UserAttendTable({ datas, handleMyCard }) {
           position: 'relative',
           display: 'block',
           maxWidth: '100%',
-          height: '590px',
+          height: `${Object.keys(data).length === 0 ? '47px' : '100px'}`,
           padding: '0px',
           '& td, & th': { whiteSpace: 'nowrap' },
           '&::-webkit-scrollbar': {
@@ -179,22 +151,10 @@ export default function UserAttendTable({ datas, handleMyCard }) {
         >
           <OrderTableHead order={order} orderBy={orderBy} />
           <TableBody>
-            {stableSort(datas, getComparator(order, orderBy)).map((data, index) => {
-              const isItemSelected = isSelected(data.date);
-              const labelId = `enhanced-table-checkbox-${index}`;
-
-              return (
-                <TableRow
-                  hover
-                  role="checkbox"
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                  aria-checked={isItemSelected}
-                  tabIndex={-1}
-                  key={data.date}
-                  selected={isItemSelected}
-                  onClick={() => handleMyCard(data)}
-                >
-                  <TableCell component="th" id={labelId} scope="data" align="center">
+            <TableRow hover role="checkbox" sx={{ '&:last-child td, &:last-child th': { border: 0 } }} tabIndex={-1} key={data.date}>
+              {Object.keys(data).length !== 0 && (
+                <>
+                  <TableCell component="th" scope="data" align="center">
                     {data.date}
                   </TableCell>
                   <TableCell align="center">{data.startTime}</TableCell>
@@ -202,9 +162,21 @@ export default function UserAttendTable({ datas, handleMyCard }) {
                   <TableCell align="center">
                     <OrderStatus status={data.status} />
                   </TableCell>
-                </TableRow>
-              );
-            })}
+                </>
+              )}
+              {/* {Object.keys(data).length === 0 && (
+                <Box
+                  p={1}
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center', // 수평 중앙 정렬
+                    alignItems: 'center' // 수직 중앙 정렬
+                  }}
+                >
+                  <Typography variant="h5">선택된 날짜 없음</Typography>
+                </Box>
+              )} */}
+            </TableRow>
           </TableBody>
         </Table>
       </TableContainer>

@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { Box, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 // project import
-import { Button, Typography } from '../../../node_modules/@mui/material/index';
+import { Typography } from '../../../node_modules/@mui/material/index';
 
 // 아이콘
 import Dot from 'components/@extended/Dot';
@@ -62,12 +62,6 @@ const headCells = [
     align: 'center',
     disablePadding: false,
     label: '근태상태'
-  },
-  {
-    id: 'updateBtn',
-    align: 'center',
-    disablePadding: false,
-    label: '수정요청'
   }
 ];
 
@@ -201,6 +195,9 @@ export default function RecentAttendTable({ datas, handleMyCard }) {
                   tabIndex={-1}
                   key={data.date}
                   selected={isItemSelected}
+                  onClick={() => {
+                    handleMyCard(data);
+                  }}
                 >
                   <TableCell component="th" id={labelId} scope="data" align="center">
                     {data.date}
@@ -209,17 +206,6 @@ export default function RecentAttendTable({ datas, handleMyCard }) {
                   <TableCell align="center">{data.endTime}</TableCell>
                   <TableCell align="center">
                     <OrderStatus status={data.status} />
-                  </TableCell>
-                  <TableCell align="center">
-                    <Button
-                      variant="contained"
-                      size="small"
-                      onClick={() => {
-                        handleMyCard(data);
-                      }}
-                    >
-                      <Box clone>선택</Box>
-                    </Button>
                   </TableCell>
                 </TableRow>
               );

@@ -131,12 +131,17 @@ const UserAttendance = () => {
               </Grid>
             </Grid>
             <Grid container alignItems="center" justifyContent="space-between">
-              <Grid item xs={5} md={5} lg={5}>
-                <MainCard sx={{ mt: 2, mr: 1, height: '670px' }} content={false}>
-                  <RecentAttendTable datas={datas} handleMyCard={handleMyCard} />
+              <Grid item xs={4} md={4} lg={4}>
+                <MainCard sx={{ mt: 2, mr: 1, pt: 2, height: '670px' }} content={false}>
+                  <Box  ml={2}>
+                  <Typography variant="h5">최근 이상 근태 내역</Typography>
+                  </Box>
+                  <Box mt={1}>
+                    <RecentAttendTable datas={datas} handleMyCard={handleMyCard} />
+                  </Box>
                 </MainCard>
               </Grid>
-              <Grid item xs={7} md={7} lg={7}>
+              <Grid item xs={8} md={8} lg={8}>
                 <MainCard sx={{ mt: 2, pt: 2, pr: 2, pl: 2, height: '670px' }} content={false}>
                   <Grid container spacing={1} justifyContent="center">
                     <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -254,7 +259,7 @@ const UserAttendance = () => {
                             <FormControlLabel value="other" control={<Radio size="small" />} label="직접입력" />
                           </RadioGroup>
                         </FormControl>
-                        {attendDefault == 'other' && <TimePicker2 label={updateTime} setTime={setUpdateTime} />}
+                        {attendDefault == 'other' && <TimePicker2 label={'수정시간'} setTime={setUpdateTime} />}
                         {attendDefault == 'default' && (
                           <TextField
                             size="small"
@@ -302,7 +307,7 @@ const UserAttendance = () => {
                   </Grid>
                   <Grid item sx={{ mt: 0.3 }}>
                     <Button variant="contained" color="secondary">
-                      조회 {startDate} {endDate}
+                      조회 {startDate} {endDate} {updateTime}
                     </Button>
                   </Grid>
                 </Grid>

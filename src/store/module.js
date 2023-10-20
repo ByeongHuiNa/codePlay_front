@@ -83,3 +83,10 @@ export const useHasDrity = create(
     setHasDrity: (hasDrity) => set(() => ({ hasDrity: hasDrity }))
   }))
 );
+
+export const useLeaveTab = create(
+  devtools((set) => ({
+    index: 0,
+    setIndex: (newIndex) => set(() => ({ index: newIndex }))
+  }))
+)

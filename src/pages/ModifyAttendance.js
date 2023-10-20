@@ -27,6 +27,8 @@ import BasicChip from 'components/Chip/BasicChip';
 import MainCard from 'components/MainCard';
 import BasicTab from 'components/tab/BasicTab';
 import TimePicker2 from 'components/DatePicker/TimePicker';
+import BasicDatePicker from 'components/DatePicker/BasicDatePicker';
+import UserAttendInfoTable from 'components/Table/UserAttendInfoTable';
 
 const ModifyAttendance = () => {
   const [value, setValue] = useState(0); // Tab 부분
@@ -37,6 +39,8 @@ const ModifyAttendance = () => {
   // 선택한 휴가 데이터 값
   const [selectLeaveData, setSelectLeaveData] = useState({});
 
+  // 선택한 출/퇴근 날짜
+  const [selectDate, setSelectDate] = useState('');
   // 선택한 출/퇴근 데이터 값
   const [selectAttendData, setSelectAttendData] = useState({});
   // 테이블에서 데이터 선택 시 selectAttendData에 저장
@@ -68,6 +72,7 @@ const ModifyAttendance = () => {
       setAttendKind('start');
       setAttendDefault('default');
       setUpdateTime('');
+      setSelectDate('');
     }
   }, [selectAttendData]);
 
@@ -76,6 +81,7 @@ const ModifyAttendance = () => {
   const handleTab = (event, newValue) => {
     setValue(newValue);
     setUpdateTime('');
+    setSelectDate('');
     setAttendKind('');
     setAttendDefault('');
     setSelectLeaveData({});
@@ -109,7 +115,7 @@ const ModifyAttendance = () => {
     box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
     border: 1px solid #e6ebf1;
     border-radius: 15px;
-    width: 70%;
+    width: 100%;
     padding-left: 40px;
   `;
 
@@ -127,8 +133,13 @@ const ModifyAttendance = () => {
     createAttendData('2023/10/13', '08:50:13', '18:12:58', 2),
     createAttendData('2023/10/18', '08:06:35', '18:07:26', 3),
     createAttendData('2023/10/14', '08:06:35', '18:07:26', 3),
-    createAttendData('2023/10/19', '08:32:57', '18:01:13', 4),
-    createAttendData('2023/10/15', '08:32:57', '18:01:13', 4)
+    createAttendData('2023/10/19', '08:32:57', '18:01:13', 0),
+    createAttendData('2023/10/15', '08:32:57', '18:01:13', 0),
+    createAttendData('2023/10/21', '08:32:57', '18:01:13', 0),
+    createAttendData('2023/10/22', '08:32:57', '18:01:13', 0),
+    createAttendData('2023/10/23', '08:32:57', '18:01:13', 0),
+    createAttendData('2023/10/24', '08:32:57', '18:01:13', 0),
+    createAttendData('2023/10/25', '08:32:57', '18:01:13', 0)
   ];
 
   function createUserData(name, dept, position, email) {
@@ -221,162 +232,127 @@ const ModifyAttendance = () => {
             </Box>
             <ApprovalTab value={value} index={0} border={'none'}>
               <Grid container alignItems="center" justifyContent="space-between">
-                <Grid item xs={5} md={5} lg={5}>
+                <Grid item xs={4} md={4} lg={4}>
+                  <MainCard sx={{ pt: 2, pr: 2, mr: 1, height: '670px' }} content={false}>
+                    <Typography variant="h5" sx={{ mb: 1, pl: 2 }}>
+                      근태 내역 {selectDate} {updateTime}
+                    </Typography>
+                    <UserAttendTable datas={attendDatas} handleMyCard={handleMyCard} />
+                  </MainCard>
+                </Grid>
+                <Grid item xs={8} md={8} lg={8}>
                   <Grid container direction="column">
-                    <Grid item xs={3} md={3} lg={3} sx={{ mb: 1 }}>
-                      <MainCard sx={{ pt: 2, pr: 2, pl: 2, mr: 2, height: '140px' }} content={false}>
-                        <Typography variant="h5">날짜 선택</Typography>
+                    <Grid item xs={5} md={5} lg={5} sx={{ mb: 1 }}>
+                      <MainCard sx={{ pt: 2, mr: 1, height: '200px' }} content={false}>
+                        <Grid container alignItems="center" direction="row" spacing={1} sx={{ pl: 2 }}>
+                          <Grid item xs={1.5} md={1.5} lg={1.5}>
+                            <Typography variant="h5">날짜 선택</Typography>
+                          </Grid>
+                          <Grid item xs={4} md={4} lg={4}>
+                            <BasicDatePicker setDate={setSelectDate} />
+                          </Grid>
+                          <Grid item xs={2} md={2} lg={2}>
+                            <Button variant="contained">검색</Button>
+                          </Grid>
+                          <Grid item xs={4.5} md={4.5} lg={4.5}></Grid>
+                        </Grid>
+                        <Box clone mt={3}>
+                          <UserAttendInfoTable data={selectAttendData} />
+                          {Object.keys(selectAttendData).length === 0 && (
+                            <Box
+                              p={1}
+                              sx={{
+                                display: 'flex',
+                                justifyContent: 'center', // 수평 중앙 정렬
+                                alignItems: 'center' // 수직 중앙 정렬
+                              }}
+                            >
+                              <Typography variant="h5">선택된 날짜 없음</Typography>
+                            </Box>
+                          )}
+                        </Box>
                       </MainCard>
                     </Grid>
-                    <Grid item xs={9} md={9} lg={9}>
-                      <MainCard sx={{ pt: 2, pr: 2, pl: 2, mr: 2, height: '520px' }} content={false}>
-                        <Typography variant="h5" sx={{ mb: 1 }}>
-                          최근 이상 근태 내역
-                        </Typography>
-                        <UserAttendTable datas={attendDatas} handleMyCard={handleMyCard} />
+                    <Grid item xs={7} md={7} lg={7}>
+                      <MainCard sx={{ pt: 2, pr: 2, pl: 2, height: '460px' }} content={false}>
+                        <Grid container spacing={1} justifyContent="center">
+                          <Grid item xs={12} sm={12} md={12} lg={12}>
+                            <Typography variant="h5">출/퇴근 수정</Typography>
+                            <Box clone mt={2.5}>
+                              <BasicChip label="제목" color="gray" />
+                              <TextField size="small" />
+                            </Box>
+                            <Box clone mt={1.5}>
+                              <BasicChip label="결재자" color="gray" />
+                              <TextField
+                                label="결재자"
+                                id="approver"
+                                type="search"
+                                size="small"
+                                sx={{
+                                  width: '170px'
+                                }}
+                                InputProps={{
+                                  endAdornment: (
+                                    <InputAdornment position="end">
+                                      <IconButton id="searchApp">
+                                        <SearchOutlined />
+                                      </IconButton>
+                                    </InputAdornment>
+                                  )
+                                }}
+                              />
+                            </Box>
+                            <Box clone mt={1.5}>
+                              <BasicChip label="수정사항" color="gray" />
+                              <FormControl sx={{ ml: 1 }}>
+                                <RadioGroup
+                                  row
+                                  sx={{ justifyContent: 'center', alignItems: 'center' }}
+                                  value={attendKind}
+                                  onChange={handleKindRadioChange}
+                                >
+                                  <FormControlLabel value="start" control={<Radio size="small" />} label="출근" />
+                                  <FormControlLabel value="end" control={<Radio size="small" />} label="퇴근" />
+                                </RadioGroup>
+                              </FormControl>
+                            </Box>
+                            <Box clone mt={1.5}>
+                              <BasicChip label="수정시간" color="gray" />
+                              <FormControl sx={{ ml: 1 }}>
+                                <RadioGroup
+                                  row
+                                  sx={{ justifyContent: 'center', alignItems: 'center' }}
+                                  value={attendDefault}
+                                  onChange={handleDefaultRadioChange}
+                                >
+                                  <FormControlLabel value="default" control={<Radio size="small" />} label="기본값" />
+                                  <FormControlLabel value="other" control={<Radio size="small" />} label="직접입력" />
+                                </RadioGroup>
+                              </FormControl>
+                              {attendDefault == 'other' && <TimePicker2 label={'수정시간'} setTime={setUpdateTime} />}
+                              {attendDefault == 'default' && (
+                                <TextField
+                                  size="small"
+                                  defaultValue={attendKind === 'start' ? '09 : 00 : 00' : '18 : 00 : 00'}
+                                  key={attendKind}
+                                  inputProps={{ readOnly: true }}
+                                  sx={{ width: '30%' }}
+                                />
+                              )}
+                            </Box>
+                            <Box clone mt={1.5} mr={1}>
+                              <BasicChip label="수정사유" color="gray" />
+                              <TextField multiline rows={5} sx={{ width: '84%' }} />
+                            </Box>
+                            <Stack direction="row" justifyContent="flex-end" mt={2} mr={1.5}>
+                              <Button variant="contained">결재완료</Button>
+                            </Stack>
+                          </Grid>
+                        </Grid>
                       </MainCard>
                     </Grid>
                   </Grid>
-                </Grid>
-                <Grid item xs={7} md={7} lg={7}>
-                  <MainCard sx={{ pt: 2, pr: 2, pl: 2, height: '670px' }} content={false}>
-                    <Grid container spacing={1} justifyContent="center">
-                      <Grid item xs={12} sm={12} md={12} lg={12}>
-                        <Typography variant="h5">출/퇴근 수정</Typography>
-                        <Box clone mt={3}>
-                          <BasicChip label="제목" color="gray" />
-                          <TextField size="small" />
-                        </Box>
-                        <Box clone mt={2.5}>
-                          <BasicChip label="날짜" color="gray" />
-                          <TextField
-                            label="날짜"
-                            id="date"
-                            type="search"
-                            size="small"
-                            sx={{
-                              width: '170px'
-                            }}
-                            defaultValue={selectAttendData.date}
-                            key={selectAttendData.date}
-                            inputProps={{ readOnly: true }}
-                            InputProps={{
-                              endAdornment: (
-                                <InputAdornment position="end">
-                                  <IconButton id="searchApp">
-                                    <SearchOutlined />
-                                  </IconButton>
-                                </InputAdornment>
-                              )
-                            }}
-                          />
-                        </Box>
-                        {/* {Object.keys(selectAttendData).length !== 0 && (
-                          <>
-                            <Box mt={2.5} sx={{ display: 'flex' }}>
-                              <BasicChip label="선택날짜" color="gray" />
-                              <MyCard>
-                                <Grid container alignItems="center" justifyContent="space-between">
-                                  <Grid item xs={3} md={3} lg={3} style={{ textAlign: 'center' }}>
-                                    {selectAttendData.date}
-                                  </Grid>
-                                  <Grid item xs={3} md={3} lg={3} style={{ textAlign: 'center' }}>
-                                    <Typography align="center" variant="text" component="span">
-                                      {selectAttendData.startTime}
-                                    </Typography>
-                                  </Grid>
-                                  <Grid item xs={3} md={3} lg={3} style={{ textAlign: 'center' }}>
-                                    <Typography align="center" variant="text" component="span">
-                                      {selectAttendData.endTime}
-                                    </Typography>
-                                  </Grid>
-                                  <Grid item xs={3} md={3} lg={3} style={{ textAlign: 'center' }}>
-                                    <Typography align="center" variant="text" component="span">
-                                      {selectAttendData.status === 0
-                                        ? '정상'
-                                        : selectAttendData.status === 1
-                                        ? '휴가'
-                                        : selectAttendData.status === 2
-                                        ? '지각'
-                                        : selectAttendData.status === 3
-                                        ? '조퇴'
-                                        : '결근'}
-                                    </Typography>
-                                  </Grid>
-                                </Grid>
-                              </MyCard>
-                            </Box>
-                          </>
-                        )} */}
-                        <Box clone mt={2.5}>
-                          <BasicChip label="결재자" color="gray" />
-                          <TextField
-                            label="결재자"
-                            id="approver"
-                            type="search"
-                            size="small"
-                            sx={{
-                              width: '170px'
-                            }}
-                            InputProps={{
-                              endAdornment: (
-                                <InputAdornment position="end">
-                                  <IconButton id="searchApp">
-                                    <SearchOutlined />
-                                  </IconButton>
-                                </InputAdornment>
-                              )
-                            }}
-                          />
-                        </Box>
-                        <Box clone mt={2.5}>
-                          <BasicChip label="수정사항" color="gray" />
-                          <FormControl sx={{ ml: 1 }}>
-                            <RadioGroup
-                              row
-                              sx={{ justifyContent: 'center', alignItems: 'center' }}
-                              value={attendKind}
-                              onChange={handleKindRadioChange}
-                            >
-                              <FormControlLabel value="start" control={<Radio size="small" />} label="출근" />
-                              <FormControlLabel value="end" control={<Radio size="small" />} label="퇴근" />
-                            </RadioGroup>
-                          </FormControl>
-                        </Box>
-                        <Box clone mt={2.5}>
-                          <BasicChip label="수정시간" color="gray" />
-                          <FormControl sx={{ ml: 1 }}>
-                            <RadioGroup
-                              row
-                              sx={{ justifyContent: 'center', alignItems: 'center' }}
-                              value={attendDefault}
-                              onChange={handleDefaultRadioChange}
-                            >
-                              <FormControlLabel value="default" control={<Radio size="small" />} label="기본값" />
-                              <FormControlLabel value="other" control={<Radio size="small" />} label="직접입력" />
-                            </RadioGroup>
-                          </FormControl>
-                          {attendDefault == 'other' && <TimePicker2 label={updateTime} setTime={setUpdateTime} />}
-                          {attendDefault == 'default' && (
-                            <TextField
-                              size="small"
-                              defaultValue={attendKind === 'start' ? '09 : 00 : 00' : '18 : 00 : 00'}
-                              key={attendKind}
-                              inputProps={{ readOnly: true }}
-                              sx={{ width: '30%' }}
-                            />
-                          )}
-                        </Box>
-                        <Box clone mt={2.5} mr={1}>
-                          <BasicChip label="수정사유" color="gray" />
-                          <TextField multiline rows={5} sx={{ width: '84%' }} />
-                        </Box>
-                        <Stack direction="row" justifyContent="flex-end" mt={2.5} mr={1}>
-                          <Button variant="contained">결재완료</Button>
-                        </Stack>
-                      </Grid>
-                    </Grid>
-                  </MainCard>
                 </Grid>
               </Grid>
             </ApprovalTab>
