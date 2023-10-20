@@ -228,7 +228,6 @@ const UserAttendanceTotalPage = () => {
               <AttendanceTable />
             </MainCard>
           </Grid>
-          
 
           {/* row 3 - 근태현황 그리드 */}
           {/* <Grid item xs={4}>

@@ -1,7 +1,7 @@
 import { Typography, Box, Grid, Tab, Tabs } from '@mui/material';
 import ComponentSkeleton from './components-overview/ComponentSkeleton';
-import { FormControl, IconButton, InputLabel, MenuItem, NativeSelect, TextField } from '../../node_modules/@mui/material/index';
-import Select from '@mui/material/Select';
+import { FormControl, IconButton, InputLabel, NativeSelect, TextField } from '../../node_modules/@mui/material/index';
+
 import VacationCountTable from 'components/Table/VacationCountTable';
 import AttendanceDayTable from 'components/Table/AttendanceDayTable';
 import AttendanceWeekTable from 'components/Table/AttendanceWeekTable';
@@ -30,8 +30,8 @@ const SeeAllAttendance = () => {
     setValue2(newValue);
   };
 
-  const [date, setDate] = useState(new Date('2023-10-16'));
-  const [currentDate, setCurrentDate] = useState(new Date('2023-10-16'));
+  const [date, setDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   const [currentWeek, setCurrentWeek] = useState(0);
 
@@ -85,7 +85,7 @@ const SeeAllAttendance = () => {
         <Grid item xs={12} sm={6} md={5} lg={7}>
           <MainCard>
             <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <Typography variant="h5">{dept}부서 휴가보유 현황</Typography>
+              <Typography variant="h5">{dept ? `${dept} 부서 출/퇴근 현황` : '개발 부서 휴가보유 현황 '}</Typography>
               <FormControl sx={{ marginLeft: 3 }}>
                 <InputLabel variant="standard" htmlFor="uncontrolled-native">
                   부서
@@ -143,28 +143,36 @@ const SeeAllAttendance = () => {
                 <IconButton onClick={handlePrevDay} aria-label="이전 날짜">
                   <ArrowBackIosNewOutlinedIcon />
                 </IconButton>
-
-                <Typography variant="h5" sx={{ textAlign: 'center' }}>
-                  {dept ? `${dept} 부서 출/퇴근 현황` : '개발 부서 출/퇴근 현황 '}
-                </Typography>
-
                 <Typography variant="h5" sx={{ textAlign: 'center' }}>
                   {date.toLocaleDateString()}
                 </Typography>
-
-                <FormControl sx={{ minWidth: 100 }}>
-                  <InputLabel id="demo-simple-select-label">부서</InputLabel>
-                  <Select labelId="demo-simple-select-label" id="demo-simple-select" value={dept} label="month" onChange={handleChange2}>
-                    <MenuItem value={'개발'}>개발</MenuItem>
-                    <MenuItem value={'인사'}>인사</MenuItem>
-                    <MenuItem value={'회계'}>회계</MenuItem>
-                  </Select>
-                </FormControl>
 
                 <IconButton onClick={handleNextDay} aria-label="다음 날짜">
                   <ArrowForwardIosOutlinedIcon />
                 </IconButton>
               </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Typography variant="h5" sx={{ textAlign: 'center' }}>
+                  {dept ? `${dept} 부서 출/퇴근 현황` : '개발 부서 출/퇴근 현황 '}
+                </Typography>
+                <FormControl sx={{ marginLeft: 3 }}>
+                  <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                    부서
+                  </InputLabel>
+                  <NativeSelect
+                    onChange={handleChange2}
+                    inputProps={{
+                      name: 'month',
+                      id: 'uncontrolled-native'
+                    }}
+                  >
+                    <option value={'개발'}>개발</option>
+                    <option value={'인사'}>인사</option>
+                    <option value={'회계'}>회계</option>
+                  </NativeSelect>
+                </FormControl>
+              </div>
+
               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <Grid container xs={9} rowSpacing={4} columnSpacing={2.75}>
                   <Grid item xs={3}>
@@ -220,24 +228,35 @@ const SeeAllAttendance = () => {
                 <IconButton onClick={handlePrevWeek} aria-label="이전 날짜">
                   <ArrowBackIosNewOutlinedIcon />
                 </IconButton>
-
-                <Typography variant="h5" sx={{ textAlign: 'center', flexGrow: 1 }}>
-                  {dept ? `${dept} 부서 출/퇴근 현황` : '개발 부서 출/퇴근 현황 '}
+                <Typography variant="h5" sx={{ textAlign: 'center' }}>
                   {currentDate.toLocaleDateString()} {currentWeek}주
                 </Typography>
-                <FormControl sx={{ minWidth: 100 }}>
-                  <InputLabel id="demo-simple-select-label">부서</InputLabel>
-                  <Select labelId="demo-simple-select-label" id="demo-simple-select" value={dept} label="month" onChange={handleChange2}>
-                    <MenuItem value={'개발'}>개발</MenuItem>
-                    <MenuItem value={'인사'}>인사</MenuItem>
-                    <MenuItem value={'회계'}>회계</MenuItem>
-                  </Select>
-                </FormControl>
-
                 <IconButton onClick={handleNextWeek} aria-label="다음 날짜">
                   <ArrowForwardIosOutlinedIcon />
                 </IconButton>
               </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Typography variant="h5" sx={{ textAlign: 'center' }}>
+                  {dept ? `${dept} 부서 출/퇴근 현황` : '개발 부서 출/퇴근 현황 '}
+                </Typography>
+                <FormControl sx={{ marginLeft: 3 }}>
+                  <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                    부서
+                  </InputLabel>
+                  <NativeSelect
+                    onChange={handleChange2}
+                    inputProps={{
+                      name: 'month',
+                      id: 'uncontrolled-native'
+                    }}
+                  >
+                    <option value={'개발'}>개발</option>
+                    <option value={'인사'}>인사</option>
+                    <option value={'회계'}>회계</option>
+                  </NativeSelect>
+                </FormControl>
+              </div>
+
               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <Grid container xs={9} rowSpacing={4} columnSpacing={2.75}>
                   <Grid item xs={3}>

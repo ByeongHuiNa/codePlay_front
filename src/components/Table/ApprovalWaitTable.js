@@ -54,19 +54,19 @@ function stableSort(array, comparator) {
 const headCells = [
   {
     id: 'type',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     label: '휴가종류'
   },
   {
     id: 'start',
-    align: 'left',
+    align: 'center',
     disablePadding: true,
     label: '휴가시작일'
   },
   {
     id: 'end',
-    align: 'right',
+    align: 'center',
     disablePadding: false,
     label: '휴가종료일'
   }
@@ -193,11 +193,11 @@ export default function ApprovalWaitTable() {
                   key={row.trackingNo}
                   selected={isItemSelected}
                 >
-                  <TableCell component="th" id={labelId} scope="row" align="left">
+                  <TableCell component="th" id={labelId} scope="row" align="center">
                     {row.type}
                   </TableCell>
-                  <TableCell align="left">{row.start}</TableCell>
-                  <TableCell align="right">{row.end}</TableCell>
+                  <TableCell align="center">{row.start}</TableCell>
+                  <TableCell align="center">{row.end}</TableCell>
                  
                 </TableRow>
               );

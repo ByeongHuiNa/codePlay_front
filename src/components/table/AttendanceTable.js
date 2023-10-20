@@ -18,11 +18,11 @@ function createData(date, start, end, status) {
 }
 
 const rows = [
+  createData(20231012, '09:00', '18:00', 0),
   createData(20231012, '09:00', '18:00', 1),
-  createData(20231012, '09:00', '18:00', 1),
-  createData(20231012, '09:00', '18:00', 1),
-  createData(20231012, '09:00', '18:00', 1),
-  createData(20231012, '09:00', '18:00', 1)
+  createData(20231012, '09:00', '18:00', 2),
+  createData(20231012, '09:00', '18:00', 3),
+  createData(20231012, '09:00', '18:00', 4)
 
   //   createData(98756325, 'Mobile', 355, 1, 90989),
   //   createData(98652366, 'Handset', 50, 1, 10239),
