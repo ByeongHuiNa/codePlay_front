@@ -142,10 +142,22 @@ export default function AdminAppLeaveTable({ appLeaveStatus, datas, setSelectLea
           display: 'block',
           maxWidth: '100%',
           height: '492px',
-          '& td, & th': { whiteSpace: 'nowrap' }
+          padding: '0px',
+          '& td, & th': { whiteSpace: 'nowrap' },
+          '&::-webkit-scrollbar': {
+            width: 5
+          },
+          '&::-webkit-scrollbar-track': {
+            backgroundColor: 'white'
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: 'gray',
+            borderRadius: 2
+          }
         }}
       >
         <Table
+          stickyHeader
           aria-labelledby="tableTitle"
           sx={{
             '& .MuiTableCell-root:first-of-type': {

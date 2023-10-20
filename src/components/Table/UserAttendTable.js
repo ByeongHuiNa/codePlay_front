@@ -134,7 +134,7 @@ OrderStatus.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function UserAttendTable({ datas, setSelectAttendData }) {
+export default function UserAttendTable({ datas, handleMyCard }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
@@ -150,12 +150,23 @@ export default function UserAttendTable({ datas, setSelectAttendData }) {
           position: 'relative',
           display: 'block',
           maxWidth: '100%',
-          height: '492px',
+          height: '450px',
           padding: '0px',
-          '& td, & th': { whiteSpace: 'nowrap' }
+          '& td, & th': { whiteSpace: 'nowrap' },
+          '&::-webkit-scrollbar': {
+            width: 5
+          },
+          '&::-webkit-scrollbar-track': {
+            backgroundColor: 'white'
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: 'gray',
+            borderRadius: 2
+          }
         }}
       >
         <Table
+          stickyHeader
           aria-labelledby="tableTitle"
           sx={{
             '& .MuiTableCell-root:first-of-type': {
@@ -181,7 +192,7 @@ export default function UserAttendTable({ datas, setSelectAttendData }) {
                   tabIndex={-1}
                   key={data.date}
                   selected={isItemSelected}
-                  onClick={() => setSelectAttendData(data)}
+                  onClick={() => handleMyCard(data)}
                 >
                   <TableCell component="th" id={labelId} scope="data" align="center">
                     {data.date}

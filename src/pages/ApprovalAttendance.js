@@ -354,17 +354,17 @@ const ApprovalAttendance = () => {
                     </MyTabs>
                   </Box>
                   <ApprovalTab value={value2} index={0}>
-                    <Box p={3}>
+                    <Box pt={3} pb={3}>
                       <AdminAppLeaveTable appLeaveStatus={0} datas={leaveDatas} setSelectLeaveData={setSelectLeaveData} />
                     </Box>
                   </ApprovalTab>
                   <ApprovalTab value={value2} index={1}>
-                    <Box p={3}>
+                    <Box pt={3} pb={3}>
                       <AdminAppLeaveTable appLeaveStatus={1} datas={leaveDatas} setSelectLeaveData={setSelectLeaveData} />
                     </Box>
                   </ApprovalTab>
                   <ApprovalTab value={value2} index={2}>
-                    <Box p={3}>
+                    <Box pt={3} pb={3}>
                       <AdminAppLeaveTable appLeaveStatus={2} datas={leaveDatas} setSelectLeaveData={setSelectLeaveData} />
                     </Box>
                   </ApprovalTab>
@@ -592,17 +592,17 @@ const ApprovalAttendance = () => {
                     </MyTabs>
                   </Box>
                   <ApprovalTab value={value3} index={0}>
-                    <Box p={3}>
+                    <Box pt={3} pb={3}>
                       <AdminAppAttendTable appAttendStatus={0} datas={attendDatas} setSelectAttendData={setSelectAttendData} />
                     </Box>
                   </ApprovalTab>
                   <ApprovalTab value={value3} index={1}>
-                    <Box p={3}>
+                    <Box pt={3} pb={3}>
                       <AdminAppAttendTable appAttendStatus={1} datas={attendDatas} setSelectAttendData={setSelectAttendData} />
                     </Box>
                   </ApprovalTab>
                   <ApprovalTab value={value3} index={2}>
-                    <Box p={3}>
+                    <Box pt={3} pb={3}>
                       <AdminAppAttendTable appAttendStatus={2} datas={attendDatas} setSelectAttendData={setSelectAttendData} />
                     </Box>
                   </ApprovalTab>

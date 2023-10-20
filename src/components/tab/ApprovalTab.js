@@ -8,7 +8,7 @@ function ApprovalTab(props) {
 
   return (
     <div role="tabpanel" hidden={value !== index} id={`simple-tabpanel-${index}`} aria-labelledby={`simple-tab-${index}`} {...other}>
-      {value === index && (
+      {value === index && props.border !== 'none' ? (
         <Box
           sx={{
             border: '1px solid #e6ebf1',
@@ -16,6 +16,10 @@ function ApprovalTab(props) {
             borderBottomRightRadius: '8px'
           }}
         >
+          <Typography>{children}</Typography>
+        </Box>
+      ) : (
+        <Box>
           <Typography>{children}</Typography>
         </Box>
       )}
