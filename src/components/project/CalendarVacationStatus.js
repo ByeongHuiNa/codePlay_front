@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import MainCard from 'components/MainCard';
+import Typography from '@mui/material/Typography';
 
 // chart options
 const barChartOptions = {
@@ -72,15 +73,42 @@ export default function CalendarChart() {
     <>
       <Grid>
         <ReactApexChart options={options} series={series} type="donut" height={365} />
-        <Grid container rowSpacing={4} columnSpacing={1}>
+        <Grid container direction="row" justifyContent="center" alignItems="center" rowSpacing={4} columnSpacing={1}>
           <Grid item xs={4}>
-            <MainCard title="전체 휴가">10</MainCard>
+            <MainCard>
+              <Grid container direction="column" justifyContent="space-between" alignItems="center">
+                <Typography component="span" variant="h6" color="text.primary">
+                  {`총 휴가`}
+                </Typography>
+                <Typography component="span" variant="body2" color="text.primary">
+                  {`10`}
+                </Typography>
+              </Grid>
+            </MainCard>
           </Grid>
           <Grid item xs={4}>
-            <MainCard title="사용 휴가">10</MainCard>
+            <MainCard>
+              <Grid container direction="column" justifyContent="space-between" alignItems="center">
+                <Typography component="span" variant="h6" color="text.primary">
+                  {`사용 휴가`}
+                </Typography>
+                <Typography component="span" variant="body2" color="text.primary">
+                  {`10`}
+                </Typography>
+              </Grid>
+            </MainCard>
           </Grid>
           <Grid item xs={4}>
-            <MainCard title="잔여 휴가">10</MainCard>
+            <MainCard>
+              <Grid container direction="column" justifyContent="space-between" alignItems="center">
+                <Typography component="span" variant="h6" color="text.primary">
+                  {`잔여 휴가`}
+                </Typography>
+                <Typography component="span" variant="body2" color="text.primary">
+                  {`10`}
+                </Typography>
+              </Grid>
+            </MainCard>
           </Grid>
         </Grid>
       </Grid>

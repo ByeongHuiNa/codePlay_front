@@ -8,6 +8,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
+// eslint-disable-next-line no-unused-vars
 import { INITIAL_EVENTS, createEventId } from './event-utils';
 import CalendarVacationStatus from './CalendarVacationStatus';
 import CalendarWorkList from './CalendarWorkList';
@@ -15,6 +16,7 @@ import { Stack } from '../../../node_modules/@mui/material/index';
 import { IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import { useDetailCardState } from 'store/module';
 
 const PersonalCalendar = () => {
   const Item = styled(Paper)(({ theme }) => ({
@@ -33,25 +35,26 @@ const PersonalCalendar = () => {
       </>
     );
   }
+  const { setView } = useDetailCardState();
 
-  //이벤트 생성 함수
+  //달력 클릭 시 발생하는 이벤트
+  // eslint-disable-next-line no-unused-vars
   function handleDateSelect(selectInfo) {
-    let title = prompt(`이벤트를 생성 하시겠습니까? ${selectInfo.startStr}`);
-    let calendarApi = selectInfo.view.calendar;
-
-    calendarApi.unselect(); // clear date selection
-
-    if (title) {
-      calendarApi.addEvent({
-        id: createEventId(),
-        title,
-        start: selectInfo.startStr,
-        end: selectInfo.endStr,
-        allDay: selectInfo.allDay
-        // color: '#4582ec',
-        // textColor: 'yellow'
-      });
-    }
+    // let title = prompt(`이벤트를 생성 하시겠습니까? ${selectInfo.startStr}`);
+    // let calendarApi = selectInfo.view.calendar;
+    // calendarApi.unselect(); // clear date selection
+    // if (title) {
+    //   calendarApi.addEvent({
+    //     id: createEventId(),
+    //     title,
+    //     start: selectInfo.startStr,
+    //     end: selectInfo.endStr,
+    //     allDay: selectInfo.allDay
+    //     // color: '#4582ec',
+    //     // textColor: 'yellow'
+    //   });
+    // }
+    setView(true);
   }
   //이벤트 클릭 시 지우는 함수
   function handleEventClick(clickInfo) {
