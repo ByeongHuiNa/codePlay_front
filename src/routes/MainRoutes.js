@@ -6,13 +6,6 @@ import MainLayout from 'layout/MainLayout';
 
 // render - dashboard
 const CalendarPage = Loadable(lazy(() => import('pages/CalendarPage')));
-
-// render - dashboard
-const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
-
-// render - sample page
-const SamplePage = Loadable(lazy(() => import('pages/extra-pages/SamplePage')));
-
 // render - UserAttendanceTotal page
 const UserAttendanceTotal = Loadable(lazy(() => import('pages/UserAttendanceTotal')));
 // render - SeeAllAttendance page
@@ -23,10 +16,6 @@ const SeeUserAttendance = Loadable(lazy(() => import('pages/SeeUserAttendance'))
 const Main = Loadable(lazy(() => import('pages/Main')));
 
 // render - utilities
-const Typography = Loadable(lazy(() => import('pages/components-overview/Typography')));
-const Color = Loadable(lazy(() => import('pages/components-overview/Color')));
-const Shadow = Loadable(lazy(() => import('pages/components-overview/Shadow')));
-const AntIcons = Loadable(lazy(() => import('pages/components-overview/AntIcons')));
 
 // render - user information page
 const UserInformation = Loadable(lazy(() => import('pages/UserInformation')));
@@ -55,24 +44,7 @@ const MainRoutes = {
   children: [
     {
       path: '/',
-      element: <DashboardDefault />
-    },
-    {
-      path: 'color',
-      element: <Color />
-    },
-    {
-      path: 'dashboard',
-      children: [
-        {
-          path: 'default',
-          element: <DashboardDefault />
-        }
-      ]
-    },
-    {
-      path: 'sample-page',
-      element: <SamplePage />
+      element: <Main />
     },
     {
       path: 'userAttendanceTotal',
@@ -89,18 +61,6 @@ const MainRoutes = {
     {
       path: 'main',
       element: <Main />
-    },
-    {
-      path: 'shadow',
-      element: <Shadow />
-    },
-    {
-      path: 'typography',
-      element: <Typography />
-    },
-    {
-      path: 'icons/ant',
-      element: <AntIcons />
     },
     {
       path: 'userInformation',
