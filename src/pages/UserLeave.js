@@ -29,6 +29,7 @@ import UnappLeaveTable from 'components/Table/UnappLeaveTable';
 import { SearchOutlined, UploadOutlined } from '../../node_modules/@mui/icons-material/index';
 import styled from 'styled-components';
 import BasicDatePicker from 'components/DatePicker/BasicDatePicker';
+import { useLeaveTab } from 'store/module';
 
 // ===============================|| Shadow-Box ||=============================== //
 
@@ -54,11 +55,11 @@ ShadowBox.propTypes = {
 // ============================|| COMPONENT - SHADOW ||============================ //
 
 const UserLeave = () => {
-  const [value, setValue] = useState(0);
+  const { index, setIndex } = useLeaveTab();
   const [selectedValue, setSelectedValue] = useState('annual');
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    setIndex(newValue);
   };
 
   // 결재 대기 중인 휴가 취소 (바로 취소 가능)
@@ -68,7 +69,7 @@ const UserLeave = () => {
 
   // 결재 완료 된 휴가 취소 신청 (결재 받은 뒤 취소 처리)
   const requestLeaveCancel = () => {
-    setValue(2);
+    setIndex(2);
   };
 
   // Chip 커스텀
@@ -154,13 +155,13 @@ const UserLeave = () => {
   return (
     <ComponentSkeleton>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+        <Tabs value={index} onChange={handleChange} aria-label="basic tabs example">
           <Tab label="휴가조회" />
           <Tab label="휴가신청" />
           <Tab label="휴가취소신청" />
         </Tabs>
       </Box>
-      <BasicTab value={value} index={0}>
+      <BasicTab value={index} index={0}>
         <Grid container spacing={1}>
           <Grid item xs={4} sm={4} md={4} lg={4} sx={{ height: '360px' }}>
             <BasicContainer sx={{ height: 1 }}>
@@ -189,7 +190,7 @@ const UserLeave = () => {
           </Grid>
         </Grid>
       </BasicTab>
-      <BasicTab value={value} index={1}>
+      <BasicTab value={index} index={1}>
         <BasicContainer>
           <Grid container spacing={1} justifyContent="center">
             <Grid item xs={11} sm={11} md={11} lg={11}>
@@ -262,7 +263,7 @@ const UserLeave = () => {
           </Grid>
         </BasicContainer>
       </BasicTab>
-      <BasicTab value={value} index={2}>
+      <BasicTab value={index} index={2}>
         <BasicContainer>
           <Grid container spacing={1} justifyContent="center">
             <Grid item xs={11} sm={11} md={11} lg={11}>
