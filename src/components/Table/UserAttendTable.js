@@ -150,7 +150,7 @@ export default function UserAttendTable({ datas, handleMyCard }) {
           position: 'relative',
           display: 'block',
           maxWidth: '100%',
-          height: '450px',
+          height: '590px',
           padding: '0px',
           '& td, & th': { whiteSpace: 'nowrap' },
           '&::-webkit-scrollbar': {
