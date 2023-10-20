@@ -10,6 +10,7 @@ import { Avatar } from '../../node_modules/@mui/material/index';
 import ApprovalWaitTable from 'components/Table/ApprovalWaitTable';
 import AppLeaveTotalTable from 'components/Table/AppLeaveTotalTable';
 import AttendanceTable from 'components/Table/AttendanceTable';
+import AttendanceWeekTable from 'components/Table/AttendanceWeekTable';
 
 const SeeUserAttendance = () => {
   const [value, setValue] = useState(0);
@@ -90,21 +91,21 @@ const SeeUserAttendance = () => {
         <BasicTab value={value2} index={0}>
           <Grid item xs={12}>
             <MainCard>
-            <AppLeaveTotalTable />
+              <AppLeaveTotalTable />
             </MainCard>
           </Grid>
         </BasicTab>
         <BasicTab value={value2} index={1}>
           <Grid item xs={12}>
             <MainCard>
-            <AppLeaveTotalTable />
+              <AppLeaveTotalTable />
             </MainCard>
           </Grid>
         </BasicTab>
       </BasicTab>
 
       <BasicTab value={value} index={1}>
-      <Grid item xs={12} sm={6} md={5} lg={7}>
+        <Grid item xs={12} sm={6} md={5} lg={7}>
           <MainCard>
             <Grid container direction="column" xs={12}>
               <Grid item container direction="row" xs={12}>
@@ -149,16 +150,17 @@ const SeeUserAttendance = () => {
         </Box>
         <BasicTab value={value3} index={0}>
           <MainCard>
-          <Grid item xs={12} sm={6} md={5} lg={7}>
-          <AttendanceTable />
-          
-          </Grid>
+            <Grid item xs={12} sm={6} md={5} lg={7}>
+              <AttendanceTable />
+            </Grid>
           </MainCard>
         </BasicTab>
         <BasicTab value={value3} index={1}>
-          <Grid item xs={12} sm={6} md={5} lg={7}>
-            <MainCard></MainCard>
-          </Grid>
+          <MainCard>
+            <Grid item xs={12} sm={6} md={5} lg={7}>
+              <AttendanceWeekTable />
+            </Grid>
+          </MainCard>
         </BasicTab>
       </BasicTab>
     </ComponentSkeleton>

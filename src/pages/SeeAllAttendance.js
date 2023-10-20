@@ -30,8 +30,8 @@ const SeeAllAttendance = () => {
     setValue2(newValue);
   };
 
-  const [date, setDate] = useState(new Date('2023-10-16'));
-  const [currentDate, setCurrentDate] = useState(new Date('2023-10-16'));
+  const [date, setDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   const [currentWeek, setCurrentWeek] = useState(0);
 
@@ -156,21 +156,21 @@ const SeeAllAttendance = () => {
                   {dept ? `${dept} 부서 출/퇴근 현황` : '개발 부서 출/퇴근 현황 '}
                 </Typography>
                 <FormControl sx={{ marginLeft: 3 }}>
-                <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                  부서
-                </InputLabel>
-                <NativeSelect
-                  onChange={handleChange2}
-                  inputProps={{
-                    name: 'month',
-                    id: 'uncontrolled-native'
-                  }}
-                >
-                  <option value={'개발'}>개발</option>
-                  <option value={'인사'}>인사</option>
-                  <option value={'회계'}>회계</option>
-                </NativeSelect>
-              </FormControl>
+                  <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                    부서
+                  </InputLabel>
+                  <NativeSelect
+                    onChange={handleChange2}
+                    inputProps={{
+                      name: 'month',
+                      id: 'uncontrolled-native'
+                    }}
+                  >
+                    <option value={'개발'}>개발</option>
+                    <option value={'인사'}>인사</option>
+                    <option value={'회계'}>회계</option>
+                  </NativeSelect>
+                </FormControl>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -236,25 +236,25 @@ const SeeAllAttendance = () => {
                 </IconButton>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Typography variant="h5" sx={{ textAlign: 'center'}}>
+                <Typography variant="h5" sx={{ textAlign: 'center' }}>
                   {dept ? `${dept} 부서 출/퇴근 현황` : '개발 부서 출/퇴근 현황 '}
                 </Typography>
                 <FormControl sx={{ marginLeft: 3 }}>
-                <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                  부서
-                </InputLabel>
-                <NativeSelect
-                  onChange={handleChange2}
-                  inputProps={{
-                    name: 'month',
-                    id: 'uncontrolled-native'
-                  }}
-                >
-                  <option value={'개발'}>개발</option>
-                  <option value={'인사'}>인사</option>
-                  <option value={'회계'}>회계</option>
-                </NativeSelect>
-              </FormControl>
+                  <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                    부서
+                  </InputLabel>
+                  <NativeSelect
+                    onChange={handleChange2}
+                    inputProps={{
+                      name: 'month',
+                      id: 'uncontrolled-native'
+                    }}
+                  >
+                    <option value={'개발'}>개발</option>
+                    <option value={'인사'}>인사</option>
+                    <option value={'회계'}>회계</option>
+                  </NativeSelect>
+                </FormControl>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
