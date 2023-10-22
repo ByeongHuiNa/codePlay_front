@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import { useDetailCardState } from 'store/module';
+import { useCalendarDrawer } from 'store/module';
 import {
   FormControl,
   FormControlLabel,
@@ -15,7 +15,7 @@ import {
 } from '../../../node_modules/@mui/material/index';
 
 export default function CalendarDrawer() {
-  const { view, setView } = useDetailCardState();
+  const { view, setView } = useCalendarDrawer();
 
   //일정종류
   const [scheduleType, setScheduleType] = React.useState('');
