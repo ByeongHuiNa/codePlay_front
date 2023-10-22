@@ -7,7 +7,7 @@ import InputSeach from 'components/Input/InputSearch';
 import { Grid } from '../../node_modules/@mui/material/index';
 
 //icon import
-import { useDetailCardState, useTabState, useTableListState } from 'store/module';
+import { useCriteria, useDetailCardState, useTabState, useTableListState } from 'store/module';
 import { useEffect } from 'react';
 import axios from '../../node_modules/axios/index';
 import SettingAttendancePolicyTable from 'components/Table/SettingAttendancePolicyTable';
@@ -22,6 +22,7 @@ const SettingAttendancePolicy = () => {
   const { setIndex, setTab } = useTabState();
   const { setTableList } = useTableListState();
   const { view, setView } = useDetailCardState();
+  const { setSearch } = useCriteria();
 
   //화면 초기값 셋팅
   useEffect(() => {
@@ -41,6 +42,7 @@ const SettingAttendancePolicy = () => {
       setTab(tabs);
       setTableList(result[1].data);
       setView(false);
+      setSearch('');
     }
     get();
   }, []);

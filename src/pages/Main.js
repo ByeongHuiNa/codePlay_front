@@ -21,7 +21,7 @@ const Main = () => {
     async function get() {
       const endPoints = ['http://localhost:8000/user_information'];
       const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
-      setProfile(result[0].data);
+      setProfile(result[0].data[0]);
     }
     get();
   }, []);

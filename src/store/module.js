@@ -76,6 +76,7 @@ export const useProfileState = create(
     setProfile: (newProfile) => set(() => ({ profile: newProfile }))
   }))
 );
+//TODO:관리자가 다른사람 프로필 수정할때 위에 프로필까지 수정되는 현상을 막기위해 하나 새로 만들기
 
 export const useHasDrity = create(
   devtools((set) => ({

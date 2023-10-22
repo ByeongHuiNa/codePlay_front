@@ -26,6 +26,7 @@ const SettingAuthority = () => {
   const { setTableList } = useTableListState();
   const { view, setView } = useDetailCardState();
   const { setPage } = useCriteria();
+  const { setSearch } = useCriteria();
   //화면 초기값 셋팅
   useEffect(() => {
     setIndex(0);
@@ -43,6 +44,7 @@ const SettingAuthority = () => {
       }
       setTab(tabs);
       setView(false);
+      setSearch('');
     }
     get();
   }, []);
