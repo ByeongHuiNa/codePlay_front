@@ -89,4 +89,11 @@ export const useLeaveTab = create(
     index: 0,
     setIndex: (newIndex) => set(() => ({ index: newIndex }))
   }))
-)
+);
+
+export const useCalendarDrawer = create(
+  devtools((set) => ({
+    view: false,
+    setView: (newView) => set(() => ({ view: newView })),
+  }))
+);

@@ -16,7 +16,7 @@ import { Stack } from '../../../node_modules/@mui/material/index';
 import { IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import { useDetailCardState } from 'store/module';
+import { useCalendarDrawer } from 'store/module';
 
 const PersonalCalendar = () => {
   const Item = styled(Paper)(({ theme }) => ({
@@ -35,7 +35,7 @@ const PersonalCalendar = () => {
       </>
     );
   }
-  const { setView } = useDetailCardState();
+  const { setView } = useCalendarDrawer();
 
   //달력 클릭 시 발생하는 이벤트
   // eslint-disable-next-line no-unused-vars
