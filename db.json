@@ -498,7 +498,7 @@
       ]
     }
   ],
-  "user_information": {
+  "user_information": [{
     "user_no": 0,
     "user_profile": "https://picsum.photos/200",
     "dept_name": "개발팀",
@@ -509,6 +509,18 @@
     "user_phone": "010-5698-0001",
     "user_address": "서울특별시 종로구 창경궁로 254-123"
   },
+  {
+    "user_no": 1,
+    "user_profile": "https://picsum.photos/200",
+    "dept_name": "개발1팀",
+    "user_name": "Christian",
+    "user_position": "연구원",
+    "user_birth_date": "1960-01-24",
+    "user_email": "dylan@douzon.com",
+    "user_phone": "010-5698-0001",
+    "user_address": "서울특별시 종로구 창경궁로 254-123"
+  }
+],
   "policy_count": [
     {
       "policy_no": "0",
@@ -534,7 +546,7 @@
       "user_position": "연구원"
     },
     {
-      "user_no": "",
+      "user_no": 1,
       "dept_name": "개발1팀",
       "user_name": "Christian",
       "user_position": "연구원"
@@ -1350,7 +1362,7 @@
       "user_birth_date": "1960-01-24"
     },
     {
-      "user_no": "",
+      "user_no": 1,
       "user_profile": "https://picsum.photos/200",
       "dept_name": "개발1팀",
       "user_name": "Christian",
