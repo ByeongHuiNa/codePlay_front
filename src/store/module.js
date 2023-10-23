@@ -99,11 +99,11 @@ export const useCalendarDrawer = create(
   }))
 );
 
-//휴가결재대기내역
-export const useAppwaitState = create(
+//휴가결재내역(승인, 반려, 대기)
+export const useApprovalState = create(
   devtools((set) => ({
-    appwait: {},
-    setAppWait: (newAppwait) => set(() => ({ appwait: newAppwait }))
+    app: {},
+    setApp: (newApp) => set(() => ({ app: newApp }))
   }))
 );
 
@@ -112,5 +112,13 @@ export const useLeaveState = create(
   devtools((set) => ({
     leave: {},
     setLeave: (newLeave) => set(() => ({ leave: newLeave }))
+  }))
+);
+
+//사용자의 오늘휴가
+export const useTodayState = create(
+  devtools((set) => ({
+    attend: {},
+    setAttend: (newAttend) => set(() => ({ attend: newAttend }))
   }))
 );

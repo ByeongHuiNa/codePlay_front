@@ -498,29 +498,30 @@
       ]
     }
   ],
-  "user_information": [{
-    "user_no": 0,
-    "user_profile": "https://picsum.photos/200",
-    "dept_name": "개발팀",
-    "user_name": "Dylan",
-    "user_position": "연구원",
-    "user_birth_date": "1960-01-24",
-    "user_email": "dylan@douzon.com",
-    "user_phone": "010-5698-0001",
-    "user_address": "서울특별시 종로구 창경궁로 254-123"
-  },
-  {
-    "user_no": 1,
-    "user_profile": "https://picsum.photos/200",
-    "dept_name": "개발1팀",
-    "user_name": "Christian",
-    "user_position": "연구원",
-    "user_birth_date": "1960-01-24",
-    "user_email": "dylan@douzon.com",
-    "user_phone": "010-5698-0001",
-    "user_address": "서울특별시 종로구 창경궁로 254-123"
-  }
-],
+  "user_information": [
+    {
+      "user_no": 0,
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발팀",
+      "user_name": "Dylan",
+      "user_position": "연구원",
+      "user_birth_date": "1960-01-24",
+      "user_email": "dylan@douzon.com",
+      "user_phone": "010-5698-0001",
+      "user_address": "서울특별시 종로구 창경궁로 254-123"
+    },
+    {
+      "user_no": 1,
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발1팀",
+      "user_name": "Christian",
+      "user_position": "연구원",
+      "user_birth_date": "1960-01-24",
+      "user_email": "dylan@douzon.com",
+      "user_phone": "010-5698-0001",
+      "user_address": "서울특별시 종로구 창경궁로 254-123"
+    }
+  ],
   "policy_count": [
     {
       "policy_no": "0",
@@ -2154,36 +2155,109 @@
       "user_birth_date": "1966-04-28"
     }
   ],
-  "approval_wait":[{
-    "approval_wait_no":0,
-    "user_no":0,
-    "leave_start":"2023-10-11",
-    "leave_end": "2023-10-11",
-    "leave_type": "연차",
-    "leave_count": "1"
+  "leave_approval": [
+    
+    {
+      "leaveapp_no": 1,
+      "user_no": 1,
+      "leaveapp_final_date": "2023-10-09",
+      "leaveapp_start": "2023-10-11",
+      "leaveapp_end": "2023-10-11",
+      "leaveapp_type": "연차",
+      "leaveapp_count": 1,
+      "leaveapp_status" : 0,
+      "leaveapp_title" : "연차신청제목1",
+      "leaveapp_content" : "연차신청내용1",
+      "leaveapp_cancel_no" : ""
     },
     {
-      "approval_wait_no":1,
-      "user_no":0,
-      "leave_start":"2023-10-10",
-      "leave_end": "2023-10-12",
-      "leave_type": "연차",
-      "leave_count": "2"
+      "leaveapp_no": 2,
+      "user_no": 0,
+      "leaveapp_final_date": "2023-10-09",
+      "leaveapp_start": "2023-10-11",
+      "leaveapp_end": "2023-10-11",
+      "leaveapp_type": "연차",
+      "leaveapp_count": 1,
+      "leaveapp_status" : 0,
+      "leaveapp_title" : "연차신청제목2",
+      "leaveapp_content" : "연차신청내용2",
+      "leaveapp_cancel_no" : ""
     },
     {
-      "approval_wait_no":2,
-      "user_no":0,
-      "leave_start":"2023-10-9",
-      "leave_end": "2023-10-9",
-      "leave_type": "오전반차",
-      "leave_count": "0.5"
+      "leaveapp_no": 3,
+      "user_no": 0,
+      "leaveapp_final_date": "2023-10-09",
+      "leaveapp_start": "2023-10-11",
+      "leaveapp_end": "2023-10-11",
+      "leaveapp_type": "연차",
+      "leaveapp_count": 1,
+      "leaveapp_status" : 0,
+      "leaveapp_title" : "연차신청제목3",
+      "leaveapp_content" : "연차신청내용3",
+      "leaveapp_cancel_no" : ""
+    },{
+      "leaveapp_no": 4,
+      "user_no": 1,
+      "leaveapp_final_date": "2023-10-09",
+      "leaveapp_start": "2023-10-11",
+      "leaveapp_end": "2023-10-11",
+      "leaveapp_type": "연차",
+      "leaveapp_count": 1,
+      "leaveapp_status" : 0,
+      "leaveapp_title" : "연차신청제목4",
+      "leaveapp_content" : "연차신청내용4",
+      "leaveapp_cancel_no" : ""
+    },
+    {
+      "leaveapp_no": 5,
+      "user_no": 0,
+      "leaveapp_final_date": "2023-10-09",
+      "leaveapp_start": "2023-10-11",
+      "leaveapp_end": "2023-10-11",
+      "leaveapp_type": "연차",
+      "leaveapp_count": 1,
+      "leaveapp_status" : 0,
+      "leaveapp_title" : "연차신청제목5",
+      "leaveapp_content" : "연차신청내용5",
+      "leaveapp_cancel_no" : ""
+    },
+    {
+      "leaveapp_no": 6,
+      "user_no": 0,
+      "leaveapp_final_date": "2023-10-09",
+      "leaveapp_start": "2023-10-11",
+      "leaveapp_end": "2023-10-11",
+      "leaveapp_type": "연차",
+      "leaveapp_count": 1,
+      "leaveapp_status" : 0,
+      "leaveapp_title" : "연차신청제목6",
+      "leaveapp_content" : "연차신청내용6",
+      "leaveapp_cancel_no" : ""
+    },
+    {
+      "leaveapp_no": 7,
+      "user_no": 0,
+      "leaveapp_final_date": "2023-10-09",
+      "leaveapp_start": "2023-10-11",
+      "leaveapp_end": "2023-10-11",
+      "leaveapp_type": "연차",
+      "leaveapp_count": 1,
+      "leaveapp_status" : 2,
+      "leaveapp_title" : "연차신청제목7",
+      "leaveapp_content" : "연차신청내용7",
+      "leaveapp_cancel_no" : ""
     }
   ],
-  "user_leave": [{
-    "user_no":0,
-    "leave_no":0,
-    "leave_total":15,
-    "leave_use":4,
-    "leave_remain":11
-  }]
+  "user_leave": [
+    {
+      "user_no": 0,
+      "leave_no": 0,
+      "leave_total": 15,
+      "leave_use": 4,
+      "leave_remain": 11
+    }
+  ],
+  "attend": [
+    
+  ]
 }

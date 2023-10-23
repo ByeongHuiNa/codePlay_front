@@ -6,7 +6,7 @@ import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow }
 
 // project import
 import { Button, Pagination, Stack } from '../../../node_modules/@mui/material/index';
-import { useAppwaitState } from 'store/module';
+import { useApprovalState } from 'store/module';
 import axios from '../../../node_modules/axios/index';
 
 // function descendingComparator(a, b, orderBy) {
@@ -102,14 +102,16 @@ export default function UnappLeaveTotalTable({ leaveCancel }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   //const [selected] = useState([]);
-  const { appwait, setAppWait } = useAppwaitState();
+  const { app, setApp } = useApprovalState();
 
   useEffect(() => {
     async function get() {
-      const endPoints = ['http://localhost:8000/approval_wait'];
+      const endPoints = ['http://localhost:8000/leave_approval'];
       const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
+       // result[0].data를 필터링하여 leave_status가 2인 데이터만 추출
+      const filteredData = result[0].data.filter((item) => item.leaveapp_status === 2);
 
-      setAppWait(result[0].data);
+      setApp(filteredData);
     }
     get();
   }, []);
@@ -152,7 +154,7 @@ export default function UnappLeaveTotalTable({ leaveCancel }) {
         >
           <OrderTableHead order={order} orderBy={orderBy} />
           <TableBody>
-          {Object.values(appwait).map((appwait) => (
+          {Object.values(app).map((app) => (
               //const isItemSelected = isSelected(appwait.date);
               //const labelId = `enhanced-table-checkbox-${index}`;
               <TableRow
@@ -161,15 +163,15 @@ export default function UnappLeaveTotalTable({ leaveCancel }) {
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 // aria-checked={isItemSelected}
                 tabIndex={-1}
-                key={appwait.approval_wait_no}
+                key={app.leaveapp_no}
                 // selected={isItemSelected}
               >
-                <TableCell component="th" id={appwait.approval_wait_no} scope="data" align="center">
-                  {appwait.leave_start}
+                <TableCell component="th" id={app.leaveapp_no} scope="data" align="center">
+                  {app.leaveapp_start}
                 </TableCell>
-                <TableCell align="center">{appwait.leave_end}</TableCell>
-                <TableCell align="center">{appwait.leave_type}</TableCell>
-                <TableCell align="center">{appwait.leave_count}</TableCell>
+                <TableCell align="center">{app.leaveapp_end}</TableCell>
+                <TableCell align="center">{app.leaveapp_type}</TableCell>
+                <TableCell align="center">{app.leaveapp_count}</TableCell>
                 <TableCell align="center">
                   <Button variant="contained" size="small" onClick={leaveCancel}>
                     취소

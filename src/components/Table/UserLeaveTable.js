@@ -1,37 +1,40 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // material-ui
 import { Box, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 // project import
 import { Chip } from '../../../node_modules/@mui/material/index';
+import { useApprovalState } from 'store/module';
+import axios from '../../../node_modules/axios/index';
 
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
 
-function getComparator(order, orderBy) {
-  return order === 'desc' ? (a, b) => descendingComparator(a, b, orderBy) : (a, b) => -descendingComparator(a, b, orderBy);
-}
+// function descendingComparator(a, b, orderBy) {
+//   if (b[orderBy] < a[orderBy]) {
+//     return -1;
+//   }
+//   if (b[orderBy] > a[orderBy]) {
+//     return 1;
+//   }
+//   return 0;
+// }
 
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) {
-      return order;
-    }
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
+// function getComparator(order, orderBy) {
+//   return order === 'desc' ? (a, b) => descendingComparator(a, b, orderBy) : (a, b) => -descendingComparator(a, b, orderBy);
+// }
+
+// function stableSort(array, comparator) {
+//   const stabilizedThis = array.map((el, index) => [el, index]);
+//   stabilizedThis.sort((a, b) => {
+//     const order = comparator(a[0], b[0]);
+//     if (order !== 0) {
+//       return order;
+//     }
+//     return a[1] - b[1];
+//   });
+//   return stabilizedThis.map((el) => el[0]);
+// }
 
 // ==============================|| ORDER TABLE - HEADER CELL ||============================== //
 
@@ -127,21 +130,34 @@ UserLeaveStatus.propTypes = {
 export default function UserLeaveTable() {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
-  const [selected] = useState([]);
+  //const [selected] = useState([]);
+  const { app, setApp } = useApprovalState();
 
-  const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
+  //const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
 
-  function createData(leaveType, leaveStart, leaveEnd, leaveCnt, leaveStatus) {
-    return { leaveType, leaveStart, leaveEnd, leaveCnt, leaveStatus };
-  }
 
-  const datas = [
-    createData('연차', '2023/10/17', '2023/10/18', '2', 2),
-    createData('연차', '2023/10/11', '2023/10/11', '1', 0),
-    createData('연차', '2023/10/08', '2023/10/10', '1', 1),
-    createData('오전반차', '2023/09/12', '2023/09/12', '0.5', 0),
-    createData('오후반차', '2023/09/02', '2023/09/02', '0.5', 0)
-  ];
+  useEffect(() => {
+    async function get() {
+      const endPoints = ['http://localhost:8000/leave_approval'];
+      const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
+       // result[0].data를 필터링하여 leave_status가 1인 데이터만 추출
+      //const filteredData = result[0].data.filter((item) => item.leave_status === 1);
+
+      setApp(result[0].data);
+    }
+    get();
+  }, []);
+  // function createData(leaveType, leaveStart, leaveEnd, leaveCnt, leaveStatus) {
+  //   return { leaveType, leaveStart, leaveEnd, leaveCnt, leaveStatus };
+  // }
+
+  // const datas = [
+  //   createData('연차', '2023/10/17', '2023/10/18', '2', 2),
+  //   createData('연차', '2023/10/11', '2023/10/11', '1', 0),
+  //   createData('연차', '2023/10/08', '2023/10/10', '1', 1),
+  //   createData('오전반차', '2023/09/12', '2023/09/12', '0.5', 0),
+  //   createData('오후반차', '2023/09/02', '2023/09/02', '0.5', 0)
+  // ];
 
   return (
     <Box sx={{ width: '103%' }}>
@@ -168,6 +184,31 @@ export default function UserLeaveTable() {
         >
           <UserLeaveTableHead order={order} orderBy={orderBy} />
           <TableBody>
+          {Object.values(app).slice(0,5).map((app) => (
+
+                <TableRow
+                  hover
+                  role="checkbox"
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  //aria-checked={isItemSelected}
+                  tabIndex={-1}
+                  key={app.leaveapp_no}
+                  //selected={isItemSelected}
+                >
+                  <TableCell component="th" id={app.leaveapp_no} scope="data" align="center">
+                    {app.leaveapp_type}
+                  </TableCell>
+                  <TableCell align="center">{app.leaveapp_start}</TableCell>
+                  <TableCell align="center">{app.leaveapp_end}</TableCell>
+
+                  <TableCell align="center">
+                    <UserLeaveStatus status={app.leaveapp_status} />
+                  </TableCell>
+                </TableRow>
+             
+            ))};
+          </TableBody>
+          {/* <TableBody>
             {stableSort(datas, getComparator(order, orderBy)).map((data, index) => {
               const isItemSelected = isSelected(data.date);
               const labelId = `enhanced-table-checkbox-${index}`;
@@ -194,7 +235,7 @@ export default function UserLeaveTable() {
                 </TableRow>
               );
             })}
-          </TableBody>
+          </TableBody> */}
         </Table>
       </TableContainer>
     </Box>
