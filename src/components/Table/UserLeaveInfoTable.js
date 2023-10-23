@@ -10,28 +10,46 @@ import Dot from 'components/@extended/Dot';
 
 const headCells = [
   {
-    id: 'date',
+    id: 'leaveStart',
     align: 'center',
     disablePadding: false,
-    label: '날짜'
+    label: '휴가시작일'
   },
   {
-    id: 'startTime',
+    id: 'leaveEnd',
     align: 'center',
     disablePadding: false,
-    label: '출근시간'
+    label: '휴가종료일'
   },
   {
-    id: 'endTime',
+    id: 'leaveType',
     align: 'center',
     disablePadding: false,
-    label: '퇴근시간'
+    label: '휴가종류'
+  },
+  {
+    id: 'leaveCnt',
+    align: 'center',
+    disablePadding: false,
+    label: '휴가사용일수'
+  },
+  {
+    id: 'appDate',
+    align: 'center',
+    disablePadding: false,
+    label: '결재일'
+  },
+  {
+    id: 'approver',
+    align: 'center',
+    disablePadding: false,
+    label: '결재자'
   },
   {
     id: 'status',
     align: 'center',
     disablePadding: false,
-    label: '근태상태'
+    label: '결재상태'
   }
 ];
 
@@ -68,31 +86,21 @@ const OrderStatus = ({ status }) => {
   let color;
   let title;
 
-  // 0 : 정상출근
-  // 1 : 휴가(연차,반차,공가)
-  // 2 : 지각
-  // 3 : 조퇴(조기퇴근)
-  // 4 : 결근(출근 혹은 퇴근누락))
+  // 0 : 결재완료(승인)
+  // 1 : 결재완료(반려)
+  // 2 : 결재대기
   switch (status) {
     case 0:
       color = 'success';
-      title = '정상';
+      title = '결재승인';
       break;
     case 1:
-      color = 'primary';
-      title = '휴가';
+      color = 'error';
+      title = '결재반려';
       break;
     case 2:
-      color = 'secondary';
-      title = '지각';
-      break;
-    case 3:
-      color = 'warning';
-      title = '조퇴';
-      break;
-    case 4:
-      color = 'error';
-      title = '결근';
+      color = 'primary';
+      title = '결재대기';
   }
 
   return (
@@ -107,9 +115,13 @@ OrderStatus.propTypes = {
   status: PropTypes.number
 };
 
+OrderStatus.propTypes = {
+  status: PropTypes.number
+};
+
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function UserAttendInfoTable({ data }) {
+export default function UserLeaveInfoTable({ data }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
 
@@ -151,16 +163,19 @@ export default function UserAttendInfoTable({ data }) {
         >
           <OrderTableHead order={order} orderBy={orderBy} />
           <TableBody>
-            <TableRow hover role="checkbox" sx={{ '&:last-child td, &:last-child th': { border: 0 } }} tabIndex={-1} key={data.date}>
+            <TableRow hover role="checkbox" sx={{ '&:last-child td, &:last-child th': { border: 0 } }} tabIndex={-1} key={data.leaveStart}>
               {Object.keys(data).length !== 0 && (
                 <>
                   <TableCell component="th" scope="data" align="center">
-                    {data.attend_date}
+                    {data.leaveStart}
                   </TableCell>
-                  <TableCell align="center">{data.attend_start}</TableCell>
-                  <TableCell align="center">{data.attend_end}</TableCell>
+                  <TableCell align="center">{data.leaveEnd}</TableCell>
+                  <TableCell align="center">{data.leaveType}</TableCell>
+                  <TableCell align="center">{data.leaveCnt}</TableCell>
+                  <TableCell align="center">{data.appDate}</TableCell>
+                  <TableCell align="center">{data.approver}</TableCell>
                   <TableCell align="center">
-                    <OrderStatus status={data.attend_status} />
+                    <OrderStatus status={data.status} />
                   </TableCell>
                 </>
               )}

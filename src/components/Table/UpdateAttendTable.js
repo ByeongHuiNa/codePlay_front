@@ -133,28 +133,12 @@ OrderStatus.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function UpdateAttendTable({ handleOpenRead }) {
+export default function UpdateAttendTable({ handleOpenRead, datas }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
 
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
-
-  function createData(reqDate, title, updateDate, updateItem, status) {
-    return { reqDate, title, updateDate, updateItem, status };
-  }
-
-  const datas = [
-    createData('2023/10/07', '이유나/231005/출근', '2023/10/05', '출근', 2),
-    createData('2023/10/07', '이유나/231005/출근', '2023/10/05', '출근', 0),
-    createData('2023/10/07', '이유나/231005/출근', '2023/10/05', '출근', 1),
-    createData('2023/10/07', '이유나/231005/출근', '2023/10/05', '출근', 0),
-    createData('2023/10/07', '이유나/231005/출근', '2023/10/05', '출근', 0),
-    createData('2023/10/07', '이유나/231005/출근', '2023/10/05', '출근', 0),
-    createData('2023/10/07', '이유나/231005/출근', '2023/10/05', '출근', 2),
-    createData('2023/10/07', '이유나/231005/출근', '2023/10/05', '출근', 2),
-    createData('2023/10/07', '이유나/231005/출근', '2023/10/05', '출근', 0)
-  ];
 
   return (
     <Box>
@@ -208,13 +192,15 @@ export default function UpdateAttendTable({ handleOpenRead }) {
                   onClick={handleOpenRead}
                 >
                   <TableCell component="th" id={labelId} scope="data" align="center">
-                    {data.reqDate}
+                    {data.attendedit_date}
                   </TableCell>
-                  <TableCell align="center">{data.title}</TableCell>
-                  <TableCell align="center">{data.updateDate}</TableCell>
-                  <TableCell align="center">{data.updateItem}</TableCell>
+                  <TableCell align="center">{data.attendedit_title}</TableCell>
+                  <TableCell align="center">{data.attend.attend_date}</TableCell>
                   <TableCell align="center">
-                    <OrderStatus status={data.status} handleOpenRead={handleOpenRead} />
+                    {data.attendedit_kind === 0 ? '출근' : data.attendedit_kind === 1 ? '퇴근' : '출근/퇴근'}
+                  </TableCell>
+                  <TableCell align="center">
+                    <OrderStatus status={data.attendapp_status} handleOpenRead={handleOpenRead} />
                   </TableCell>
                 </TableRow>
               );

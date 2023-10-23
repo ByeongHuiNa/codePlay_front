@@ -5,7 +5,7 @@ export default function BasicChip({ label, color }) {
   const MyChip = styled(Chip)`
     background-color: ${color};
     color: white;
-    width: 100px;
+    width: 110px;
     height: 35px;
     margin-right: 10px;
   `;
