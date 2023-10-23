@@ -110,7 +110,7 @@ export const useAppwaitState = create(
 //사용자의 휴가보유 현황
 export const useLeaveState = create(
   devtools((set) => ({
-    appwait: {},
-    setAppWait: (newAppwait) => set(() => ({ appwait: newAppwait }))
+    leave: {},
+    setLeave: (newLeave) => set(() => ({ leave: newLeave }))
   }))
 );

@@ -5,6 +5,8 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import MainCard from 'components/MainCard';
+import { useLeaveState } from 'store/module';
+import axios from '../../../node_modules/axios/index';
 
 // chart options
 const barChartOptions = {
@@ -47,11 +49,23 @@ const barChartOptions = {
 
 export default function VacationDonutChart() {
   const newCategories = ['새로운 항목 1', '새로운 항목 2'];
-  const series = [12, 3]; // 예시 데이터
+  
   const [options, setOptions] = useState(barChartOptions);
   const theme = useTheme();
   const { primary, secondary } = theme.palette.text;
   const info = theme.palette.info.light;
+
+  const { leave, setLeave } = useLeaveState();
+
+  useEffect(() => {
+    async function get() {
+      const endPoints = ['http://localhost:8000/user_leave'];
+      const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
+      setLeave(result[0].data[0]);
+    }
+    get();
+  }, []);
+  const series = [leave.leave_remain, leave.leave_use]; 
 
   useEffect(() => {
     setOptions((prevState) => ({
@@ -77,13 +91,15 @@ export default function VacationDonutChart() {
       <Grid>
         <ReactApexChart options={options} series={series} type="donut" height={190} />
         <Grid container rowSpacing={4} columnSpacing={1} sx={{mt:0.5}}>
+          
           <Grid item xs={4}>
+          
             <MainCard>
               <Typography variant="h5" style={{ textAlign: 'center' }}>
                 전체 휴가
               </Typography>
               <Typography variant="h5" style={{ textAlign: 'center' }}>
-                15
+               {leave.leave_total}
               </Typography>
             </MainCard>
           </Grid>
@@ -93,7 +109,7 @@ export default function VacationDonutChart() {
                 사용 휴가
               </Typography>
               <Typography variant="h5" style={{ textAlign: 'center' }}>
-                3
+              {leave.leave_use}
               </Typography>
             </MainCard>
           </Grid>
@@ -103,7 +119,7 @@ export default function VacationDonutChart() {
                 잔여 휴가
               </Typography>
               <Typography variant="h5" style={{ textAlign: 'center' }}>
-                12
+              {leave.leave_remain}
               </Typography>
             </MainCard>
           </Grid>
