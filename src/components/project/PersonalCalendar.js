@@ -16,7 +16,9 @@ import { Stack } from '../../../node_modules/@mui/material/index';
 import { IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import { useCalendarDrawer } from 'store/module';
+import { useCalendarDate, useCalendarDrawer, useCalendarEvent } from 'store/module';
+import CalendarWorkModal from './CalendarWorkModal';
+import CalendarWorkModalContent from './CalendarWorkModalContent';
 
 const PersonalCalendar = () => {
   const Item = styled(Paper)(({ theme }) => ({
@@ -35,26 +37,46 @@ const PersonalCalendar = () => {
       </>
     );
   }
+
+  //zustand
   const { setView } = useCalendarDrawer();
+  const { setStartDate, setEndDate } = useCalendarDate();
+  const { setEvent } = useCalendarEvent();
 
   //달력 클릭 시 발생하는 이벤트
   // eslint-disable-next-line no-unused-vars
   function handleDateSelect(selectInfo) {
-    // let title = prompt(`이벤트를 생성 하시겠습니까? ${selectInfo.startStr}`);
-    // let calendarApi = selectInfo.view.calendar;
-    // calendarApi.unselect(); // clear date selection
-    // if (title) {
-    //   calendarApi.addEvent({
-    //     id: createEventId(),
-    //     title,
-    //     start: selectInfo.startStr,
-    //     end: selectInfo.endStr,
-    //     allDay: selectInfo.allDay
-    //     // color: '#4582ec',
-    //     // textColor: 'yellow'
-    //   });
-    // }
+    //종료일자 -1
+    var dateStr = selectInfo.endStr;
+    var parts = dateStr.split('-');
+    var year = parseInt(parts[0], 10);
+    var month = parseInt(parts[1], 10);
+    var day = parseInt(parts[2], 10);
+
+    var newDay = day - 1;
+    var newMonth = month;
+    var newYear = year;
+
+    if (newDay === 0) {
+      // 날짜가 0이면 이전 달로 이동
+      newMonth--;
+      if (newMonth === 0) {
+        // 이전 달이 0이면 작년 12월로 이동
+        newYear--;
+        newMonth = 12;
+      }
+
+      // 이전 달의 마지막 날짜를 계산
+      var lastDayOfPreviousMonth = new Date(newYear, newMonth, 0).getDate();
+      newDay = lastDayOfPreviousMonth;
+    }
+
+    var newDateStr = newYear + '-' + String(newMonth).padStart(2, '0') + '-' + String(newDay).padStart(2, '0');
+
+    setStartDate(selectInfo.startStr);
+    setEndDate(newDateStr);
     setView(true);
+    setEvent(selectInfo);
   }
   //이벤트 클릭 시 지우는 함수
   function handleEventClick(clickInfo) {
@@ -62,9 +84,27 @@ const PersonalCalendar = () => {
       clickInfo.event.remove();
     }
   }
+  //CalendarWorkModal on/off
+  const [calendarWorkModal, setCalendarWorkModal] = React.useState(false);
+
+  const handleCalendarWorkModal = () => {
+    setCalendarWorkModal((pre) => !pre);
+  };
+
+  const calendarWorkModalContent = () => {
+    return (
+      <>
+        <h2>modal</h2>
+        <CalendarWorkModalContent handleClose={handleCalendarWorkModal} />
+      </>
+    );
+  };
 
   return (
     <>
+      <CalendarWorkModal open={calendarWorkModal} handleClose={handleCalendarWorkModal}>
+        {calendarWorkModalContent()}
+      </CalendarWorkModal>
       <Box
         sx={{
           flexGrow: 1
@@ -118,7 +158,7 @@ const PersonalCalendar = () => {
                     <Stack direction="row" spacing={1}>
                       <IconButton
                         onClick={() => {
-                          console.log('+');
+                          setCalendarWorkModal(true);
                         }}
                       >
                         <AddIcon />

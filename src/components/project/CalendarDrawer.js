@@ -1,8 +1,9 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import { useCalendarDrawer } from 'store/module';
+import { useCalendarDate, useCalendarDrawer, useCalendarEvent } from 'store/module';
 import {
+  Button,
   FormControl,
   FormControlLabel,
   Grid,
@@ -19,6 +20,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
+import { DateField } from '@mui/x-date-pickers/DateField';
 
 export default function CalendarDrawer() {
   const { view, setView } = useCalendarDrawer();
@@ -37,21 +39,90 @@ export default function CalendarDrawer() {
     setTltle(e.target.value);
   };
 
-  //스위치 on/off
+  //내용 입력
+  const [content, setContent] = React.useState('');
+
+  const handleContentChange = (e) => {
+    setContent(e.target.value);
+  };
+
+  //AllDay스위치 on/off
   const [allDayType, setAllDayType] = React.useState(true);
 
-  const handleSwitchChange = () => {
+  const handleAllDayTypeSwitchChange = () => {
     setAllDayType((pre) => !pre);
   };
 
-  //시간
+  //LEAVETYPE스위치 on/off
+  const [leaveType, setLeaveType] = React.useState(false);
 
+  const handleLeaveTypeSwitchChange = () => {
+    setLeaveType((pre) => !pre);
+  };
+
+  //LEAVEHALF_TYPE스위치 on/off
+  const [leaveHalfType, setLeaveHalfType] = React.useState(false);
+
+  const handleLeaveHalfTypeSwitchChange = () => {
+    setLeaveHalfType((pre) => !pre);
+  };
+
+  //공유 스위치 on/off
+  const [shareType, setShareType] = React.useState(false);
+
+  const handleShareTypeSwitchChange = () => {
+    setShareType((pre) => !pre);
+  };
+
+  //Drawer on/off
   const toggleDrawer = (open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
     }
     setView(open);
     setScheduleType('');
+    setTltle('');
+    setContent('');
+    setStartDatePicker(false);
+    setEndDatePicker(false);
+    setAllDayType(true);
+    setShareType(false);
+    setLeaveType(false);
+    setLeaveHalfType(false);
+  };
+
+  // eslint-disable-next-line no-unused-vars
+  const { startDate, setStartDate, endDate, setEndDate } = useCalendarDate();
+
+  //DatePicker on/off
+  const [startDatePicker, setStartDatePicker] = React.useState(false);
+  const [endDatePicker, setEndDatePicker] = React.useState(false);
+
+  const handleStartDateFieldOnClick = () => {
+    setStartDatePicker((pre) => !pre);
+    if (endDatePicker) setEndDatePicker(false);
+  };
+
+  const handleStartDateFieldOnAccept = (e) => {
+    setStartDate(e);
+    setStartDatePicker((pre) => !pre);
+  };
+
+  const handleEndDateFieldOnClick = () => {
+    setEndDatePicker((pre) => !pre);
+    if (startDatePicker) setStartDatePicker(false);
+  };
+
+  const handleEndDateFieldOnAccept = (e) => {
+    setEndDate(e);
+    setEndDatePicker((pre) => !pre);
+  };
+
+  //AddEventOnClick
+  const { event } = useCalendarEvent();
+
+  const handleAddEventOnClick = () => {
+    console.log(event);
   };
 
   const list = () => {
@@ -94,22 +165,9 @@ export default function CalendarDrawer() {
             </Select>
             {/* 개인일정 및 회사일정을 선택하면 제목, All Day 버튼, 일자, 메모, 공유 버튼을 작성할 수 있는 폼을 제공한다. */}
             {/* 휴가일정을 선택하면 연차 및 반차 버튼, 일자를 선택할 수 있고 확인 및 취소 버튼을 포함하고있다 */}
-            {scheduleType && (
+            {scheduleType === '개인 일정' || scheduleType === '회사 일정' ? (
               <>
-                <TextField
-                  sx={{ mt: 3 }}
-                  id="outlined-basic"
-                  label="제목"
-                  onChange={handleTitleChange}
-                  value={tltle}
-                  InputProps={{
-                    onClick: () => {
-                      if (tltle === '제목을 입력해 주세요.') {
-                        handleTitleChange({ target: { value: '' } }); // 기본값이면 클릭 시 값 초기화
-                      }
-                    }
-                  }}
-                />
+                <TextField sx={{ mt: 3 }} id="outlined-basic" label="제목" onChange={handleTitleChange} value={tltle} />
                 <Grid container direction="row" justifyContent="flex-start" alignItems="center">
                   <FormControlLabel
                     sx={{
@@ -118,9 +176,9 @@ export default function CalendarDrawer() {
                     }}
                     control={
                       <Switch
-                        color="secondary"
+                        color="primary"
                         checked={allDayType}
-                        onChange={handleSwitchChange}
+                        onChange={handleAllDayTypeSwitchChange}
                         sx={{
                           justifyContent: 'flex-start' // 왼쪽 정렬
                         }}
@@ -131,25 +189,200 @@ export default function CalendarDrawer() {
                   />
                 </Grid>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DateTimeField
-                    sx={{
-                      mt: 2
-                    }}
-                    label="시작일"
-                    defaultValue={dayjs('2022-04-17T15:30')}
-                  />
-                  <DateTimeField
-                    sx={{
-                      mt: 2
-                    }}
-                    label="종료일"
-                    defaultValue={dayjs('2022-04-17T15:30')}
-                  />
-                  {/* <DateTimeField label="Controlled field" value={value} onChange={(newValue) => setValue(newValue)} /> */}
-                  <StaticDatePicker defaultValue={dayjs('2022-04-17')} />
-                  <StaticDateTimePicker defaultValue={dayjs('2022-04-17')} />
+                  {allDayType == true ? (
+                    <>
+                      <DateField
+                        sx={{
+                          mt: 3
+                        }}
+                        label="시작일"
+                        value={dayjs(`${startDate}`)}
+                        onClick={handleStartDateFieldOnClick}
+                      />
+                      <DateField
+                        sx={{
+                          mt: 3
+                        }}
+                        label="종료일"
+                        value={dayjs(`${endDate}`)}
+                        onClick={handleEndDateFieldOnClick}
+                      />
+                      {startDatePicker && (
+                        <StaticDatePicker
+                          value={dayjs(`${startDate}`)}
+                          onAccept={handleStartDateFieldOnAccept}
+                          onClose={() => setStartDatePicker(false)}
+                        />
+                      )}
+                      {endDatePicker && (
+                        <StaticDatePicker
+                          value={dayjs(`${endDate}`)}
+                          onAccept={handleEndDateFieldOnAccept}
+                          onClose={() => setEndDatePicker(false)}
+                        />
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <DateTimeField
+                        sx={{
+                          mt: 3
+                        }}
+                        label="시작일"
+                        value={dayjs(`${startDate}`)}
+                        onClick={handleStartDateFieldOnClick}
+                      />
+                      <DateTimeField
+                        sx={{
+                          mt: 3
+                        }}
+                        label="종료일"
+                        value={dayjs(`${endDate}`)}
+                        onClick={handleEndDateFieldOnClick}
+                      />
+                      {startDatePicker && (
+                        <StaticDateTimePicker
+                          value={dayjs(`${startDate}`)}
+                          onAccept={handleStartDateFieldOnAccept}
+                          onClose={() => setStartDatePicker(false)}
+                        />
+                      )}
+                      {endDatePicker && (
+                        <StaticDateTimePicker
+                          value={dayjs(`${endDate}`)}
+                          onAccept={handleEndDateFieldOnAccept}
+                          onClose={() => setEndDatePicker(false)}
+                        />
+                      )}
+                    </>
+                  )}
                 </LocalizationProvider>
+                <TextField
+                  id="outlined-multiline-flexible"
+                  label="일정 내용"
+                  multiline
+                  rows={3}
+                  onChange={handleContentChange}
+                  value={content}
+                  sx={{
+                    mt: 3
+                  }}
+                />
+                <Grid container direction="row" justifyContent="flex-start" alignItems="center">
+                  <FormControlLabel
+                    sx={{
+                      mt: 1.5,
+                      ml: 0.7
+                    }}
+                    control={
+                      <Switch
+                        color="primary"
+                        checked={shareType}
+                        onChange={handleShareTypeSwitchChange}
+                        sx={{
+                          justifyContent: 'flex-start' // 왼쪽 정렬
+                        }}
+                      />
+                    }
+                    label="공유하기"
+                    labelPlacement="start"
+                  />
+                </Grid>
+                <Button
+                  size="large"
+                  variant="contained"
+                  color="primary"
+                  onClick={handleAddEventOnClick}
+                  sx={{
+                    mt: 30
+                  }}
+                >
+                  일정 등록
+                </Button>
               </>
+            ) : (
+              scheduleType && (
+                <>
+                  <Grid container direction="row" justifyContent="flex-start" alignItems="center" sx={{ mt: 1.5, ml: 0.7 }}>
+                    <Typography>연차</Typography>
+                    <Switch color="primary" checked={leaveType} onChange={handleLeaveTypeSwitchChange} />
+                    <Typography sx={{ mr: 5 }}>반차</Typography>
+                    {leaveType && (
+                      <>
+                        <Typography sx={{ ml: 5 }}>오전</Typography>
+                        <Switch color="primary" checked={leaveHalfType} onChange={handleLeaveHalfTypeSwitchChange} />
+                        <Typography>오후</Typography>
+                      </>
+                    )}
+                  </Grid>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    {leaveType == false ? (
+                      <>
+                        <DateField
+                          sx={{
+                            mt: 3
+                          }}
+                          label="시작일"
+                          value={dayjs(`${startDate}`)}
+                          onClick={handleStartDateFieldOnClick}
+                        />
+                        <DateField
+                          sx={{
+                            mt: 3
+                          }}
+                          label="종료일"
+                          value={dayjs(`${endDate}`)}
+                          onClick={handleEndDateFieldOnClick}
+                        />
+                        {startDatePicker && (
+                          <StaticDatePicker
+                            value={dayjs(`${startDate}`)}
+                            onAccept={handleStartDateFieldOnAccept}
+                            onClose={() => setStartDatePicker(false)}
+                          />
+                        )}
+                        {endDatePicker && (
+                          <StaticDatePicker
+                            value={dayjs(`${endDate}`)}
+                            onAccept={handleEndDateFieldOnAccept}
+                            onClose={() => setEndDatePicker(false)}
+                          />
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        <DateTimeField
+                          sx={{
+                            mt: 3
+                          }}
+                          disabled="true"
+                          label="시작일"
+                          value={leaveHalfType == false ? dayjs(`${startDate}T09:00`) : dayjs(`${startDate}T14:00`)}
+                        />
+                        <DateTimeField
+                          sx={{
+                            mt: 3
+                          }}
+                          disabled="true"
+                          label="종료일"
+                          value={leaveHalfType == false ? dayjs(`${startDate}T13:00`) : dayjs(`${startDate}T18:00`)}
+                        />
+                      </>
+                    )}
+                  </LocalizationProvider>
+                  <Button
+                    size="large"
+                    variant="contained"
+                    color="primary"
+                    onClick={handleAddEventOnClick}
+                    sx={{
+                      mt: 62
+                    }}
+                  >
+                    휴가 등록
+                  </Button>
+                </>
+              )
             )}
           </FormControl>
         </Grid>
