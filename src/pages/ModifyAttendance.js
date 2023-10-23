@@ -19,7 +19,7 @@ import {
 import BasicContainer from 'components/container/BasicContainer';
 import ApprovalTab from 'components/tab/ApprovalTab';
 import styled from 'styled-components';
-import UserAttendTable from 'components/Table/UserAttendTable';
+import UserAllAttendTable from 'components/Table/UserAllAttendTable';
 import { SearchOutlined } from '../../node_modules/@mui/icons-material/index';
 import BasicChip from 'components/Chip/BasicChip';
 import MainCard from 'components/MainCard';
@@ -30,6 +30,9 @@ import BasicAuto from 'components/AutoComplete/BasicAuto';
 import axios from '../../node_modules/axios/index';
 import SelectUserTable from 'components/Table/SelectUserTable';
 import AttendUpdateModal from 'components/Modal/AttendUpdateModal';
+import UserAllLeaveTable from 'components/Table/UserAllLeaveTable';
+import UserLeaveInfoTable from 'components/Table/UserLeaveInfoTable';
+import Dot from 'components/@extended/Dot';
 
 const ModifyAttendance = () => {
   // Tab : 0.출/퇴근, 1.휴가
@@ -44,6 +47,7 @@ const ModifyAttendance = () => {
     setAttendDefault('');
     setSelectLeaveData({});
     setSelectAttendData({});
+    setLeaveKind('');
   };
 
   // 부서 전체 사용자 데이터
@@ -112,32 +116,6 @@ const ModifyAttendance = () => {
   // 달력에서 날짜 클릭하면 해당 날짜의 출/퇴근 내용 불러오기
   const [selectDate, setSelectDate] = useState('');
 
-  // 모달창 설정
-  // 탭 0. 출/퇴근 전체 조회
-  const [openAll, setOpenAll] = React.useState(false);
-  // 모달창 : 날짜 검색 시작일
-  const [searchStartDate, setSearchStartDate] = useState('');
-  // 모달창 : 날짜 검색 종료일
-  const [searchEndDate, setSearchEndDate] = useState('');
-  // 모달창에서 선택한 출/퇴근 데이터 값
-  const [searchAttendData, setSearchAttendData] = useState({});
-  // 모달창 열기
-  const handleOpenAll = () => setOpenAll(true);
-  // 모달창 취소 버튼 (데이터 저장 X)
-  const handleCloseAllSave = () => {
-    setOpenAll(false);
-    setSelectAttendData(searchAttendData);
-    setSearchStartDate('');
-    setSearchEndDate('');
-  };
-  // 모달창 확인 버튼 (데이터 저장 O)
-  const handleCloseAll = () => {
-    setOpenAll(false);
-    setSearchAttendData({});
-    setSearchStartDate('');
-    setSearchEndDate('');
-  };
-
   // 선택한 출/퇴근 데이터
   const [selectAttendData, setSelectAttendData] = useState({});
 
@@ -175,9 +153,74 @@ const ModifyAttendance = () => {
     }
   }, [checkItems]);
 
-  // ------------------------------------------------------------
   // 선택한 휴가 데이터 값
   const [selectLeaveData, setSelectLeaveData] = useState({});
+
+  // 휴가 결재상태 수정 시 라디오 버튼
+  // 출/퇴근 수정 요청 시 라디오 출/퇴근 선택
+  const [leaveKind, setLeaveKind] = useState('');
+  const handleLeaveKindRadioChange = (event) => {
+    setLeaveKind(event.target.value);
+  };
+
+  useEffect(() => {
+    if (Object.keys(selectLeaveData).length !== 0) {
+      setLeaveKind(selectLeaveData.status === 0 ? 'n' : 'y');
+    }
+  }, [selectLeaveData]);
+
+  // 모달창 설정
+  // 탭 0. 출/퇴근 전체 조회
+  const [openAll, setOpenAll] = React.useState(false);
+  // 모달창 : 날짜 검색 시작일
+  const [searchStartDate, setSearchStartDate] = useState('');
+  // 모달창 : 날짜 검색 종료일
+  const [searchEndDate, setSearchEndDate] = useState('');
+  // 모달창에서 선택한 출/퇴근 데이터 값
+  const [searchAttendData, setSearchAttendData] = useState({});
+  // 모달창 열기
+  const handleOpenAll = () => setOpenAll(true);
+  // 모달창 취소 버튼 (데이터 저장 O)
+  const handleCloseAllSave = () => {
+    setOpenAll(false);
+    setSelectAttendData(searchAttendData);
+    setSearchStartDate('');
+    setSearchEndDate('');
+  };
+  // 모달창 확인 버튼 (데이터 저장 X)
+  const handleCloseAll = () => {
+    setOpenAll(false);
+    setSearchAttendData({});
+    setSearchStartDate('');
+    setSearchEndDate('');
+  };
+
+  // 탭 1. 휴가 전체 조회
+  const [openAllLeave, setOpenAllLeave] = React.useState(false);
+  // 모달창 : 날짜 검색 시작일
+  const [searchLeaveStartDate, setSearchLeaveStartDate] = useState('');
+  // 모달창 : 날짜 검색 종료일
+  const [searchLeaveEndDate, setSearchLeaveEndDate] = useState('');
+  // 모달창에서 선택한 휴가 데이터 값
+  const [searchLeaveData, setSearchLeaveData] = useState({});
+  // 모달창 열기
+  const handleOpenAllLeave = () => setOpenAllLeave(true);
+  // 모달창 취소 버튼 (데이터 저장 O)
+  const handleCloseAllLeaveSave = () => {
+    setOpenAllLeave(false);
+    setSelectLeaveData(searchLeaveData);
+    setSearchLeaveData({});
+    setSearchLeaveStartDate('');
+    setSearchLeaveEndDate('');
+  };
+  // 모달창 확인 버튼 (데이터 저장 X)
+  const handleCloseAllLeave = () => {
+    setOpenAllLeave(false);
+    setSelectLeaveData({});
+    setSearchLeaveData({});
+    setSearchLeaveStartDate('');
+    setSearchLeaveEndDate('');
+  };
 
   // 사용하지 않은 부분
   console.log(updateTime);
@@ -186,6 +229,8 @@ const ModifyAttendance = () => {
   console.log(searchEndDate);
   console.log(selectDate);
   console.log(selectLeaveData);
+  console.log(searchLeaveStartDate);
+  console.log(searchLeaveEndDate);
 
   // Tab 커스텀
   const MyTab = styled(Tab)`
@@ -206,6 +251,7 @@ const ModifyAttendance = () => {
   `;
 
   // 데이터 생성
+  // 출/퇴근 관련
   function createAttendData(date, startTime, endTime, status) {
     return { date, startTime, endTime, status };
   }
@@ -226,6 +272,23 @@ const ModifyAttendance = () => {
     createAttendData('2023/10/23', '08:32:57', '18:01:13', 0),
     createAttendData('2023/10/24', '08:32:57', '18:01:13', 0),
     createAttendData('2023/10/25', '08:32:57', '18:01:13', 0)
+  ];
+
+  // 휴가 관련
+  function createLeaveData(leaveStart, leaveEnd, leaveType, leaveCnt, appDate, approver, status) {
+    return { leaveStart, leaveEnd, leaveType, leaveCnt, appDate, approver, status };
+  }
+
+  const leaveDatas = [
+    createLeaveData('2023/10/11', '2023/10/11', '연차', '1', '2023/10/07', '이유나 팀장', 0),
+    createLeaveData('2023/10/11', '2023/10/11', '반차(오후)', '0.5', '2023/10/07', '김유나 팀장', 0),
+    createLeaveData('2023/10/11', '2023/10/11', '반차(오전)', '0.5', '2023/10/07', '이유나 팀장', 0),
+    createLeaveData('2023/10/11', '2023/10/11', '연차', '1', '2023/10/07', '박유나 팀장', 1),
+    createLeaveData('2023/10/11', '2023/10/11', '연차', '1', '2023/10/07', '이유나 팀장', 1),
+    createLeaveData('2023/10/11', '2023/10/13', '공가', '3', '2023/10/07', '박유나 팀장', 0),
+    createLeaveData('2023/10/11', '2023/10/13', '연차', '3', '2023/10/07', '이유나 팀장', 2),
+    createLeaveData('2023/10/11', '2023/10/11', '연차', '1', '2023/10/07', '박유나 팀장', 0),
+    createLeaveData('2023/10/11', '2023/10/11', '연차', '1', '2023/10/07', '이유나 팀장', 0)
   ];
 
   return (
@@ -462,7 +525,7 @@ const ModifyAttendance = () => {
                         <Button variant="contained">검색</Button>
                       </Grid>
                     </Grid>
-                    <UserAttendTable datas={attendDatas} handleMyCard={setSearchAttendData} height={'470px'} />
+                    <UserAllAttendTable datas={attendDatas} handleMyCard={setSearchAttendData} height={'470px'} />
                     <Grid container justifyContent="right" spacing={1} sx={{ mt: 2 }}>
                       <Grid item>
                         <Button variant="contained" size="medium" onClick={handleCloseAll}>
@@ -483,38 +546,72 @@ const ModifyAttendance = () => {
                       <Grid item>
                         <Typography variant="h4">휴가 수정</Typography>
                       </Grid>
+                      <Button variant="contained" onClick={handleOpenAllLeave} sx={{ width: 100 }}>
+                        휴가선택
+                      </Button>
                     </Grid>
                     <Box clone mt={2}>
-                      <BasicChip label="휴가선택" color="gray" />
-                      <TextField label="제목" id="title" size="small" />
+                      <UserLeaveInfoTable data={selectLeaveData} />
+                      {Object.keys(selectLeaveData).length === 0 && (
+                        <Box
+                          p={1}
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center', // 수평 중앙 정렬
+                            alignItems: 'center' // 수직 중앙 정렬
+                          }}
+                        >
+                          <Typography variant="h5">선택된 휴가 없음</Typography>
+                        </Box>
+                      )}
                     </Box>
                     <Box clone mt={2}>
                       <BasicChip label="제목" color="gray" />
-                      <TextField label="제목" id="title" size="small" />
-                    </Box>
-                    <Box clone mt={2}>
-                      <BasicChip label="결재자" color="gray" />
                       <TextField
-                        label="결재자"
-                        id="approver"
-                        type="search"
+                        defaultValue={selectLeaveData.leaveStart}
+                        key={selectLeaveData.leaveStart}
+                        label="제목"
+                        id="title"
                         size="small"
-                        sx={{
-                          width: '170px'
-                        }}
-                        InputProps={{
-                          endAdornment: (
-                            <InputAdornment position="end">
-                              <IconButton id="searchApp">
-                                <SearchOutlined />
-                              </IconButton>
-                            </InputAdornment>
-                          )
-                        }}
+                        sx={{ width: '30%' }}
+                        inputProps={{ readOnly: true }}
                       />
                     </Box>
+                    <Box clone mt={2} sx={{ display: 'flex' }}>
+                      <BasicChip label="결재자" color="gray" />
+                      <TextField
+                        defaultValue={selectLeaveData.approver}
+                        key={selectLeaveData.approver}
+                        label="결재자"
+                        id="approver"
+                        size="small"
+                        sx={{ width: '20%', mr: 2 }}
+                        inputProps={{ readOnly: true }}
+                      />
+                      <BasicChip label="결재상태" color="gray" />
+                      {Object.keys(selectLeaveData).length !== 0 && (
+                        <Stack direction="row" alignItems="center" justifyContent="center" spacing={1}>
+                          <Dot color={selectLeaveData.status === 0 ? 'success' : 'error'} />
+                          <Typography>{selectLeaveData.status === 0 ? '결재승인' : '결재반려'}</Typography>
+                        </Stack>
+                      )}
+                    </Box>
                     <Box clone mt={2}>
-                      <BasicChip label="휴가 사유" color="gray" />
+                      <BasicChip label="결재상태수정" color="gray" />
+                      <FormControl sx={{ ml: 1 }}>
+                        <RadioGroup
+                          row
+                          sx={{ justifyContent: 'center', alignItems: 'center' }}
+                          value={leaveKind}
+                          onChange={handleLeaveKindRadioChange}
+                        >
+                          <FormControlLabel value="y" control={<Radio size="small" />} label="승인" />
+                          <FormControlLabel value="n" control={<Radio size="small" />} label="반려" />
+                        </RadioGroup>
+                      </FormControl>
+                    </Box>
+                    <Box clone mt={2}>
+                      <BasicChip label="수정사유" color="gray" />
                     </Box>
                     <Box clone mt={2}>
                       <TextField
@@ -536,6 +633,40 @@ const ModifyAttendance = () => {
                       </Grid>
                     </Box>
                   </MainCard>
+                  <AttendUpdateModal open={openAllLeave} handleClose={handleCloseAllLeave}>
+                    <Grid container alignItems="center" direction="row" spacing={1} sx={{ mb: 2 }}>
+                      <Grid item xs={3.5} md={3.5} lg={4}>
+                        <Typography variant="h5">전체 휴가 내역</Typography>
+                      </Grid>
+                      <Grid item xs={3.5} md={3.5} lg={3.5}>
+                        <BasicDatePicker setDate={setSearchLeaveStartDate} />
+                      </Grid>
+                      <Grid item xs={3.5} md={3.5} lg={3.5}>
+                        <BasicDatePicker setDate={setSearchLeaveEndDate} />
+                      </Grid>
+                      <Grid item xs={1.5} md={1.5} lg={1}>
+                        <Button variant="contained">검색</Button>
+                      </Grid>
+                    </Grid>
+                    {/* 결재 완료 된 휴가만 수정 가능 */}
+                    <UserAllLeaveTable
+                      datas={leaveDatas.filter((data) => data.status !== 2)}
+                      handleMyCard={setSearchLeaveData}
+                      height={'470px'}
+                    />
+                    <Grid container justifyContent="right" spacing={1} sx={{ mt: 2 }}>
+                      <Grid item>
+                        <Button variant="contained" size="medium" onClick={handleCloseAllLeave}>
+                          취소
+                        </Button>
+                      </Grid>
+                      <Grid item>
+                        <Button variant="contained" size="medium" onClick={handleCloseAllLeaveSave}>
+                          확인
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </AttendUpdateModal>
                 </ApprovalTab>
               </Grid>
             </Grid>
