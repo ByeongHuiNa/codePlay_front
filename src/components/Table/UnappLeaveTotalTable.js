@@ -6,7 +6,7 @@ import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow }
 
 // project import
 import { Button, Pagination, Stack } from '../../../node_modules/@mui/material/index';
-import { useApprovalState } from 'store/module';
+import { useUnApprovalState } from 'store/module';
 import axios from '../../../node_modules/axios/index';
 
 // function descendingComparator(a, b, orderBy) {
@@ -97,19 +97,19 @@ OrderTableHead.propTypes = {
 };
 
 // ==============================|| ORDER TABLE ||============================== //
-
+//결재대기 테이블
 export default function UnappLeaveTotalTable({ leaveCancel }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   //const [selected] = useState([]);
-  const { app, setApp } = useApprovalState();
+  const { app, setApp } = useUnApprovalState();
 
   useEffect(() => {
     async function get() {
       const endPoints = ['http://localhost:8000/leave_approval'];
       const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
-       // result[0].data를 필터링하여 leave_status가 2인 데이터만 추출
-      const filteredData = result[0].data.filter((item) => item.leaveapp_status === 2);
+      // result[0].data를 필터링하여 leave_status가 2인 데이터만 추출
+      const filteredData = result[0].data.filter((item) => item.leaveapp_status == 2);
 
       setApp(filteredData);
     }
@@ -154,7 +154,7 @@ export default function UnappLeaveTotalTable({ leaveCancel }) {
         >
           <OrderTableHead order={order} orderBy={orderBy} />
           <TableBody>
-          {Object.values(app).map((app) => (
+            {Object.values(app).map((app) => (
               //const isItemSelected = isSelected(appwait.date);
               //const labelId = `enhanced-table-checkbox-${index}`;
               <TableRow
@@ -179,7 +179,7 @@ export default function UnappLeaveTotalTable({ leaveCancel }) {
                 </TableCell>
               </TableRow>
             ))}
-            
+
             {/* {stableSort(datas, getComparator(order, orderBy)).map((data, index) => {
               const isItemSelected = isSelected(data.date);
               const labelId = `enhanced-table-checkbox-${index}`;

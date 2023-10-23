@@ -100,7 +100,21 @@ export const useCalendarDrawer = create(
 );
 
 //휴가결재내역(승인, 반려, 대기)
-export const useApprovalState = create(
+export const useAllApprovalState1 = create(
+  devtools((set) => ({
+    app: {},
+    setApp: (newApp) => set(() => ({ app: newApp }))
+  }))
+);
+//휴가결재내역(승인, 반려)
+export const useApprovalState2 = create(
+  devtools((set) => ({
+    app: {},
+    setApp: (newApp) => set(() => ({ app: newApp }))
+  }))
+);
+//휴가결재내역(대기)
+export const useUnApprovalState = create(
   devtools((set) => ({
     app: {},
     setApp: (newApp) => set(() => ({ app: newApp }))

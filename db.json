@@ -2245,7 +2245,8 @@
       "leaveapp_status" : 2,
       "leaveapp_title" : "연차신청제목7",
       "leaveapp_content" : "연차신청내용7",
-      "leaveapp_cancel_no" : ""
+      "leaveapp_cancel_no" : "",
+      "leaveapp_user_name" : "홍길동 팀장"
     }
   ],
   "user_leave": [

@@ -6,7 +6,7 @@ import { Box, Stack, Table, TableBody, TableCell, TableContainer, TableHead, Tab
 
 // project import
 import { Chip } from '../../../node_modules/@mui/material/index';
-import { useApprovalState } from 'store/module';
+import { useAllApprovalState1 } from 'store/module';
 import axios from '../../../node_modules/axios/index';
 
 
@@ -131,7 +131,7 @@ export default function UserLeaveTable() {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   //const [selected] = useState([]);
-  const { app, setApp } = useApprovalState();
+  const { app, setApp } = useAllApprovalState1();
 
   //const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
 
