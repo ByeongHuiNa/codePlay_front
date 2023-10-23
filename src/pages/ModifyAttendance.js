@@ -92,25 +92,11 @@ const ModifyAttendance = () => {
 
   // 사원선택에서 검색한 이름
   const [searchName, setSearchName] = useState('');
-  // 사원선택에서 검색한 이름을 포함한 모든 사원 목록
-  const [filteredData, setFilteredData] = useState(allUsers);
 
   // 사원선택의 자동완성 창에서 검색어 변경(검색) 될 때마다 searchName 설정
   const handleSelectUser = (event, newValue) => {
     setSearchName(newValue);
   };
-
-  // 사원선택에서 검색 이름, 사원목록 변경될 때마다 리렌더링
-  useEffect(() => {
-    if (searchName) {
-      // 검색한 이름이 있는 경우 전체 목록에서 검색어를 포함한 사원만 필더링하여 filterData에 저장
-      const filteredUsers = allUsers.filter((user) => user.user_name.includes(searchName));
-      setFilteredData(filteredUsers);
-    } else {
-      // 검색한 이름이 없는 경우 전체 목록을 filterData에 저장
-      setFilteredData(allUsers);
-    }
-  }, [searchName, allUsers]);
 
   // 선택한 출/퇴근 날짜
   // 달력에서 날짜 클릭하면 해당 날짜의 출/퇴근 내용 불러오기
@@ -314,11 +300,18 @@ const ModifyAttendance = () => {
                   >
                     <BasicChip label="사원선택" color="gray" />
                     {/* 자동완성 부분 */}
-                    <BasicAuto label="이름" datas={allUsers} handleSelectUser={handleSelectUser} setFilteredData={setFilteredData} />
+                    <BasicAuto
+                      label="이름"
+                      datas={allUsers}
+                      handleSelectUser={handleSelectUser}
+                      searchName={searchName}
+                      setSearchName={setSearchName}
+                    />
                   </Box>
                   <SelectUserTable
                     value={value}
-                    datas={filteredData}
+                    datas={allUsers}
+                    searchName={searchName}
                     handleAllCheck={handleAllCheck}
                     handleSingleCheck={handleSingleCheck}
                     checkItems={checkItems}
