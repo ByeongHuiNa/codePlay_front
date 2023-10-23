@@ -111,7 +111,8 @@ export default function CalendarWorkModalContent({ handleClose }) {
                   }}
                 />
               </ListItemIcon>
-              <ListItemText id={labelId} primary={`List item ${value + 1}`} />
+              <ListItemText id={labelId} primary={`일정의 타이틀 ${value + 1}`} sx={{ml : 2, overflow: 'auto'}}/>
+              <ListItemText primary={`2023-10-18 ~ 2023-10-19`} sx={{mr : -2, overflow: 'auto'}}/>
             </ListItem>
           );
         })}
