@@ -92,12 +92,17 @@ export const useLeaveTab = create(
   }))
 );
 
+export const useAccessPage = create(
+  devtools((set) => ({
+    accessPage: {},
+    setAccessPage: (newAccessPage) => set(() => ({ accessPage: newAccessPage }))
+  }))
+);
+
 export const useCalendarDrawer = create(
   devtools((set) => ({
     view: false,
     setView: (newView) => set(() => ({ view: newView }))
-  }))
-);
 
 export const useCalendarDate = create(
   devtools((set) => ({

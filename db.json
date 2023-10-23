@@ -2153,5 +2153,168 @@
       "user_position": "차장",
       "user_birth_date": "1966-04-28"
     }
+  ],
+  "access_page_list": [
+    {
+      "page_no": 0,
+      "page_tittle": "캘린더",
+      "page_default_role_no": 0
+    },
+    {
+      "page_no": 1,
+      "page_tittle": "근태현황조회",
+      "page_default_role_no": 0
+    },
+    {
+      "page_no": 2,
+      "page_tittle": "근태현황조회(담당자)",
+      "page_default_role_no": 1
+    },
+    {
+      "page_no": 3,
+      "page_tittle": "사용자별 근태현황조회(담당자)",
+      "page_default_role_no": 1
+    },
+    {
+      "page_no": 4,
+      "page_tittle": "사용자조회",
+      "page_default_role_no": 2
+    },
+    {
+      "page_no": 5,
+      "page_tittle": "권한조회",
+      "page_default_role_no": 2
+    }
+  ],
+  "role_access_page": [
+    {
+      "role_level": 0,
+      "access_page_list":[{      "page_no": 0,
+      "page_tittle": "캘린더",
+      "permission_access_date" : "2023-10-23",
+      "page_default_role_no": 0,
+      "role_level": 0
+      },{
+        "page_no": 1,
+        "page_tittle": "근태현황조회",
+        "role_level": 0,
+        "permission_access_date" : "2023-10-23",
+        "page_default_role_no": 0
+      },
+      {
+        "page_no": 2,
+        "page_tittle": "근태현황조회(담당자)",
+        "role_level": null,
+        "permission_access_date" : null,
+        "page_default_role_no": 1
+      },
+      {
+        "page_no": 3,
+        "page_tittle": "사용자별 근태현황조회(담당자)",
+        "role_level": null,
+        "permission_access_date" : null,
+        "page_default_role_no": 1
+      },
+      {
+        "page_no": 4,
+        "page_tittle": "사용자조회",
+        "role_level": null,
+        "permission_access_date" : null,
+        "page_default_role_no": 2
+      },
+      {
+        "page_no": 5,
+        "page_tittle": "권한조회",
+        "role_level": null,
+        "permission_access_date" : null,
+        "page_default_role_no": 2
+      }
+    ]
+  },
+  {
+    "role_level": 1,
+    "access_page_list":[
+      {"page_no": 0,
+        "page_tittle": "캘린더",
+        "permission_access_date" : "2023-10-23",
+        "page_default_role_no": 0,
+        "role_level": 1
+        },{
+      "page_no": 1,
+      "page_tittle": "근태현황조회",
+      "role_level": 1,
+      "permission_access_date" : "2023-10-23",
+      "page_default_role_no": 0
+    },{
+      "page_no": 2,
+      "page_tittle": "근태현황조회(담당자)",
+      "role_level": 1,
+      "permission_access_date" : "2023-10-23",
+      "page_default_role_no": 1
+    },
+    {
+      "page_no": 3,
+      "page_tittle": "사용자별 근태현황조회(담당자)",
+      "role_level": 1,
+      "permission_access_date" : "2023-10-23",
+      "page_default_role_no": 1
+    },
+    {
+      "page_no": 4,
+      "page_tittle": "사용자조회",
+      "role_level": null,
+      "permission_access_date" : null,
+      "page_default_role_no": 2
+    },
+    {
+      "page_no": 5,
+      "page_tittle": "권한조회",
+      "role_level": null,
+      "permission_access_date" : null,
+      "page_default_role_no": 2
+    }]},
+  {
+    "role_level": 2,
+    "access_page_list":[
+      {"page_no": 0,
+        "page_tittle": "캘린더",
+        "permission_access_date" : "2023-10-23",
+        "page_default_role_no": 0,
+        "role_level": 2
+        },{
+      "page_no": 1,
+      "page_tittle": "근태현황조회",
+      "role_level": 2,
+      "permission_access_date" : "2023-10-23",
+      "page_default_role_no": 0
+    },{
+      "page_no": 2,
+      "page_tittle": "근태현황조회(담당자)",
+      "role_level": null,
+      "permission_access_date" : null,
+      "page_default_role_no": 1
+    },
+    {
+      "page_no": 3,
+      "page_tittle": "사용자별 근태현황조회(담당자)",
+      "role_level": null,
+      "permission_access_date" : null,
+      "page_default_role_no": 1
+    },
+    {
+      "page_no": 4,
+      "page_tittle": "사용자조회",
+      "role_level": 2,
+      "permission_access_date" : "2023-10-23",
+      "page_default_role_no": 2
+    },
+    {
+      "page_no": 5,
+      "page_tittle": "권한조회",
+      "role_level": 2,
+      "permission_access_date" : "2023-10-23",
+      "page_default_role_no": 2
+    }
+    ]}
   ]
 }

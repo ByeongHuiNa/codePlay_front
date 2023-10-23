@@ -58,7 +58,7 @@ const SettingAuthority = () => {
       setView(false);
     }
     get();
-  }, [index, setPage, setTableList, setView]);
+  }, [index]);
 
   return (
     <>
