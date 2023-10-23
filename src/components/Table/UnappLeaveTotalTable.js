@@ -1,37 +1,39 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // material-ui
 import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 // project import
 import { Button, Pagination, Stack } from '../../../node_modules/@mui/material/index';
+import { useAppwaitState } from 'store/module';
+import axios from '../../../node_modules/axios/index';
 
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
+// function descendingComparator(a, b, orderBy) {
+//   if (b[orderBy] < a[orderBy]) {
+//     return -1;
+//   }
+//   if (b[orderBy] > a[orderBy]) {
+//     return 1;
+//   }
+//   return 0;
+// }
 
-function getComparator(order, orderBy) {
-  return order === 'desc' ? (a, b) => descendingComparator(a, b, orderBy) : (a, b) => -descendingComparator(a, b, orderBy);
-}
+// function getComparator(order, orderBy) {
+//   return order === 'desc' ? (a, b) => descendingComparator(a, b, orderBy) : (a, b) => -descendingComparator(a, b, orderBy);
+// }
 
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) {
-      return order;
-    }
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
+// function stableSort(array, comparator) {
+//   const stabilizedThis = array.map((el, index) => [el, index]);
+//   stabilizedThis.sort((a, b) => {
+//     const order = comparator(a[0], b[0]);
+//     if (order !== 0) {
+//       return order;
+//     }
+//     return a[1] - b[1];
+//   });
+//   return stabilizedThis.map((el) => el[0]);
+// }
 
 // ==============================|| ORDER TABLE - HEADER CELL ||============================== //
 
@@ -99,19 +101,30 @@ OrderTableHead.propTypes = {
 export default function UnappLeaveTotalTable({ leaveCancel }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
-  const [selected] = useState([]);
+  //const [selected] = useState([]);
+  const { appwait, setAppWait } = useAppwaitState();
 
-  const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
+  useEffect(() => {
+    async function get() {
+      const endPoints = ['http://localhost:8000/approval_wait'];
+      const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
 
-  function createData(leaveStart, leaveEnd, leaveType, leaveCnt, appDate, approver, status) {
-    return { leaveStart, leaveEnd, leaveType, leaveCnt, appDate, approver, status };
-  }
+      setAppWait(result[0].data);
+    }
+    get();
+  }, []);
 
-  const datas = [
-    createData('2023/10/11', '2023/10/11', '연차', '1'),
-    createData('2023/10/11', '2023/10/11', '반차(오전)', '0.5'),
-    createData('2023/10/11', '2023/10/13', '연차', '3')
-  ];
+  //const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
+
+  // function createData(leaveStart, leaveEnd, leaveType, leaveCnt, appDate, approver, status) {
+  //   return { leaveStart, leaveEnd, leaveType, leaveCnt, appDate, approver, status };
+  // }
+
+  // const datas = [
+  //   createData('2023/10/11', '2023/10/11', '연차', '1'),
+  //   createData('2023/10/11', '2023/10/11', '반차(오전)', '0.5'),
+  //   createData('2023/10/11', '2023/10/13', '연차', '3')
+  // ];
 
   return (
     <Box>
@@ -139,7 +152,33 @@ export default function UnappLeaveTotalTable({ leaveCancel }) {
         >
           <OrderTableHead order={order} orderBy={orderBy} />
           <TableBody>
-            {stableSort(datas, getComparator(order, orderBy)).map((data, index) => {
+          {Object.values(appwait).map((appwait) => (
+              //const isItemSelected = isSelected(appwait.date);
+              //const labelId = `enhanced-table-checkbox-${index}`;
+              <TableRow
+                hover
+                role="checkbox"
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                // aria-checked={isItemSelected}
+                tabIndex={-1}
+                key={appwait.approval_wait_no}
+                // selected={isItemSelected}
+              >
+                <TableCell component="th" id={appwait.approval_wait_no} scope="data" align="center">
+                  {appwait.leave_start}
+                </TableCell>
+                <TableCell align="center">{appwait.leave_end}</TableCell>
+                <TableCell align="center">{appwait.leave_type}</TableCell>
+                <TableCell align="center">{appwait.leave_count}</TableCell>
+                <TableCell align="center">
+                  <Button variant="contained" size="small" onClick={leaveCancel}>
+                    취소
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+            
+            {/* {stableSort(datas, getComparator(order, orderBy)).map((data, index) => {
               const isItemSelected = isSelected(data.date);
               const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -166,14 +205,13 @@ export default function UnappLeaveTotalTable({ leaveCancel }) {
                   </TableCell>
                 </TableRow>
               );
-            })}
+            })} */}
           </TableBody>
         </Table>
       </TableContainer>
       <Stack alignItems="center" mt={-2.5}>
-          <Pagination count={5} variant="outlined" shape="rounded" />
+        <Pagination count={5} variant="outlined" shape="rounded" />
       </Stack>
-      
     </Box>
   );
 }

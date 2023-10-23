@@ -98,3 +98,19 @@ export const useCalendarDrawer = create(
     setView: (newView) => set(() => ({ view: newView })),
   }))
 );
+
+//휴가결재대기내역
+export const useAppwaitState = create(
+  devtools((set) => ({
+    appwait: {},
+    setAppWait: (newAppwait) => set(() => ({ appwait: newAppwait }))
+  }))
+);
+
+//사용자의 휴가보유 현황
+export const useLeaveState = create(
+  devtools((set) => ({
+    appwait: {},
+    setAppWait: (newAppwait) => set(() => ({ appwait: newAppwait }))
+  }))
+);

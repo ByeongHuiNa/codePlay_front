@@ -2153,5 +2153,37 @@
       "user_position": "차장",
       "user_birth_date": "1966-04-28"
     }
-  ]
+  ],
+  "approval_wait":[{
+    "approval_wait_no":0,
+    "user_no":0,
+    "leave_start":"2023-10-11",
+    "leave_end": "2023-10-11",
+    "leave_type": "연차",
+    "leave_count": "1"
+    },
+    {
+      "approval_wait_no":1,
+      "user_no":0,
+      "leave_start":"2023-10-10",
+      "leave_end": "2023-10-12",
+      "leave_type": "연차",
+      "leave_count": "2"
+    },
+    {
+      "approval_wait_no":2,
+      "user_no":0,
+      "leave_start":"2023-10-9",
+      "leave_end": "2023-10-9",
+      "leave_type": "오전반차",
+      "leave_count": "0.5"
+    }
+  ],
+  "user_leave": [{
+    "user_no":0,
+    "leave_no":0,
+    "leave_total":15,
+    "leave_use":4,
+    "leave_remain":11
+  }]
 }
