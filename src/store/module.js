@@ -103,6 +103,8 @@ export const useCalendarDrawer = create(
   devtools((set) => ({
     view: false,
     setView: (newView) => set(() => ({ view: newView }))
+  }))
+);
 
 export const useCalendarDate = create(
   devtools((set) => ({
