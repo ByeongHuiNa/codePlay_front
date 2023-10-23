@@ -92,10 +92,24 @@ export const useLeaveTab = create(
   }))
 );
 
+export const useAccessPage = create(
+  devtools((set) => ({
+    accessPage: {},
+    setAccessPage: (newAccessPage) => set(() => ({ accessPage: newAccessPage }))
+  }))
+);
+
 export const useCalendarDrawer = create(
   devtools((set) => ({
     view: false,
-    setView: (newView) => set(() => ({ view: newView })),
+    setView: (newView) => set(() => ({ view: newView }))
+
+export const useCalendarDate = create(
+  devtools((set) => ({
+    startDate: {},
+    endDate: {},
+    setStartDate: (newStartDate) => set(() => ({ startDate: newStartDate })),
+    setEndDate: (newEndDate) => set(() => ({ endDate: newEndDate }))
   }))
 );
 
@@ -134,5 +148,11 @@ export const useTodayState = create(
   devtools((set) => ({
     attend: {},
     setAttend: (newAttend) => set(() => ({ attend: newAttend }))
+  }))
+);
+export const useCalendarEvent = create(
+  devtools((set) => ({
+    event: {},
+    setEvent: (newEvent) => set(() => ({ event: newEvent }))
   }))
 );

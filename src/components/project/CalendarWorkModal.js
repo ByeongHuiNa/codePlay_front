@@ -7,8 +7,8 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: '50%',
-  height: '70%',
+  width: '70%',
+  height: '80%',
   bgcolor: 'background.paper',
   border: '7px',
   borderRadius: '15px',
@@ -16,7 +16,8 @@ const style = {
   p: 4
 };
 
-export default function AttendUpdateModal({ open, handleClose, children }) {
+// eslint-disable-next-line react/prop-types
+export default function CalendarWorkModal({ open, handleClose, children }) {
   return (
     <div>
       <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
