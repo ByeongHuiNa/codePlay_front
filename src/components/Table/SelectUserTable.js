@@ -1,14 +1,11 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 // material-ui
-import { Box, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 // project import
-import { Typography } from '../../../node_modules/@mui/material/index';
-
-// 아이콘
-import Dot from 'components/@extended/Dot';
+import { Avatar, Checkbox } from '../../../node_modules/@mui/material/index';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -40,37 +37,46 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: 'date',
+    id: 'user_profile',
     align: 'center',
     disablePadding: false,
-    label: '날짜'
+    label: '프로필'
   },
   {
-    id: 'startTime',
+    id: 'user_name',
     align: 'center',
     disablePadding: false,
-    label: '출근시간'
+    label: '이름'
   },
   {
-    id: 'endTime',
+    id: 'user_dept',
     align: 'center',
     disablePadding: false,
-    label: '퇴근시간'
+    label: '부서'
   },
   {
-    id: 'status',
+    id: 'user_position',
     align: 'center',
     disablePadding: false,
-    label: '근태상태'
+    label: '직책'
   }
 ];
 
 // ==============================|| ORDER TABLE - HEADER ||============================== //
 
-function OrderTableHead({ order, orderBy }) {
+function OrderTableHead({ value, order, orderBy, checkItems, handleAllCheck, datas }) {
   return (
     <TableHead>
       <TableRow>
+        {value === 0 && (
+          <TableCell>
+            <Checkbox
+              checked={checkItems.length === datas.length ? true : false}
+              onChange={(e) => handleAllCheck(e.target.checked)}
+              inputProps={{ 'aria-label': 'controlled' }}
+            />
+          </TableCell>
+        )}
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -91,67 +97,22 @@ OrderTableHead.propTypes = {
   orderBy: PropTypes.string
 };
 
-// ==============================|| ORDER TABLE - STATUS ||============================== //
-
-const OrderStatus = ({ status }) => {
-  let color;
-  let title;
-
-  // 0 : 정상출근
-  // 1 : 휴가(연차,반차,공가)
-  // 2 : 지각
-  // 3 : 조퇴(조기퇴근)
-  // 4 : 결근(출근 혹은 퇴근누락))
-  switch (status) {
-    case 0:
-      color = 'success';
-      title = '정상';
-      break;
-    case 1:
-      color = 'primary';
-      title = '휴가';
-      break;
-    case 2:
-      color = 'secondary';
-      title = '지각';
-      break;
-    case 3:
-      color = 'warning';
-      title = '조퇴';
-      break;
-    case 4:
-      color = 'error';
-      title = '결근';
-  }
-
-  return (
-    <Stack direction="row" alignItems="center" justifyContent="center" spacing={1}>
-      <Dot color={color} />
-      <Typography>{title}</Typography>
-    </Stack>
-  );
-};
-
-OrderStatus.propTypes = {
-  status: PropTypes.number
-};
-
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function RecentAttendTable({ datas, handleMyCard }) {
+export default function SelectUserTable({ value, datas, handleSingleCheck, handleAllCheck, checkItems, setSelectUserData }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
 
-  const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
+  const isSelected = (user_no) => selected.indexOf(user_no) !== -1;
 
   return (
     <Box>
       <TableContainer
         sx={{
           width: '100%',
-          height: '650px',
-          overflow: 'auto',
+          height: '670px',
+          overflowX: 'auto',
           position: 'relative',
           display: 'block',
           maxWidth: '100%',
@@ -169,7 +130,6 @@ export default function RecentAttendTable({ datas, handleMyCard }) {
         }}
       >
         <Table
-          stickyHeader
           aria-labelledby="tableTitle"
           sx={{
             '& .MuiTableCell-root:first-of-type': {
@@ -180,10 +140,17 @@ export default function RecentAttendTable({ datas, handleMyCard }) {
             }
           }}
         >
-          <OrderTableHead order={order} orderBy={orderBy} />
+          <OrderTableHead
+            value={value}
+            order={order}
+            orderBy={orderBy}
+            handleAllCheck={handleAllCheck}
+            checkItems={checkItems}
+            datas={datas}
+          />
           <TableBody>
             {stableSort(datas, getComparator(order, orderBy)).map((data, index) => {
-              const isItemSelected = isSelected(data.date);
+              const isItemSelected = isSelected(data.user_no);
               const labelId = `enhanced-table-checkbox-${index}`;
 
               return (
@@ -193,20 +160,25 @@ export default function RecentAttendTable({ datas, handleMyCard }) {
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   aria-checked={isItemSelected}
                   tabIndex={-1}
-                  key={data.date}
+                  key={data.user_no}
                   selected={isItemSelected}
-                  onClick={() => {
-                    handleMyCard(data);
-                  }}
+                  onClick={setSelectUserData}
                 >
+                  {value === 0 && (
+                    <TableCell align="center">
+                      <Checkbox
+                        checked={checkItems.includes(data.user_no) ? true : false}
+                        onChange={(e) => handleSingleCheck(e.target.checked, data.user_no)}
+                        inputProps={{ 'aria-label': 'controlled' }}
+                      />
+                    </TableCell>
+                  )}
                   <TableCell component="th" id={labelId} scope="data" align="center">
-                    {data.date}
+                    <Avatar src={data.user_profile} sx={{ width: 40, height: 40, margin: 'auto' }}></Avatar>
                   </TableCell>
-                  <TableCell align="center">{data.startTime}</TableCell>
-                  <TableCell align="center">{data.endTime}</TableCell>
-                  <TableCell align="center">
-                    <OrderStatus status={data.status} />
-                  </TableCell>
+                  <TableCell align="center">{data.user_name}</TableCell>
+                  <TableCell align="center">{data.user_dept}</TableCell>
+                  <TableCell align="center">{data.user_position}</TableCell>
                 </TableRow>
               );
             })}
