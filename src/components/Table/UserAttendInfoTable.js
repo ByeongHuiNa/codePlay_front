@@ -155,12 +155,12 @@ export default function UserAttendInfoTable({ data }) {
               {Object.keys(data).length !== 0 && (
                 <>
                   <TableCell component="th" scope="data" align="center">
-                    {data.date}
+                    {data.attend_date}
                   </TableCell>
-                  <TableCell align="center">{data.startTime}</TableCell>
-                  <TableCell align="center">{data.endTime}</TableCell>
+                  <TableCell align="center">{data.attend_start}</TableCell>
+                  <TableCell align="center">{data.attend_end}</TableCell>
                   <TableCell align="center">
-                    <OrderStatus status={data.status} />
+                    <OrderStatus status={data.attend_status} />
                   </TableCell>
                 </>
               )}

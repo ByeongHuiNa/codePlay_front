@@ -134,7 +134,7 @@ OrderStatus.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function UserAllAttendTable({ datas, handleMyCard, height }) {
+export default function UserAllAttendTable({ datas, handleMyCard, height, selectAttendData, searchAttendData }) {
   const [order] = useState('asc');
   const [orderBy] = useState('date');
   const [selected] = useState([]);
@@ -196,16 +196,17 @@ export default function UserAllAttendTable({ datas, handleMyCard, height }) {
                   selected={isItemSelected}
                   onClick={() => handleMyCard(data)}
                   sx={{
-                    '&:last-child td, &:last-child th': { border: 0 }
+                    '&:last-child td, &:last-child th': { border: 0 },
+                    backgroundColor: data === selectAttendData || data === searchAttendData ? '#e4e3e3' : 'inherit'
                   }}
                 >
                   <TableCell component="th" id={labelId} scope="data" align="center">
-                    {data.date}
+                    {data.attend_date}
                   </TableCell>
-                  <TableCell align="center">{data.startTime}</TableCell>
-                  <TableCell align="center">{data.endTime}</TableCell>
+                  <TableCell align="center">{data.attend_start}</TableCell>
+                  <TableCell align="center">{data.attend_end}</TableCell>
                   <TableCell align="center">
-                    <OrderStatus status={data.status} />
+                    <OrderStatus status={data.attend_status} />
                   </TableCell>
                 </TableRow>
               );
