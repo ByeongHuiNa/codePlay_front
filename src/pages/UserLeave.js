@@ -1,12 +1,9 @@
-import PropTypes from 'prop-types';
-
 // material-ui
-import { Grid, Stack, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 
 // project import
 import ComponentSkeleton from './components-overview/ComponentSkeleton';
 import BasicContainer from 'components/container/BasicContainer';
-import MainCard from 'components/MainCard';
 import {
   Box,
   Button,
@@ -22,7 +19,7 @@ import {
   TextField
 } from '../../node_modules/@mui/material/index';
 import BasicTab from 'components/tab/BasicTab';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import LeaveDonutChart from 'components/chart/LeaveDonutChart';
 import AppLeaveTable from 'components/Table/AppLeaveTable';
 import UnappLeaveTable from 'components/Table/UnappLeaveTable';
@@ -31,29 +28,6 @@ import styled from 'styled-components';
 import BasicDatePicker from 'components/DatePicker/BasicDatePicker';
 import { useLeaveTab } from 'store/module';
 
-// ===============================|| Shadow-Box ||=============================== //
-
-function ShadowBox({ shadow, label, color, bgcolor }) {
-  return (
-    <MainCard border={false} sx={{ bgcolor: bgcolor || 'inherit', boxShadow: shadow }}>
-      <Stack spacing={1} justifyContent="center" alignItems="center">
-        <Typography variant="subtitle1" color={color}>
-          {label}
-        </Typography>
-      </Stack>
-    </MainCard>
-  );
-}
-
-ShadowBox.propTypes = {
-  shadow: PropTypes.string.isRequired,
-  color: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  bgcolor: PropTypes.string
-};
-
-// ============================|| COMPONENT - SHADOW ||============================ //
-
 const UserLeave = () => {
   const { index, setIndex } = useLeaveTab();
   const [selectedValue, setSelectedValue] = useState('annual');
@@ -61,6 +35,10 @@ const UserLeave = () => {
   const handleChange = (event, newValue) => {
     setIndex(newValue);
   };
+
+  useEffect(() => {
+    setIndex(0);
+  }, []);
 
   // 결재 대기 중인 휴가 취소 (바로 취소 가능)
   const leaveCancel = () => {
@@ -143,7 +121,7 @@ const UserLeave = () => {
         </Box>
         <Box clone mt={2}>
           <MyChip label="증빙 업로드" />
-          <Button component="label" variant="contained" size="small" endIcon={<UploadOutlined />}>
+          <Button component="label" variant="contained" size="medium" endIcon={<UploadOutlined />}>
             파일 선택
             <VisuallyHiddenInput type="file" />
           </Button>

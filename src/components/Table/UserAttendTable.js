@@ -134,12 +134,12 @@ OrderStatus.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function UserAttendTable({ datas, handleMyCard }) {
+export default function UserAttendTable({ datas, handleMyCard, height }) {
   const [order] = useState('asc');
-  const [orderBy] = useState('trackingNo');
+  const [orderBy] = useState('date');
   const [selected] = useState([]);
 
-  const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
+  const isSelected = (date) => selected.indexOf(date) !== -1;
 
   return (
     <Box>
@@ -150,7 +150,7 @@ export default function UserAttendTable({ datas, handleMyCard }) {
           position: 'relative',
           display: 'block',
           maxWidth: '100%',
-          height: '590px',
+          height: { height },
           padding: '0px',
           '& td, & th': { whiteSpace: 'nowrap' },
           '&::-webkit-scrollbar': {
@@ -183,16 +183,22 @@ export default function UserAttendTable({ datas, handleMyCard }) {
               const isItemSelected = isSelected(data.date);
               const labelId = `enhanced-table-checkbox-${index}`;
 
+              console.log(isItemSelected);
+              console.log(selected);
+
               return (
                 <TableRow
                   hover
                   role="checkbox"
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   aria-checked={isItemSelected}
                   tabIndex={-1}
                   key={data.date}
                   selected={isItemSelected}
                   onClick={() => handleMyCard(data)}
+                  sx={{
+                    backgroundColor: isItemSelected ? 'lightblue' : 'inherit', // 선택된 데이터에 대한 배경색을 변경
+                    '&:last-child td, &:last-child th': { border: 0 }
+                  }}
                 >
                   <TableCell component="th" id={labelId} scope="data" align="center">
                     {data.date}
