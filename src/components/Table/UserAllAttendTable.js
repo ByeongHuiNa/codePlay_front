@@ -134,7 +134,7 @@ OrderStatus.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function UserAttendTable({ datas, handleMyCard, height }) {
+export default function UserAllAttendTable({ datas, handleMyCard, height }) {
   const [order] = useState('asc');
   const [orderBy] = useState('date');
   const [selected] = useState([]);
@@ -196,7 +196,6 @@ export default function UserAttendTable({ datas, handleMyCard, height }) {
                   selected={isItemSelected}
                   onClick={() => handleMyCard(data)}
                   sx={{
-                    backgroundColor: isItemSelected ? 'lightblue' : 'inherit', // 선택된 데이터에 대한 배경색을 변경
                     '&:last-child td, &:last-child th': { border: 0 }
                   }}
                 >

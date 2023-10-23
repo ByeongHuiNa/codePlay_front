@@ -27,7 +27,7 @@ import BasicDatePicker from 'components/DatePicker/BasicDatePicker';
 import BasicChip from 'components/Chip/BasicChip';
 import { SearchOutlined, UploadOutlined } from '../../node_modules/@mui/icons-material/index';
 import TimePicker2 from 'components/DatePicker/TimePicker';
-import UserAttendTable from 'components/Table/UserAttendTable';
+import UserAllAttendTable from 'components/Table/UserAllAttendTable';
 import UserAttendInfoTable from 'components/Table/UserAttendInfoTable';
 import styled from 'styled-components';
 
@@ -175,7 +175,7 @@ const UserAttendance = () => {
                     <Button onClick={handleOpenAll}>전체보기</Button>
                   </Box>
                   <Box mt={1}>
-                    <UserAttendTable datas={datas.filter((data) => data.status > 1)} handleMyCard={handleMyCard} height={'650px'} />
+                    <UserAllAttendTable datas={datas.filter((data) => data.status > 1)} handleMyCard={handleMyCard} height={'650px'} />
                   </Box>
                 </MainCard>
               </Grid>
@@ -311,7 +311,7 @@ const UserAttendance = () => {
               <Button variant="contained">검색</Button>
             </Grid>
           </Grid>
-          <UserAttendTable datas={datas} handleMyCard={setSearchAttendData} height={'470px'} />
+          <UserAllAttendTable datas={datas} handleMyCard={setSearchAttendData} height={'470px'} />
           <Grid container justifyContent="right" spacing={1} sx={{ mt: 2 }}>
             <Grid item>
               <Button variant="contained" size="medium" onClick={handleCloseAll}>
