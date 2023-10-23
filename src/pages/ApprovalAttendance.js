@@ -1,6 +1,3 @@
-/* eslint-disable no-unused-vars */
-import PropTypes from 'prop-types';
-
 // material-ui
 import { Grid, Stack, Typography } from '@mui/material';
 

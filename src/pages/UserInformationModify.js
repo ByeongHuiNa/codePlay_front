@@ -4,7 +4,7 @@ import { Typography, Button, Grid, Avatar } from '@mui/material';
 // project import
 import MainCard from 'components/MainCard';
 import { Stack, TextField } from '../../node_modules/@mui/material/index';
-import { useNavigate } from '../../node_modules/react-router-dom/dist/index';
+import { useLocation, useNavigate } from '../../node_modules/react-router-dom/dist/index';
 import { useHasDrity, useProfileState } from 'store/module';
 import { useEffect } from 'react';
 import axios from '../../node_modules/axios/index';
@@ -16,17 +16,24 @@ const UserInformationModify = () => {
   function cancelClick() {
     navigate('/userInformation');
   }
+  const location = useLocation();
 
   const { profile, setProfile } = useProfileState();
   const { setHasDrity } = useHasDrity();
   //TODO: ismodifyed 를 이용하여 unstable_usePrompt 로 변경이 됬는데, 주소를 옮길시 화면전환이 안되게 만들기
   //TODO: 로그인한 사용자의 user_no 가져올것.
-  const endPoints = ['http://localhost:8000/user_information?user_no=0'];
 
   useEffect(() => {
+    const endPoints = [];
+    console.log(location);
+    if (location.state == null) {
+      endPoints.push(`http://localhost:8000/user_information?user_no=0`);
+    } else {
+      endPoints.push(`http://localhost:8000/user_information?user_no=${location.state.user_no}`);
+    }
     async function get() {
       const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
-      setProfile(result[0].data);
+      setProfile(result[0].data[0]);
       setHasDrity(false);
     }
     get();
@@ -49,8 +56,6 @@ const UserInformationModify = () => {
   function saveUserInformationModify() {
     //TODO: 로그인한 사용자의 user_no 가져올것.
     axios.patch('http://localhost:8000/user_information?user_no=0', profile).then(() => {
-      // console.log(res);
-      // 200
       setHasDrity(false);
       cancelClick();
     });

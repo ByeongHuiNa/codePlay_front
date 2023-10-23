@@ -10,6 +10,7 @@ import { Avatar, Button, Pagination, Stack } from '../../../node_modules/@mui/ma
 
 // zusthand
 import { useCriteria, useUserTableListState } from 'store/module';
+import { useNavigate } from '../../../node_modules/react-router-dom/dist/index';
 
 // TODO:정렬 구현하기
 function descendingComparator(a, b, orderBy) {
@@ -121,6 +122,11 @@ export default function OrderTable() {
     setTableList(result.data);
   }
 
+  let navigate = useNavigate();
+  function modifiyClick(user_no) {
+    navigate('/userInformationModify', { state: { user_no } });
+  }
+
   return (
     <>
       <Box>
@@ -169,7 +175,7 @@ export default function OrderTable() {
                       <TableCell align="center">{row.user_position}</TableCell>
                       <TableCell align="center">{row.user_birth_date}</TableCell>
                       <TableCell align="center">
-                        <Button> 사용자 정보 변경</Button>
+                        <Button onClick={() => modifiyClick(row.user_no)}> 사용자 정보 변경</Button>
                       </TableCell>
                     </TableRow>
                   );
