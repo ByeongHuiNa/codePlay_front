@@ -39,14 +39,15 @@ const PersonalCalendar = () => {
   }
 
   //zustand
-  const { setView } = useCalendarDrawer();
+  const { setView, setClickView } = useCalendarDrawer();
   const { setStartDate, setEndDate } = useCalendarDate();
   const { setEvent } = useCalendarEvent();
 
-  //달력 클릭 시 발생하는 이벤트
+  //달력 선택 시 발생하는 이벤트
   // eslint-disable-next-line no-unused-vars
   function handleDateSelect(selectInfo) {
     //종료일자 -1
+    console.log(selectInfo);
     var dateStr = selectInfo.endStr;
     var parts = dateStr.split('-');
     var year = parseInt(parts[0], 10);
@@ -80,9 +81,38 @@ const PersonalCalendar = () => {
   }
   //이벤트 클릭 시 지우는 함수
   function handleEventClick(clickInfo) {
-    if (confirm(`해당 이벤트를 삭제 하시겠습니까? '${clickInfo.event.title}'`)) {
-      clickInfo.event.remove();
+    //종료일자 -1
+    console.log(clickInfo.event);
+    var dateStr = clickInfo.event.endStr;
+    var parts = dateStr.split('-');
+    var year = parseInt(parts[0], 10);
+    var month = parseInt(parts[1], 10);
+    var day = parseInt(parts[2], 10);
+
+    var newDay = day - 1;
+    var newMonth = month;
+    var newYear = year;
+
+    if (newDay === 0) {
+      // 날짜가 0이면 이전 달로 이동
+      newMonth--;
+      if (newMonth === 0) {
+        // 이전 달이 0이면 작년 12월로 이동
+        newYear--;
+        newMonth = 12;
+      }
+
+      // 이전 달의 마지막 날짜를 계산
+      var lastDayOfPreviousMonth = new Date(newYear, newMonth, 0).getDate();
+      newDay = lastDayOfPreviousMonth;
     }
+
+    var newDateStr = newYear + '-' + String(newMonth).padStart(2, '0') + '-' + String(newDay).padStart(2, '0');
+
+    setStartDate(clickInfo.event.startStr);
+    setEndDate(newDateStr);
+    setClickView(true);
+    setEvent(clickInfo.event);
   }
   //CalendarWorkModal on/off
   const [calendarWorkModal, setCalendarWorkModal] = React.useState(false);

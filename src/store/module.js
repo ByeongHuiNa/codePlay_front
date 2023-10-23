@@ -95,7 +95,9 @@ export const useLeaveTab = create(
 export const useCalendarDrawer = create(
   devtools((set) => ({
     view: false,
-    setView: (newView) => set(() => ({ view: newView }))
+    clickView: false,
+    setView: (newView) => set(() => ({ view: newView })),
+    setClickView: (newClickView) => set(() => ({ clickView: newClickView }))
   }))
 );
 
