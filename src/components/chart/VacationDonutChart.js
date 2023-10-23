@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Grid } from '../../../node_modules/@mui/material/index';
+import { Grid, Typography } from '../../../node_modules/@mui/material/index';
 import ReactApexChart from 'react-apexcharts';
 import { useState } from 'react';
 import { useEffect } from 'react';
@@ -10,7 +10,7 @@ import MainCard from 'components/MainCard';
 const barChartOptions = {
   chart: {
     type: 'donut',
-    
+
     toolbar: {
       show: false,
       name
@@ -20,7 +20,7 @@ const barChartOptions = {
     pie: {
       donut: {
         labels: {
-          show:true
+          show: true
         }
       }
     }
@@ -76,15 +76,36 @@ export default function VacationDonutChart() {
     <>
       <Grid>
         <ReactApexChart options={options} series={series} type="donut" height={190} />
-        <Grid container rowSpacing={4} columnSpacing={1}>
+        <Grid container rowSpacing={4} columnSpacing={1} sx={{mt:0.5}}>
           <Grid item xs={4}>
-            <MainCard title="전체 휴가">15</MainCard>
+            <MainCard>
+              <Typography variant="h5" style={{ textAlign: 'center' }}>
+                전체 휴가
+              </Typography>
+              <Typography variant="h5" style={{ textAlign: 'center' }}>
+                15
+              </Typography>
+            </MainCard>
           </Grid>
           <Grid item xs={4}>
-            <MainCard title="사용 휴가">3</MainCard>
+            <MainCard>
+            <Typography variant="h5" style={{ textAlign: 'center' }}>
+                사용 휴가
+              </Typography>
+              <Typography variant="h5" style={{ textAlign: 'center' }}>
+                3
+              </Typography>
+            </MainCard>
           </Grid>
           <Grid item xs={4}>
-            <MainCard title="잔여 휴가">12</MainCard>
+            <MainCard>
+            <Typography variant="h5" style={{ textAlign: 'center' }}>
+                잔여 휴가
+              </Typography>
+              <Typography variant="h5" style={{ textAlign: 'center' }}>
+                12
+              </Typography>
+            </MainCard>
           </Grid>
         </Grid>
       </Grid>

@@ -15,8 +15,8 @@ export const INITIAL_EVENTS = [
   {
     title: 'Meeting',
     start: new Date(),
-    color: 'black',
-    textColor: 'yellow'
+    color: '#b9e7ff',
+    textColor: '#16b1ff'
   },
   {
     title: 'Meeting',

@@ -7,7 +7,7 @@ import InputSeach from 'components/Input/InputSearch';
 import { Grid } from '../../node_modules/@mui/material/index';
 
 //icon import
-import { useDetailCardState, useTabState, useTableListState } from 'store/module';
+import { useCriteria, useDetailCardState, useTabState, useTableListState } from 'store/module';
 import { useEffect } from 'react';
 import axios from '../../node_modules/axios/index';
 import SettingAttendancePolicyTable from 'components/Table/SettingAttendancePolicyTable';
@@ -22,13 +22,13 @@ const SettingAttendancePolicy = () => {
   const { setIndex, setTab } = useTabState();
   const { setTableList } = useTableListState();
   const { view, setView } = useDetailCardState();
-
-  const endPoints = ['http://localhost:8000/policy_count', 'http://localhost:8000/get_user_authority_list?role=ROLE_USER'];
+  const { setSearch } = useCriteria();
 
   //화면 초기값 셋팅
   useEffect(() => {
     setIndex(0);
     async function get() {
+      const endPoints = ['http://localhost:8000/policy_count', 'http://localhost:8000/role_query_list'];
       const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
       const tabs = [];
       for (let i of result[0].data) {
@@ -42,6 +42,7 @@ const SettingAttendancePolicy = () => {
       setTab(tabs);
       setTableList(result[1].data);
       setView(false);
+      setSearch('');
     }
     get();
   }, []);

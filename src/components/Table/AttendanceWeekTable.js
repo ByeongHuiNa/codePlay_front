@@ -56,49 +56,49 @@ function stableSort(array, comparator) {
 const headCells = [
   {
     id: 'name',
-    align: 'left',
+    align: 'center',
     disablePadding: false,
     label: '이름'
   },
   {
     id: 'position',
-    align: 'left',
+    align: 'center',
     disablePadding: true,
     label: '직책'
   },
   {
     id:  'mon',
-    align: 'right',
+    align: 'center',
     disablePadding: false,
     label: '월'
   },
   {
     id:  'tues',
-    align: 'right',
+    align: 'center',
     disablePadding: false,
     label: '화'
   },
   {
     id:  'wednes',
-    align: 'right',
+    align: 'center',
     disablePadding: false,
     label: '수'
   },
   {
     id:  'thurs',
-    align: 'right',
+    align: 'center',
     disablePadding: false,
     label: '목'
   },
   {
     id:  'fri',
-    align: 'right',
+    align: 'center',
     disablePadding: false,
     label: '금'
   },
   {
     id: 'weekhours',
-    align: 'right',
+    align: 'center',
     disablePadding: false,
     label: '주간근무시간'
   }
@@ -224,28 +224,28 @@ export default function AttendanceWeekTable() {
                   key={row.trackingNo}
                   selected={isItemSelected}
                 >
-                  <TableCell component="th" id={labelId} scope="row" align="left">
+                  <TableCell component="th" id={labelId} scope="row" align="center">
                     <Link color="secondary" component={RouterLink} to="">
                       {row.name}
                     </Link>
                   </TableCell>
-                  <TableCell align="left">{row.position}</TableCell>
-                  <TableCell align="right">
+                  <TableCell align="center">{row.position}</TableCell>
+                  <TableCell align="center">
                     <AttendanceWeekStatus status={row.mon} />
                   </TableCell>
-                  <TableCell align="right">
+                  <TableCell align="center">
                     <AttendanceWeekStatus status={row.tues} />
                   </TableCell>
-                  <TableCell align="right">
+                  <TableCell align="center">
                     <AttendanceWeekStatus status={row.wednes} />
                   </TableCell>
-                  <TableCell align="right">
+                  <TableCell align="center">
                     <AttendanceWeekStatus status={row.thurs} />
                   </TableCell>
-                  <TableCell align="right">
+                  <TableCell align="center">
                     <AttendanceWeekStatus status={row.fri} />
                   </TableCell>
-                  <TableCell align="right">
+                  <TableCell align="center">
                     40시간
                   </TableCell>
                   

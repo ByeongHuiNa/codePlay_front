@@ -442,16 +442,6 @@
     "user_dept": "개발1팀"
   }
 ], 
-"user_information" : {
-  "user_profile": "https://picsum.photos/200",
-  "dept_name": "개발팀",
-  "user_name": "Dylan",
-  "user_position": "연구원",
-  "user_birth_date": "1960-01-24",
-  "user_email": "dylan@douzon.com",
-  "user_phone" : "010-0000-0000",
-  "user_address" : "서울특별시 종로구 창경궁로 254"
-},
 "role_count" : [
   { "role_level":"0", "role_name": "사용자", "count" : 200 },
   { "role_level":"1", "role_name": "근태담당자", "count" : 30 },
@@ -459,23 +449,56 @@
   { "role_level":"3", "role_name": "메인관리자", "count" : 2 },
   { "role_level":"4", "role_name" : "맞춤", "count" : 5}
 ],
-"role_query_user_detail":{
-    "user_no": 0,
-    "user_profile": "https://picsum.photos/200",
-    "dept_name": "개발팀",
-    "user_name": "Dylan",
-    "user_position": "연구원",
-    "role" : [{
-      "role_level": 0,
-      "role_name": "사용자",
-      "role_designated_date": "1960-01-24"
-    },{
-      "role_level": 1,
-      "role_name": "근태담당자",
-      "role_designated_date": "1960-01-24"
-    }  ]
-  },
-  "user_information": {
+  "role_query_user_detail": [
+    {
+      "user_no": 0,
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발팀",
+      "user_name": "Dylan",
+      "user_position": "연구원",
+      "role": [
+        {
+          "role_level": 0,
+          "role_name": "사용자",
+          "role_designated_date": "1960-01-24"
+        },
+        {
+          "role_level": 1,
+          "role_name": "근태담당자",
+          "role_designated_date": "1960-01-24",
+          "attend_ma": [
+            {
+              "dept_no": 0,
+              "attend_ma_designated_date": "2023-10-20"
+            },
+            {
+              "dept_no": 1,
+              "attend_ma_designated_date": "2023-10-20"
+            },
+            {
+              "dept_no": 2,
+              "attend_ma_designated_date": "2023-10-20"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "user_no": 1,
+      "user_profile": "https://picsum.photos/200",
+      "dept_name": "개발2팀",
+      "user_name": "Christian",
+      "user_position": "연구원",
+      "role": [
+        {
+          "role_level": 0,
+          "role_name": "사용자",
+          "role_designated_date": "1960-01-24"
+        }
+      ]
+    }
+  ],
+  "user_information": [{
     "user_no": 0,
     "user_profile": "https://picsum.photos/200",
     "dept_name": "개발팀",
@@ -483,36 +506,21 @@
     "user_position": "연구원",
     "user_birth_date": "1960-01-24",
     "user_email": "dylan@douzon.com",
-    "user_phone": "010-5698-5321",
-    "user_address": "서울특별시 종로구 창경궁로 254"
+    "user_phone": "010-5698-0001",
+    "user_address": "서울특별시 종로구 창경궁로 254-123"
   },
-  "role_count": [
-    {
-      "role_level": "0",
-      "role_name": "사용자",
-      "count": 200
-    },
-    {
-      "role_level": "1",
-      "role_name": "근태담당자",
-      "count": 30
-    },
-    {
-      "role_level": "2",
-      "role_name": "관리자",
-      "count": 10
-    },
-    {
-      "role_level": "3",
-      "role_name": "메인관리자",
-      "count": 2
-    },
-    {
-      "role_level": "4",
-      "role_name": "맞춤",
-      "count": 5
-    }
-  ],
+  {
+    "user_no": 1,
+    "user_profile": "https://picsum.photos/200",
+    "dept_name": "개발1팀",
+    "user_name": "Christian",
+    "user_position": "연구원",
+    "user_birth_date": "1960-01-24",
+    "user_email": "dylan@douzon.com",
+    "user_phone": "010-5698-0001",
+    "user_address": "서울특별시 종로구 창경궁로 254-123"
+  }
+],
   "policy_count": [
     {
       "policy_no": "0",
@@ -538,7 +546,7 @@
       "user_position": "연구원"
     },
     {
-      "user_no": "",
+      "user_no": 1,
       "dept_name": "개발1팀",
       "user_name": "Christian",
       "user_position": "연구원"
@@ -1354,7 +1362,7 @@
       "user_birth_date": "1960-01-24"
     },
     {
-      "user_no": "",
+      "user_no": 1,
       "user_profile": "https://picsum.photos/200",
       "dept_name": "개발1팀",
       "user_name": "Christian",

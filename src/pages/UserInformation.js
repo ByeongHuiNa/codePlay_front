@@ -26,7 +26,7 @@ const UserInformation = () => {
   useEffect(() => {
     async function get() {
       const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
-      setProfile(result[0].data);
+      setProfile(result[0].data[0]);
     }
     get();
   }, []);
