@@ -95,6 +95,22 @@ export const useLeaveTab = create(
 export const useCalendarDrawer = create(
   devtools((set) => ({
     view: false,
-    setView: (newView) => set(() => ({ view: newView })),
+    setView: (newView) => set(() => ({ view: newView }))
+  }))
+);
+
+export const useCalendarDate = create(
+  devtools((set) => ({
+    startDate: {},
+    endDate: {},
+    setStartDate: (newStartDate) => set(() => ({ startDate: newStartDate })),
+    setEndDate: (newEndDate) => set(() => ({ endDate: newEndDate }))
+  }))
+);
+
+export const useCalendarEvent = create(
+  devtools((set) => ({
+    event: {},
+    setEvent: (newEvent) => set(() => ({ event: newEvent }))
   }))
 );
