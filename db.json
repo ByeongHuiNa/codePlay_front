@@ -267,7 +267,8 @@
     "user_position": "사장",
     "user_email": "aaa1@aaa.com",
     "user_phone": "010-2222-2222",
-    "user_profile": "https://picsum.photos/201"
+    "user_profile": "https://picsum.photos/201",
+    "user_dept": "개발1팀"
   },
   {
     "user_no": 2,
@@ -275,7 +276,8 @@
     "user_position": "대리",
     "user_email": "aaa2@aaa.com",
     "user_phone": "010-3333-3333",
-    "user_profile": "https://picsum.photos/202"
+    "user_profile": "https://picsum.photos/202",
+    "user_dept": "개발1팀"
   },
   {
     "user_no": 3,
@@ -283,7 +285,8 @@
     "user_position": "주임",
     "user_email": "aaa3@aaa.com",
     "user_phone": "010-4444-4444",
-    "user_profile": "https://picsum.photos/203"
+    "user_profile": "https://picsum.photos/203",
+    "user_dept": "개발1팀"
   },
   {
     "user_no": 4,
@@ -291,7 +294,8 @@
     "user_position": "부장",
     "user_email": "aaa4@aaa.com",
     "user_phone": "010-5555-5555",
-    "user_profile": "https://picsum.photos/204"
+    "user_profile": "https://picsum.photos/204",
+    "user_dept": "개발1팀"
   },
   {
     "user_no": 5,
@@ -299,7 +303,8 @@
     "user_position": "회장",
     "user_email": "aaa5@aaa.com",
     "user_phone": "010-6666-6666",
-    "user_profile": "https://picsum.photos/205"
+    "user_profile": "https://picsum.photos/205",
+    "user_dept": "개발1팀"
   },
   {
     "user_no": 6,
@@ -307,7 +312,8 @@
     "user_position": "대리",
     "user_email": "aaa6@aaa.com",
     "user_phone": "010-7777-7777",
-    "user_profile": "https://picsum.photos/206"
+    "user_profile": "https://picsum.photos/206",
+    "user_dept": "개발1팀"
   },
   {
     "user_no": 7,
@@ -315,7 +321,8 @@
     "user_position": "주임",
     "user_email": "aaa7@aaa.com",
     "user_phone": "010-8888-8888",
-    "user_profile": "https://picsum.photos/207"
+    "user_profile": "https://picsum.photos/207",
+    "user_dept": "개발1팀"
   },
   {
     "user_no": 8,
@@ -323,7 +330,8 @@
     "user_position": "사원",
     "user_email": "aaa8@aaa.com",
     "user_phone": "010-9999-9999",
-    "user_profile": "https://picsum.photos/208"
+    "user_profile": "https://picsum.photos/208",
+    "user_dept": "개발1팀"
   },
   {
     "user_no": 9,
@@ -331,7 +339,8 @@
     "user_position": "부장",
     "user_email": "aaa9@aaa.com",
     "user_phone": "010-1010-1010",
-    "user_profile": "https://picsum.photos/209"
+    "user_profile": "https://picsum.photos/209",
+    "user_dept": "개발1팀"
   },
   {
     "user_no": 10,
@@ -339,7 +348,8 @@
     "user_position": "이사",
     "user_email": "aaa10@aaa.com",
     "user_phone": "010-1111-1111",
-    "user_profile": "https://picsum.photos/210"
+    "user_profile": "https://picsum.photos/210",
+    "user_dept": "개발1팀"
   },
   {
     "user_no": 11,
@@ -347,7 +357,8 @@
     "user_position": "대리",
     "user_email": "aaa11@aaa.com",
     "user_phone": "010-1212-1212",
-    "user_profile": "https://picsum.photos/211"
+    "user_profile": "https://picsum.photos/211",
+    "user_dept": "개발1팀"
   },
   {
     "user_no": 12,
@@ -355,7 +366,8 @@
     "user_position": "주임",
     "user_email": "aaa12@aaa.com",
     "user_phone": "010-1313-1313",
-    "user_profile": "https://picsum.photos/212"
+    "user_profile": "https://picsum.photos/212",
+    "user_dept": "개발1팀"
   },
   {
     "user_no": 13,
@@ -363,7 +375,8 @@
     "user_position": "사원",
     "user_email": "aaa13@aaa.com",
     "user_phone": "010-1414-1414",
-    "user_profile": "https://picsum.photos/213"
+    "user_profile": "https://picsum.photos/213",
+    "user_dept": "개발1팀"
   },
   {
     "user_no": 14,
@@ -371,7 +384,8 @@
     "user_position": "부장",
     "user_email": "aaa14@aaa.com",
     "user_phone": "010-1515-1515",
-    "user_profile": "https://picsum.photos/214"
+    "user_profile": "https://picsum.photos/214",
+    "user_dept": "개발1팀"
   },
   {
     "user_no": 15,
@@ -379,7 +393,8 @@
     "user_position": "이사",
     "user_email": "aaa15@aaa.com",
     "user_phone": "010-1616-1616",
-    "user_profile": "https://picsum.photos/215"
+    "user_profile": "https://picsum.photos/215",
+    "user_dept": "개발1팀"
   },
   {
     "user_no": 16,
@@ -387,7 +402,8 @@
     "user_position": "대리",
     "user_email": "aaa16@aaa.com",
     "user_phone": "010-1717-1717",
-    "user_profile": "https://picsum.photos/216"
+    "user_profile": "https://picsum.photos/216",
+    "user_dept": "개발1팀"
   },
   {
     "user_no": 17,
@@ -395,7 +411,8 @@
     "user_position": "주임",
     "user_email": "aaa17@aaa.com",
     "user_phone": "010-1818-1818",
-    "user_profile": "https://picsum.photos/217"
+    "user_profile": "https://picsum.photos/217",
+    "user_dept": "개발1팀"
   },
   {
     "user_no": 18,
@@ -403,7 +420,8 @@
     "user_position": "사원",
     "user_email": "aaa18@aaa.com",
     "user_phone": "010-1919-1919",
-    "user_profile": "https://picsum.photos/218"
+    "user_profile": "https://picsum.photos/218",
+    "user_dept": "개발1팀"
   },
   {
     "user_no": 19,
@@ -411,7 +429,8 @@
     "user_position": "부장",
     "user_email": "aaa19@aaa.com",
     "user_phone": "010-2020-2020",
-    "user_profile": "https://picsum.photos/219"
+    "user_profile": "https://picsum.photos/219",
+    "user_dept": "개발1팀"
   },
   {
     "user_no": 20,
@@ -419,7 +438,8 @@
     "user_position": "이사",
     "user_email": "aaa20@aaa.com",
     "user_phone": "010-2121-2121",
-    "user_profile": "https://picsum.photos/220"
+    "user_profile": "https://picsum.photos/220",
+    "user_dept": "개발1팀"
   }
 ], 
 "user_information" : {
