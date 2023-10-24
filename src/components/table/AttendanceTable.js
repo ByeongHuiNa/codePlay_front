@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 // material-ui
@@ -12,50 +12,52 @@ import { Box, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHea
 import Dot from 'components/@extended/Dot';
 import { Grid, Pagination } from '../../../node_modules/@mui/material/index';
 import MainCard from 'components/MainCard';
+import { useAttendanceState } from 'store/module';
+import axios from '../../../node_modules/axios/index';
 
-function createData(date, start, end, status) {
-  return { date, start, end, status };
-}
+// function createData(date, start, end, status) {
+//   return { date, start, end, status };
+// }
 
-const rows = [
-  createData(20231012, '09:00', '18:00', 0),
-  createData(20231012, '09:00', '18:00', 1),
-  createData(20231012, '09:00', '18:00', 2),
-  createData(20231012, '09:00', '18:00', 3),
-  createData(20231012, '09:00', '18:00', 4)
+// const rows = [
+//   createData(20231012, '09:00', '18:00', 0),
+//   createData(20231012, '09:00', '18:00', 1),
+//   createData(20231012, '09:00', '18:00', 2),
+//   createData(20231012, '09:00', '18:00', 3),
+//   createData(20231012, '09:00', '18:00', 4)
 
-  //   createData(98756325, 'Mobile', 355, 1, 90989),
-  //   createData(98652366, 'Handset', 50, 1, 10239),
-  //   createData(13286564, 'Computer Accessories', 100, 1, 83348),
-  //   createData(86739658, 'TV', 99, 0, 410780),
-  //   createData(13256498, 'Keyboard', 125, 2, 70999),
-];
+//   //   createData(98756325, 'Mobile', 355, 1, 90989),
+//   //   createData(98652366, 'Handset', 50, 1, 10239),
+//   //   createData(13286564, 'Computer Accessories', 100, 1, 83348),
+//   //   createData(86739658, 'TV', 99, 0, 410780),
+//   //   createData(13256498, 'Keyboard', 125, 2, 70999),
+// ];
 
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
+// function descendingComparator(a, b, orderBy) {
+//   if (b[orderBy] < a[orderBy]) {
+//     return -1;
+//   }
+//   if (b[orderBy] > a[orderBy]) {
+//     return 1;
+//   }
+//   return 0;
+// }
 
-function getComparator(order, orderBy) {
-  return order === 'desc' ? (a, b) => descendingComparator(a, b, orderBy) : (a, b) => -descendingComparator(a, b, orderBy);
-}
+// function getComparator(order, orderBy) {
+//   return order === 'desc' ? (a, b) => descendingComparator(a, b, orderBy) : (a, b) => -descendingComparator(a, b, orderBy);
+// }
 
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) {
-      return order;
-    }
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
+// function stableSort(array, comparator) {
+//   const stabilizedThis = array.map((el, index) => [el, index]);
+//   stabilizedThis.sort((a, b) => {
+//     const order = comparator(a[0], b[0]);
+//     if (order !== 0) {
+//       return order;
+//     }
+//     return a[1] - b[1];
+//   });
+//   return stabilizedThis.map((el) => el[0]);
+// }
 
 // ==============================|| ORDER TABLE - HEADER CELL ||============================== //
 
@@ -163,9 +165,22 @@ AttendanceStatus.propTypes = {
 export default function AttendanceTable() {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
-  const [selected] = useState([]);
+  //const [selected] = useState([]);
+  const { attendance, setAttendance } = useAttendanceState();
 
-  const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
+  useEffect(() => {
+    async function get() {
+      const endPoints = ['http://localhost:8000/attendance'];
+      const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
+       // result[0].data를 필터링하여 leave_status가 1인 데이터만 추출
+      //const filteredData = result[0].data.filter((item) => item.leave_status === 1);
+
+      setAttendance(result[0].data);
+    }
+    get();
+  }, []);
+
+  //const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
 
   return (
     <Box sx={{mt:3}}>
@@ -236,6 +251,35 @@ export default function AttendanceTable() {
         >
           <AttendanceTableHead order={order} orderBy={orderBy} />
           <TableBody>
+          {Object.values(attendance).slice(0,5).map((attendance) => (
+              // const isItemSelected = isSelected(row.date);
+              // const labelId = `enhanced-table-checkbox-${index}`;
+
+            
+                <TableRow
+                  hover
+                  role="checkbox"
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  //aria-checked={isItemSelected}
+                  tabIndex={-1}
+                  key={attendance.attend_no}
+                  //selected={isItemSelected}
+                >
+                  <TableCell component="th" id={attendance.attend_no} scope="row" align="center">
+                    <Link color="secondary" component={RouterLink} to="">
+                      {attendance.attend_date}
+                    </Link>
+                  </TableCell>
+                  <TableCell align="center">{attendance.attend_start}</TableCell>
+                  <TableCell align="center">{attendance.attend_end}</TableCell>
+                  <TableCell align="center">
+                    <AttendanceStatus status={attendance.attend_status} />
+                  </TableCell>
+                </TableRow>
+              
+            ))};
+          </TableBody>
+          {/* <TableBody>
             {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
               const isItemSelected = isSelected(row.date);
               const labelId = `enhanced-table-checkbox-${index}`;
@@ -263,7 +307,7 @@ export default function AttendanceTable() {
                 </TableRow>
               );
             })}
-          </TableBody>
+          </TableBody> */}
         </Table>
       </TableContainer>
       <Stack alignItems="center" mt={3}>
