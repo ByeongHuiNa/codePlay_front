@@ -67,7 +67,7 @@ const Main = () => {
                 더보기
               </Link>
             </div>
-            <Box clone my={2} align="center" sx={{ marginBottom: 5 }}>
+            <Box my={2} align="center" sx={{ marginBottom: 5 }}>
               <Avatar alt="프로필" src={profile.user_profile} sx={{ width: 150, height: 150 }} />
             </Box>
             <Typography align="center" variant="h5" component="div">
@@ -84,7 +84,7 @@ const Main = () => {
           <Typography align="left" variant="h5">
             출/퇴근
           </Typography>
-          <Box clone mt={4} mb={4} ml={3}>
+          <Box mt={4} mb={4} ml={3}>
             <Grid container justifyContent="center" spacing={1}>
               <Grid item xs={3} sm={3} md={3} lg={3}>
                 <Typography align="center" color="text.secondary">
@@ -101,7 +101,7 @@ const Main = () => {
               </Grid>
             </Grid>
           </Box>
-          <Box clone my={4} ml={3}>
+          <Box my={4} ml={3}>
             <Grid container justifyContent="center" spacing={1}>
               <Grid item xs={3} sm={3} md={3} lg={3}>
                 <Typography align="center" color="text.secondary">
@@ -118,18 +118,18 @@ const Main = () => {
               </Grid>
             </Grid>
           </Box>
-          <Box clone mb={2}>
+          <Box mb={2}>
             <Grid container justifyContent="center" spacing={1}>
               <Grid item>
                 <Button variant="outlined" size="large">
-                  <Box clone mx={6} onClick={postData}>
+                  <Box mx={6} onClick={postData}>
                     출근
                   </Box>
                 </Button>
               </Grid>
               <Grid item>
                 <Button variant="contained" size="large">
-                  <Box clone mx={6}>
+                  <Box mx={6}>
                     퇴근
                   </Box>
                 </Button>

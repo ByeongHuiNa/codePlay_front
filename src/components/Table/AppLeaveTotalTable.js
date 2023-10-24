@@ -253,7 +253,7 @@ export default function AppLeaveTotalTable({ requestLeaveCancel }) {
                   </TableCell>
                 </TableRow>
               ))}
-            ;
+            
           </TableBody>
           {/* <TableBody>
             {stableSort(datas, getComparator(order, orderBy)).map((data, index) => {
