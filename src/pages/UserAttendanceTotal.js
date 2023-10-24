@@ -225,7 +225,7 @@ const UserAttendanceTotalPage = () => {
                   </NativeSelect>
                 </FormControl>
               </div>
-              <AttendanceTable />
+              <AttendanceTable month={month3}/>
             </MainCard>
           </Grid>
 

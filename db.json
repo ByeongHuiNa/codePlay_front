@@ -2324,7 +2324,8 @@
       "leave_no": 0,
       "leave_total": 15,
       "leave_use": 4,
-      "leave_remain": 11
+      "leave_remain": 11,
+      "dept_name" : "개발1팀"
     },
     {
       "user_no": 1,
@@ -2332,7 +2333,8 @@
       "leave_no": 1,
       "leave_total": 17,
       "leave_use": 8,
-      "leave_remain": 9
+      "leave_remain": 9,
+      "dept_name" : "개발1팀"
     },
     {
       "user_no": 2,
@@ -2340,7 +2342,8 @@
       "leave_no": 2,
       "leave_total": 16,
       "leave_use": 6,
-      "leave_remain": 10
+      "leave_remain": 10,
+      "dept_name" : "개발1팀"
     },
     {
       "user_no": 3,
@@ -2348,7 +2351,8 @@
       "leave_no": 3,
       "leave_total": 18,
       "leave_use": 10,
-      "leave_remain": 8
+      "leave_remain": 8,
+      "dept_name" : "개발1팀"
     },
     {
       "user_no": 4,
@@ -2356,7 +2360,8 @@
       "leave_no": 4,
       "leave_total": 20,
       "leave_use": 12,
-      "leave_remain": 8
+      "leave_remain": 8,
+      "dept_name" : "개발1팀"
     }
   ],
   

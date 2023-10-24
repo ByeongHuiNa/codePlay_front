@@ -162,71 +162,95 @@ AttendanceStatus.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function AttendanceTable() {
+export default function AttendanceTable({ month }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   //const [selected] = useState([]);
   const { attendance, setAttendance } = useAttendanceState();
+  // const [total, setTotal] = useState(0); //출퇴근현황 개수
+  // const [normal, setNormal] = useState(0); //정상 출퇴근 개수
+  // const [problem, setProblem] = useState(0); //근태이상 개수
+  // const [leave, setLeave] = useState(0); //휴가 개수
 
   useEffect(() => {
     async function get() {
-      const endPoints = ['http://localhost:8000/leave_approval'];
+      const endPoints = ['http://localhost:8000/attendance'];
       const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
-       // result[0].data를 필터링하여 leave_status가 1인 데이터만 추출
-      //const filteredData = result[0].data.filter((item) => item.leave_status === 1);
+      // result[0].data를 필터링하여 leave_status가 1인 데이터만 추출
+      const filteredData = result[0].data.filter((item) => new Date(item.attend_date).getMonth()+1 == month );
+      console.log("달:" + filteredData);
+      console.log("월:" + month);
+      console.log("ㅋㅋ:" + result[0].data);
+      setAttendance(filteredData);
+      // const dateObject = new Date(result[0].data[0].attend_date);
+      // const month = dateObject.getMonth() + 1;
 
-      setAttendance(result[0].data);
+      //setTotal(result[0].data.length);
+
+      // for (let i = 0; i < result[0].data.length; i++) {
+      //   console.log('월: ' + month);
+
+      //   if (result[0].data[i].attend_status === 0) {
+      //     setNormal(normal + 1);
+      //   }
+      //   if (result[0].data[i].attend_status === 1) {
+      //     setLeave(leave + 1);
+      //   }
+      //   if (result[0].data[i].attend_status === 2 || result[0].data[i].attend_status === 3 || result[0].data[i].attend_status === 4) {
+      //     setProblem(problem + 1);
+      //   }
+      // }
     }
     get();
-  }, []);
+  }, [month]);
 
   //const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
 
   return (
-    <Box sx={{mt:3}}>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-      <Grid container xs={9} rowSpacing={4} columnSpacing={2.75}>
-        <Grid item xs={3}>
-          <MainCard>
-            <Typography variant="h4" style={{ textAlign: 'center' }}>
-              전체
-            </Typography>
-            <Typography variant="h5" style={{ textAlign: 'center' }}>
-              7건
-            </Typography>
-          </MainCard>
+    <Box sx={{ mt: 3 }}>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <Grid container xs={9} rowSpacing={4} columnSpacing={2.75}>
+          <Grid item xs={3}>
+            <MainCard>
+              <Typography variant="h4" style={{ textAlign: 'center' }}>
+                전체
+              </Typography>
+              <Typography variant="h5" style={{ textAlign: 'center' }}>
+                {/* {total}건 */}
+              </Typography>
+            </MainCard>
+          </Grid>
+          <Grid item xs={3}>
+            <MainCard>
+              <Typography variant="h4" style={{ textAlign: 'center' }}>
+                정상
+              </Typography>
+              <Typography variant="h5" style={{ textAlign: 'center' }}>
+                {/* {normal}건 */}
+              </Typography>
+            </MainCard>
+          </Grid>
+          <Grid item xs={3}>
+            <MainCard>
+              <Typography variant="h4" style={{ textAlign: 'center' }}>
+                근태이상
+              </Typography>
+              <Typography variant="h5" style={{ textAlign: 'center' }}>
+                {/* {problem}건 */}
+              </Typography>
+            </MainCard>
+          </Grid>
+          <Grid item xs={3}>
+            <MainCard>
+              <Typography variant="h4" style={{ textAlign: 'center' }}>
+                휴가
+              </Typography>
+              <Typography variant="h5" style={{ textAlign: 'center' }}>
+                {/* {leave}건 */}
+              </Typography>
+            </MainCard>
+          </Grid>
         </Grid>
-        <Grid item xs={3}>
-          <MainCard>
-            <Typography variant="h4" style={{ textAlign: 'center' }}>
-              정상
-            </Typography>
-            <Typography variant="h5" style={{ textAlign: 'center' }}>
-              7건
-            </Typography>
-          </MainCard>
-        </Grid>
-        <Grid item xs={3}>
-          <MainCard>
-            <Typography variant="h4" style={{ textAlign: 'center' }}>
-              근태이상
-            </Typography>
-            <Typography variant="h5" style={{ textAlign: 'center' }}>
-              0건
-            </Typography>
-          </MainCard>
-        </Grid>
-        <Grid item xs={3}>
-          <MainCard>
-            <Typography variant="h4" style={{ textAlign: 'center' }}>
-              휴가
-            </Typography>
-            <Typography variant="h5" style={{ textAlign: 'center' }}>
-              0건
-            </Typography>
-          </MainCard>
-        </Grid>
-      </Grid>
       </div>
       <TableContainer
         sx={{
@@ -251,11 +275,12 @@ export default function AttendanceTable() {
         >
           <AttendanceTableHead order={order} orderBy={orderBy} />
           <TableBody>
-          {Object.values(attendance).slice(0,5).map((attendance) => (
-              // const isItemSelected = isSelected(row.date);
-              // const labelId = `enhanced-table-checkbox-${index}`;
+            {Object.values(attendance)
+              .slice(0, 5)
+              .map((attendance) => (
+                // const isItemSelected = isSelected(row.date);
+                // const labelId = `enhanced-table-checkbox-${index}`;
 
-            
                 <TableRow
                   hover
                   role="checkbox"
@@ -276,8 +301,8 @@ export default function AttendanceTable() {
                     <AttendanceStatus status={attendance.attend_status} />
                   </TableCell>
                 </TableRow>
-              
-            ))};
+              ))}
+            
           </TableBody>
           {/* <TableBody>
             {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
