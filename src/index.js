@@ -16,6 +16,7 @@ import App from './App';
 import { store } from 'store';
 import reportWebVitals from './reportWebVitals';
 import CalendarDrawer from 'components/project/CalendarDrawer';
+import CalendarClickDrawer from 'components/project/CalendarClickDrawer';
 
 // ==============================|| MAIN - REACT DOM RENDER  ||============================== //
 
@@ -24,6 +25,7 @@ const root = createRoot(container); // createRoot(container!) if you use TypeScr
 root.render(
   <>
     <CalendarDrawer />
+    <CalendarClickDrawer />
     <StrictMode>
       <ReduxProvider store={store}>
         <BrowserRouter>

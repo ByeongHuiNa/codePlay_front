@@ -7,20 +7,11 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import { Grid, ListItemButton, Pagination } from '../../../node_modules/@mui/material/index';
+import { useCalendarMemoModal } from 'store/module';
 
+// eslint-disable-next-line react/prop-types
 export default function CalendarDepWorkMemo() {
-  // eslint-disable-next-line no-unused-vars
-  const handleToggle = (value) => () => {
-    // const currentIndex = checked.indexOf(value);
-    // const newChecked = [...checked];
-    // if (currentIndex === -1) {
-    //   newChecked.push(value);
-    // } else {
-    //   newChecked.splice(currentIndex, 1);
-    // }
-    // setChecked(newChecked);
-  };
-
+  const { setMemoView } = useCalendarMemoModal();
   return (
     <>
       <List sx={{ width: '110%', maxWidth: 360, bgcolor: 'background.paper' }}>
@@ -28,22 +19,22 @@ export default function CalendarDepWorkMemo() {
           return (
             <>
               <ListItem alignItems="flex-start" sx={{ p: 0.5 }}>
-                <ListItemButton role={undefined} onClick={handleToggle()} dense>
-                  <Grid container direction="row" justifyContent="space-between" alignItems="center">
+                <ListItemButton role={undefined} onClick={() => setMemoView(true)} dense>
+                  <Grid container direction="row" justifyContent="flex-start" alignItems="center">
                     <ListItemAvatar>
-                      <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ width: 28, height: 28, mb: 1 }} />
+                      <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ width: 30, height: 30 }} />
                     </ListItemAvatar>
                     <ListItemText>
-                      <Grid container direction="column" justifyContent="center" alignItems="flex-start">
+                      <Grid container direction="column" justifyContent="center" alignItems="flex-start" sx={{ ml: -1.5 }}>
                         <Typography component="span" variant="body2" color="text.primary">
                           {`이름 ${value}`}
                         </Typography>
-                        <Typography component="span" variant="body3" color="text.primary">
+                        <Typography component="span" variant="body3" color="text.primary" sx={{ textOverflow: 'ellipsis' }}>
                           {`사용자가 남긴 메모 내역`}
                         </Typography>
                       </Grid>
                     </ListItemText>
-                    <ListItemText primary={`9:0${value} AM`} />
+                    <ListItemText primary={`9:0${value} AM`} sx={{ ml: 2.5 }} />
                   </Grid>
                 </ListItemButton>
               </ListItem>

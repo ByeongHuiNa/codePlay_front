@@ -8,9 +8,12 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
-import { INITIAL_EVENTS, createEventId } from './event-utils';
+import { INITIAL_EVENTS } from './event-utils';
 import CalendarDepWorkListTab from './CalendarDepWorkListTab';
 import CalendarDepWorkMemo from './CalendarDepWorkMemo';
+import { useCalendarDate, useCalendarDrawer, useCalendarEvent, useCalendarEventClick, useCalendarMemoModal } from 'store/module';
+import CalendarMemoModal from './CalendarMemoModal';
+import CalendarMemoModalContent from './CalendarMemoModalContent';
 
 const PublicCalendar = () => {
   const Item = styled(Paper)(({ theme }) => ({
@@ -29,36 +32,68 @@ const PublicCalendar = () => {
       </>
     );
   }
+  //zustand
+  const { setClickView } = useCalendarDrawer();
+  const { setStartDate, setEndDate } = useCalendarDate();
+  const { setEvent } = useCalendarEvent();
 
-  //이벤트 생성 함수
-  function handleDateSelect(selectInfo) {
-    let title = prompt(`이벤트를 생성 하시겠습니까? ${selectInfo.startStr}`);
-    let calendarApi = selectInfo.view.calendar;
-    console.log(selectInfo.view);
-
-    calendarApi.unselect(); // clear date selection
-
-    if (title) {
-      calendarApi.addEvent({
-        id: createEventId(),
-        title,
-        start: selectInfo.startStr,
-        end: selectInfo.endStr,
-        allDay: selectInfo.allDay
-        // color: '#4582ec',
-        // textColor: 'yellow'
-      });
-    }
-  }
-  //이벤트 클릭 시 지우는 함수
+  //이벤트 클릭 시 수정하는 함수
+  const { setTitle, setAllDay } = useCalendarEventClick();
   function handleEventClick(clickInfo) {
-    if (confirm(`해당 이벤트를 삭제 하시겠습니까? '${clickInfo.event.title}'`)) {
-      clickInfo.event.remove();
+    //종료일자 -1
+    console.log(clickInfo.event);
+    if (clickInfo.event.endStr == !'') {
+      var dateStr = clickInfo.event.endStr;
+      var parts = dateStr.split('-');
+      var year = parseInt(parts[0], 10);
+      var month = parseInt(parts[1], 10);
+      var day = parseInt(parts[2], 10);
+
+      var newDay = day - 1;
+      var newMonth = month;
+      var newYear = year;
+
+      if (newDay === 0) {
+        // 날짜가 0이면 이전 달로 이동
+        newMonth--;
+        if (newMonth === 0) {
+          // 이전 달이 0이면 작년 12월로 이동
+          newYear--;
+          newMonth = 12;
+        }
+
+        // 이전 달의 마지막 날짜를 계산
+        var lastDayOfPreviousMonth = new Date(newYear, newMonth, 0).getDate();
+        newDay = lastDayOfPreviousMonth;
+      }
+
+      var newDateStr = newYear + '-' + String(newMonth).padStart(2, '0') + '-' + String(newDay).padStart(2, '0');
+    } else {
+      newDateStr = clickInfo.event.startStr;
     }
+    setStartDate(clickInfo.event.startStr);
+    setEndDate(newDateStr);
+    setClickView(true);
+    setEvent(clickInfo.event);
+    setTitle(clickInfo.event.title);
+    setAllDay(clickInfo.event.allDay);
   }
+
+  //CalendarMemoModal on/off
+  const { memoView } = useCalendarMemoModal();
+
+  const calendarWorkModalContent = () => {
+    return (
+      <>
+        <h2>메모 상세</h2>
+        <CalendarMemoModalContent />
+      </>
+    );
+  };
 
   return (
     <>
+      <CalendarMemoModal open={memoView}>{calendarWorkModalContent()}</CalendarMemoModal>
       <Box
         sx={{
           flexGrow: 1
@@ -80,7 +115,6 @@ const PublicCalendar = () => {
                 initialEvents={INITIAL_EVENTS}
                 eventContent={renderEventContent}
                 selectable={true}
-                select={handleDateSelect}
                 eventClick={handleEventClick}
                 dayMaxEventRows={true}
               />
@@ -103,7 +137,7 @@ const PublicCalendar = () => {
                     <h3>메모</h3>
                   </Grid>
                   <Grid>
-                    <CalendarDepWorkMemo></CalendarDepWorkMemo>
+                    <CalendarDepWorkMemo />
                   </Grid>
                 </Grid>
               </Item>
