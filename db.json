@@ -2377,6 +2377,20 @@
       "leave_total": 15,
       "leave_use": 4,
       "leave_remain": 11
+    },
+    {
+      "user_no": 1,
+      "leave_no": 1,
+      "leave_total": 15,
+      "leave_use": 4,
+      "leave_remain": 11
+    },
+    {
+      "user_no": 2,
+      "leave_no": 2,
+      "leave_total": 16,
+      "leave_use": 3,
+      "leave_remain": 13
     }
   ],
   
