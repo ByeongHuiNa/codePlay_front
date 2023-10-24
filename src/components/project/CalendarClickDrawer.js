@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import { useCalendarDate, useCalendarDrawer, useCalendarEvent } from 'store/module';
+import { useCalendarDate, useCalendarDrawer, useCalendarEvent, useCalendarEventClick } from 'store/module';
 import {
   Button,
   FormControl,
@@ -25,6 +25,7 @@ import { DateField } from '@mui/x-date-pickers/DateField';
 export default function CalendarClickDrawer() {
   //AddEventOnClick
   const { event } = useCalendarEvent();
+  const { title, setTitle, allDay, setAllDay } = useCalendarEventClick();
 
   const { clickView, setClickView } = useCalendarDrawer();
 
@@ -35,11 +36,9 @@ export default function CalendarClickDrawer() {
     setScheduleType(event.target.value);
   };
 
-  //제목 입력
-  const [tltle, setTltle] = React.useState(`${event}`);
-
+  //제목 수정
   const handleTitleChange = (e) => {
-    setTltle(e.target.value);
+    setTitle(e.target.value);
   };
 
   //내용 입력
@@ -50,10 +49,8 @@ export default function CalendarClickDrawer() {
   };
 
   //AllDay스위치 on/off
-  const [allDayType, setAllDayType] = React.useState(true);
-
   const handleAllDayTypeSwitchChange = () => {
-    setAllDayType((pre) => !pre);
+    setAllDay((pre) => !pre);
   };
 
   //LEAVETYPE스위치 on/off
@@ -84,11 +81,11 @@ export default function CalendarClickDrawer() {
     }
     setClickView(open);
     setScheduleType('');
-    setTltle('');
+    setTitle('');
     setContent('');
     setStartDatePicker(false);
     setEndDatePicker(false);
-    setAllDayType(true);
+    setAllDay(true);
     setShareType(false);
     setLeaveType(false);
     setLeaveHalfType(false);
@@ -146,7 +143,7 @@ export default function CalendarClickDrawer() {
               ml: 2
             }}
           >
-            Add Event
+            Edit Event
           </Typography>
         </Box>
         <Grid container direction="column" justifyContent="flex-start" alignItems="center" spacing={2}>
@@ -167,7 +164,7 @@ export default function CalendarClickDrawer() {
             {/* 휴가일정을 선택하면 연차 및 반차 버튼, 일자를 선택할 수 있고 확인 및 취소 버튼을 포함하고있다 */}
             {scheduleType === '개인 일정' || scheduleType === '회사 일정' ? (
               <>
-                <TextField sx={{ mt: 3 }} id="outlined-basic" label="제목" onChange={handleTitleChange} value={tltle} />
+                <TextField sx={{ mt: 3 }} id="outlined-basic" label="제목" onChange={handleTitleChange} value={title} />
                 <Grid container direction="row" justifyContent="flex-start" alignItems="center">
                   <FormControlLabel
                     sx={{
@@ -177,7 +174,7 @@ export default function CalendarClickDrawer() {
                     control={
                       <Switch
                         color="primary"
-                        checked={allDayType}
+                        checked={allDay}
                         onChange={handleAllDayTypeSwitchChange}
                         sx={{
                           justifyContent: 'flex-start' // 왼쪽 정렬
@@ -189,7 +186,7 @@ export default function CalendarClickDrawer() {
                   />
                 </Grid>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  {allDayType == true ? (
+                  {allDay == true ? (
                     <>
                       <DateField
                         sx={{
@@ -294,11 +291,22 @@ export default function CalendarClickDrawer() {
                   color="primary"
                   onClick={handleAddEventOnClick}
                   sx={{
-                    mt: 30
+                    mt: 28
                   }}
                 >
-                  일정 등록
+                  일정 수정
                 </Button>
+                <Button
+                    size="large"
+                    variant="contained"
+                    color="error"
+                    onClick={handleAddEventOnClick}
+                    sx={{
+                      mt: 2
+                    }}
+                  >
+                    일정 취소
+                  </Button>
               </>
             ) : (
               scheduleType && (
@@ -373,13 +381,13 @@ export default function CalendarClickDrawer() {
                   <Button
                     size="large"
                     variant="contained"
-                    color="primary"
+                    color="error"
                     onClick={handleAddEventOnClick}
                     sx={{
                       mt: 62
                     }}
                   >
-                    휴가 등록
+                    휴가 취소
                   </Button>
                 </>
               )

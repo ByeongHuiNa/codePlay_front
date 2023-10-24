@@ -29,14 +29,14 @@ export default function CalendarDepWorkList() {
             <>
               <ListItem alignItems="flex-start" sx={{ p: 0.5 }}>
                 <ListItemButton role={undefined} onClick={handleToggle()} dense>
-                  <Grid container direction="row" justifyContent="space-between" alignItems="center">
+                  <Grid container direction="row" justifyContent="flex-start" alignItems="center">
                     <ListItemAvatar>
-                      <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ width: 28, height: 28, mb: 1 }} />
+                      <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ width: 30, height: 30 }} />
                     </ListItemAvatar>
-                    <ListItemText primary={`이름 ${value}`} />
-                    <ListItemText primary={`일정 ${value}`} />
+                    <ListItemText primary={`이름 ${value}`} sx={{ ml: -1 }} />
+                    <ListItemText primary={`일정 ${value}`} sx={{ ml: 1, textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} />
                     <ListItemText>
-                      <Grid container direction="column" justifyContent="space-between" alignItems="center">
+                      <Grid container direction="column" justifyContent="space-between" alignItems="center" sx={{ ml: 1.5 }}>
                         <Typography component="span" variant="body2" color="text.primary">
                           {`2023-10-18 ~ `}
                         </Typography>

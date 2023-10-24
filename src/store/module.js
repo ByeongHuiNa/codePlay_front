@@ -116,3 +116,19 @@ export const useCalendarEvent = create(
     setEvent: (newEvent) => set(() => ({ event: newEvent }))
   }))
 );
+
+export const useCalendarEventClick = create(
+  devtools((set) => ({
+    title: '',
+    allDay: false,
+    setTitle: (newTitle) => set(() => ({ title: newTitle })),
+    setAllDay: (newAllDay) => set(() => ({ allDay: newAllDay }))
+  }))
+);
+
+export const useCalendarMemoModal = create(
+  devtools((set) => ({
+    memoView: false,
+    setMemoView: (newMemoView) => set(() => ({ memoView: newMemoView }))
+  }))
+);
