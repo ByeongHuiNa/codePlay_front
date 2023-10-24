@@ -67,7 +67,7 @@ export default function CalendarWorkModalContent({ handleClose }) {
   };
 
   const customList = (title, items) => (
-    <Card sx={{ mt: 7 }}>
+    <Card sx={{ mt: 7 , backgroundColor: '#e3f2fd' }}>
       <CardHeader
         sx={{ px: 2, py: 1 }}
         avatar={
@@ -111,7 +111,8 @@ export default function CalendarWorkModalContent({ handleClose }) {
                   }}
                 />
               </ListItemIcon>
-              <ListItemText id={labelId} primary={`List item ${value + 1}`} />
+              <ListItemText id={labelId} primary={`일정의 타이틀 ${value + 1}`} sx={{ ml: 2, overflow: 'auto' }} />
+              <ListItemText primary={`2023-10-18 ~ 2023-10-19`} sx={{ mr: -2, overflow: 'auto' }} />
             </ListItem>
           );
         })}
@@ -121,6 +122,7 @@ export default function CalendarWorkModalContent({ handleClose }) {
 
   return (
     <>
+      <Divider />
       <Grid container spacing={2} justifyContent="center" alignItems="center">
         <Grid item sx={{ width: '45%' }}>
           {customList('리스트에 보이는 일정', left)}
@@ -159,7 +161,7 @@ export default function CalendarWorkModalContent({ handleClose }) {
           variant="contained"
           color="primary" // 확인 버튼은 primary 스타일
           onClick={handleClose} // handleConfirm 함수를 호출하도록 설정
-          sx={{ mt: 4, mr: 2 }} // 상단 여백 및 우측 여백 설정
+          sx={{ mt: 6, mr: 2 }} // 상단 여백 및 우측 여백 설정
         >
           저장
         </Button>
@@ -168,7 +170,7 @@ export default function CalendarWorkModalContent({ handleClose }) {
           variant="contained"
           color="inherit" // 취소 버튼은 회색 스타일 (기본 스타일)
           onClick={handleClose} // handleCancel 함수를 호출하도록 설정
-          sx={{ mt: 4, mr: 2 }} // 상단 여백 설정
+          sx={{ mt: 6, mr: 2 }} // 상단 여백 설정
         >
           취소
         </Button>

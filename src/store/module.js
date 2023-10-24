@@ -102,7 +102,9 @@ export const useAccessPage = create(
 export const useCalendarDrawer = create(
   devtools((set) => ({
     view: false,
-    setView: (newView) => set(() => ({ view: newView }))
+    clickView: false,
+    setView: (newView) => set(() => ({ view: newView })),
+    setClickView: (newClickView) => set(() => ({ clickView: newClickView }))
   }))
 );
 
@@ -170,5 +172,21 @@ export const useCalendarEvent = create(
   devtools((set) => ({
     event: {},
     setEvent: (newEvent) => set(() => ({ event: newEvent }))
+  }))
+);
+
+export const useCalendarEventClick = create(
+  devtools((set) => ({
+    title: '',
+    allDay: false,
+    setTitle: (newTitle) => set(() => ({ title: newTitle })),
+    setAllDay: (newAllDay) => set(() => ({ allDay: newAllDay }))
+  }))
+);
+
+export const useCalendarMemoModal = create(
+  devtools((set) => ({
+    memoView: false,
+    setMemoView: (newMemoView) => set(() => ({ memoView: newMemoView }))
   }))
 );

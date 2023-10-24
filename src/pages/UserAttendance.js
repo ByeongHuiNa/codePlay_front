@@ -8,10 +8,9 @@ import MainCard from 'components/MainCard';
 import {
   Box,
   Button,
+  Checkbox,
   FormControl,
   FormControlLabel,
-  IconButton,
-  InputAdornment,
   Radio,
   RadioGroup,
   Stack,
@@ -25,23 +24,28 @@ import AttendUpdateModal from '../components/Modal/AttendUpdateModal';
 import UpdateAttendTable from 'components/Table/UpdateAttendTable';
 import BasicDatePicker from 'components/DatePicker/BasicDatePicker';
 import BasicChip from 'components/Chip/BasicChip';
-import { SearchOutlined, UploadOutlined } from '../../node_modules/@mui/icons-material/index';
+import { UploadOutlined } from '../../node_modules/@mui/icons-material/index';
 import TimePicker2 from 'components/DatePicker/TimePicker';
-import UserAttendTable from 'components/Table/UserAttendTable';
+import UserAllAttendTable from 'components/Table/UserAllAttendTable';
 import UserAttendInfoTable from 'components/Table/UserAttendInfoTable';
 import styled from 'styled-components';
+import axios from '../../node_modules/axios/index';
+import BasicAuto from 'components/AutoComplete/BasicAuto';
 
 const UserAttendance = () => {
   // 탭(0.출/퇴근수정, 1.수정요청목록)
   const [value, setValue] = useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
-    setUpdateTime('');
-    setAttendKind('');
-    setAttendDefault('');
+    setUpdateStartTime('');
+    setUpdateEndTime('');
+    setAttendStartDefault('');
+    setAttendEndDefault('');
     setSearchStartDate('');
     setSearchEndDate('');
     setSelectAttendData({});
+    setStartChecked(false);
+    setEndChecked(false);
   };
 
   // 탭 0. 출/퇴근 수정
@@ -66,27 +70,43 @@ const UserAttendance = () => {
   };
 
   // 출/퇴근 수정 폼
-  // 수정할 시간
-  const [updateTime, setUpdateTime] = useState('');
+  // 출근 : 수정할 시간
+  const [updateStartTime, setUpdateStartTime] = useState('');
+  // 퇴근 : 수정할 시간
+  const [updateEndTime, setUpdateEndTime] = useState('');
 
-  // 수정 요청 시 라디오 버튼
-  // 수정 요청 시 라디오 : 출/퇴근 선택
-  const [attendKind, setAttendKind] = useState('');
-  const handleKindRadioChange = (event) => {
-    setAttendKind(event.target.value);
+  // 수정 요청 시 체크 박스
+  // true : 체크 O, false : 체크 X
+  const [startChecked, setStartChecked] = useState(false);
+  const [endChecked, setEndChecked] = useState(false);
+
+  const handleStartChange = (e) => {
+    setStartChecked(e.target.checked);
   };
-  // 수정 요청 시 라디오 : 수정시간 기본값/직접입력 선택
-  const [attendDefault, setAttendDefault] = useState('');
-  const handleDefaultRadioChange = (event) => {
-    setAttendDefault(event.target.value);
+
+  const handleEndChange = (e) => {
+    setEndChecked(e.target.checked);
+  };
+
+  // 출근 수정 요청 시 라디오 : 수정시간 기본값/직접입력 선택
+  const [attendStartDefault, setAttendStartDefault] = useState('');
+  const handleDefaultStartChange = (event) => {
+    setAttendStartDefault(event.target.value);
+  };
+
+  // 퇴근 수정 요청 시 라디오 : 수정시간 기본값/직접입력 선택
+  const [attendEndDefault, setAttendEndDefault] = useState('');
+  const handleDefaultEndChange = (event) => {
+    setAttendEndDefault(event.target.value);
   };
 
   // 데이터를 선택할 때마다 리렌더링
   useEffect(() => {
     if (Object.keys(selectAttendData).length !== 0) {
-      setAttendKind('start');
-      setAttendDefault('default');
-      setUpdateTime('');
+      setAttendStartDefault('default');
+      setAttendEndDefault('default');
+      setUpdateStartTime('');
+      setUpdateEndTime('');
     }
   }, [selectAttendData]);
 
@@ -127,34 +147,41 @@ const UserAttendance = () => {
     width: 1;
   `;
 
-  // 더미 데이터 생성
-  function createData(date, startTime, endTime, status) {
-    return { date, startTime, endTime, status };
-  }
+  const user_no = 1;
+  const dept_no = 1;
+  const user_position = '팀장';
+  // 같은 부서의 근태담당자 (우선 지금은 팀장) 사용자 데이터
+  const [allUsers, setAllUsers] = useState([]);
+  // 1번(user_no) 사용자의 출/퇴근 기록 가져오기
+  const [attendDatas, setAttendDatas] = useState([]);
+  // 1번(user_no) 사용자의 출/퇴근 수정 기록 가져오기
+  const [attendEditDatas, setAttendEditDatas] = useState([]);
+  useEffect(() => {
+    axios.get(`http://localhost:8000/attendance?user_no=${user_no}`).then((res) => {
+      setAttendDatas(res.data);
+    });
+    axios.get(`http://localhost:8000/attendance_edit_approval?user_no=${user_no}`).then((res) => {
+      setAttendEditDatas(res.data);
+    });
+    axios.get(`http://localhost:8000/user?dept_no=${dept_no}&user_position=${user_position}`).then((res) => {
+      setAllUsers(res.data);
+    });
+  }, []);
 
-  const datas = [
-    createData('2023/10/11', '08:57:10', '18:05:12', 0),
-    createData('2023/10/12', '09:00:00', '18:00:00', 1),
-    createData('2023/10/13', '08:50:13', '18:12:58', 0),
-    createData('2023/10/14', '09:50:13', '18:12:58', 2),
-    createData('2023/10/15', '08:06:35', '18:07:26', 3),
-    createData('2023/10/16', '08:06:35', '18:07:26', 3),
-    createData('2023/10/17', '08:32:57', '18:01:13', 4),
-    createData('2023/10/18', '08:32:57', '18:01:13', 4),
-    createData('2023/10/19', '08:57:10', '18:05:12', 0),
-    createData('2023/10/20', '08:59:26', '18:21:06', 1),
-    createData('2023/10/21', '08:50:13', '18:12:58', 0),
-    createData('2023/10/22', '09:50:13', '18:12:58', 2),
-    createData('2023/10/23', '08:57:10', '18:05:12', 0),
-    createData('2023/10/24', '08:57:10', '18:05:12', 0),
-    createData('2023/10/25', '08:57:10', '18:05:12', 0),
-    createData('2023/10/26', '08:57:10', '18:05:12', 0),
-    createData('2023/10/27', '09:57:10', '18:05:12', 2),
-    createData('2023/10/28', '08:57:10', '17:05:12', 3),
-    createData('2023/10/29', '08:57:10', '18:05:12', 0),
-    createData('2023/10/30', '08:57:10', '18:05:12', 0),
-    createData('2023/10/31', '09:57:10', '18:05:12', 2)
-  ];
+  // 자동완성
+  // 사원선택에서 검색한 이름
+  const [searchName, setSearchName] = useState('');
+
+  // 사원선택의 자동완성 창에서 검색어 변경(검색) 될 때마다 searchName 설정
+  const handleSelectUser = (event, newValue) => {
+    setSearchName(newValue);
+  };
+
+  // 아직 사용하지 않은 데이터
+  console.log(searchStartDate);
+  console.log(searchEndDate);
+  console.log(updateStartTime);
+  console.log(updateEndTime);
 
   return (
     <ComponentSkeleton>
@@ -175,7 +202,12 @@ const UserAttendance = () => {
                     <Button onClick={handleOpenAll}>전체보기</Button>
                   </Box>
                   <Box mt={1}>
-                    <UserAttendTable datas={datas.filter((data) => data.status > 1)} handleMyCard={handleMyCard} height={'650px'} />
+                    <UserAllAttendTable
+                      datas={attendDatas.filter((data) => data.attend_status > 1)}
+                      handleMyCard={handleMyCard}
+                      height={'650px'}
+                      selectAttendData={selectAttendData}
+                    />
                   </Box>
                 </MainCard>
               </Grid>
@@ -214,65 +246,75 @@ const UserAttendance = () => {
                             <BasicChip label="제목" color="gray" />
                             <TextField size="small" />
                           </Box>
-                          <Box clone mt={2.5}>
+                          <Box clone mt={2.5} sx={{ display: 'flex' }}>
                             <BasicChip label="결재자" color="gray" />
-                            <TextField
+                            <BasicAuto
                               label="결재자"
-                              id="approver"
-                              type="search"
-                              size="small"
-                              sx={{
-                                width: '170px'
-                              }}
-                              InputProps={{
-                                endAdornment: (
-                                  <InputAdornment position="end">
-                                    <IconButton id="searchApp">
-                                      <SearchOutlined />
-                                    </IconButton>
-                                  </InputAdornment>
-                                )
-                              }}
+                              datas={allUsers}
+                              handleSelectUser={handleSelectUser}
+                              searchName={searchName}
+                              setSearchName={setSearchName}
                             />
                           </Box>
                           <Box clone mt={2.5}>
                             <BasicChip label="수정사항" color="gray" />
-                            <FormControl sx={{ ml: 1 }}>
-                              <RadioGroup
-                                row
-                                sx={{ justifyContent: 'center', alignItems: 'center' }}
-                                value={attendKind}
-                                onChange={handleKindRadioChange}
-                              >
-                                <FormControlLabel value="start" control={<Radio size="small" />} label="출근" />
-                                <FormControlLabel value="end" control={<Radio size="small" />} label="퇴근" />
-                              </RadioGroup>
-                            </FormControl>
+                            <Checkbox size="small" checked={startChecked} onChange={handleStartChange} />
+                            출근
+                            <Checkbox size="small" checked={endChecked} onChange={handleEndChange} />
+                            퇴근
                           </Box>
-                          <Box clone mt={2.5}>
-                            <BasicChip label="수정시간" color="gray" />
-                            <FormControl sx={{ ml: 1 }}>
-                              <RadioGroup
-                                row
-                                sx={{ justifyContent: 'center', alignItems: 'center' }}
-                                value={attendDefault}
-                                onChange={handleDefaultRadioChange}
-                              >
-                                <FormControlLabel value="default" control={<Radio size="small" />} label="기본값" />
-                                <FormControlLabel value="other" control={<Radio size="small" />} label="직접입력" />
-                              </RadioGroup>
-                            </FormControl>
-                            {attendDefault == 'other' && <TimePicker2 label={'수정시간'} setTime={setUpdateTime} />}
-                            {attendDefault == 'default' && (
-                              <TextField
-                                size="small"
-                                defaultValue={attendKind === 'start' ? '09 : 00 : 00' : '18 : 00 : 00'}
-                                key={attendKind}
-                                inputProps={{ readOnly: true }}
-                                sx={{ width: '30%' }}
-                              />
-                            )}
-                          </Box>
+                          {startChecked === true && (
+                            <Box clone mt={2.5}>
+                              <BasicChip label="출근수정시간" color="gray" />
+                              <FormControl sx={{ ml: 1 }}>
+                                <RadioGroup
+                                  row
+                                  sx={{ justifyContent: 'center', alignItems: 'center' }}
+                                  value={attendStartDefault}
+                                  onChange={handleDefaultStartChange}
+                                >
+                                  <FormControlLabel value="default" control={<Radio size="small" />} label="기본값" />
+                                  <FormControlLabel value="other" control={<Radio size="small" />} label="직접입력" />
+                                </RadioGroup>
+                              </FormControl>
+                              {attendStartDefault == 'other' && <TimePicker2 label={'출근수정시간'} setTime={setUpdateStartTime} />}
+                              {attendStartDefault == 'default' && (
+                                <TextField
+                                  size="small"
+                                  defaultValue="09:00:00"
+                                  key={attendStartDefault}
+                                  inputProps={{ readOnly: true }}
+                                  sx={{ width: '30%' }}
+                                />
+                              )}
+                            </Box>
+                          )}
+                          {endChecked === true && (
+                            <Box clone mt={2.5}>
+                              <BasicChip label="퇴근수정시간" color="gray" />
+                              <FormControl sx={{ ml: 1 }}>
+                                <RadioGroup
+                                  row
+                                  sx={{ justifyContent: 'center', alignItems: 'center' }}
+                                  value={attendEndDefault}
+                                  onChange={handleDefaultEndChange}
+                                >
+                                  <FormControlLabel value="default" control={<Radio size="small" />} label="기본값" />
+                                  <FormControlLabel value="other" control={<Radio size="small" />} label="직접입력" />
+                                </RadioGroup>
+                              </FormControl>
+                              {attendEndDefault == 'other' && <TimePicker2 label={'퇴근수정시간'} setTime={setUpdateEndTime} />}
+                              {attendEndDefault == 'default' && (
+                                <TextField
+                                  size="small"
+                                  defaultValue="18:00:00"
+                                  key={attendEndDefault}
+                                  inputProps={{ readOnly: true }}
+                                  sx={{ width: '30%' }}
+                                />
+                              )}
+                            </Box>
+                          )}
                           <Box clone mt={2.5}>
                             <BasicChip label="증빙 업로드" color="gray" />
                             <Button component="label" variant="contained" size="medium" endIcon={<UploadOutlined />}>
@@ -282,7 +324,7 @@ const UserAttendance = () => {
                           </Box>
                           <Box clone mt={2.5} mr={1}>
                             <BasicChip label="수정사유" color="gray" />
-                            <TextField multiline rows={5} sx={{ width: '84%' }} />
+                            <TextField multiline rows={3} sx={{ width: '84%' }} />
                           </Box>
                           <Stack direction="row" justifyContent="flex-end" mt={2.5} mr={1}>
                             <Button variant="contained">결재완료</Button>
@@ -311,7 +353,7 @@ const UserAttendance = () => {
               <Button variant="contained">검색</Button>
             </Grid>
           </Grid>
-          <UserAttendTable datas={datas} handleMyCard={setSearchAttendData} height={'470px'} />
+          <UserAllAttendTable datas={attendDatas} handleMyCard={setSearchAttendData} searchAttendData={searchAttendData} height={'470px'} />
           <Grid container justifyContent="right" spacing={1} sx={{ mt: 2 }}>
             <Grid item>
               <Button variant="contained" size="medium" onClick={handleCloseAll}>
@@ -328,16 +370,16 @@ const UserAttendance = () => {
       </BasicTab>
       <BasicTab value={value} index={1}>
         <Box clone mx={1} my={1} pb={2}>
-          <BasicContainer>
+          <BasicContainer sx={{ height: '760px' }}>
             <Grid container>
               <Grid item xs={3} md={3} lg={3}>
-                <Typography variant="h4">출/퇴근 정정 요청 목록</Typography>
+                <Typography variant="h4">출/퇴근 수정 요청 목록</Typography>
               </Grid>
               <Grid item xs={9} md={9} lg={9}>
                 <Grid container justifyContent="right" spacing={1}>
                   <Grid item sx={{ mt: 0.3 }}>
                     <Button variant="contained" color="secondary">
-                      전체 ({searchStartDate} ~ {searchEndDate})
+                      전체
                     </Button>
                   </Grid>
                   <Grid item>
@@ -348,14 +390,14 @@ const UserAttendance = () => {
                   </Grid>
                   <Grid item sx={{ mt: 0.3 }}>
                     <Button variant="contained" color="secondary">
-                      조회 {updateTime}
+                      조회
                     </Button>
                   </Grid>
                 </Grid>
               </Grid>
             </Grid>
             <MainCard sx={{ mt: 2 }} content={false}>
-              <UpdateAttendTable handleOpenRead={handleOpenRead} />
+              <UpdateAttendTable handleOpenRead={handleOpenRead} datas={attendEditDatas} />
             </MainCard>
           </BasicContainer>
         </Box>

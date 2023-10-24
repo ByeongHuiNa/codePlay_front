@@ -16,19 +16,19 @@ import AttendancePolicyDetailCard from 'components/Card/AttendancePolicyDetailCa
 
 //zustand import
 
-// ==============================|| 관리자 권한관리 PAGE ||============================== //
+// ==============================|| 관리자 출퇴근 정책관리 PAGE ||============================== //
 
 const SettingAttendancePolicy = () => {
-  const { setIndex, setTab } = useTabState();
+  const { setIndex, setTab, index } = useTabState();
   const { setTableList } = useTableListState();
   const { view, setView } = useDetailCardState();
-  const { setSearch } = useCriteria();
+  const { setPage, setSearch } = useCriteria();
 
   //화면 초기값 셋팅
   useEffect(() => {
     setIndex(0);
     async function get() {
-      const endPoints = ['http://localhost:8000/policy_count', 'http://localhost:8000/role_query_list'];
+      const endPoints = ['http://localhost:8000/policy_count'];
       const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
       const tabs = [];
       for (let i of result[0].data) {
@@ -40,13 +40,22 @@ const SettingAttendancePolicy = () => {
         tabs.push(tab_temp);
       }
       setTab(tabs);
-      setTableList(result[1].data);
       setView(false);
       setSearch('');
     }
     get();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    async function get() {
+      setPage(1);
+      const result = await axios.get(`http://localhost:8000/user_policy_list?policy_no=${index}&_page=1&_limit=7`);
+      setTableList(result.data);
+      setView(false);
+    }
+    get();
+  }, [index]);
 
   return (
     <>
