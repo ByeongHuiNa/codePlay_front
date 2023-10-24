@@ -22,7 +22,7 @@ const Main = () => {
 
   useEffect(() => {
     async function get() {
-      const endPoints = ['http://localhost:8000/user_information'];
+      const endPoints = ['/user_information'];
       const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
       setProfile(result[0].data[0]);
     }
