@@ -29,10 +29,10 @@ import UserAttendInfoTable from 'components/Table/UserAttendInfoTable';
 import BasicAuto from 'components/AutoComplete/BasicAuto';
 import axios from '../../node_modules/axios/index';
 import SelectUserTable from 'components/Table/SelectUserTable';
-import AttendUpdateModal from 'components/Modal/AttendUpdateModal';
 import UserAllLeaveTable from 'components/Table/UserAllLeaveTable';
 import UserLeaveInfoTable from 'components/Table/UserLeaveInfoTable';
 import Dot from 'components/@extended/Dot';
+import ModalM from 'components/Modal/ModalM';
 
 const ModifyAttendance = () => {
   // Tab : 0.출/퇴근, 1.휴가
@@ -495,7 +495,7 @@ const ModifyAttendance = () => {
                               <BasicChip label="수정사유" color="gray" />
                               <TextField multiline rows={5} sx={{ width: '84%' }} />
                             </Box>
-                            <Stack direction="row" justifyContent="flex-end" mt={2} mr={1.5}>
+                            <Stack direction="row" justifyContent="flex-end" mt={2} mr={3}>
                               <Button variant="contained">결재완료</Button>
                             </Stack>
                           </Grid>
@@ -503,7 +503,7 @@ const ModifyAttendance = () => {
                       </MainCard>
                     </>
                   )}
-                  <AttendUpdateModal open={openAll} handleClose={handleCloseAll}>
+                  <ModalM open={openAll} handleClose={handleCloseAll}>
                     <Grid container alignItems="center" direction="row" spacing={1} sx={{ mb: 2 }}>
                       <Grid item xs={3.5} md={3.5} lg={4}>
                         <Typography variant="h5">전체 근태 내역</Typography>
@@ -531,7 +531,7 @@ const ModifyAttendance = () => {
                         </Button>
                       </Grid>
                     </Grid>
-                  </AttendUpdateModal>
+                  </ModalM>
                 </ApprovalTab>
                 <ApprovalTab value={value} index={1} border={'none'}>
                   <MainCard sx={{ pt: 2, pr: 2, pl: 2, height: '690px' }} content={false}>
@@ -626,7 +626,7 @@ const ModifyAttendance = () => {
                       </Grid>
                     </Box>
                   </MainCard>
-                  <AttendUpdateModal open={openAllLeave} handleClose={handleCloseAllLeave}>
+                  <ModalM open={openAllLeave} handleClose={handleCloseAllLeave}>
                     <Grid container alignItems="center" direction="row" spacing={1} sx={{ mb: 2 }}>
                       <Grid item xs={3.5} md={3.5} lg={4}>
                         <Typography variant="h5">전체 휴가 내역</Typography>
@@ -659,7 +659,7 @@ const ModifyAttendance = () => {
                         </Button>
                       </Grid>
                     </Grid>
-                  </AttendUpdateModal>
+                  </ModalM>
                 </ApprovalTab>
               </Grid>
             </Grid>

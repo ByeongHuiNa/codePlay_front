@@ -189,7 +189,9 @@ export default function UpdateAttendTable({ handleOpenRead, datas }) {
                   tabIndex={-1}
                   key={data.date}
                   selected={isItemSelected}
-                  onClick={handleOpenRead}
+                  onClick={() => {
+                    handleOpenRead(data);
+                  }}
                 >
                   <TableCell component="th" id={labelId} scope="data" align="center">
                     {data.attendedit_date}
@@ -200,7 +202,7 @@ export default function UpdateAttendTable({ handleOpenRead, datas }) {
                     {data.attendedit_kind === 0 ? '출근' : data.attendedit_kind === 1 ? '퇴근' : '출근/퇴근'}
                   </TableCell>
                   <TableCell align="center">
-                    <OrderStatus status={data.attendapp_status} handleOpenRead={handleOpenRead} />
+                    <OrderStatus status={data.attendapp_status} />
                   </TableCell>
                 </TableRow>
               );

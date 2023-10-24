@@ -2,7 +2,7 @@ import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
-export default function BasicAuto({ datas, handleSelectUser, setSearchName }) {
+export default function AppAuto({ datas, handleSelectUser, setSearchName, setApprover }) {
   const [inputValue, setInputValue] = React.useState('');
 
   const handleInputChange = (event, newInputValue) => {
@@ -25,8 +25,8 @@ export default function BasicAuto({ datas, handleSelectUser, setSearchName }) {
       disablePortal
       id="combo-box-demo"
       options={datas}
-      getOptionLabel={(option) => option.user_name} // 각 항목에서 렌더링할 라벨을 추출하는 함수
-      sx={{ width: 150 }}
+      getOptionLabel={(option) => `${option.user_name} ${option.user_position}`} // 사원명 + 직책
+      sx={{ width: 160 }}
       size="small"
       inputValue={inputValue}
       onInputChange={handleInputChange}
@@ -35,6 +35,7 @@ export default function BasicAuto({ datas, handleSelectUser, setSearchName }) {
       onChange={(event, newValue, selectOption) => {
         if (selectOption == 'selectOption') {
           console.log('선택됨');
+          setApprover(newValue);
         }
         handleSelectUser(event, newValue);
       }}

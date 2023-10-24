@@ -148,7 +148,7 @@ OrderStatus.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function AppLeaveTable({ requestLeaveCancel }) {
+export default function AppLeaveTable({ requestLeaveCancel, handleOpen }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
@@ -205,6 +205,7 @@ export default function AppLeaveTable({ requestLeaveCancel }) {
                   tabIndex={-1}
                   key={data.date}
                   selected={isItemSelected}
+                  onClick={() => handleOpen(data)}
                 >
                   <TableCell component="th" id={labelId} scope="data" align="center">
                     {data.leaveStart}
