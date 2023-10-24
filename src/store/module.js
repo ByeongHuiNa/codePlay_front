@@ -92,6 +92,13 @@ export const useLeaveTab = create(
   }))
 );
 
+export const useAccessPage = create(
+  devtools((set) => ({
+    accessPage: {},
+    setAccessPage: (newAccessPage) => set(() => ({ accessPage: newAccessPage }))
+  }))
+);
+
 export const useCalendarDrawer = create(
   devtools((set) => ({
     view: false,
@@ -110,6 +117,43 @@ export const useCalendarDate = create(
   }))
 );
 
+//휴가결재내역(승인, 반려, 대기)
+export const useAllApprovalState1 = create(
+  devtools((set) => ({
+    app: {},
+    setApp: (newApp) => set(() => ({ app: newApp }))
+  }))
+);
+//휴가결재내역(승인, 반려)
+export const useApprovalState2 = create(
+  devtools((set) => ({
+    app: {},
+    setApp: (newApp) => set(() => ({ app: newApp }))
+  }))
+);
+//휴가결재내역(대기)
+export const useUnApprovalState = create(
+  devtools((set) => ({
+    app: {},
+    setApp: (newApp) => set(() => ({ app: newApp }))
+  }))
+);
+
+//사용자의 휴가보유 현황
+export const useLeaveState = create(
+  devtools((set) => ({
+    leave: {},
+    setLeave: (newLeave) => set(() => ({ leave: newLeave }))
+  }))
+);
+
+//사용자의 오늘휴가
+export const useTodayState = create(
+  devtools((set) => ({
+    attend: {},
+    setAttend: (newAttend) => set(() => ({ attend: newAttend }))
+  }))
+);
 export const useCalendarEvent = create(
   devtools((set) => ({
     event: {},

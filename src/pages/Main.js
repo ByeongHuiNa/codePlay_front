@@ -7,7 +7,7 @@ import { Avatar, Box, Button, Grid, Link, Typography } from '../../node_modules/
 import VacationDonutChart from 'components/chart/VacationDonutChart';
 import AttendChart from 'components/chart/AttendChart';
 import UserLeaveTable from 'components/Table/UserLeaveTable';
-import { useProfileState } from 'store/module';
+import { useProfileState} from 'store/module';
 import { useEffect } from 'react';
 import axios from '../../node_modules/axios/index';
 
@@ -17,6 +17,9 @@ const Main = () => {
   //화면 초기값 셋팅
   const { profile, setProfile } = useProfileState();
 
+  //const { attend, setAttend } = useTodayState();
+  
+
   useEffect(() => {
     async function get() {
       const endPoints = ['http://localhost:8000/user_information'];
@@ -25,6 +28,34 @@ const Main = () => {
     }
     get();
   }, []);
+
+  // useEffect(() => {
+  //   async function get() {
+  //     const endPoints = ['http://localhost:8000/attendance'];
+  //     const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
+  //     setAttend(result[0].data[0]);
+  //     console.log("zz: " + result[0].data[0]);
+  //   }
+  //   get();
+  // }, []);
+
+  async function postData() {
+    alert("zz");
+    try {
+      //응답 성공 
+      const response = await axios.post('http://localhost:8000/attend',{
+          
+          start: "devstone",
+          end: "12345"
+      });
+      alert("성공");
+      console.log(response);
+    } catch (error) {
+      //응답 실패
+      console.error(error);
+    }
+  }
+
   return (
     <Grid container xs={12} spacing={2}>
       <Grid item xs={4} sm={4} md={4} lg={4}>
@@ -93,7 +124,7 @@ const Main = () => {
             <Grid container justifyContent="center" spacing={1}>
               <Grid item>
                 <Button variant="outlined" size="large">
-                  <Box clone mx={6}>
+                  <Box clone mx={6} onClick={postData}>
                     출근
                   </Box>
                 </Button>

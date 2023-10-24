@@ -1,19 +1,16 @@
-/* eslint-disable no-unused-vars */
 // material-ui
 import { Typography } from '@mui/material';
 
 // project import
 import MainCard from 'components/MainCard';
 import InputSeach from 'components/Input/InputSearch';
-import SettingAccessTable from 'components/Table/SettingAccessTable';
-import { useCriteria, useTabState } from 'store/module';
-import ComponentSkeleton from './components-overview/ComponentSkeleton';
-import { Box, Checkbox, FormControlLabel, Stack, Tab, Tabs } from '../../node_modules/@mui/material/index';
+import { useAccessPage, useCriteria, useTabState } from 'store/module';
+import { Box, Tab, Tabs } from '../../node_modules/@mui/material/index';
 import { useEffect, useState } from 'react';
-import BasicTab from 'components/tab/BasicTab';
 import SettingAuthorityTable from 'components/Table/SettingAuthorityTable';
 import AccessTab from 'components/tab/AccessTab';
 import axios from '../../node_modules/axios/index';
+import AccessCheckbox from 'components/Checkbox/AccessCheckbox';
 
 // ==============================|| 관리자 접근관리 PAGE ||============================== //
 
@@ -26,11 +23,13 @@ const SettingAccess = () => {
   //zustand로 관리할 값들
   const { setIndex, setTab } = useTabState();
   const { setSearch } = useCriteria();
+  const { setAccessPage } = useAccessPage();
+  // const { setRoleAccessPage } = useRoleAccessPage();
+
   //화면 초기값 셋팅
   useEffect(() => {
-    setIndex(0);
     async function get() {
-      const endPoints = ['http://localhost:8000/role_count'];
+      const endPoints = ['http://localhost:8000/role_count', 'http://localhost:8000/access_page_list'];
       const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
       const tabs = [];
       for (let i of result[0].data) {
@@ -42,56 +41,36 @@ const SettingAccess = () => {
         tabs.push(tab_temp);
       }
       setTab(tabs);
+      setAccessPage(
+        result[1].data.reduce(
+          (groups, item) => ({
+            ...groups,
+            [item.page_default_role_no]: [...(groups[item.page_default_role_no] || []), { ...item, checked: item.page_no == 1 }]
+          }),
+          {}
+        )
+      );
+      setIndex(0);
       setSearch('');
     }
     get();
   }, []);
 
-  const [checked, setChecked] = useState([true, false]);
-
-  const handleChange1 = (event) => {
-    setChecked([event.target.checked, event.target.checked]);
-  };
-
-  const handleChange2 = (event) => {
-    setChecked([event.target.checked, checked[1]]);
-  };
-
-  const handleChange3 = (event) => {
-    setChecked([checked[0], event.target.checked]);
-  };
-
-  const children = (
-    <Stack direction="row">
-      <FormControlLabel label="Child 1" control={<Checkbox checked={checked[0]} onChange={handleChange2} />} />
-      <FormControlLabel label="Child 2" control={<Checkbox checked={checked[1]} onChange={handleChange3} />} />
-    </Stack>
-  );
-
   return (
-    <ComponentSkeleton>
+    <>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
           <Tab label="권한별" />
           <Tab label="개인 맞춤" />
         </Tabs>
       </Box>
-      <BasicTab value={value} index={0}>
+      <div role="tabpanel" hidden={value !== 0} id={`simple-tabpanel-${0}`} aria-labelledby={`simple-tab-${0}`} value={value}>
         <MainCard>
           <AccessTab />
-          <Typography mt={2} variant="h4">
-            사용자 페이지
-          </Typography>
-          <Stack>
-            <FormControlLabel
-              label="Parent"
-              control={<Checkbox checked={checked[0] && checked[1]} indeterminate={checked[0] !== checked[1]} onChange={handleChange1} />}
-            />
-            {children}
-          </Stack>
+          <AccessCheckbox />
         </MainCard>
-      </BasicTab>
-      <BasicTab value={value} index={1}>
+      </div>
+      <div role="tabpanel" hidden={value !== 1} id={`simple-tabpanel-${1}`} aria-labelledby={`simple-tab-${1}`} value={value}>
         <MainCard>
           <Typography mt={2} variant="h4">
             사용자명으로 검색
@@ -99,8 +78,8 @@ const SettingAccess = () => {
           <InputSeach isPersonIcon={true}></InputSeach>
           <SettingAuthorityTable />
         </MainCard>
-      </BasicTab>
-    </ComponentSkeleton>
+      </div>
+    </>
   );
 };
 

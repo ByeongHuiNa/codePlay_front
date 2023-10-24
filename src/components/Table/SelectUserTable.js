@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // material-ui
 import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
@@ -99,10 +99,13 @@ OrderTableHead.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function SelectUserTable({ value, datas, handleSingleCheck, handleAllCheck, checkItems, setSelectUserData }) {
+export default function SelectUserTable({ value, datas, handleSingleCheck, handleAllCheck, checkItems, setSelectUserData, searchName }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
+
+  // 사원선택에서 검색 이름, 사원목록 변경될 때마다 리렌더링
+  useEffect(() => {}, [searchName, datas]);
 
   const isSelected = (user_no) => selected.indexOf(user_no) !== -1;
 
@@ -149,39 +152,41 @@ export default function SelectUserTable({ value, datas, handleSingleCheck, handl
             datas={datas}
           />
           <TableBody>
-            {stableSort(datas, getComparator(order, orderBy)).map((data, index) => {
-              const isItemSelected = isSelected(data.user_no);
-              const labelId = `enhanced-table-checkbox-${index}`;
+            {stableSort(datas, getComparator(order, orderBy))
+              .filter((data) => data.user_name.includes(searchName))
+              .map((data, index) => {
+                const isItemSelected = isSelected(data.user_no);
+                const labelId = `enhanced-table-checkbox-${index}`;
 
-              return (
-                <TableRow
-                  hover
-                  role="checkbox"
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                  aria-checked={isItemSelected}
-                  tabIndex={-1}
-                  key={data.user_no}
-                  selected={isItemSelected}
-                  onClick={setSelectUserData}
-                >
-                  {value === 0 && (
-                    <TableCell align="center">
-                      <Checkbox
-                        checked={checkItems.includes(data.user_no) ? true : false}
-                        onChange={(e) => handleSingleCheck(e.target.checked, data.user_no)}
-                        inputProps={{ 'aria-label': 'controlled' }}
-                      />
+                return (
+                  <TableRow
+                    hover
+                    role="checkbox"
+                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    aria-checked={isItemSelected}
+                    tabIndex={-1}
+                    key={data.user_no}
+                    selected={isItemSelected}
+                    onClick={setSelectUserData}
+                  >
+                    {value === 0 && (
+                      <TableCell align="center">
+                        <Checkbox
+                          checked={checkItems.includes(data.user_no) ? true : false}
+                          onChange={(e) => handleSingleCheck(e.target.checked, data.user_no)}
+                          inputProps={{ 'aria-label': 'controlled' }}
+                        />
+                      </TableCell>
+                    )}
+                    <TableCell component="th" id={labelId} scope="data" align="center">
+                      <Avatar src={data.user_profile} sx={{ width: 40, height: 40, margin: 'auto' }}></Avatar>
                     </TableCell>
-                  )}
-                  <TableCell component="th" id={labelId} scope="data" align="center">
-                    <Avatar src={data.user_profile} sx={{ width: 40, height: 40, margin: 'auto' }}></Avatar>
-                  </TableCell>
-                  <TableCell align="center">{data.user_name}</TableCell>
-                  <TableCell align="center">{data.user_dept}</TableCell>
-                  <TableCell align="center">{data.user_position}</TableCell>
-                </TableRow>
-              );
-            })}
+                    <TableCell align="center">{data.user_name}</TableCell>
+                    <TableCell align="center">{data.dept.dept_name}</TableCell>
+                    <TableCell align="center">{data.user_position}</TableCell>
+                  </TableRow>
+                );
+              })}
           </TableBody>
         </Table>
       </TableContainer>

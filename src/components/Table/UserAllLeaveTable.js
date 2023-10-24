@@ -6,35 +6,78 @@ import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow }
 import { Stack, Typography } from '../../../node_modules/@mui/material/index';
 import Dot from 'components/@extended/Dot';
 
+function descendingComparator(a, b, orderBy) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
+}
+
+function getComparator(order, orderBy) {
+  return order === 'desc' ? (a, b) => descendingComparator(a, b, orderBy) : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+function stableSort(array, comparator) {
+  const stabilizedThis = array.map((el, index) => [el, index]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) {
+      return order;
+    }
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map((el) => el[0]);
+}
+
 // ==============================|| ORDER TABLE - HEADER CELL ||============================== //
 
 const headCells = [
   {
-    id: 'date',
+    id: 'leaveStart',
     align: 'center',
     disablePadding: false,
-    label: '날짜'
+    label: '휴가시작일'
   },
   {
-    id: 'startTime',
+    id: 'leaveEnd',
     align: 'center',
     disablePadding: false,
-    label: '출근시간'
+    label: '휴가종료일'
   },
   {
-    id: 'endTime',
+    id: 'leaveType',
     align: 'center',
     disablePadding: false,
-    label: '퇴근시간'
+    label: '휴가종류'
+  },
+  {
+    id: 'leaveCnt',
+    align: 'center',
+    disablePadding: false,
+    label: '휴가사용일수'
+  },
+  {
+    id: 'appDate',
+    align: 'center',
+    disablePadding: false,
+    label: '결재일'
+  },
+  {
+    id: 'approver',
+    align: 'center',
+    disablePadding: false,
+    label: '결재자'
   },
   {
     id: 'status',
     align: 'center',
     disablePadding: false,
-    label: '근태상태'
+    label: '결재상태'
   }
 ];
-
 // ==============================|| ORDER TABLE - HEADER ||============================== //
 
 function OrderTableHead({ order, orderBy }) {
@@ -47,7 +90,6 @@ function OrderTableHead({ order, orderBy }) {
             align={headCell.align}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
-            sx={{ height: '30px', p: 1 }}
           >
             {headCell.label}
           </TableCell>
@@ -68,31 +110,21 @@ const OrderStatus = ({ status }) => {
   let color;
   let title;
 
-  // 0 : 정상출근
-  // 1 : 휴가(연차,반차,공가)
-  // 2 : 지각
-  // 3 : 조퇴(조기퇴근)
-  // 4 : 결근(출근 혹은 퇴근누락))
+  // 0 : 결재완료(승인)
+  // 1 : 결재완료(반려)
+  // 2 : 결재대기
   switch (status) {
     case 0:
       color = 'success';
-      title = '정상';
+      title = '결재승인';
       break;
     case 1:
-      color = 'primary';
-      title = '휴가';
+      color = 'error';
+      title = '결재반려';
       break;
     case 2:
-      color = 'secondary';
-      title = '지각';
-      break;
-    case 3:
-      color = 'warning';
-      title = '조퇴';
-      break;
-    case 4:
-      color = 'error';
-      title = '결근';
+      color = 'primary';
+      title = '결재대기';
   }
 
   return (
@@ -107,11 +139,18 @@ OrderStatus.propTypes = {
   status: PropTypes.number
 };
 
+OrderStatus.propTypes = {
+  status: PropTypes.number
+};
+
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function UserAttendInfoTable({ data }) {
+export default function UserAllLeaveTable({ datas, handleMyCard, height }) {
   const [order] = useState('asc');
-  const [orderBy] = useState('trackingNo');
+  const [orderBy] = useState('date');
+  const [selected] = useState([]);
+
+  const isSelected = (date) => selected.indexOf(date) !== -1;
 
   return (
     <Box>
@@ -122,7 +161,7 @@ export default function UserAttendInfoTable({ data }) {
           position: 'relative',
           display: 'block',
           maxWidth: '100%',
-          height: `${Object.keys(data).length === 0 ? '47px' : '100px'}`,
+          height: { height },
           padding: '0px',
           '& td, & th': { whiteSpace: 'nowrap' },
           '&::-webkit-scrollbar': {
@@ -151,32 +190,38 @@ export default function UserAttendInfoTable({ data }) {
         >
           <OrderTableHead order={order} orderBy={orderBy} />
           <TableBody>
-            <TableRow hover role="checkbox" sx={{ '&:last-child td, &:last-child th': { border: 0 } }} tabIndex={-1} key={data.date}>
-              {Object.keys(data).length !== 0 && (
-                <>
-                  <TableCell component="th" scope="data" align="center">
-                    {data.attend_date}
-                  </TableCell>
-                  <TableCell align="center">{data.attend_start}</TableCell>
-                  <TableCell align="center">{data.attend_end}</TableCell>
-                  <TableCell align="center">
-                    <OrderStatus status={data.attend_status} />
-                  </TableCell>
-                </>
-              )}
-              {/* {Object.keys(data).length === 0 && (
-                <Box
-                  p={1}
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'center', // 수평 중앙 정렬
-                    alignItems: 'center' // 수직 중앙 정렬
-                  }}
+            {stableSort(datas, getComparator(order, orderBy)).map((data, index) => {
+              const isItemSelected = isSelected(data.date);
+              const labelId = `enhanced-table-checkbox-${index}`;
+
+              console.log(isItemSelected);
+              console.log(selected);
+
+              return (
+                <TableRow
+                  hover
+                  role="checkbox"
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  aria-checked={isItemSelected}
+                  tabIndex={-1}
+                  key={data.date}
+                  selected={isItemSelected}
+                  onClick={() => handleMyCard(data)}
                 >
-                  <Typography variant="h5">선택된 날짜 없음</Typography>
-                </Box>
-              )} */}
-            </TableRow>
+                  <TableCell component="th" id={labelId} scope="data" align="center">
+                    {data.leaveStart}
+                  </TableCell>
+                  <TableCell align="center">{data.leaveEnd}</TableCell>
+                  <TableCell align="center">{data.leaveType}</TableCell>
+                  <TableCell align="center">{data.leaveCnt}</TableCell>
+                  <TableCell align="center">{data.appDate}</TableCell>
+                  <TableCell align="center">{data.approver}</TableCell>
+                  <TableCell align="center">
+                    <OrderStatus status={data.status} />
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>
