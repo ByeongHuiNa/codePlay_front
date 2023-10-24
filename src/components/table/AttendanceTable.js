@@ -170,7 +170,7 @@ export default function AttendanceTable() {
 
   useEffect(() => {
     async function get() {
-      const endPoints = ['http://localhost:8000/attendance'];
+      const endPoints = ['http://localhost:8000/leave_approval'];
       const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
        // result[0].data를 필터링하여 leave_status가 1인 데이터만 추출
       //const filteredData = result[0].data.filter((item) => item.leave_status === 1);
@@ -262,7 +262,7 @@ export default function AttendanceTable() {
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   //aria-checked={isItemSelected}
                   tabIndex={-1}
-                  key={attendance.attend_no}
+                  key={attendance.attend_end}
                   //selected={isItemSelected}
                 >
                   <TableCell component="th" id={attendance.attend_no} scope="row" align="center">

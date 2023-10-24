@@ -2320,10 +2320,43 @@
   "user_leave": [
     {
       "user_no": 0,
+      "user_name":"나병희",
       "leave_no": 0,
       "leave_total": 15,
       "leave_use": 4,
       "leave_remain": 11
+    },
+    {
+      "user_no": 1,
+      "user_name":"안재진",
+      "leave_no": 1,
+      "leave_total": 17,
+      "leave_use": 8,
+      "leave_remain": 9
+    },
+    {
+      "user_no": 2,
+      "user_name":"이유나",
+      "leave_no": 2,
+      "leave_total": 16,
+      "leave_use": 6,
+      "leave_remain": 10
+    },
+    {
+      "user_no": 3,
+      "user_name":"송희문",
+      "leave_no": 3,
+      "leave_total": 18,
+      "leave_use": 10,
+      "leave_remain": 8
+    },
+    {
+      "user_no": 4,
+      "user_name":"나짱이",
+      "leave_no": 4,
+      "leave_total": 20,
+      "leave_use": 12,
+      "leave_remain": 8
     }
   ],
   

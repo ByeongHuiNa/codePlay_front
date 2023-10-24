@@ -144,6 +144,13 @@ export const useLeaveState = create(
     setLeave: (newLeave) => set(() => ({ leave: newLeave }))
   }))
 );
+//모든 사용자의 휴가보유 현황
+export const useAllLeaveState = create(
+  devtools((set) => ({
+    allLeave: {},
+    setAllLeave: (newAllLeave) => set(() => ({ allLeave: newAllLeave }))
+  }))
+);
 //사용자의 근태 현황
 export const useAttendanceState = create(
   devtools((set) => ({
