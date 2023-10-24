@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 // material-ui
@@ -11,46 +11,48 @@ import { Box, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHea
 // project import
 import Dot from 'components/@extended/Dot';
 import { Pagination } from '../../../node_modules/@mui/material/index';
+import { useAllLeaveState } from 'store/module';
+import axios from '../../../node_modules/axios/index';
 
-function createData(name, position, total, use, remain) {
-  return { name, position, total, use, remain };
-}
+// function createData(name, position, total, use, remain) {
+//   return { name, position, total, use, remain };
+// }
 
-const rows = [
-  createData('나병희', '주임', 16, 5, 11),
-  createData('나병희', '주임', 16, 5, 11),
-  createData('나병희', '주임', 16, 5, 11),
-  createData('나병희', '주임', 16, 5, 11),
-  createData('나병희', '주임', 16, 5, 11)
+// const rows = [
+//   createData('나병희', '주임', 16, 5, 11),
+//   createData('나병희', '주임', 16, 5, 11),
+//   createData('나병희', '주임', 16, 5, 11),
+//   createData('나병희', '주임', 16, 5, 11),
+//   createData('나병희', '주임', 16, 5, 11)
 
   
-];
+// ];
 
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
+// function descendingComparator(a, b, orderBy) {
+//   if (b[orderBy] < a[orderBy]) {
+//     return -1;
+//   }
+//   if (b[orderBy] > a[orderBy]) {
+//     return 1;
+//   }
+//   return 0;
+// }
 
-function getComparator(order, orderBy) {
-  return order === 'desc' ? (a, b) => descendingComparator(a, b, orderBy) : (a, b) => -descendingComparator(a, b, orderBy);
-}
+// function getComparator(order, orderBy) {
+//   return order === 'desc' ? (a, b) => descendingComparator(a, b, orderBy) : (a, b) => -descendingComparator(a, b, orderBy);
+// }
 
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) {
-      return order;
-    }
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
+// function stableSort(array, comparator) {
+//   const stabilizedThis = array.map((el, index) => [el, index]);
+//   stabilizedThis.sort((a, b) => {
+//     const order = comparator(a[0], b[0]);
+//     if (order !== 0) {
+//       return order;
+//     }
+//     return a[1] - b[1];
+//   });
+//   return stabilizedThis.map((el) => el[0]);
+// }
 
 // ==============================|| ORDER TABLE - HEADER CELL ||============================== //
 
@@ -154,9 +156,21 @@ VacationStatus.propTypes = {
 export default function VacationCountTable() {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
-  const [selected] = useState([]);
+  //const [selected] = useState([]);
+  const { allLeave, setAllLeave } = useAllLeaveState();
 
-  const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
+  useEffect(() => {
+    async function get() {
+      const endPoints = ['http://localhost:8000/user_leave'];
+      const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
+       // result[0].data를 필터링하여 leave_status가 1인 데이터만 추출
+      //const filteredData = result[0].data.filter((item) => item.leave_status === 1);
+      setAllLeave(result[0].data);
+    }
+    get();
+  }, []);
+
+  //const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
 
   return (
     <Box>
@@ -183,6 +197,36 @@ export default function VacationCountTable() {
         >
           <VacationCountTableHead order={order} orderBy={orderBy} />
           <TableBody>
+          {Object.values(allLeave).map((allLeave) => (
+              // const isItemSelected = isSelected(row.date);
+              // const labelId = `enhanced-table-checkbox-${index}`;
+
+              
+                <TableRow
+                  hover
+                  role="checkbox"
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  //aria-checked={isItemSelected}
+                  tabIndex={-1}
+                  key={allLeave.leave_no}
+                  //selected={isItemSelected}
+                >
+                  <TableCell component="th" id={allLeave.leave_no} scope="row" align="center">
+                    <Link color="secondary" component={RouterLink} to="">
+                      {allLeave.user_name}
+                    </Link>
+                  </TableCell>
+                  <TableCell align="center">{allLeave.user_name}</TableCell>
+                  <TableCell align="center">{allLeave.leave_total}</TableCell>
+                  <TableCell align="center">{allLeave.leave_use}</TableCell>
+                  <TableCell align="center">{allLeave.leave_remain}</TableCell>
+                  
+                  
+                </TableRow>
+            
+            ))}
+          </TableBody>
+          {/* <TableBody>
             {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
               const isItemSelected = isSelected(row.date);
               const labelId = `enhanced-table-checkbox-${index}`;
@@ -211,7 +255,7 @@ export default function VacationCountTable() {
                 </TableRow>
               );
             })}
-          </TableBody>
+          </TableBody> */}
         </Table>
       </TableContainer>
       <Stack alignItems="center" mt={2}>

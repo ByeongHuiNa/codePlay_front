@@ -2276,8 +2276,69 @@
       "user_birth_date": "1966-04-28"
     }
   ],
-  "leave_approval": [
+  "attendance": [
+    {
+      "attend_no": 0,
+      "user_no": 0,
+      "attend_date": "2023-10-09",
+      "attend_start": "09:00",
+      "attend_end": "18:00",
+      "attend_total": 8,
+      "attend_status": 0
+     
+    }, 
+    {
+      "attend_no": 1,
+      "user_no": 0,
+      "attend_date": "2023-10-10",
+      "attend_start": "09:00",
+      "attend_end": "13:00",
+      "attend_total": 4,
+      "attend_status": 1
+     
+    },
+    {
+      "attend_no": 2,
+      "user_no": 0,
+      "attend_date": "2023-10-11",
+      "attend_start": "09:00",
+      "attend_end": "18:00",
+      "attend_total": 8,
+      "attend_status": 0
+     
+    },
+    {
+      "attend_no": 3,
+      "user_no": 0,
+      "attend_date": "2023-10-12",
+      "attend_start": "10:00",
+      "attend_end": "18:00",
+      "attend_total": 7,
+      "attend_status": 2
+     
+    },
+    {
+      "attend_no": 4,
+      "user_no": 0,
+      "attend_date": "2023-10-13",
+      "attend_start": "09:00",
+      "attend_end": "15:00",
+      "attend_total": 5,
+      "attend_status": 3
+     
+    },
+    {
+      "attend_no": 5,
+      "user_no": 0,
+      "attend_date": "2023-10-14",
+      "attend_start": null,
+      "attend_end": null,
+      "attend_total": 0,
+      "attend_status": 4
+     
+    }
     
+  ],"leave_approval": [
     {
       "leaveapp_no": 1,
       "user_no": 1,
@@ -2289,7 +2350,8 @@
       "leaveapp_status" : 0,
       "leaveapp_title" : "연차신청제목1",
       "leaveapp_content" : "연차신청내용1",
-      "leaveapp_cancel_no" : ""
+      "leaveapp_cancel_no" : "",
+      "leaveapp_user_name" : "홍길동 팀장"
     },
     {
       "leaveapp_no": 2,
@@ -2299,10 +2361,11 @@
       "leaveapp_end": "2023-10-11",
       "leaveapp_type": "연차",
       "leaveapp_count": 1,
-      "leaveapp_status" : 0,
+      "leaveapp_status" : 1,
       "leaveapp_title" : "연차신청제목2",
       "leaveapp_content" : "연차신청내용2",
-      "leaveapp_cancel_no" : ""
+      "leaveapp_cancel_no" : "",
+      "leaveapp_user_name" : "홍길동 팀장"
     },
     {
       "leaveapp_no": 3,
@@ -2312,22 +2375,24 @@
       "leaveapp_end": "2023-10-11",
       "leaveapp_type": "연차",
       "leaveapp_count": 1,
-      "leaveapp_status" : 0,
+      "leaveapp_status" : 2,
       "leaveapp_title" : "연차신청제목3",
       "leaveapp_content" : "연차신청내용3",
-      "leaveapp_cancel_no" : ""
+      "leaveapp_cancel_no" : "",
+      "leaveapp_user_name" : null
     },{
       "leaveapp_no": 4,
       "user_no": 1,
       "leaveapp_final_date": "2023-10-09",
       "leaveapp_start": "2023-10-11",
       "leaveapp_end": "2023-10-11",
-      "leaveapp_type": "연차",
-      "leaveapp_count": 1,
+      "leaveapp_type": "오전반차",
+      "leaveapp_count": 0.5,
       "leaveapp_status" : 0,
       "leaveapp_title" : "연차신청제목4",
       "leaveapp_content" : "연차신청내용4",
-      "leaveapp_cancel_no" : ""
+      "leaveapp_cancel_no" : "",
+      "leaveapp_user_name" : "홍길동 팀장"
     },
     {
       "leaveapp_no": 5,
@@ -2340,7 +2405,8 @@
       "leaveapp_status" : 0,
       "leaveapp_title" : "연차신청제목5",
       "leaveapp_content" : "연차신청내용5",
-      "leaveapp_cancel_no" : ""
+      "leaveapp_cancel_no" : "",
+      "leaveapp_user_name" : "홍길동 팀장"
     },
     {
       "leaveapp_no": 6,
@@ -2353,7 +2419,9 @@
       "leaveapp_status" : 0,
       "leaveapp_title" : "연차신청제목6",
       "leaveapp_content" : "연차신청내용6",
-      "leaveapp_cancel_no" : ""
+      "leaveapp_cancel_no" : "",
+      "leaveapp_user_name" : "홍길동 팀장"
+
     },
     {
       "leaveapp_no": 7,
@@ -2373,24 +2441,48 @@
   "user_leave": [
     {
       "user_no": 0,
+      "user_name":"나병희",
       "leave_no": 0,
       "leave_total": 15,
       "leave_use": 4,
-      "leave_remain": 11
+      "leave_remain": 11,
+      "dept_name" : "개발1팀"
     },
     {
       "user_no": 1,
+      "user_name":"안재진",
       "leave_no": 1,
-      "leave_total": 15,
-      "leave_use": 4,
-      "leave_remain": 11
+      "leave_total": 17,
+      "leave_use": 8,
+      "leave_remain": 9,
+      "dept_name" : "개발1팀"
     },
     {
       "user_no": 2,
+      "user_name":"이유나",
       "leave_no": 2,
       "leave_total": 16,
-      "leave_use": 3,
-      "leave_remain": 13
+      "leave_use": 6,
+      "leave_remain": 10,
+      "dept_name" : "개발1팀"
+    },
+    {
+      "user_no": 3,
+      "user_name":"송희문",
+      "leave_no": 3,
+      "leave_total": 18,
+      "leave_use": 10,
+      "leave_remain": 8,
+      "dept_name" : "개발1팀"
+    },
+    {
+      "user_no": 4,
+      "user_name":"나짱이",
+      "leave_no": 4,
+      "leave_total": 20,
+      "leave_use": 12,
+      "leave_remain": 8,
+      "dept_name" : "개발1팀"
     }
   ],
   
@@ -2556,6 +2648,249 @@
       "permission_access_date" : "2023-10-23",
       "page_default_role_no": 2
     }
+    ]},
+  {
+    "role_level": 3,
+    "access_page_list":[
+      {"page_no": 0,
+        "page_tittle": "캘린더",
+        "permission_access_date" : "2023-10-23",
+        "page_default_role_no": 0,
+        "role_level": 2
+        },{
+      "page_no": 1,
+      "page_tittle": "근태현황조회",
+      "role_level": 2,
+      "permission_access_date" : "2023-10-23",
+      "page_default_role_no": 0
+    },{
+      "page_no": 2,
+      "page_tittle": "근태현황조회(담당자)",
+      "role_level": null,
+      "permission_access_date" : null,
+      "page_default_role_no": 1
+    },
+    {
+      "page_no": 3,
+      "page_tittle": "사용자별 근태현황조회(담당자)",
+      "role_level": null,
+      "permission_access_date" : null,
+      "page_default_role_no": 1
+    },
+    {
+      "page_no": 4,
+      "page_tittle": "사용자조회",
+      "role_level": 2,
+      "permission_access_date" : "2023-10-23",
+      "page_default_role_no": 2
+    },
+    {
+      "page_no": 5,
+      "page_tittle": "권한조회",
+      "role_level": 2,
+      "permission_access_date" : "2023-10-23",
+      "page_default_role_no": 2
+    }
     ]}
+  ],
+  "user_policy_list": [
+    {
+      "user_no": 3,
+      "user_profile": "https://picsum.photos/200",
+      "policy_no": 0,
+      "dept_name": "개발팀",
+      "user_name": "Damian",
+      "user_position": "연구원",
+      "policy_designated_date": "1983-02-15"
+    },
+    {
+      "user_no": 4,
+      "user_profile": "https://picsum.photos/200",
+      "policy_no": 0,
+      "dept_name": "개발팀",
+      "user_name": "Andrea",
+      "user_position": "연구원",
+      "policy_designated_date": "1986-11-23"
+    },
+    {
+      "user_no": 5,
+      "user_profile": "https://picsum.photos/200",
+      "policy_no": 0,
+      "dept_name": "개발팀",
+      "user_name": "Aubrey",
+      "user_position": "연구원",
+      "policy_designated_date": "1988-08-25"
+    },
+    {
+      "user_no": 6,
+      "user_profile": "https://picsum.photos/200",
+      "policy_no": 0,
+      "dept_name": "개발팀",
+      "user_name": "Brandon",
+      "user_position": "연구원",
+      "policy_designated_date": "1986-05-09"
+    },
+    {
+      "user_no": 7,
+      "user_profile": "https://picsum.photos/200",
+      "policy_no": 0,
+      "dept_name": "개발팀",
+      "user_name": "Camila",
+      "user_position": "연구원",
+      "policy_designated_date": "1986-08-18"
+    },
+    {
+      "user_no": 8,
+      "user_profile": "https://picsum.photos/200",
+      "policy_no": 0,
+      "dept_name": "개발팀",
+      "user_name": "Amelia",
+      "user_position": "연구원",
+      "policy_designated_date": "1974-03-16"
+    },
+    {
+      "user_no": 9,
+      "user_profile": "https://picsum.photos/200",
+      "policy_no": 0,
+      "dept_name": "개발팀",
+      "user_name": "Isabella",
+      "user_position": "연구원",
+      "policy_designated_date": "1992-01-07"
+    },
+    {
+      "user_no": 10,
+      "user_profile": "https://picsum.photos/200",
+      "policy_no": 0,
+      "dept_name": "개발팀",
+      "user_name": "Taylor",
+      "user_position": "연구원",
+      "policy_designated_date": "1971-04-02"
+    },
+    {
+      "user_no": 11,
+      "user_profile": "https://picsum.photos/200",
+      "policy_no": 0,
+      "dept_name": "개발팀",
+      "user_name": "Caleb",
+      "user_position": "연구원",
+      "policy_designated_date": "1985-04-08"
+    },
+    {
+      "user_no": 12,
+      "user_profile": "https://picsum.photos/200",
+      "policy_no": 0,
+      "dept_name": "개발팀",
+      "user_name": "Dylan",
+      "user_position": "연구원",
+      "policy_designated_date": "1961-08-01"
+    },
+    {
+      "user_no": 13,
+      "user_profile": "https://picsum.photos/200",
+      "policy_no": 0,
+      "dept_name": "개발팀",
+      "user_name": "Skylar",
+      "user_position": "연구원",
+      "policy_designated_date": "1993-11-23"
+    },
+    {
+      "user_no": 14,
+      "user_profile": "https://picsum.photos/200",
+      "policy_no": 0,
+      "dept_name": "개발팀",
+      "user_name": "John",
+      "user_position": "연구원",
+      "policy_designated_date": "1985-09-09"
+    },
+    {
+      "user_no": 15,
+      "user_profile": "https://picsum.photos/200",
+      "policy_no": 0,
+      "dept_name": "개발팀",
+      "user_name": "Camila",
+      "user_position": "연구원",
+      "policy_designated_date": "1962-12-01"
+    },
+    {
+      "user_no": 16,
+      "user_profile": "https://picsum.photos/200",
+      "policy_no": 0,
+      "dept_name": "개발팀",
+      "user_name": "Christian",
+      "user_position": "수석연구원",
+      "policy_designated_date": "1987-09-03"
+    },
+    {
+      "user_no": 17,
+      "user_profile": "https://picsum.photos/200",
+      "policy_no": 0,
+      "dept_name": "개발팀",
+      "user_name": "Maya",
+      "user_position": "수석연구원",
+      "policy_designated_date": "1962-02-14"
+    },
+    {
+      "user_no": 0,
+      "user_profile": "https://picsum.photos/200",
+      "policy_no": 1,
+      "dept_name": "개발팀",
+      "user_name": "Dylan",
+      "user_position": "연구원",
+      "policy_designated_date": "1960-01-24"
+    },
+    {
+      "user_no": 1,
+      "user_profile": "https://picsum.photos/200",
+      "policy_no": 2,
+      "dept_name": "개발팀",
+      "user_name": "Christian",
+      "user_position": "연구원",
+      "policy_designated_date": "1998-07-22"
+    },
+    {
+      "user_no": 2,
+      "user_profile": "https://picsum.photos/200",
+      "policy_no": 2,
+      "dept_name": "개발팀",
+      "user_name": "Bryson",
+      "user_position": "연구원",
+      "policy_designated_date": "1973-04-27"
+    }
+  ],
+  "user_policy_detail" : 
+    [
+      {
+        "user_no": 0,
+        "user_profile": "https://picsum.photos/200",
+        "policy_no": 1,
+        "dept_name": "개발팀",
+        "user_name": "Dylan",
+        "user_position": "연구원",
+        "standard_start_time": "0000T09:00",
+        "standard_end_time": "0000T18:00",
+        "policy_designated_date": "1960-01-24"
+      },
+      {
+        "user_no": 3,
+        "user_profile": "https://picsum.photos/200",
+        "policy_no": 0,
+        "dept_name": "개발팀",
+        "user_name": "Damian",
+        "user_position": "연구원",
+        "standard_start_time": "0000T08:00",
+        "standard_end_time": "0000T17:00",
+        "policy_designated_date": "1983-02-15"
+      },
+      {
+        "user_no": 4,
+        "user_profile": "https://picsum.photos/200",
+        "policy_no": 0,
+        "dept_name": "개발팀",
+        "user_name": "Andrea",
+        "user_position": "연구원",
+        "standard_start_time": "0000T08:00",
+        "standard_end_time": "0000T17:00",
+        "policy_designated_date": "1986-11-23"
+      }
   ]
 }

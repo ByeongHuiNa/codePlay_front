@@ -175,7 +175,7 @@ const UserAttendanceTotalPage = () => {
                       name: '정상근무',
                       type: 'column',
                       fill: 'solid',
-                      data: [0, 8, 10, 10, 4, 10, 0]
+                      data: [6, 8, 10, 10, 4, 10, 0]
                     },
                     {
                       name: '초과근무',
@@ -225,7 +225,7 @@ const UserAttendanceTotalPage = () => {
                   </NativeSelect>
                 </FormControl>
               </div>
-              <AttendanceTable />
+              <AttendanceTable month={month3}/>
             </MainCard>
           </Grid>
 
