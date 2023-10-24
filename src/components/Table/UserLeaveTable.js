@@ -9,7 +9,6 @@ import { Chip } from '../../../node_modules/@mui/material/index';
 import { useAllApprovalState1 } from 'store/module';
 import axios from '../../../node_modules/axios/index';
 
-
 // function descendingComparator(a, b, orderBy) {
 //   if (b[orderBy] < a[orderBy]) {
 //     return -1;
@@ -135,12 +134,11 @@ export default function UserLeaveTable() {
 
   //const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
 
-
   useEffect(() => {
     async function get() {
       const endPoints = ['http://localhost:8000/leave_approval'];
       const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
-       // result[0].data를 필터링하여 leave_status가 1인 데이터만 추출
+      // result[0].data를 필터링하여 leave_status가 1인 데이터만 추출
       //const filteredData = result[0].data.filter((item) => item.leave_status === 1);
 
       setApp(result[0].data);
@@ -184,8 +182,9 @@ export default function UserLeaveTable() {
         >
           <UserLeaveTableHead order={order} orderBy={orderBy} />
           <TableBody>
-          {Object.values(app).slice(0,5).map((app) => (
-
+            {Object.values(app)
+              .slice(0, 5)
+              .map((app) => (
                 <TableRow
                   hover
                   role="checkbox"
@@ -205,8 +204,7 @@ export default function UserLeaveTable() {
                     <UserLeaveStatus status={app.leaveapp_status} />
                   </TableCell>
                 </TableRow>
-             
-            ))};
+              ))}
           </TableBody>
           {/* <TableBody>
             {stableSort(datas, getComparator(order, orderBy)).map((data, index) => {
