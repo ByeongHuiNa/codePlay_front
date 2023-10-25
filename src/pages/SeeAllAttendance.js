@@ -174,7 +174,7 @@ const SeeAllAttendance = () => {
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Grid container xs={9} rowSpacing={4} columnSpacing={2.75}>
+                <Grid container  rowSpacing={4} columnSpacing={2.75}>
                   <Grid item xs={3}>
                     <MainCard>
                       <Typography variant="h4" align="center">
@@ -258,7 +258,7 @@ const SeeAllAttendance = () => {
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Grid container xs={9} rowSpacing={4} columnSpacing={2.75}>
+                <Grid container rowSpacing={4} columnSpacing={2.75}>
                   <Grid item xs={3}>
                     <MainCard>
                       <Typography variant="h4" align="center">

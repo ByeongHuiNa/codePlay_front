@@ -16,7 +16,7 @@ const style = {
   p: 4
 };
 
-export default function AttendUpdateModal({ open, handleClose, children }) {
+export default function ModalM({ open, handleClose, children }) {
   return (
     <div>
       <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">

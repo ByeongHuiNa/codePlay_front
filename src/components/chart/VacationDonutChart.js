@@ -22,33 +22,42 @@ const barChartOptions = {
     pie: {
       donut: {
         labels: {
-          show: true
+          show: true,
+          total: {
+            showAlways: true,
+            show: true,
+            label: '전체 휴가',
+            fontSize: '12px',
+            color: 'black'
+          }
         }
       }
     }
   },
   dataLabels: {
-    enabled: true
+    enabled: false
   },
-  xaxis: {
-    categories: ['잔여휴가', '사용휴가'],
-    axisBorder: {
-      show: false
-    },
-    axisTicks: {
-      show: false
-    }
-  },
-  yaxis: {
-    show: false
-  },
-  grid: {
-    show: false
-  }
+  labels: ['사용연차', '잔여연차'],
+  
+  // xaxis: {
+  //   categories: ['잔여휴가', '사용휴가'],
+  //   axisBorder: {
+  //     show: false
+  //   },
+  //   axisTicks: {
+  //     show: false
+  //   }
+  // },
+  // yaxis: {
+  //   show: false
+  // },
+  // grid: {
+  //   show: false
+  // }
 };
 
 export default function VacationDonutChart() {
-  const newCategories = ['새로운 항목 1', '새로운 항목 2'];
+  //const newCategories = ['새로운 항목 1', '새로운 항목 2'];
 
   const [options, setOptions] = useState(barChartOptions);
   const theme = useTheme();
@@ -75,7 +84,6 @@ export default function VacationDonutChart() {
       colors: [info],
       xaxis: {
         labels: {
-          categories: newCategories,
           style: {
             colors: [secondary, secondary]
           }

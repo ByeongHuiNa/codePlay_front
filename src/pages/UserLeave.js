@@ -27,6 +27,7 @@ import { SearchOutlined, UploadOutlined } from '../../node_modules/@mui/icons-ma
 import styled from 'styled-components';
 import BasicDatePicker from 'components/DatePicker/BasicDatePicker';
 import { useLeaveTab } from 'store/module';
+import LeaveModal from 'components/Modal/LeaveModal';
 
 const UserLeave = () => {
   const { index, setIndex } = useLeaveTab();
@@ -48,6 +49,18 @@ const UserLeave = () => {
   // 결재 완료 된 휴가 취소 신청 (결재 받은 뒤 취소 처리)
   const requestLeaveCancel = () => {
     setIndex(2);
+  };
+
+  // 휴가 신청 내역 확인 모달창
+  const [modalOpen, setModalOpen] = useState(false);
+  // 조회할 데이터 선택
+  const [modalData, setModalData] = useState({});
+  const handleOpen = (data) => {
+    setModalData(data);
+    setModalOpen(true);
+  };
+  const handleClose = () => {
+    setModalOpen(false);
   };
 
   // Chip 커스텀
@@ -94,7 +107,7 @@ const UserLeave = () => {
     content = (
       <>
         <Box clone mt={2}>
-          <MyChip label="시작날짜" />
+          <MyChip label="날짜" />
           <BasicDatePicker sx={{ width: '30px' }} />
         </Box>
         <Box clone mt={2}>
@@ -163,10 +176,11 @@ const UserLeave = () => {
                   <Typography variant="h5">최근 결재 완료 내역</Typography>
                 </Grid>
               </Grid>
-              <AppLeaveTable requestLeaveCancel={requestLeaveCancel} />
+              <AppLeaveTable requestLeaveCancel={requestLeaveCancel} handleOpen={handleOpen} />
             </BasicContainer>
           </Grid>
         </Grid>
+        <LeaveModal open={modalOpen} handleClose={handleClose} data={modalData} />
       </BasicTab>
       <BasicTab value={index} index={1}>
         <BasicContainer>
