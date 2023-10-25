@@ -28,6 +28,8 @@ import styled from 'styled-components';
 import BasicDatePicker from 'components/DatePicker/BasicDatePicker';
 import { useLeaveTab } from 'store/module';
 import LeaveModal from 'components/Modal/LeaveModal';
+import AppAuto from 'components/AutoComplete/AppAuto';
+import axios from '../../node_modules/axios/index';
 
 const UserLeave = () => {
   const { index, setIndex } = useLeaveTab();
@@ -62,6 +64,38 @@ const UserLeave = () => {
   const handleClose = () => {
     setModalOpen(false);
   };
+
+  // 자동완성
+  // 결재자 창에서 검색한 이름
+  const [searchName, setSearchName] = useState('');
+  // 선택한 결재자 데이터
+  const [approver, setApprover] = useState({});
+
+  // 사원선택의 자동완성 창에서 검색어 변경(검색) 될 때마다 searchName 설정
+  const handleSelectUser = (event, newValue) => {
+    setSearchName(newValue);
+  };
+
+  // 로그인 한 사용자
+  const user = {
+    user_no: 1,
+    user_name: '이유나',
+    user_position: '팀장',
+    dept: {
+      dept_no: 1,
+      dept_name: '개발1팀'
+    }
+  };
+
+  // 같은 부서의 근태담당자 (우선 지금은 팀장) 사용자 데이터
+  const [allUsers, setAllUsers] = useState([]);
+
+  useEffect(() => {
+    // 로그인 한 사용자 부서의 근태 담당자 내역 -> 결재자 검색창 autocomplete
+    axios.get(`http://localhost:8000/user?dept_no=${user.dept.dept_no}&user_position=${user.user_position}`).then((res) => {
+      setAllUsers(res.data);
+    });
+  }, []);
 
   // Chip 커스텀
   const MyChip = styled(Chip)`
@@ -143,6 +177,9 @@ const UserLeave = () => {
     );
   }
 
+  // 사용하지 않은 데이터
+  console.log(approver);
+
   return (
     <ComponentSkeleton>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -195,25 +232,26 @@ const UserLeave = () => {
                 <MyChip label="제목" />
                 <TextField label="제목" id="title" size="small" />
               </Box>
-              <Box clone mt={2}>
-                <MyChip label="결재자" />
-                <TextField
-                  label="결재자"
-                  id="approver"
-                  type="search"
-                  size="small"
-                  sx={{
-                    width: '170px'
-                  }}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton id="searchApp">
-                          <SearchOutlined />
-                        </IconButton>
-                      </InputAdornment>
-                    )
-                  }}
+              <Box clone mt={2} sx={{ display: 'flex' }}>
+                <MyChip label="1차 결재자" />
+                <AppAuto
+                  label="1차 결재자"
+                  datas={allUsers}
+                  handleSelectUser={handleSelectUser}
+                  searchName={searchName}
+                  setSearchName={setSearchName}
+                  setApprover={setApprover}
+                />
+              </Box>
+              <Box clone mt={2} sx={{ display: 'flex' }}>
+                <MyChip label="2차 결재자" />
+                <AppAuto
+                  label="2차 결재자"
+                  datas={allUsers}
+                  handleSelectUser={handleSelectUser}
+                  searchName={searchName}
+                  setSearchName={setSearchName}
+                  setApprover={setApprover}
                 />
               </Box>
               <Box clone mt={2}>
@@ -268,25 +306,15 @@ const UserLeave = () => {
                 <MyChip label="제목" />
                 <TextField label="제목" id="title" size="small" />
               </Box>
-              <Box clone mt={2}>
+              <Box clone mt={2} sx={{ display: 'flex' }}>
                 <MyChip label="결재자" />
-                <TextField
+                <AppAuto
                   label="결재자"
-                  id="approver"
-                  type="search"
-                  size="small"
-                  sx={{
-                    width: '170px'
-                  }}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton id="searchApp">
-                          <SearchOutlined />
-                        </IconButton>
-                      </InputAdornment>
-                    )
-                  }}
+                  datas={allUsers}
+                  handleSelectUser={handleSelectUser}
+                  searchName={searchName}
+                  setSearchName={setSearchName}
+                  setApprover={setApprover}
                 />
               </Box>
               <Box clone mt={2}>

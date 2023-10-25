@@ -11,7 +11,7 @@ export default function BasicDatePicker({ label, setDate }) {
   };
 
   const startDateChange = (date) => {
-    setDate(date.format(datePickerFormat));
+    setDate(date.toDate().toISOString());
   };
 
   return (

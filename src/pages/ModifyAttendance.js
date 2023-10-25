@@ -53,12 +53,6 @@ const ModifyAttendance = () => {
   // 부서 전체 사용자 데이터
   const [allUsers, setAllUsers] = useState([]);
 
-  useEffect(() => {
-    axios.get('http://localhost:8000/user').then((res) => {
-      setAllUsers(res.data);
-    });
-  }, []);
-
   // 부서 전체 사용자 : 체크박스로 선택 가능
   // 체크된 아이템을 담을 배열
   const [checkItems, setCheckItems] = useState([]);
@@ -98,6 +92,9 @@ const ModifyAttendance = () => {
     setSearchName(newValue);
   };
 
+  // 선택한 사원의 전체 근태 내역
+  const [attendDatas, setAttendDatas] = useState([]);
+
   // 선택한 출/퇴근 날짜
   // 달력에서 날짜 클릭하면 해당 날짜의 출/퇴근 내용 불러오기
   const [selectDate, setSelectDate] = useState('');
@@ -125,7 +122,7 @@ const ModifyAttendance = () => {
       setAttendKind('start');
       setAttendDefault('default');
       setUpdateTime('');
-      setSelectDate('');
+      setSelectDate({});
     }
   }, [selectAttendData]);
 
@@ -134,7 +131,7 @@ const ModifyAttendance = () => {
       setAttendKind('start');
       setAttendDefault('default');
       setUpdateTime('');
-      setSelectDate('');
+      setSelectDate({});
       setSelectAttendData({});
     }
   }, [checkItems]);
@@ -159,9 +156,9 @@ const ModifyAttendance = () => {
   // 탭 0. 출/퇴근 전체 조회
   const [openAll, setOpenAll] = React.useState(false);
   // 모달창 : 날짜 검색 시작일
-  const [searchStartDate, setSearchStartDate] = useState('');
+  const [searchStartDate, setSearchStartDate] = useState({});
   // 모달창 : 날짜 검색 종료일
-  const [searchEndDate, setSearchEndDate] = useState('');
+  const [searchEndDate, setSearchEndDate] = useState({});
   // 모달창에서 선택한 출/퇴근 데이터 값
   const [searchAttendData, setSearchAttendData] = useState({});
   // 모달창 열기
@@ -211,9 +208,9 @@ const ModifyAttendance = () => {
   // 사용하지 않은 부분
   console.log(updateTime);
   console.log(selectUserData);
-  console.log(searchStartDate);
-  console.log(searchEndDate);
-  console.log(selectDate);
+  console.log(typeof searchStartDate);
+  console.log(typeof searchEndDate);
+  console.log(typeof selectDate);
   console.log(selectLeaveData);
   console.log(searchLeaveStartDate);
   console.log(searchLeaveEndDate);
@@ -236,30 +233,28 @@ const ModifyAttendance = () => {
     min-height: 37px;
   `;
 
-  // 데이터 생성
-  // 출/퇴근 관련
-  function createAttendData(date, startTime, endTime, status) {
-    return { date, startTime, endTime, status };
-  }
+  // 선택한 사용자
+  const user = {
+    user_no: 1,
+    user_name: '이유나',
+    user_position: '팀장',
+    dept: {
+      dept_no: 1,
+      dept_name: '개발1팀'
+    }
+  };
 
-  const attendDatas = [
-    createAttendData('2023/10/10', '08:57:10', '18:05:12', 0),
-    createAttendData('2023/10/11', '08:57:10', '18:05:12', 0),
-    createAttendData('2023/10/16', '08:59:26', '18:21:06', 1),
-    createAttendData('2023/10/12', '08:59:26', '18:21:06', 1),
-    createAttendData('2023/10/17', '08:50:13', '18:12:58', 2),
-    createAttendData('2023/10/13', '08:50:13', '18:12:58', 2),
-    createAttendData('2023/10/18', '08:06:35', '18:07:26', 3),
-    createAttendData('2023/10/14', '08:06:35', '18:07:26', 3),
-    createAttendData('2023/10/19', '08:32:57', '18:01:13', 0),
-    createAttendData('2023/10/15', '08:32:57', '18:01:13', 0),
-    createAttendData('2023/10/21', '08:32:57', '18:01:13', 0),
-    createAttendData('2023/10/22', '08:32:57', '18:01:13', 0),
-    createAttendData('2023/10/23', '08:32:57', '18:01:13', 0),
-    createAttendData('2023/10/24', '08:32:57', '18:01:13', 0),
-    createAttendData('2023/10/25', '08:32:57', '18:01:13', 0)
-  ];
+  useEffect(() => {
+    // 선택한 사용자의 전체 출퇴근 내역 조회 (이상 근태 내역은 전체 내역에서 필터링 처리)
+    axios.get(`http://localhost:8000/attendance?user_no=${user.user_no}`).then((res) => {
+      setAttendDatas(res.data);
+    });
+    axios.get(`http://localhost:8000/user?dept_no=${user.dept.dept_no}`).then((res) => {
+      setAllUsers(res.data);
+    });
+  }, []);
 
+  console.log(selectAttendData);
   // 휴가 관련
   function createLeaveData(leaveStart, leaveEnd, leaveType, leaveCnt, appDate, approver, status) {
     return { leaveStart, leaveEnd, leaveType, leaveCnt, appDate, approver, status };
@@ -332,10 +327,6 @@ const ModifyAttendance = () => {
                       <Grid container spacing={1} justifyContent="center">
                         <Grid item xs={12} sm={12} md={12} lg={12}>
                           <Typography variant="h5">일괄 출/퇴근 수정</Typography>
-                          <Box clone mt={2.5}>
-                            <BasicChip label="제목" color="gray" />
-                            <TextField size="small" />
-                          </Box>
                           <Box clone mt={1.5}>
                             <BasicChip label="수정사항" color="gray" />
                             <FormControl sx={{ ml: 1 }}>
@@ -557,18 +548,6 @@ const ModifyAttendance = () => {
                           <Typography variant="h5">선택된 휴가 없음</Typography>
                         </Box>
                       )}
-                    </Box>
-                    <Box clone mt={2}>
-                      <BasicChip label="제목" color="gray" />
-                      <TextField
-                        defaultValue={selectLeaveData.leaveStart}
-                        key={selectLeaveData.leaveStart}
-                        label="제목"
-                        id="title"
-                        size="small"
-                        sx={{ width: '30%' }}
-                        inputProps={{ readOnly: true }}
-                      />
                     </Box>
                     <Box clone mt={2} sx={{ display: 'flex' }}>
                       <BasicChip label="결재자" color="gray" />

@@ -26,6 +26,7 @@ import styled from 'styled-components';
 import AdminAppLeaveTable from 'components/Table/AdminAppLeaveTable';
 import AdminAppAttendTable from 'components/Table/AdminAppAttendTable';
 import BasicChip from 'components/Chip/BasicChip';
+import TimePicker2 from 'components/DatePicker/TimePicker';
 
 const ApprovalAttendance = () => {
   const [value1, setValue1] = useState(0); // 전체 Tab
@@ -43,6 +44,8 @@ const ApprovalAttendance = () => {
   const [appAttendStatus, setAppAttendStatus] = useState('attendApp');
   // 출/퇴근 승인 시 기본값, 직접입력
   const [appDefault, setAppDefault] = useState('default');
+  // 출/퇴근 수정 시간
+  const [updateTime, setUpdateTime] = useState('');
 
   useEffect(() => {
     setAppLeaveStatus('');
@@ -250,6 +253,9 @@ const ApprovalAttendance = () => {
       attendWaitapp++;
     }
   });
+
+  // 사용하지 않은 데이터
+  console.log(updateTime);
 
   return (
     <ComponentSkeleton>
@@ -613,7 +619,7 @@ const ApprovalAttendance = () => {
                       height: '540px',
                       borderBottomLeftRadius: '8px',
                       borderBottomRightRadius: '8px',
-                      p: 3
+                      py: 3
                     }}
                   >
                     {Object.keys(selectAttendData).length !== 0 && (
@@ -690,7 +696,7 @@ const ApprovalAttendance = () => {
                           )}
                           {selectAttendData.status == 2 && (
                             <MainCard
-                              sx={{ mt: 2, p: 1, pt: 1.5, width: '91%', justifyContent: 'center', alignItems: 'center' }}
+                              sx={{ mt: 2, p: 1, pt: 1.5, width: '100%', justifyContent: 'center', alignItems: 'center' }}
                               content={false}
                             >
                               <AppChip label="결재" />
@@ -719,7 +725,9 @@ const ApprovalAttendance = () => {
                                       <FormControlLabel value="other" control={<Radio size="small" />} label="직접입력" />
                                     </RadioGroup>
                                   </FormControl>
-                                  {appDefault == 'other' && <TextField size="small" sx={{ width: '30%' }} />}
+                                  {appDefault == 'other' && (
+                                    <TimePicker2 label={'출근수정시간'} setTime={setUpdateTime} sx={{ width: '30px' }} />
+                                  )}
                                   {appDefault == 'default' && (
                                     <TextField
                                       size="small"
