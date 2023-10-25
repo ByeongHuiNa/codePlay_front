@@ -124,7 +124,7 @@ const PublicCalendar = () => {
           <Grid item xs={3} justifyContent="flex-start">
             <Grid item>
               <Item>
-                <Grid>
+                <Grid sx={{ mt: -1 }}>
                   <CalendarDepWorkListTab></CalendarDepWorkListTab>
                 </Grid>
               </Item>
@@ -133,10 +133,10 @@ const PublicCalendar = () => {
             <Grid item mt={1.3}>
               <Item>
                 <Grid container direction="column" justifyContent="space-between" alignItems="flex-start">
-                  <Grid pl>
+                  <Grid pl sx={{ mt: -1 }}>
                     <h3>메모</h3>
                   </Grid>
-                  <Grid>
+                  <Grid sx={{ ml: -2, mt: -2 }}>
                     <CalendarDepWorkMemo />
                   </Grid>
                 </Grid>
