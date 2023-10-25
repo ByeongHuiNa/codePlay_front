@@ -163,9 +163,9 @@ export default function AppLeaveTotalTable({ requestLeaveCancel }) {
       const endPoints = ['http://localhost:8000/leave_approval'];
       const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
       // result[0].data를 필터링하여 leave_status가 1인 데이터만 추출
-      //const filteredData = result[0].data.filter((item) => item.leave_status === 0 || item.leave_status === 1);
+      const filteredData = result[0].data.filter((item) => item.leaveapp_status === 0 || item.leaveapp_status === 1);
 
-      setApp(result[0].data);
+      setApp(filteredData);
     }
     get();
   }, []);
@@ -253,7 +253,7 @@ export default function AppLeaveTotalTable({ requestLeaveCancel }) {
                   </TableCell>
                 </TableRow>
               ))}
-            ;
+            
           </TableBody>
           {/* <TableBody>
             {stableSort(datas, getComparator(order, orderBy)).map((data, index) => {
