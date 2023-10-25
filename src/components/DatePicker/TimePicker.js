@@ -12,8 +12,11 @@ export default function TimePicker2({ label, setTime }) {
   };
 
   const TimeChange = (time) => {
-    const ampm = time.$H >= 12 ? 'PM' : 'AM';
-    setTime(`${ampm} ${time.$H} : ${time.$m} : 00`);
+    const hours = time.$H;
+    const minutes = time.$m;
+    const date = new Date();
+    date.setHours(hours, minutes, 0, 0);
+    setTime(date.toISOString());
   };
 
   return (

@@ -234,10 +234,10 @@ const UserAttendance = () => {
   };
 
   // 아직 사용하지 않은 데이터
-  console.log(searchStartDate);
-  console.log(searchEndDate);
-  console.log(updateStartTime);
-  console.log(updateEndTime);
+  console.log(typeof searchStartDate);
+  console.log(typeof searchEndDate);
+  console.log(typeof updateStartTime);
+  console.log(typeof updateEndTime);
   console.log(approver);
   console.log(reason);
 
