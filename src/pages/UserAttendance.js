@@ -209,7 +209,7 @@ const UserAttendance = () => {
 
   useEffect(() => {
     // 로그인 한 사용자의 전체 출퇴근 내역 조회 (이상 근태 내역은 전체 내역에서 필터링 처리)
-    axios.get(`http://localhost:8000/attendance?user_no=${user.user_no}`).then((res) => {
+    axios.get(`http://localhost:8000/attendance1?user_no=${user.user_no}`).then((res) => {
       setAttendDatas(res.data);
     });
     // 로그인 한 사용자의 전체 출퇴근 수정 내역 조회
