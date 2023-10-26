@@ -27,9 +27,9 @@ const UserInformationModify = () => {
     const endPoints = [];
     console.log(location);
     if (location.state == null) {
-      endPoints.push(`http://localhost:8000/user_information?user_no=0`);
+      endPoints.push(`/user-information?user_no=1`);
     } else {
-      endPoints.push(`http://localhost:8000/user_information?user_no=${location.state.user_no}`);
+      endPoints.push(`/user-information?user_no=${location.state.user_no}`);
     }
     async function get() {
       const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
@@ -55,7 +55,7 @@ const UserInformationModify = () => {
 
   function saveUserInformationModify() {
     //TODO: 로그인한 사용자의 user_no 가져올것.
-    axios.patch('http://localhost:8000/user_information?user_no=0', profile).then(() => {
+    axios.patch('/user-information?user_no=1', profile).then(() => {
       setHasDrity(false);
       cancelClick();
     });
