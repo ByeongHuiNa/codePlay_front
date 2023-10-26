@@ -21,7 +21,7 @@ const UserInformation = () => {
   //화면 초기값 셋팅
   const { profile, setProfile } = useProfileState();
   //TODO: 로그인한 사용자의 user_no 가져올것.
-  const endPoints = ['http://localhost:8000/user_information?user_no=0'];
+  const endPoints = ['/user-information?user_no=1'];
 
   useEffect(() => {
     async function get() {

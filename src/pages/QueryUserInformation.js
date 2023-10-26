@@ -22,7 +22,7 @@ const QueryUserInformation = () => {
 
   useEffect(() => {
     async function get() {
-      const result = await axios.get('http://localhost:8000/user_query_list');
+      const result = await axios.get('/user-query-list');
       const groups = result.data.reduce(
         (groups, item) => ({
           ...groups,
@@ -39,7 +39,7 @@ const QueryUserInformation = () => {
 
   async function search_user(search) {
     setPage(1);
-    const result = await axios.get(`http://localhost:8000/user_query?user_name=${search}&_page=1&_limit=${limit}`);
+    const result = await axios.get(`/user-query?user_name=${search}&page=1&limit=${limit}`);
     setTableList(result.data);
   }
 
