@@ -15,6 +15,11 @@ import { useEffect, useState } from 'react';
 import MainCard from 'components/MainCard';
 
 const SeeAllAttendance = () => {
+  const [userInput, setUserInput] = useState(''); //사원검색창 입력값
+
+  const getValue = (e) => {
+    setUserInput(e.target.value.toLowerCase())};
+
   const [dept, setDept] = useState('');
   const handleChange2 = (event) => {
     setDept(event.target.value);
@@ -105,6 +110,7 @@ const SeeAllAttendance = () => {
             </Grid>
 
             <TextField
+              
               id="outlined-basic"
               label="직책명"
               variant="outlined"
@@ -113,6 +119,8 @@ const SeeAllAttendance = () => {
               }}
             />
             <TextField
+              value={userInput}
+              onChange={getValue}
               id="outlined-basic"
               label="사원명"
               variant="outlined"
