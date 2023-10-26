@@ -67,7 +67,7 @@ export default function CalendarWorkModalContent({ handleClose }) {
   };
 
   const customList = (title, items) => (
-    <Card sx={{ mt: 7 , backgroundColor: '#e3f2fd' }}>
+    <Card sx={{ mt: 7, backgroundColor: '#e3f2fd' }}>
       <CardHeader
         sx={{ px: 2, py: 1 }}
         avatar={
