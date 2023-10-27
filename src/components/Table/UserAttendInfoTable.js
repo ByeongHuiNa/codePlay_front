@@ -6,6 +6,16 @@ import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow }
 import { Stack, Typography } from '../../../node_modules/@mui/material/index';
 import Dot from 'components/@extended/Dot';
 
+function dateFormat(date) {
+  let month = date.getMonth() + 1;
+  let day = date.getDate();
+
+  month = month >= 10 ? month : '0' + month;
+  day = day >= 10 ? day : '0' + day;
+
+  return date.getFullYear() + '/' + month + '/' + day;
+}
+
 // ==============================|| ORDER TABLE - HEADER CELL ||============================== //
 
 const headCells = [
@@ -68,33 +78,44 @@ const OrderStatus = ({ status }) => {
   let color;
   let title;
 
-  // 0 : 정상출근
-  // 1 : 휴가(연차,반차,공가)
-  // 2 : 지각
-  // 3 : 조퇴(조기퇴근)
-  // 4 : 결근(출근 혹은 퇴근누락))
+  // 정상출근
+  // 휴가(연차,오전반차,오후반차,공가)
+  // 지각
+  // 조퇴(조기퇴근)
+  // 결근(출근 혹은 퇴근누락))
   switch (status) {
-    case 0:
+    case '정상':
       color = 'success';
       title = '정상';
       break;
-    case 1:
+    case '휴가(연차)':
       color = 'primary';
-      title = '휴가';
+      title = '연차';
       break;
-    case 2:
+    case '휴가(오전반차)':
+      color = 'primary';
+      title = '오전 반차';
+      break;
+    case '휴가(오후반차)':
+      color = 'primary';
+      title = '오후 반차';
+      break;
+    case '휴가(공가)':
+      color = 'primary';
+      title = '공가';
+      break;
+    case '지각':
       color = 'secondary';
       title = '지각';
       break;
-    case 3:
+    case '조퇴':
       color = 'warning';
       title = '조퇴';
       break;
-    case 4:
+    case '결근':
       color = 'error';
       title = '결근';
   }
-
   return (
     <Stack direction="row" alignItems="center" justifyContent="center" spacing={1}>
       <Dot color={color} />
@@ -155,27 +176,15 @@ export default function UserAttendInfoTable({ data }) {
               {Object.keys(data).length !== 0 && (
                 <>
                   <TableCell component="th" scope="data" align="center">
-                    {data.attend_date}
+                    {dateFormat(new Date(data.attend_date))}
                   </TableCell>
-                  <TableCell align="center">{data.attend_start}</TableCell>
-                  <TableCell align="center">{data.attend_end}</TableCell>
+                  <TableCell align="center">{data.attend_start ? data.attend_start : '-'}</TableCell>
+                  <TableCell align="center">{data.attend_end ? data.attend_end : '-'}</TableCell>
                   <TableCell align="center">
                     <OrderStatus status={data.attend_status} />
                   </TableCell>
                 </>
               )}
-              {/* {Object.keys(data).length === 0 && (
-                <Box
-                  p={1}
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'center', // 수평 중앙 정렬
-                    alignItems: 'center' // 수직 중앙 정렬
-                  }}
-                >
-                  <Typography variant="h5">선택된 날짜 없음</Typography>
-                </Box>
-              )} */}
             </TableRow>
           </TableBody>
         </Table>
