@@ -25,6 +25,7 @@ import UpdateAttendTable from 'components/Table/UpdateAttendTable';
 import BasicDatePicker from 'components/DatePicker/BasicDatePicker';
 import BasicChip from 'components/Chip/BasicChip';
 import { UploadOutlined } from '../../node_modules/@mui/icons-material/index';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import TimePicker2 from 'components/DatePicker/TimePicker';
 import UserAllAttendTable from 'components/Table/UserAllAttendTable';
 import UserAttendInfoTable from 'components/Table/UserAttendInfoTable';
@@ -103,33 +104,33 @@ const UserAttendance = () => {
     setAttendEndDefault(event.target.value);
   };
 
+  // 수정 제목
+  const [title, setTitle] = useState('');
   // 수정 사유
   const [reason, setReason] = useState('');
 
   // 출퇴근 수정 완료 버튼
   function submitAttendEdit() {
-    alert('수정완료');
-    // axios
-    //   .post(`http://localhost:8000/attendance_edit_approval?user_no=${user.user_no}&attend_no=${selectAttendData.attend_no}`, {
-    //     user_no: user.user_no,
-    //     attend_no: selectAttendData.attend_no,
-    //     attendedit_reason: reason,
-    //     attendedit_kind: startChecked === true && endChecked === true ? 2 : startChecked === true ? 0 : 1,
-    //     attendedit_time:
-    //       startChecked === true && endChecked === true
-    //         ? [updateStartTime, updateEndTime]
-    //         : startChecked === true
-    //         ? updateStartTime
-    //         : updateEndTime,
-    //     attendedit_date: new Date().toLocaleDateString(),
-    //     attendedit_title: `${user.user_name}/${selectAttendData.attend_date}/${
-    //       startChecked === true && endChecked === true ? '출퇴근' : startChecked === true ? '출근' : '퇴근'
-    //     }`,
-    //     attendapp_user_no: approver.user_no
-    //   })
-    //   .then(() => {
-    //     alter('ㅇ');
-    //   });
+    if (Object.keys(selectAttendData).length === 0 || Object.keys(approver).length === 0) {
+      alert('eee');
+    } else {
+      axios
+        .post(`/attend-edit?user_no=${user.user_no}&attend_no=${selectAttendData.attend_no}`, {
+          attendedit_title: title
+            ? title
+            : `${user.user_name}/${selectAttendData.attend_date}/${
+                startChecked === true && endChecked === true ? '출퇴근' : startChecked === true ? '출근' : '퇴근'
+              }`,
+          attendedit_reason: reason,
+          attendedit_kind: startChecked === true && endChecked === true ? 2 : startChecked === true ? 0 : 1,
+          attendedit_start_time: startChecked !== true ? null : updateStartTime ? updateStartTime : '09:00:00',
+          attendedit_end_time: endChecked !== true ? null : updateEndTime ? updateEndTime : '18:00:00',
+          attendapp_user_no: approver.user_no
+        })
+        .then((res) => {
+          console.log(res);
+        });
+    }
   }
 
   // 탭 1. 출/퇴근 수정 목록 조회
@@ -143,6 +144,9 @@ const UserAttendance = () => {
       setAttendEndDefault('default');
       setUpdateStartTime('');
       setUpdateEndTime('');
+      setTitle('');
+      setReason('');
+      setApprover({});
     }
   }, [selectAttendData]);
 
@@ -209,15 +213,15 @@ const UserAttendance = () => {
 
   useEffect(() => {
     // 로그인 한 사용자의 전체 출퇴근 내역 조회 (이상 근태 내역은 전체 내역에서 필터링 처리)
-    axios.get(`http://localhost:8000/attendance1?user_no=${user.user_no}`).then((res) => {
+    axios.get(`/user-attend?user_no=${user.user_no}`).then((res) => {
       setAttendDatas(res.data);
     });
     // 로그인 한 사용자의 전체 출퇴근 수정 내역 조회
-    axios.get(`http://localhost:8000/attendance_edit_approval?user_no=${user.user_no}`).then((res) => {
+    axios.get(`/attend-edit?user_no=${user.user_no}`).then((res) => {
       setAttendEditDatas(res.data);
     });
     // 로그인 한 사용자 부서의 근태 담당자 내역 -> 결재자 검색창 autocomplete
-    axios.get(`http://localhost:8000/user?dept_no=${user.dept.dept_no}&user_position=${user.user_position}`).then((res) => {
+    axios.get(`/dept-manager?dept_no=${user.dept.dept_no}`).then((res) => {
       setAllUsers(res.data);
     });
   }, []);
@@ -236,10 +240,6 @@ const UserAttendance = () => {
   // 아직 사용하지 않은 데이터
   console.log(typeof searchStartDate);
   console.log(typeof searchEndDate);
-  console.log(typeof updateStartTime);
-  console.log(typeof updateEndTime);
-  console.log(approver);
-  console.log(reason);
 
   return (
     <ComponentSkeleton>
@@ -261,7 +261,9 @@ const UserAttendance = () => {
                   </Box>
                   <Box mt={1}>
                     <UserAllAttendTable
-                      datas={attendDatas.filter((data) => data.attend_status > 1)}
+                      datas={attendDatas.filter(
+                        (data) => data.attend_status === '지각' || data.attend_status === '결근' || data.attend_status === '조퇴'
+                      )}
                       handleMyCard={handleMyCard}
                       height={'650px'}
                       selectAttendData={selectAttendData}
@@ -302,7 +304,18 @@ const UserAttendance = () => {
                           <Typography variant="h5">출/퇴근 수정</Typography>
                           <Box clone mt={3}>
                             <BasicChip label="제목" color="gray" />
-                            <TextField size="small" />
+                            <TextField
+                              size="small"
+                              onChange={(e) => {
+                                setTitle(e.target.value);
+                              }}
+                            />
+                          </Box>
+                          <Box clone mt={1} sx={{ display: 'flex', alignItems: 'center' }}>
+                            <ErrorOutlineIcon fontSize="medium" color="secondary" sx={{ mx: 1 }} />
+                            <Typography size="small" color="secondary">
+                              입력하지 않을 시 자동 생성됩니다.
+                            </Typography>
                           </Box>
                           <Box clone mt={2.5} sx={{ display: 'flex' }}>
                             <BasicChip label="결재자" color="gray" />
@@ -421,7 +434,7 @@ const UserAttendance = () => {
               <Button variant="contained">검색</Button>
             </Grid>
           </Grid>
-          <UserAllAttendTable datas={attendDatas} handleMyCard={setSearchAttendData} searchAttendData={searchAttendData} height={'470px'} />
+          <UserAllAttendTable datas={attendDatas} handleMyCard={setSearchAttendData} searchAttendData={searchAttendData} height={'400px'} />
           <Grid container justifyContent="right" spacing={1} sx={{ mt: 2 }}>
             <Grid item>
               <Button variant="contained" size="medium" onClick={handleCloseAll}>
@@ -575,7 +588,7 @@ const UserAttendance = () => {
             </Grid>
           </Box>
           <Stack direction="row" justifyContent="flex-end" mt={2} mr={1.5}>
-            <Button variant="contained" size="medium" onClick={handleCloseRead} sx={{backgroundColor:"#42a5f5"}}>
+            <Button variant="contained" size="medium" onClick={handleCloseRead} sx={{ backgroundColor: '#42a5f5' }}>
               닫기
             </Button>
           </Stack>
