@@ -92,7 +92,8 @@ UserLeaveTableHead.propTypes = {
 
 // ==============================|| ORDER TABLE - STATUS ||============================== //
 
-const UserLeaveStatus = ({ status }) => {
+//결재상태
+const OrderStatus = ({ status }) => {
   let color;
   let title;
 
@@ -109,8 +110,13 @@ const UserLeaveStatus = ({ status }) => {
       title = '결재반려';
       break;
     case 2:
+        color = 'primary';
+        title = '결재진행중';
+        break;
+    case 3:
       color = 'primary';
       title = '결재대기';
+      break;
   }
 
   return (
@@ -120,12 +126,56 @@ const UserLeaveStatus = ({ status }) => {
   );
 };
 
-UserLeaveStatus.propTypes = {
+OrderStatus.propTypes = {
   status: PropTypes.number
+};
+//휴가종류
+const Type = ({ type }) => {
+  
+  let title;
+
+  // 0 : 연차 
+  // 1 : 오전반차
+  // 2 : 오후반차
+  // 3 : 공가
+  // 4 : 휴가취소
+
+  switch (type) {
+    case 0:
+      
+      title = '연차';
+      break;
+    case 1:
+    
+      title = '오전반차';
+      break;
+    case 2:
+        
+        title = '오후반차';
+        break;
+    case 3:
+      
+      title = '공가';
+      break;
+    case 4:
+      title = '휴가취소';
+      break;
+  }
+
+  return (
+    <Stack direction="row" alignItems="center" justifyContent="center" spacing={1}>
+    
+      {title}
+    </Stack>
+  );
+};
+
+Type.propTypes = {
+  type: PropTypes.number
 };
 
 // ==============================|| ORDER TABLE ||============================== //
-
+//메인페이지 휴가신청목록
 export default function UserLeaveTable() {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
@@ -136,12 +186,13 @@ export default function UserLeaveTable() {
 
   useEffect(() => {
     async function get() {
-      const endPoints = ['http://localhost:8000/leave_approval'];
-      const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
+      // const endPoints = ['http://localhost:8000/leave_approval'];
+      // const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
+      const result = await axios.get('/user-leave-request?user_no=1');
       // result[0].data를 필터링하여 leave_status가 1인 데이터만 추출
       //const filteredData = result[0].data.filter((item) => item.leave_status === 1);
 
-      setApp(result[0].data);
+      setApp(result.data);
     }
     get();
   }, []);
@@ -195,13 +246,13 @@ export default function UserLeaveTable() {
                   //selected={isItemSelected}
                 >
                   <TableCell component="th" id={app.leaveapp_no} scope="data" align="center">
-                    {app.leaveapp_type}
+                    <Type type={app.leaveapp_type} />
                   </TableCell>
                   <TableCell align="center">{app.leaveapp_start}</TableCell>
                   <TableCell align="center">{app.leaveapp_end}</TableCell>
 
                   <TableCell align="center">
-                    <UserLeaveStatus status={app.leaveapp_status} />
+                    <OrderStatus status={app.leaveapp_status} />
                   </TableCell>
                 </TableRow>
               ))}

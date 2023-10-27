@@ -69,10 +69,12 @@ export default function VacationDonutChart() {
 
   useEffect(() => {
     async function get() {
-      const endPoints = ['http://localhost:8000/user_leave'];
-      const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
-      setLeave(result[0].data[0]);
-      setSeries([result[0].data[0].leave_remain, result[0].data[0].leave_use]);
+      //const endPoints = ['http://localhost:8000/user_leave'];
+      const result = await axios.get('/user-leave?user_no=1');
+      console.log("result: " + result.data.leave_remain);
+      //const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
+      setLeave(result.data);
+      setSeries([result.data.leave_remain, result.data.leave_use]);
     }
     get();
   }, []);

@@ -171,8 +171,8 @@ const Main = () => {
         </MainCard>
       </Grid>
 
-      <Grid item xs={4}>
-        <MainCard>
+      <Grid item xs={4} >
+        <MainCard style={{ height: '415px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px' }}>
             <Typography align="left" variant="h5">
               휴가신청목록
