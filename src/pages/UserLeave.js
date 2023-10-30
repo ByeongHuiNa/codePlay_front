@@ -44,8 +44,11 @@ const UserLeave = () => {
   }, []);
 
   // 결재 대기 중인 휴가 취소 (바로 취소 가능)
-  const leaveCancel = () => {
-    alert('취소하시겠습니까?');
+  const leaveCancel = (leaveapp_no) => {
+    axios.delete(`/user-leave-request-await?leaveapp_no=${leaveapp_no}`).then((res) => {
+      alert(res.data + ' 선택한 휴가 취소 완료');
+      setIndex(0);
+    });
   };
 
   // 결재 완료 된 휴가 취소 신청 (결재 받은 뒤 취소 처리)
@@ -89,13 +92,34 @@ const UserLeave = () => {
 
   // 같은 부서의 근태담당자 (우선 지금은 팀장) 사용자 데이터
   const [allUsers, setAllUsers] = useState([]);
+  // 로그인 한 사용자의 휴가 보유 현황 [사용연차, 잔여연차]
+  const [leaveCnt, setLeaveCnt] = useState([0, 0]);
+  // 로그인 한 사용자의 휴가신청내역 (결재대기 상태)
+  const [leaveRequestAwait, setLeaveRequestAwait] = useState([]);
+  // 로그인 한 사용자의 휴가신청내역 (결재완료-승인/반려, 결재진행중 상태)
+  const [leaveRequestRecent, setLeaveRequestRecent] = useState([]);
 
   useEffect(() => {
     // 로그인 한 사용자 부서의 근태 담당자 내역 -> 결재자 검색창 autocomplete
-    axios.get(`http://localhost:8000/user?dept_no=${user.dept.dept_no}&user_position=${user.user_position}`).then((res) => {
+    axios.get(`/dept-manager?dept_no=${user.dept.dept_no}`).then((res) => {
       setAllUsers(res.data);
     });
-  }, []);
+    // 로그인 한 사용자의 휴가 보유 현황 가져오기
+    axios.get(`/user-leave?user_no=${user.user_no}`).then((res) => {
+      setLeaveCnt([res.data.leave_use, res.data.leave_remain]);
+    });
+    // 로그인 한 사용자의 승인,반려,결재진행중 상태인 모든 휴가신청내역 가져오기
+    axios.get(`/user-leave-request-recent?user_no=${user.user_no}`).then((res) => {
+      setLeaveRequestRecent(res.data);
+    });
+  }, [index]);
+
+  useEffect(() => {
+    // 로그인 한 사용자의 결재대기 상태인 모든 휴가신청내역 가져오기
+    axios.get(`/user-leave-request-await?user_no=${user.user_no}`).then((res) => {
+      setLeaveRequestAwait(res.data);
+    });
+  }, [leaveRequestAwait]);
 
   // Chip 커스텀
   const MyChip = styled(Chip)`
@@ -193,7 +217,7 @@ const UserLeave = () => {
         <Grid container spacing={1}>
           <Grid item xs={4} sm={4} md={4} lg={4} sx={{ height: '360px' }}>
             <BasicContainer sx={{ height: 1 }}>
-              <LeaveDonutChart series={[12, 4]} />
+              <LeaveDonutChart series={leaveCnt} />
             </BasicContainer>
           </Grid>
           <Grid item xs={8} sm={8} md={8} lg={8} sx={{ overflow: 'auto' }}>
@@ -203,7 +227,7 @@ const UserLeave = () => {
                   <Typography variant="h5">결재 대기 내역</Typography>
                 </Grid>
               </Grid>
-              <UnappLeaveTable leaveCancel={leaveCancel} />
+              <UnappLeaveTable leaveCancel={leaveCancel} datas={leaveRequestAwait} handleOpen={handleOpen} />
             </BasicContainer>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -213,7 +237,7 @@ const UserLeave = () => {
                   <Typography variant="h5">최근 결재 완료 내역</Typography>
                 </Grid>
               </Grid>
-              <AppLeaveTable requestLeaveCancel={requestLeaveCancel} handleOpen={handleOpen} />
+              <AppLeaveTable requestLeaveCancel={requestLeaveCancel} datas={leaveRequestRecent.slice(0, 7)} handleOpen={handleOpen} />
             </BasicContainer>
           </Grid>
         </Grid>
