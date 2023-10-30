@@ -21,19 +21,30 @@ const Main = () => {
 
   const [formattedDate, setFormattedDate] = useState('');
 
+  const formData = {};
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    axios.post('/user-attend-today?user_no=1', formData);
+  };
+
   useEffect(() => {
     async function get() {
-      const endPoints = ['/user-information?user_no=1','/user-attend-today?user_no=1'];
+      const endPoints = ['/user-information?user_no=1', '/user-attend-today?user_no=1'];
       const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
       setProfile(result[0].data[0]);
       // const resultAttend = await axios.get('/user-attend-today?user_no=1');
       setAttend(result[1].data[0]);
-      const dateObject = new Date(attend.attend_date);
-      setFormattedDate(dateObject.toLocaleDateString());
-      
+      // const dateObject = new Date(attend.attend_date);
+      // setFormattedDate(dateObject.toLocaleDateString());
+
+      // null 값 검사
+      if (attend && attend.attend_date) {
+        const dateObject = new Date(attend.attend_date);
+        setFormattedDate(dateObject.toLocaleDateString());
+      }
     }
     get();
-  }, [attend]);
+  }, []);
 
   // useEffect(() => {
   //   async function get() {
@@ -138,14 +149,14 @@ const Main = () => {
           <Box mb={2}>
             <Grid container justifyContent="center" spacing={1}>
               <Grid item>
-                <Button variant="outlined" size="large">
-                  <Box mx={6}>
-                    출근
-                  </Box>
-                </Button>
+                <form onSubmit={handleFormSubmit}>
+                  <Button variant="outlined" size="large" type="submit">
+                    <Box mx={6}>출근</Box>
+                  </Button>
+                </form>
               </Grid>
               <Grid item>
-                <Button variant="contained" size="large">
+                <Button variant="contained" size="large" type="submit">
                   <Box mx={6}>퇴근</Box>
                 </Button>
               </Grid>
