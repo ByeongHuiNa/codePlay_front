@@ -1,9 +1,8 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 
 // material-ui
-import { Box, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { Box, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 
 // // third-party
 // import NumberFormat from 'react-number-format';
@@ -127,23 +126,35 @@ const AttendanceStatus = ({ status }) => {
   // 4 : 결근(출근 혹은 퇴근누락))
 
   switch (status) {
-    case 0:
+    case '정상':
       color = 'success';
       title = '정상';
       break;
-    case 1:
+    case '휴가(연차)':
       color = 'primary';
-      title = '휴가';
+      title = '휴가(연차)';
       break;
-    case 2:
+    case '휴가(오전반차)':
+      color = 'primary';
+      title = '휴가(오전반차)';
+      break;
+    case '휴가(오후반차)':
+      color = 'primary';
+      title = '휴가(오후반차)';
+      break;
+    case '휴가(공가)':
+      color = 'primary';
+      title = '휴가(공가)';
+      break;
+    case '지각':
       color = 'secondary';
       title = '지각';
       break;
-    case 3:
+    case '조퇴':
       color = 'warning';
       title = '조퇴';
       break;
-    case 4:
+    case '결근':
       color = 'error';
       title = '결근';
   }
@@ -157,7 +168,7 @@ const AttendanceStatus = ({ status }) => {
 };
 
 AttendanceStatus.propTypes = {
-  status: PropTypes.number
+  status: PropTypes.string
 };
 
 // ==============================|| ORDER TABLE ||============================== //
@@ -165,8 +176,18 @@ AttendanceStatus.propTypes = {
 export default function AttendanceTable({ month }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
+  const [total, setTotal] = useState(0);
+  const [normal, setNormal] = useState(0);
+  const [odd, setOdd] = useState(0);
+  const [leave, setLeave] = useState(0);
   //const [selected] = useState([]);
   const { attendance, setAttendance } = useAttendanceState();
+
+
+  // let normal = 0;
+  // let notnormal = 0;
+  // let leave = 0;
+
   // const [total, setTotal] = useState(0); //출퇴근현황 개수
   // const [normal, setNormal] = useState(0); //정상 출퇴근 개수
   // const [problem, setProblem] = useState(0); //근태이상 개수
@@ -174,32 +195,38 @@ export default function AttendanceTable({ month }) {
 
   useEffect(() => {
     async function get() {
-      const endPoints = ['http://localhost:8000/attendance'];
-      const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
+      //const endPoints = ['http://localhost:8000/attendance'];
+      //const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
       // result[0].data를 필터링하여 leave_status가 1인 데이터만 추출
-      const filteredData = result[0].data.filter((item) => new Date(item.attend_date).getMonth()+1 == month );
-      console.log("달:" + filteredData);
-      console.log("월:" + month);
-      console.log("ㅋㅋ:" + result[0].data);
-      setAttendance(filteredData);
-      // const dateObject = new Date(result[0].data[0].attend_date);
-      // const month = dateObject.getMonth() + 1;
+      const result = await axios.get(`/user-attend-month?user_no=1&month=${month}`);
 
-      //setTotal(result[0].data.length);
+      setAttendance(result.data);
+      console.log('zzzz: ' + result.data.length);
 
-      // for (let i = 0; i < result[0].data.length; i++) {
-      //   console.log('월: ' + month);
+      setTotal(result.data.length);
 
-      //   if (result[0].data[i].attend_status === 0) {
-      //     setNormal(normal + 1);
-      //   }
-      //   if (result[0].data[i].attend_status === 1) {
-      //     setLeave(leave + 1);
-      //   }
-      //   if (result[0].data[i].attend_status === 2 || result[0].data[i].attend_status === 3 || result[0].data[i].attend_status === 4) {
-      //     setProblem(problem + 1);
-      //   }
-      // }
+          // 변수 초기화
+          let normalCount = 0;
+          let oddCount = 0;
+          let leaveCount = 0;
+    
+          // "attendance" 배열을 반복하여 상태별로 개수 계산
+          result.data.forEach((item) => {
+            if (item.attend_status === '정상') {
+              normalCount++;
+            } else if (item.attend_status === '지각' || item.attend_status === '조퇴' || item.attend_status === '결근') {
+              oddCount++;
+            } else if (item.attend_status.includes('휴가')) {
+              leaveCount++;
+            }
+          });
+    
+          setTotal(result.data.length);
+          setNormal(normalCount);
+          setOdd(oddCount);
+          setLeave(leaveCount);
+
+    
     }
     get();
   }, [month]);
@@ -216,7 +243,7 @@ export default function AttendanceTable({ month }) {
                 전체
               </Typography>
               <Typography variant="h5" style={{ textAlign: 'center' }}>
-                {/* {total}건 */}
+                {total}건
               </Typography>
             </MainCard>
           </Grid>
@@ -226,7 +253,7 @@ export default function AttendanceTable({ month }) {
                 정상
               </Typography>
               <Typography variant="h5" style={{ textAlign: 'center' }}>
-                {/* {normal}건 */}
+                {normal}건
               </Typography>
             </MainCard>
           </Grid>
@@ -236,7 +263,7 @@ export default function AttendanceTable({ month }) {
                 근태이상
               </Typography>
               <Typography variant="h5" style={{ textAlign: 'center' }}>
-                {/* {problem}건 */}
+                {odd}건
               </Typography>
             </MainCard>
           </Grid>
@@ -246,7 +273,7 @@ export default function AttendanceTable({ month }) {
                 휴가
               </Typography>
               <Typography variant="h5" style={{ textAlign: 'center' }}>
-                {/* {leave}건 */}
+                {leave}건
               </Typography>
             </MainCard>
           </Grid>
@@ -276,33 +303,30 @@ export default function AttendanceTable({ month }) {
           <AttendanceTableHead order={order} orderBy={orderBy} />
           <TableBody>
             {Object.values(attendance)
-              .slice(0, 5)
-              .map((attendance) => (
-                // const isItemSelected = isSelected(row.date);
-                // const labelId = `enhanced-table-checkbox-${index}`;
 
-                <TableRow
-                  hover
-                  role="checkbox"
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                  //aria-checked={isItemSelected}
-                  tabIndex={-1}
-                  key={attendance.attend_end}
-                  //selected={isItemSelected}
-                >
-                  <TableCell component="th" id={attendance.attend_no} scope="row" align="center">
-                    <Link color="secondary" component={RouterLink} to="">
-                      {attendance.attend_date}
-                    </Link>
-                  </TableCell>
-                  <TableCell align="center">{attendance.attend_start}</TableCell>
-                  <TableCell align="center">{attendance.attend_end}</TableCell>
-                  <TableCell align="center">
-                    <AttendanceStatus status={attendance.attend_status} />
-                  </TableCell>
-                </TableRow>
-              ))}
-            
+              // .slice(0, 5)
+              .map((attendance) => {
+                const dateObject = new Date(attendance.attend_date);
+                const formattedDate = dateObject.toLocaleDateString();
+                return (
+                  <TableRow
+                    hover
+                    role="checkbox"
+                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    //aria-checked={isItemSelected}
+                    tabIndex={-1}
+                    key={attendance.attend_no}
+                    //selected={isItemSelected}
+                  >
+                    <TableCell align="center">{formattedDate}</TableCell>
+                    <TableCell align="center">{attendance.attend_start}</TableCell>
+                    <TableCell align="center">{attendance.attend_end}</TableCell>
+                    <TableCell align="center">
+                      <AttendanceStatus status={attendance.attend_status} />
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
           </TableBody>
           {/* <TableBody>
             {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {

@@ -146,6 +146,7 @@ const UserAttendanceTotalPage = () => {
                     <option value={4}>4월</option>
                     <option value={3}>3월</option>
                     <option value={2}>2월</option>
+                    <option value={1}>1월</option>
                   </NativeSelect>
                 </FormControl>
               </div>
@@ -222,6 +223,7 @@ const UserAttendanceTotalPage = () => {
                     <option value={4}>4월</option>
                     <option value={3}>3월</option>
                     <option value={2}>2월</option>
+                    <option value={1}>1월</option>
                   </NativeSelect>
                 </FormControl>
               </div>

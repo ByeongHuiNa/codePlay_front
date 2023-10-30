@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { Box, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 // project import
-import { Button, Chip, Pagination} from '../../../node_modules/@mui/material/index';
+import { Button, Chip, Pagination } from '../../../node_modules/@mui/material/index';
 import LeaveModal from 'components/Modal/LeaveModal';
 import { useApprovalState2 } from 'store/module';
 import axios from '../../../node_modules/axios/index';
@@ -134,9 +134,9 @@ const OrderStatus = ({ status }) => {
       title = '결재반려';
       break;
     case 2:
-        color = 'primary';
-        title = '결재진행중';
-        break;
+      color = 'primary';
+      title = '결재진행중';
+      break;
     case 3:
       color = 'primary';
       title = '결재대기';
@@ -155,10 +155,9 @@ OrderStatus.propTypes = {
 };
 //휴가종류
 const Type = ({ type }) => {
-  
   let title;
 
-  // 0 : 연차 
+  // 0 : 연차
   // 1 : 오전반차
   // 2 : 오후반차
   // 3 : 공가
@@ -166,19 +165,15 @@ const Type = ({ type }) => {
 
   switch (type) {
     case 0:
-      
       title = '연차';
       break;
     case 1:
-    
       title = '오전반차';
       break;
     case 2:
-        
-        title = '오후반차';
-        break;
+      title = '오후반차';
+      break;
     case 3:
-      
       title = '공가';
       break;
     case 4:
@@ -188,7 +183,6 @@ const Type = ({ type }) => {
 
   return (
     <Stack direction="row" alignItems="center" justifyContent="center" spacing={1}>
-    
       {title}
     </Stack>
   );
@@ -214,7 +208,7 @@ export default function AppLeaveTotalTable({ requestLeaveCancel }) {
       const result = await axios.get('/user-leave-request?user_no=1');
       // result[0].data를 필터링하여 leave_status가 1인 데이터만 추출
       //const filteredData = result[0].data.filter((item) => item.leaveapp_status === 0 || item.leaveapp_status === 1);
-      console.log("result: " + result.data);
+      console.log('result: ' + result.data);
       setApp(result.data);
     }
     get();
@@ -305,7 +299,6 @@ export default function AppLeaveTotalTable({ requestLeaveCancel }) {
                   </TableCell>
                 </TableRow>
               ))}
-            
           </TableBody>
           {/* <TableBody>
             {stableSort(datas, getComparator(order, orderBy)).map((data, index) => {

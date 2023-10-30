@@ -110,9 +110,9 @@ const OrderStatus = ({ status }) => {
       title = '결재반려';
       break;
     case 2:
-        color = 'primary';
-        title = '결재진행중';
-        break;
+      color = 'primary';
+      title = '결재진행중';
+      break;
     case 3:
       color = 'primary';
       title = '결재대기';
@@ -131,10 +131,9 @@ OrderStatus.propTypes = {
 };
 //휴가종류
 const Type = ({ type }) => {
-  
   let title;
 
-  // 0 : 연차 
+  // 0 : 연차
   // 1 : 오전반차
   // 2 : 오후반차
   // 3 : 공가
@@ -142,19 +141,15 @@ const Type = ({ type }) => {
 
   switch (type) {
     case 0:
-      
       title = '연차';
       break;
     case 1:
-    
       title = '오전반차';
       break;
     case 2:
-        
-        title = '오후반차';
-        break;
+      title = '오후반차';
+      break;
     case 3:
-      
       title = '공가';
       break;
     case 4:
@@ -164,7 +159,6 @@ const Type = ({ type }) => {
 
   return (
     <Stack direction="row" alignItems="center" justifyContent="center" spacing={1}>
-    
       {title}
     </Stack>
   );
