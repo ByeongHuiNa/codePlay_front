@@ -64,16 +64,16 @@ const headCells = [
     label: '휴가사용일수'
   },
   {
-    id: 'appDate',
+    id: 'approver1',
     align: 'center',
     disablePadding: false,
-    label: '결재일'
+    label: '1차결재자'
   },
   {
-    id: 'approver',
+    id: 'approver2',
     align: 'center',
     disablePadding: false,
-    label: '결재자'
+    label: '2차결재자'
   },
   {
     id: 'status',
@@ -116,7 +116,7 @@ OrderTableHead.propTypes = {
 };
 
 // ==============================|| ORDER TABLE - STATUS ||============================== //
-
+//결재상태
 const OrderStatus = ({ status }) => {
   let color;
   let title;
@@ -135,7 +135,12 @@ const OrderStatus = ({ status }) => {
       break;
     case 2:
       color = 'primary';
+      title = '결재진행중';
+      break;
+    case 3:
+      color = 'primary';
       title = '결재대기';
+      break;
   }
 
   return (
@@ -147,6 +152,44 @@ const OrderStatus = ({ status }) => {
 
 OrderStatus.propTypes = {
   status: PropTypes.number
+};
+//휴가종류
+const Type = ({ type }) => {
+  let title;
+
+  // 0 : 연차
+  // 1 : 오전반차
+  // 2 : 오후반차
+  // 3 : 공가
+  // 4 : 휴가취소
+
+  switch (type) {
+    case 0:
+      title = '연차';
+      break;
+    case 1:
+      title = '오전반차';
+      break;
+    case 2:
+      title = '오후반차';
+      break;
+    case 3:
+      title = '공가';
+      break;
+    case 4:
+      title = '휴가취소';
+      break;
+  }
+
+  return (
+    <Stack direction="row" alignItems="center" justifyContent="center" spacing={1}>
+      {title}
+    </Stack>
+  );
+};
+
+Type.propTypes = {
+  type: PropTypes.number
 };
 
 // ==============================|| ORDER TABLE ||============================== //
@@ -160,12 +203,13 @@ export default function AppLeaveTotalTable({ requestLeaveCancel }) {
 
   useEffect(() => {
     async function get() {
-      const endPoints = ['http://localhost:8000/leave_approval'];
-      const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
+      //const endPoints = ['http://localhost:8000/leave_approval'];
+      //const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
+      const result = await axios.get('/user-leave-request?user_no=1');
       // result[0].data를 필터링하여 leave_status가 1인 데이터만 추출
-      const filteredData = result[0].data.filter((item) => item.leaveapp_status === 0 || item.leaveapp_status === 1);
-
-      setApp(filteredData);
+      //const filteredData = result[0].data.filter((item) => item.leaveapp_status === 0 || item.leaveapp_status === 1);
+      console.log('result: ' + result.data);
+      setApp(result.data);
     }
     get();
   }, []);
@@ -239,10 +283,12 @@ export default function AppLeaveTotalTable({ requestLeaveCancel }) {
                   </TableCell>
                   {/* <TableCell align="center">{app.leaveEnd}</TableCell> */}
                   <TableCell align="center">{app.leaveapp_end}</TableCell>
-                  <TableCell align="center">{app.leaveapp_type}</TableCell>
-                  <TableCell align="center">{app.leaveapp_count}</TableCell>
-                  <TableCell align="center">{app.leaveapp_final_date}</TableCell>
-                  <TableCell align="center">{app.leaveapp_user_name}</TableCell>
+                  <TableCell align="center">
+                    <Type type={app.leaveapp_type} />
+                  </TableCell>
+                  <TableCell align="center">{app.leaveapp_total}</TableCell>
+                  <TableCell align="center">{app.one}</TableCell>
+                  <TableCell align="center">{app.two}</TableCell>
                   <TableCell align="center">
                     <OrderStatus status={app.leaveapp_status} />
                   </TableCell>
@@ -253,7 +299,6 @@ export default function AppLeaveTotalTable({ requestLeaveCancel }) {
                   </TableCell>
                 </TableRow>
               ))}
-            
           </TableBody>
           {/* <TableBody>
             {stableSort(datas, getComparator(order, orderBy)).map((data, index) => {

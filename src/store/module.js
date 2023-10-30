@@ -161,7 +161,7 @@ export const useAttendanceState = create(
   }))
 );
 
-//사용자의 오늘휴가
+//사용자의 오늘 근태
 export const useTodayState = create(
   devtools((set) => ({
     attend: {},

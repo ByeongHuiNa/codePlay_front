@@ -18,7 +18,8 @@ const SeeAllAttendance = () => {
   const [userInput, setUserInput] = useState(''); //사원검색창 입력값
 
   const getValue = (e) => {
-    setUserInput(e.target.value.toLowerCase())};
+    setUserInput(e.target.value.toLowerCase());
+  };
 
   const [dept, setDept] = useState('');
   const handleChange2 = (event) => {
@@ -87,29 +88,30 @@ const SeeAllAttendance = () => {
       </Box>
 
       <BasicTab value={value} index={0}>
-        <Grid item xs={12} sm={6} md={5} lg={7}>
-          <MainCard>
-            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <Typography variant="h5">{dept ? `${dept} 부서 출/퇴근 현황` : '개발 부서 휴가보유 현황 '}</Typography>
-              <FormControl sx={{ marginLeft: 3 }}>
-                <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                  부서
-                </InputLabel>
-                <NativeSelect
-                  onChange={handleChange2}
-                  inputProps={{
-                    name: 'month',
-                    id: 'uncontrolled-native'
-                  }}
-                >
-                  <option value={'개발'}>개발부서</option>
-                  <option value={'인사'}>인사부서</option>
-                  <option value={'회계'}>회계부서</option>
-                </NativeSelect>
-              </FormControl>
-            </Grid>
+        <Grid container>
+          <Grid item xs={6}>
+            <MainCard>
+              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Typography variant="h5">{dept ? `${dept} 부서 출/퇴근 현황` : '개발 부서 휴가보유 현황 '}</Typography>
+                <FormControl sx={{ marginLeft: 3 }}>
+                  <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                    부서
+                  </InputLabel>
+                  <NativeSelect
+                    onChange={handleChange2}
+                    inputProps={{
+                      name: 'month',
+                      id: 'uncontrolled-native'
+                    }}
+                  >
+                    <option value={'개발'}>개발부서</option>
+                    <option value={'인사'}>인사부서</option>
+                    <option value={'회계'}>회계부서</option>
+                  </NativeSelect>
+                </FormControl>
+              </Grid>
 
-            <TextField
+              {/* <TextField
               
               id="outlined-basic"
               label="직책명"
@@ -117,23 +119,27 @@ const SeeAllAttendance = () => {
               InputLabelProps={{
                 shrink: true
               }}
-            />
-            <TextField
-              value={userInput}
-              onChange={getValue}
-              id="outlined-basic"
-              label="사원명"
-              variant="outlined"
-              InputLabelProps={{
-                shrink: true
-              }}
-            />
+            /> */}
+              <TextField
+                value={userInput}
+                onChange={getValue}
+                id="outlined-basic"
+                label="사원명"
+                variant="outlined"
+                InputLabelProps={{
+                  shrink: true
+                }}
+              />
 
-            <IconButton type="submit" sx={{ p: '10px' }} aria-label="search">
-              <SearchIcon />
-            </IconButton>
-            <VacationCountTable />
-          </MainCard>
+              <IconButton type="submit" sx={{ p: '10px' }} aria-label="search">
+                <SearchIcon />
+              </IconButton>
+              <VacationCountTable />
+            </MainCard>
+          </Grid>
+          <Grid item xs={6}>
+            <MainCard></MainCard>
+          </Grid>
         </Grid>
       </BasicTab>
 
@@ -182,7 +188,7 @@ const SeeAllAttendance = () => {
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Grid container  rowSpacing={4} columnSpacing={2.75}>
+                <Grid container rowSpacing={4} columnSpacing={2.75}>
                   <Grid item xs={3}>
                     <MainCard>
                       <Typography variant="h4" align="center">

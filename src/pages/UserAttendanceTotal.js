@@ -121,7 +121,7 @@ const UserAttendanceTotalPage = () => {
           <Grid item xs={12} sm={12} md={12} lg={12}>
             <MainCard>
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <Typography variant="h5">{month2}월 결재완료내역</Typography>
+                <Typography variant="h5">{month2}월 결재 진행/완료내역</Typography>
 
                 <FormControl sx={{ marginLeft: 3 }}>
                   <InputLabel variant="standard" htmlFor="uncontrolled-native">
@@ -146,6 +146,7 @@ const UserAttendanceTotalPage = () => {
                     <option value={4}>4월</option>
                     <option value={3}>3월</option>
                     <option value={2}>2월</option>
+                    <option value={1}>1월</option>
                   </NativeSelect>
                 </FormControl>
               </div>
@@ -222,6 +223,7 @@ const UserAttendanceTotalPage = () => {
                     <option value={4}>4월</option>
                     <option value={3}>3월</option>
                     <option value={2}>2월</option>
+                    <option value={1}>1월</option>
                   </NativeSelect>
                 </FormControl>
               </div>
