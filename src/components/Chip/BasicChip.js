@@ -1,7 +1,8 @@
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Chip } from '../../../node_modules/@mui/material/index';
 
-export default function BasicChip({ label, color }) {
+const BasicChip = ({ label, color }) => {
   const MyChip = styled(Chip)`
     background-color: ${color};
     color: white;
@@ -10,9 +11,12 @@ export default function BasicChip({ label, color }) {
     margin-right: 10px;
   `;
 
-  return (
-    <>
-      <MyChip label={label} />
-    </>
-  );
-}
+  return <MyChip label={label} />;
+};
+
+BasicChip.propTypes = {
+  label: PropTypes.string,
+  color: PropTypes.string
+};
+
+export default BasicChip;

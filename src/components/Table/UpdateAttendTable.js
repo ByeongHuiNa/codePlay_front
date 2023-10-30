@@ -6,9 +6,7 @@ import { Box, Stack, Table, TableBody, TableCell, TableContainer, TableHead, Tab
 
 // project import
 import { Chip } from '../../../node_modules/@mui/material/index';
-
-// 아이콘
-// import {  } from '@ant-design/icons';
+import { useFormatter } from 'store/module';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -137,8 +135,9 @@ export default function UpdateAttendTable({ handleOpenRead, datas }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
-
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
+  // 날짜 형식
+  const { dateFormat } = useFormatter();
 
   return (
     <Box>
@@ -187,17 +186,17 @@ export default function UpdateAttendTable({ handleOpenRead, datas }) {
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   aria-checked={isItemSelected}
                   tabIndex={-1}
-                  key={data.date}
+                  key={data.attendapp_no}
                   selected={isItemSelected}
                   onClick={() => {
                     handleOpenRead(data);
                   }}
                 >
                   <TableCell component="th" id={labelId} scope="data" align="center">
-                    {data.attendedit_date}
+                    {dateFormat(new Date(data.attendedit_date))}
                   </TableCell>
                   <TableCell align="center">{data.attendedit_title}</TableCell>
-                  <TableCell align="center">{data.attend.attend_date}</TableCell>
+                  <TableCell align="center">{dateFormat(new Date(data.attend_date))}</TableCell>
                   <TableCell align="center">
                     {data.attendedit_kind === 0 ? '출근' : data.attendedit_kind === 1 ? '퇴근' : '출근/퇴근'}
                   </TableCell>

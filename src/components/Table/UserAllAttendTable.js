@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { Stack, Typography } from '../../../node_modules/@mui/material/index';
 import Dot from 'components/@extended/Dot';
+import { useFormatter } from 'store/module';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -30,16 +31,6 @@ function stableSort(array, comparator) {
     return a[1] - b[1];
   });
   return stabilizedThis.map((el) => el[0]);
-}
-
-function dateFormat(date) {
-  let month = date.getMonth() + 1;
-  let day = date.getDate();
-
-  month = month >= 10 ? month : '0' + month;
-  day = day >= 10 ? day : '0' + day;
-
-  return date.getFullYear() + '/' + month + '/' + day;
 }
 
 // ==============================|| ORDER TABLE - HEADER CELL ||============================== //
@@ -160,8 +151,9 @@ export default function UserAllAttendTable({ datas, handleMyCard, height, select
   const [order] = useState('asc');
   const [orderBy] = useState('date');
   const [selected] = useState([]);
-
   const isSelected = (date) => selected.indexOf(date) !== -1;
+  // 날짜 형식
+  const { dateFormat } = useFormatter();
 
   return (
     <Box>
