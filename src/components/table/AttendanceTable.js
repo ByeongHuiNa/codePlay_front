@@ -286,7 +286,9 @@ export default function AttendanceTable({ month }) {
           position: 'relative',
           display: 'block',
           maxWidth: '100%',
-          '& td, & th': { whiteSpace: 'nowrap' }
+          '& td, & th': { whiteSpace: 'nowrap' },
+          // maxHeight를 설정하여 테이블 높이를 제한
+          maxHeight: '400px', // 원하는 높이로 변경하세요
         }}
       >
         <Table
