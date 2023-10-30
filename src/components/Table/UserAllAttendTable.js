@@ -32,16 +32,6 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-function dateFormat(date) {
-  let month = date.getMonth() + 1;
-  let day = date.getDate();
-
-  month = month >= 10 ? month : '0' + month;
-  day = day >= 10 ? day : '0' + day;
-
-  return date.getFullYear() + '/' + month + '/' + day;
-}
-
 // ==============================|| ORDER TABLE - HEADER CELL ||============================== //
 
 const headCells = [
@@ -156,7 +146,7 @@ OrderStatus.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function UserAllAttendTable({ datas, handleMyCard, height, selectAttendData, searchAttendData }) {
+export default function UserAllAttendTable({ datas, handleMyCard, height, selectAttendData, searchAttendData, dateFormat }) {
   const [order] = useState('asc');
   const [orderBy] = useState('date');
   const [selected] = useState([]);

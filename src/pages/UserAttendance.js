@@ -26,6 +26,7 @@ import BasicDatePicker from 'components/DatePicker/BasicDatePicker';
 import BasicChip from 'components/Chip/BasicChip';
 import { UploadOutlined } from '../../node_modules/@mui/icons-material/index';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
 import TimePicker2 from 'components/DatePicker/TimePicker';
 import UserAllAttendTable from 'components/Table/UserAllAttendTable';
 import UserAttendInfoTable from 'components/Table/UserAttendInfoTable';
@@ -34,8 +35,30 @@ import axios from '../../node_modules/axios/index';
 import AppAuto from 'components/AutoComplete/AppAuto';
 import ModalS from 'components/Modal/ModalS';
 
+// 파일 업로드
+const VisuallyHiddenInput = styled.input`
+  clip: rect(0 0 0 0);
+  clippath: inset(50%);
+  height: 1;
+  overflow: hidden;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  whitespace: nowrap;
+  width: 1;
+`;
+
+// 데이터 형식 포맷 함수 : 년/월/일
+function dateFormat(date) {
+  let month = date.getMonth() + 1;
+  let day = date.getDate();
+  month = month >= 10 ? month : '0' + month;
+  day = day >= 10 ? day : '0' + day;
+  return date.getFullYear() + '/' + month + '/' + day;
+}
+
 const UserAttendance = () => {
-  // 탭(0.출/퇴근수정, 1.수정요청목록)
+  // 탭(0.출/퇴근수정, 1.수정요청목록) ================================
   const [value, setValue] = useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -43,26 +66,31 @@ const UserAttendance = () => {
     setUpdateEndTime('');
     setAttendStartDefault('default');
     setAttendEndDefault('default');
-    setSearchStartDate('');
-    setSearchEndDate('');
     setSelectAttendData({});
     setStartChecked(false);
     setEndChecked(false);
+    // searchInitial();
   };
 
-  // 탭 0. 출/퇴근 수정
-  // 수정 데이터
+  // 탭 0. 출/퇴근 수정 =========================================
+  // 수정 할 데이터
   const [selectAttendData, setSelectAttendData] = useState({});
 
-  // 모달창에서 선택한 데이터 -> 확인 버튼 클릭하면 수정 데이터로 저장
+  // 수정 할 데이터를 선택할 때마다 리렌더링
+  useEffect(() => {
+    if (Object.keys(selectAttendData).length !== 0) {
+      setAttendStartDefault('default');
+      setAttendEndDefault('default');
+      setUpdateStartTime('');
+      setUpdateEndTime('');
+    }
+  }, [selectAttendData]);
+
+  // 최근 이상 근태 내역 전체보기 모달창
+  // 모달창에서 선택한 데이터 -> 확인 버튼 클릭하면 수정 할 데이터로 저장
   const [searchAttendData, setSearchAttendData] = useState({});
 
-  // 근태 내역 전체보기 모달창
-  // 출/퇴근 목록 검색 : 시작날짜~종료날짜
-  const [searchStartDate, setSearchStartDate] = useState('');
-  const [searchEndDate, setSearchEndDate] = useState('');
-
-  // 테이블에서 데이터 선택 시 수정 데이터(selectAttendData)에 저장
+  // 테이블에서 데이터 선택 시 수정 할 데이터(selectAttendData)에 저장
   const handleMyCard = async (data) => {
     try {
       setSelectAttendData(data);
@@ -74,13 +102,12 @@ const UserAttendance = () => {
   };
 
   // 출/퇴근 수정 폼
-  // 출근 : 수정할 시간
-  const [updateStartTime, setUpdateStartTime] = useState('');
-  // 퇴근 : 수정할 시간
-  const [updateEndTime, setUpdateEndTime] = useState('');
+  const [title, setTitle] = useState(''); // 수정 제목
+  const [reason, setReason] = useState(''); // 수정 사유
+  const [updateStartTime, setUpdateStartTime] = useState(''); // 출근 : 수정할 시간
+  const [updateEndTime, setUpdateEndTime] = useState(''); // 퇴근 : 수정할 시간
 
-  // 수정 요청 시 체크 박스
-  // true : 체크 O, false : 체크 X
+  // 수정 요청 시 체크 박스 (true : 체크 O, false : 체크 X)
   const [startChecked, setStartChecked] = useState(false);
   const [endChecked, setEndChecked] = useState(false);
 
@@ -93,32 +120,31 @@ const UserAttendance = () => {
   };
 
   // 출근 수정 요청 시 라디오 : 수정시간 기본값/직접입력 선택
-  const [attendStartDefault, setAttendStartDefault] = useState('');
+  const [attendStartDefault, setAttendStartDefault] = useState('default');
   const handleDefaultStartChange = (event) => {
     setAttendStartDefault(event.target.value);
   };
 
   // 퇴근 수정 요청 시 라디오 : 수정시간 기본값/직접입력 선택
-  const [attendEndDefault, setAttendEndDefault] = useState('');
+  const [attendEndDefault, setAttendEndDefault] = useState('default');
   const handleDefaultEndChange = (event) => {
     setAttendEndDefault(event.target.value);
   };
 
-  // 수정 제목
-  const [title, setTitle] = useState('');
-  // 수정 사유
-  const [reason, setReason] = useState('');
-
-  // 출퇴근 수정 완료 버튼
+  // 출퇴근 수정 완료 버튼 함수
   function submitAttendEdit() {
-    if (Object.keys(selectAttendData).length === 0 || Object.keys(approver).length === 0) {
-      alert('eee');
+    if (
+      Object.keys(selectAttendData).length === 0 ||
+      Object.keys(approver).length === 0 ||
+      (startChecked === false && endChecked === false)
+    ) {
+      alert('날짜 선택하시고 결재자 선택하시고 수정사항 선택하세요.');
     } else {
       axios
         .post(`/attend-edit?user_no=${user.user_no}&attend_no=${selectAttendData.attend_no}`, {
           attendedit_title: title
             ? title
-            : `${user.user_name}/${selectAttendData.attend_date}/${
+            : `${user.user_name}-${dateFormat(new Date(selectAttendData.attend_date))}-${
                 startChecked === true && endChecked === true ? '출퇴근' : startChecked === true ? '출근' : '퇴근'
               }`,
           attendedit_reason: reason,
@@ -128,79 +154,120 @@ const UserAttendance = () => {
           attendapp_user_no: approver.user_no
         })
         .then((res) => {
-          console.log(res);
+          alert(res);
+          setValue(1);
         });
     }
   }
 
-  // 탭 1. 출/퇴근 수정 목록 조회
-  // 목록에서 선택한 수정 데이터 -> 모달창에서 조회
-  const [selectAttendEditData, setSelectAttendEditData] = useState({});
+  // 탭 1. 출/퇴근 수정 목록 조회 ====================================
+  const [selectAttendEditData, setSelectAttendEditData] = useState({}); //목록에서 선택한 수정 데이터 : 모달창에서 상세 조회
 
-  // 데이터를 선택할 때마다 리렌더링
-  useEffect(() => {
-    if (Object.keys(selectAttendData).length !== 0) {
-      setAttendStartDefault('default');
-      setAttendEndDefault('default');
-      setUpdateStartTime('');
-      setUpdateEndTime('');
-      setTitle('');
-      setReason('');
-      setApprover({});
+  // 날짜별 데이터 검색 =========================================
+  const [searchStartDate, setSearchStartDate] = useState(new Date().toISOString().slice(0, 10)); // 검색 시작 날짜
+  const [searchEndDate, setSearchEndDate] = useState(new Date().toISOString().slice(0, 10)); // 검색 종료 날짜
+  const [filteredAttendData, setFilteredAttendData] = useState([0, []]); // 검색 결과 : 출퇴근 내역
+  const [filteredAttendEditData, setFilteredAttendEditData] = useState([0, []]); // 검색 결과 : 출퇴근 수정 내역
+
+  console.log(searchStartDate);
+  console.log(searchEndDate);
+
+  // 출퇴근 내역 검색 함수
+  const searchAttendButton = () => {
+    const startDate = new Date(searchStartDate);
+    const endDate = new Date(searchEndDate);
+    if (startDate > endDate) {
+      alert('종료일이 시작일보다 작을 수 없습니다.');
+    } else if (!searchStartDate || !searchEndDate) {
+      alert('검색일을 선택해주세요.');
+    } else {
+      setFilteredAttendData((prevState) => {
+        const newFiltered = [...prevState];
+        newFiltered[0] = 1;
+        newFiltered[1] = attendDatas.filter((attend) => {
+          const attendDate = new Date(attend.attend_date);
+          return attendDate >= startDate && attendDate <= endDate;
+        });
+        return newFiltered;
+      });
     }
-  }, [selectAttendData]);
+  };
 
-  // 모달창 설정
-  // 탭 0. 출/퇴근 전체 조회
-  const [openAll, setOpenAll] = React.useState(false);
-  const handleOpenAll = () => setOpenAll(true);
+  // 출퇴근 수정 내역 검색 함수
+  const searchAttendEditButton = () => {
+    const startDate = new Date(searchStartDate);
+    const endDate = new Date(searchEndDate);
+    if (startDate > endDate) {
+      alert('종료일이 시작일보다 작을 수 없습니다.');
+    } else {
+      setFilteredAttendEditData((prevState) => {
+        const newFiltered = [...prevState];
+        newFiltered[0] = 1;
+        newFiltered[1] = attendEditDatas.filter((attendEdit) => {
+          const attendEditDate = new Date(attendEdit.attend_date);
+          return attendEditDate >= startDate && attendEditDate <= endDate;
+        });
+        return newFiltered;
+      });
+    }
+  };
+
+  // 검색 초기화
+  const searchInitial = () => {
+    setFilteredAttendData([0, []]);
+    setFilteredAttendEditData([0, []]);
+    setSearchStartDate(new Date());
+    setSearchEndDate(new Date());
+  };
+
+  // 모달창 설정 =============================================
+  const [openAll, setOpenAll] = React.useState(false); // 탭 0. 출/퇴근 전체 조회 : 최근 이상 근태 내역 전체보기
+  const handleOpenAll = () => setOpenAll(true); // 모달창 활성화 버튼
+  // 모달창 취소 버튼 (데이터 저장 O)
   const handleCloseAllSave = () => {
-    // 모달창 취소 버튼 (데이터 저장 X)
     setOpenAll(false);
     setSelectAttendData(searchAttendData);
-    setSearchStartDate('');
-    setSearchEndDate('');
+    setSearchStartDate(new Date());
+    setSearchEndDate(new Date());
+    setFilteredAttendData((prevState) => {
+      const newFiltered = [...prevState];
+      newFiltered[0] = 0;
+      newFiltered[1] = [];
+      return newFiltered;
+    });
   };
+  // 모달창 확인 버튼 (데이터 저장 X)
   const handleCloseAll = () => {
-    // 모달창 확인 버튼 (데이터 저장 O)
     setOpenAll(false);
     setSearchAttendData({});
-    setSearchStartDate('');
-    setSearchEndDate('');
+    setSearchStartDate(new Date());
+    setSearchEndDate(new Date());
+    setFilteredAttendData((prevState) => {
+      const newFiltered = [...prevState];
+      newFiltered[0] = 0;
+      newFiltered[1] = [];
+      return newFiltered;
+    });
   };
 
-  // 탭 1. 수정 목록 상세 조회
-  const [openRead, setOpenRead] = React.useState(false);
+  const [openRead, setOpenRead] = React.useState(false); // 탭 1. 수정 목록 상세 조회
+  // 모달창 활성화 버튼
   const handleOpenRead = (data) => {
     setSelectAttendEditData(data);
     setOpenRead(true);
   };
+  // 모달창 취소 버튼
   const handleCloseRead = () => {
     setSelectAttendEditData({});
     setOpenRead(false);
   };
 
-  // 파일 업로드
-  const VisuallyHiddenInput = styled('input')`
-    clip: rect(0 0 0 0);
-    clippath: inset(50%);
-    height: 1;
-    overflow: hidden;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    whitespace: nowrap;
-    width: 1;
-  `;
-
   // 로그인 한 사용자
   const user = {
     user_no: 1,
     user_name: '이유나',
-    user_position: '팀장',
     dept: {
-      dept_no: 1,
-      dept_name: '개발1팀'
+      dept_no: 1
     }
   };
 
@@ -224,7 +291,7 @@ const UserAttendance = () => {
     axios.get(`/dept-manager?dept_no=${user.dept.dept_no}`).then((res) => {
       setAllUsers(res.data);
     });
-  }, []);
+  }, [value]);
 
   // 자동완성
   // 결재자 창에서 검색한 이름
@@ -236,10 +303,6 @@ const UserAttendance = () => {
   const handleSelectUser = (event, newValue) => {
     setSearchName(newValue);
   };
-
-  // 아직 사용하지 않은 데이터
-  console.log(typeof searchStartDate);
-  console.log(typeof searchEndDate);
 
   return (
     <ComponentSkeleton>
@@ -267,6 +330,7 @@ const UserAttendance = () => {
                       handleMyCard={handleMyCard}
                       height={'650px'}
                       selectAttendData={selectAttendData}
+                      dateFormat={dateFormat}
                     />
                   </Box>
                 </MainCard>
@@ -281,7 +345,7 @@ const UserAttendance = () => {
                         </Grid>
                       </Grid>
                       <Box clone mt={1}>
-                        <UserAttendInfoTable data={selectAttendData} />
+                        <UserAttendInfoTable data={selectAttendData} dateFormat={dateFormat} />
                         {Object.keys(selectAttendData).length === 0 && (
                           <Box
                             p={1}
@@ -291,7 +355,10 @@ const UserAttendance = () => {
                               alignItems: 'center' // 수직 중앙 정렬
                             }}
                           >
-                            <Typography variant="h5">선택된 날짜 없음</Typography>
+                            <ErrorOutlineIcon fontSize="medium" color="secondary" sx={{ mx: 1 }} />
+                            <Typography size="small" color="secondary">
+                              선택된 날짜 없음
+                            </Typography>
                           </Box>
                         )}
                       </Box>
@@ -312,9 +379,9 @@ const UserAttendance = () => {
                             />
                           </Box>
                           <Box clone mt={1} sx={{ display: 'flex', alignItems: 'center' }}>
-                            <ErrorOutlineIcon fontSize="medium" color="secondary" sx={{ mx: 1 }} />
+                            <EditNoteRoundedIcon fontSize="medium" color="secondary" sx={{ mx: 1 }} />
                             <Typography size="small" color="secondary">
-                              입력하지 않을 시 자동 생성됩니다.
+                              제목을 입력하지 않을 시 자동 지정됩니다.
                             </Typography>
                           </Box>
                           <Box clone mt={2.5} sx={{ display: 'flex' }}>
@@ -330,10 +397,8 @@ const UserAttendance = () => {
                           </Box>
                           <Box clone mt={2.5}>
                             <BasicChip label="수정사항" color="gray" />
-                            <Checkbox size="small" checked={startChecked} onChange={handleStartChange} />
-                            출근
-                            <Checkbox size="small" checked={endChecked} onChange={handleEndChange} />
-                            퇴근
+                            <Checkbox size="small" checked={startChecked} onChange={handleStartChange} /> 출근
+                            <Checkbox size="small" checked={endChecked} onChange={handleEndChange} /> 퇴근
                           </Box>
                           {startChecked === true && (
                             <Box clone mt={2.5}>
@@ -421,20 +486,33 @@ const UserAttendance = () => {
         </Box>
         <AttendUpdateModal open={openAll} handleClose={handleCloseAll}>
           <Grid container alignItems="center" direction="row" spacing={1} sx={{ mb: 2 }}>
-            <Grid item xs={3.5} md={3.5} lg={4}>
+            <Grid item xs={3.4} md={3.4} lg={3.4}>
               <Typography variant="h5">전체 근태 내역</Typography>
             </Grid>
-            <Grid item xs={3.5} md={3.5} lg={3.5}>
-              <BasicDatePicker setDate={setSearchStartDate} />
+            <Grid item xs={3} md={3} lg={3}>
+              <BasicDatePicker setDate={setSearchStartDate} val={searchStartDate} />
             </Grid>
-            <Grid item xs={3.5} md={3.5} lg={3.5}>
-              <BasicDatePicker setDate={setSearchEndDate} />
+            <Grid item xs={3} md={3} lg={3}>
+              <BasicDatePicker setDate={setSearchEndDate} val={searchEndDate} />
             </Grid>
-            <Grid item xs={1.5} md={1.5} lg={1}>
-              <Button variant="contained">검색</Button>
+            <Grid item xs={1.1} md={1.1} lg={1.1}>
+              <Button variant="contained" onClick={searchAttendButton}>
+                검색
+              </Button>
+            </Grid>
+            <Grid item xs={1.5} md={1.5} lg={1.5}>
+              <Button variant="contained" onClick={searchInitial}>
+                초기화
+              </Button>
             </Grid>
           </Grid>
-          <UserAllAttendTable datas={attendDatas} handleMyCard={setSearchAttendData} searchAttendData={searchAttendData} height={'400px'} />
+          <UserAllAttendTable
+            datas={filteredAttendData[0] === 0 ? attendDatas : filteredAttendData[1]}
+            handleMyCard={setSearchAttendData}
+            searchAttendData={searchAttendData}
+            height={'470px'}
+            dateFormat={dateFormat}
+          />
           <Grid container justifyContent="right" spacing={1} sx={{ mt: 2 }}>
             <Grid item>
               <Button variant="contained" size="medium" onClick={handleCloseAll}>
@@ -458,11 +536,6 @@ const UserAttendance = () => {
               </Grid>
               <Grid item xs={9} md={9} lg={9}>
                 <Grid container justifyContent="right" spacing={1}>
-                  <Grid item sx={{ mt: 0.3 }}>
-                    <Button variant="contained" color="secondary">
-                      전체
-                    </Button>
-                  </Grid>
                   <Grid item>
                     <BasicDatePicker label={'YYYY / MM / DD'} setDate={setSearchStartDate} />
                   </Grid>
@@ -470,15 +543,24 @@ const UserAttendance = () => {
                     <BasicDatePicker label={'YYYY / MM / DD'} setDate={setSearchEndDate} />
                   </Grid>
                   <Grid item sx={{ mt: 0.3 }}>
-                    <Button variant="contained" color="secondary">
+                    <Button variant="contained" color="secondary" onClick={searchAttendEditButton}>
                       조회
+                    </Button>
+                  </Grid>
+                  <Grid item sx={{ mt: 0.3 }}>
+                    <Button variant="contained" color="secondary" onClick={searchInitial}>
+                      초기화
                     </Button>
                   </Grid>
                 </Grid>
               </Grid>
             </Grid>
             <MainCard sx={{ mt: 2 }} content={false}>
-              <UpdateAttendTable handleOpenRead={handleOpenRead} datas={attendEditDatas} />
+              <UpdateAttendTable
+                handleOpenRead={handleOpenRead}
+                datas={filteredAttendEditData[0] === 0 ? attendEditDatas : filteredAttendEditData[1]}
+                dateFormat={dateFormat}
+              />
             </MainCard>
           </BasicContainer>
         </Box>
@@ -501,13 +583,13 @@ const UserAttendance = () => {
                     <BasicChip label="수정시간(출근)" color="#42a5f5" />
                   </Grid>
                   <Grid item xs={9} md={9} lg={9}>
-                    <Typography>{selectAttendEditData.attendedit_time[0]}</Typography>
+                    <Typography>{selectAttendEditData.attendedit_start_time}</Typography>
                   </Grid>
                   <Grid item xs={3} md={3} lg={3}>
                     <BasicChip label="수정시간(퇴근)" color="#42a5f5" />
                   </Grid>
                   <Grid item xs={9} md={9} lg={9}>
-                    <Typography>{selectAttendEditData.attendedit_time[1]}</Typography>
+                    <Typography>{selectAttendEditData.attendedit_end_time}</Typography>
                   </Grid>
                 </>
               )}
@@ -523,7 +605,11 @@ const UserAttendance = () => {
                     <BasicChip label={selectAttendEditData.attendedit_kind === 0 ? '수정시간(출근)' : '수정시간(퇴근)'} color="#42a5f5" />
                   </Grid>
                   <Grid item xs={9} md={9} lg={9}>
-                    <Typography>{selectAttendEditData.attendedit_time}</Typography>
+                    <Typography>
+                      {selectAttendEditData.attendedit_kind === 0
+                        ? selectAttendEditData.attendedit_start_time
+                        : selectAttendEditData.attendedit_end_time}
+                    </Typography>
                   </Grid>
                 </>
               )}
@@ -537,15 +623,13 @@ const UserAttendance = () => {
                 <BasicChip label="요청일자" color="#42a5f5" />
               </Grid>
               <Grid item xs={9} md={9} lg={9}>
-                <Typography>{selectAttendEditData.attendedit_date}</Typography>
+                <Typography>{dateFormat(new Date(selectAttendEditData.attendedit_date))}</Typography>
               </Grid>
               <Grid item xs={3} md={3} lg={3}>
                 <BasicChip label="결재자" color="#42a5f5" />
               </Grid>
               <Grid item xs={9} md={9} lg={9}>
-                {allUsers.length > 0 && Object.keys(selectAttendEditData).length > 0 && (
-                  <Typography>{allUsers.find((a) => a.user_no === selectAttendEditData.attendapp_user_no)?.user_name}</Typography>
-                )}
+                <Typography>{selectAttendEditData.attendapp_user_name}</Typography>
               </Grid>
               <Grid item xs={3} md={3} lg={3}>
                 <BasicChip label="결재상태" color="#42a5f5" />

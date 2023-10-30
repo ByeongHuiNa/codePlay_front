@@ -6,16 +6,6 @@ import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow }
 import { Stack, Typography } from '../../../node_modules/@mui/material/index';
 import Dot from 'components/@extended/Dot';
 
-function dateFormat(date) {
-  let month = date.getMonth() + 1;
-  let day = date.getDate();
-
-  month = month >= 10 ? month : '0' + month;
-  day = day >= 10 ? day : '0' + day;
-
-  return date.getFullYear() + '/' + month + '/' + day;
-}
-
 // ==============================|| ORDER TABLE - HEADER CELL ||============================== //
 
 const headCells = [
@@ -130,7 +120,7 @@ OrderStatus.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function UserAttendInfoTable({ data }) {
+export default function UserAttendInfoTable({ data, dateFormat }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
 
