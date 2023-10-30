@@ -190,3 +190,28 @@ export const useCalendarMemoModal = create(
     setMemoView: (newMemoView) => set(() => ({ memoView: newMemoView }))
   }))
 );
+
+export const useFormatter = create(
+  devtools(() => ({
+    // Date 날짜 년/월/일 형식으로 변환
+    dateFormat: (date) => {
+      let month = date.getMonth() + 1;
+      let day = date.getDate();
+      month = month >= 10 ? month : '0' + month;
+      day = day >= 10 ? day : '0' + day;
+      return date.getFullYear() + '/' + month + '/' + day;
+    },
+    // Date 시간 시:분:초 형식으로 변환
+    timeFormat: (time) => {
+      const hour = time.$H;
+      const minute = time.$m;
+      const second = time.$s;
+      const date = new Date();
+      date.setHours(hour, minute, second, 0);
+      let hours = date.getHours() >= 10 ? date.getHours() : '0' + date.getHours();
+      let minutes = date.getMinutes() >= 10 ? date.getMinutes() : '0' + date.getMinutes();
+      let seconds = date.getSeconds() >= 10 ? date.getSeconds() : '0' + date.getSeconds();
+      return `${hours}:${minutes}:${seconds}`;
+    }
+  }))
+);

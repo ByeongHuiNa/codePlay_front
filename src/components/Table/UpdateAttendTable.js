@@ -6,6 +6,7 @@ import { Box, Stack, Table, TableBody, TableCell, TableContainer, TableHead, Tab
 
 // project import
 import { Chip } from '../../../node_modules/@mui/material/index';
+import { useFormatter } from 'store/module';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -130,12 +131,13 @@ OrderStatus.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function UpdateAttendTable({ handleOpenRead, datas, dateFormat }) {
+export default function UpdateAttendTable({ handleOpenRead, datas }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
-
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
+  // 날짜 형식
+  const { dateFormat } = useFormatter();
 
   return (
     <Box>

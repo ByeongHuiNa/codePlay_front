@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { Stack, Typography } from '../../../node_modules/@mui/material/index';
 import Dot from 'components/@extended/Dot';
+import { useFormatter } from 'store/module';
 
 // ==============================|| ORDER TABLE - HEADER CELL ||============================== //
 
@@ -120,9 +121,11 @@ OrderStatus.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function UserAttendInfoTable({ data, dateFormat }) {
+export default function UserAttendInfoTable({ data }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
+  // 날짜 형식
+  const { dateFormat } = useFormatter();
 
   return (
     <Box>

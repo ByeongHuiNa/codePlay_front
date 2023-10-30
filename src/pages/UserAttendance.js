@@ -34,6 +34,7 @@ import styled from 'styled-components';
 import axios from '../../node_modules/axios/index';
 import AppAuto from 'components/AutoComplete/AppAuto';
 import ModalS from 'components/Modal/ModalS';
+import { useFormatter } from 'store/module';
 
 // 파일 업로드
 const VisuallyHiddenInput = styled.input`
@@ -48,16 +49,10 @@ const VisuallyHiddenInput = styled.input`
   width: 1;
 `;
 
-// 데이터 형식 포맷 함수 : 년/월/일
-function dateFormat(date) {
-  let month = date.getMonth() + 1;
-  let day = date.getDate();
-  month = month >= 10 ? month : '0' + month;
-  day = day >= 10 ? day : '0' + day;
-  return date.getFullYear() + '/' + month + '/' + day;
-}
-
 const UserAttendance = () => {
+  // 날짜 형식
+  const { dateFormat } = useFormatter();
+
   // 탭(0.출/퇴근수정, 1.수정요청목록) ================================
   const [value, setValue] = useState(0);
   const handleChange = (event, newValue) => {
@@ -169,13 +164,10 @@ const UserAttendance = () => {
   const [filteredAttendData, setFilteredAttendData] = useState([0, []]); // 검색 결과 : 출퇴근 내역
   const [filteredAttendEditData, setFilteredAttendEditData] = useState([0, []]); // 검색 결과 : 출퇴근 수정 내역
 
-  console.log(searchStartDate);
-  console.log(searchEndDate);
-
   // 출퇴근 내역 검색 함수
   const searchAttendButton = () => {
-    const startDate = new Date(searchStartDate);
-    const endDate = new Date(searchEndDate);
+    const startDate = new Date(searchStartDate).setHours(0, 0, 0, 0);
+    const endDate = new Date(searchEndDate).setHours(0, 0, 0, 0);
     if (startDate > endDate) {
       alert('종료일이 시작일보다 작을 수 없습니다.');
     } else if (!searchStartDate || !searchEndDate) {
@@ -195,10 +187,12 @@ const UserAttendance = () => {
 
   // 출퇴근 수정 내역 검색 함수
   const searchAttendEditButton = () => {
-    const startDate = new Date(searchStartDate);
-    const endDate = new Date(searchEndDate);
+    const startDate = new Date(searchStartDate).setHours(0, 0, 0, 0);
+    const endDate = new Date(searchEndDate).setHours(0, 0, 0, 0);
     if (startDate > endDate) {
       alert('종료일이 시작일보다 작을 수 없습니다.');
+    } else if (!searchStartDate || !searchEndDate) {
+      alert('검색일을 선택해주세요.');
     } else {
       setFilteredAttendEditData((prevState) => {
         const newFiltered = [...prevState];
@@ -273,12 +267,16 @@ const UserAttendance = () => {
 
   // 같은 부서의 근태담당자 (우선 지금은 팀장) 사용자 데이터
   const [allUsers, setAllUsers] = useState([]);
-  // 1번(user_no) 사용자의 출/퇴근 기록 가져오기
+  // 로그인 한 사용자의 출/퇴근 기록 가져오기
   const [attendDatas, setAttendDatas] = useState([]);
-  // 1번(user_no) 사용자의 출/퇴근 수정 기록 가져오기
+  // 로그인 한 사용자의 출/퇴근 수정 기록 가져오기
   const [attendEditDatas, setAttendEditDatas] = useState([]);
 
   useEffect(() => {
+    // 로그인 한 사용자 부서의 근태 담당자 내역 -> 결재자 검색창 autocomplete
+    axios.get(`/dept-manager?dept_no=${user.dept.dept_no}`).then((res) => {
+      setAllUsers(res.data);
+    });
     // 로그인 한 사용자의 전체 출퇴근 내역 조회 (이상 근태 내역은 전체 내역에서 필터링 처리)
     axios.get(`/user-attend?user_no=${user.user_no}`).then((res) => {
       setAttendDatas(res.data);
@@ -286,10 +284,6 @@ const UserAttendance = () => {
     // 로그인 한 사용자의 전체 출퇴근 수정 내역 조회
     axios.get(`/attend-edit?user_no=${user.user_no}`).then((res) => {
       setAttendEditDatas(res.data);
-    });
-    // 로그인 한 사용자 부서의 근태 담당자 내역 -> 결재자 검색창 autocomplete
-    axios.get(`/dept-manager?dept_no=${user.dept.dept_no}`).then((res) => {
-      setAllUsers(res.data);
     });
   }, [value]);
 
@@ -330,7 +324,6 @@ const UserAttendance = () => {
                       handleMyCard={handleMyCard}
                       height={'650px'}
                       selectAttendData={selectAttendData}
-                      dateFormat={dateFormat}
                     />
                   </Box>
                 </MainCard>
@@ -345,7 +338,7 @@ const UserAttendance = () => {
                         </Grid>
                       </Grid>
                       <Box clone mt={1}>
-                        <UserAttendInfoTable data={selectAttendData} dateFormat={dateFormat} />
+                        <UserAttendInfoTable data={selectAttendData} />
                         {Object.keys(selectAttendData).length === 0 && (
                           <Box
                             p={1}
@@ -511,7 +504,6 @@ const UserAttendance = () => {
             handleMyCard={setSearchAttendData}
             searchAttendData={searchAttendData}
             height={'470px'}
-            dateFormat={dateFormat}
           />
           <Grid container justifyContent="right" spacing={1} sx={{ mt: 2 }}>
             <Grid item>
@@ -537,10 +529,10 @@ const UserAttendance = () => {
               <Grid item xs={9} md={9} lg={9}>
                 <Grid container justifyContent="right" spacing={1}>
                   <Grid item>
-                    <BasicDatePicker label={'YYYY / MM / DD'} setDate={setSearchStartDate} />
+                    <BasicDatePicker setDate={setSearchStartDate} val={searchStartDate} />
                   </Grid>
                   <Grid item>
-                    <BasicDatePicker label={'YYYY / MM / DD'} setDate={setSearchEndDate} />
+                    <BasicDatePicker setDate={setSearchEndDate} val={searchEndDate} />
                   </Grid>
                   <Grid item sx={{ mt: 0.3 }}>
                     <Button variant="contained" color="secondary" onClick={searchAttendEditButton}>
@@ -559,7 +551,6 @@ const UserAttendance = () => {
               <UpdateAttendTable
                 handleOpenRead={handleOpenRead}
                 datas={filteredAttendEditData[0] === 0 ? attendEditDatas : filteredAttendEditData[1]}
-                dateFormat={dateFormat}
               />
             </MainCard>
           </BasicContainer>
