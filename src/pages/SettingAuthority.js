@@ -3,7 +3,6 @@ import { Typography } from '@mui/material';
 
 // project import
 import MainCard from 'components/MainCard';
-import InputSeach from 'components/Input/InputSearch';
 import { Grid } from '../../node_modules/@mui/material/index';
 
 //icon import
@@ -30,14 +29,15 @@ const SettingAuthority = () => {
   useEffect(() => {
     setIndex(0);
     async function get() {
-      const endPoints = ['http://localhost:8000/role_count'];
+      const endPoints = ['/role-count'];
       const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
       const tabs = [];
       for (let i of result[0].data) {
         const tab_temp = {
           id: i.role_level,
           name: i.role_name,
-          number: i.count
+          number: i.count,
+          total: Math.floor(i.count / 7) + (i.count % 7) == 0 ? 0 : 1
         };
         tabs.push(tab_temp);
       }
@@ -52,7 +52,7 @@ const SettingAuthority = () => {
   useEffect(() => {
     async function get() {
       setPage(1);
-      const result = await axios.get(`http://localhost:8000/role_query_list?role_level=${index}&_page=1&_limit=7`);
+      const result = await axios.get(`/role-query-list?role_level=${index+1}&page=1&limit=7`);
       setTableList(result.data);
       setView(false);
     }
@@ -65,8 +65,8 @@ const SettingAuthority = () => {
       <Grid container direction="row">
         <Grid item xs={view == 1 ? 8 : 12}>
           <MainCard>
-            <Typography variant="h4">사용자명으로 검색</Typography>
-            <InputSeach isPersonIcon={true} onClick={() => console.log('test')}></InputSeach>
+            {/*TODO: 추가 기능 구현예정 <Typography variant="h4">사용자명으로 검색</Typography>
+            <InputSeach isPersonIcon={true}></InputSeach> */}
             <SettingTab />
             <SettingAuthorityTable />
           </MainCard>

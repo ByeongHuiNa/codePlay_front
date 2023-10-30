@@ -115,10 +115,10 @@ export default function OrderTable() {
 
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
   const { tableContentList, setTableList } = useUserTableListState();
-  const { now_page, setPage, limit, search } = useCriteria();
+  const { total_page, now_page, setPage, limit, search } = useCriteria();
 
   async function search_user(search, page) {
-    const result = await axios.get(`http://localhost:8000/user_query?user_name=${search}&_page=${page}&_limit=${limit}`);
+    const result = await axios.get(`/user-query?user_name=${search}&_page=${page}&_limit=${limit}`);
     setTableList(result.data);
   }
 
@@ -187,7 +187,7 @@ export default function OrderTable() {
       <Stack alignItems="center" mt={2}>
         {/* TODO: count의 경우 조회한 데이터의 갯수를 불러올수 있을때 변경 */}
         <Pagination
-          count={5}
+          count={total_page}
           page={now_page}
           onChange={(event, page) => {
             setPage(page);
