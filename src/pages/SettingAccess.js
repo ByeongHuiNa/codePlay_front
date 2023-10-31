@@ -28,7 +28,8 @@ const SettingAccess = () => {
   //화면 초기값 셋팅
   useEffect(() => {
     async function get() {
-      const endPoints = ['/role-count', '/access-page-list'];
+      //TODO:'/access-page-list'
+      const endPoints = ['/role-count'];
       const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
       const tabs = [];
       for (let i of result[0].data) {
