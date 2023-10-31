@@ -190,3 +190,22 @@ export const useCalendarMemoModal = create(
     setMemoView: (newMemoView) => set(() => ({ memoView: newMemoView }))
   }))
 );
+
+export const useCalendarGetScheduleList = create(
+  devtools((set) => ({
+    dataList: [],
+    scheduleList: [],
+    leaveList: [],
+    setDataList: (newDataList) => set(() => ({ dataList: newDataList })),
+    setScheduleList: (newScheduleList) => set(() => ({ scheduleList: newScheduleList })),
+    setLeaveList: (newLeaveList) => set(() => ({ leaveList: newLeaveList })),
+    addDataList: (newDataList) =>
+      set((state) => ({
+        dataList: [...state.dataList, newDataList]
+      })),
+    addScheduleList: (newScheduleList) =>
+      set((state) => ({
+        scheduleList: [...state.scheduleList, newScheduleList]
+      }))
+  }))
+);
