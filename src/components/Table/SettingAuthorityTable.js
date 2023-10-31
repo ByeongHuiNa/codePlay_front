@@ -5,7 +5,7 @@ import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow }
 
 // third-party
 import { Avatar, Button, Pagination, Stack } from '../../../node_modules/@mui/material/index';
-import { useCriteria, useDetailCardState, useTableListState } from 'store/module';
+import { useCriteria, useDetailCardState, useTabState, useTableListState } from 'store/module';
 import { useState } from 'react';
 import axios from '../../../node_modules/axios/index';
 import { v4 as uuidv4 } from 'uuid';
@@ -64,13 +64,16 @@ export default function SettingAuthorityTable() {
   const { tableContentList } = useTableListState();
   const { setView, setId, setContent } = useDetailCardState();
   const { now_page, setPage } = useCriteria();
+  const { tab, index } = useTabState();
+
 
   async function clickDetailAuth(user_no) {
     setView(true);
     setId(user_no);
-    const result = await axios.get(`http://localhost:8000/role_query_user_detail?user_no=${user_no}`);
-    result.data[0].role.map((role) => (role['id'] = uuidv4()));
-    setContent(result.data[0]);
+    const result = await axios.get(`/role-query-user-detail?user_no=${user_no}`);
+    console.log(result.data[0].role);
+    result.data[0].role.role.map((role) => (role['id'] = uuidv4()));
+    setContent(result.data[0].role);
   }
 
   return (
@@ -131,15 +134,17 @@ export default function SettingAuthorityTable() {
         </TableContainer>
       </Box>
       <Stack alignItems="center" mt={2}>
-        <Pagination
-          count={5}
-          variant="outlined"
-          shape="rounded"
-          page={now_page}
-          onChange={(event, page) => {
-            setPage(page);
-          }}
-        />
+        {Object.keys(tab).length > 0 && (
+          <Pagination
+            count={tab[index].total}
+            page={now_page}
+            onChange={(event, page) => {
+              setPage(page);
+            }}
+            variant="outlined"
+            shape="rounded"
+          />
+        )}
       </Stack>
     </>
   );

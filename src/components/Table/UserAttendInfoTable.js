@@ -5,16 +5,7 @@ import { useState } from 'react';
 import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { Stack, Typography } from '../../../node_modules/@mui/material/index';
 import Dot from 'components/@extended/Dot';
-
-function dateFormat(date) {
-  let month = date.getMonth() + 1;
-  let day = date.getDate();
-
-  month = month >= 10 ? month : '0' + month;
-  day = day >= 10 ? day : '0' + day;
-
-  return date.getFullYear() + '/' + month + '/' + day;
-}
+import { useFormatter } from 'store/module';
 
 // ==============================|| ORDER TABLE - HEADER CELL ||============================== //
 
@@ -133,6 +124,8 @@ OrderStatus.propTypes = {
 export default function UserAttendInfoTable({ data }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
+  // 날짜 형식
+  const { dateFormat } = useFormatter();
 
   return (
     <Box>

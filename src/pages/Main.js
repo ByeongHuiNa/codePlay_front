@@ -7,8 +7,8 @@ import { Avatar, Box, Button, Grid, Link, Typography } from '../../node_modules/
 import VacationDonutChart from 'components/chart/VacationDonutChart';
 import AttendChart from 'components/chart/AttendChart';
 import UserLeaveTable from 'components/Table/UserLeaveTable';
-import { useProfileState } from 'store/module';
-import { useEffect } from 'react';
+import { useProfileState, useTodayState } from 'store/module';
+import { useEffect, useState } from 'react';
 import axios from '../../node_modules/axios/index';
 
 // ==============================|| 로그인 이후 무조건 들어올 메인페이지 ||============================== //
@@ -17,13 +17,39 @@ const Main = () => {
   //화면 초기값 셋팅
   const { profile, setProfile } = useProfileState();
 
-  //const { attend, setAttend } = useTodayState();
+  const { attend, setAttend } = useTodayState();
+
+  const [formattedDate, setFormattedDate] = useState('');
+
+  const formData = {};
+
+  //출근기록
+  const startSubmit = (e) => {
+    e.preventDefault();
+    axios.post('/user-attend-today?user_no=1', formData);
+  };
+
+   //퇴근기록
+   const endSubmit = (e) => {
+    e.preventDefault();
+    axios.put('/user-attend-today?user_no=1', formData);
+  };
 
   useEffect(() => {
     async function get() {
-      const endPoints = ['/user-information?user_no=1'];
+      const endPoints = ['/user-information?user_no=1', '/user-attend-today?user_no=1'];
       const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
       setProfile(result[0].data[0]);
+      // const resultAttend = await axios.get('/user-attend-today?user_no=1');
+      setAttend(result[1].data[0]);
+      // const dateObject = new Date(attend.attend_date);
+      // setFormattedDate(dateObject.toLocaleDateString());
+
+      // null 값 검사
+      if (attend && attend.attend_date) {
+        const dateObject = new Date(attend.attend_date);
+        setFormattedDate(dateObject.toLocaleDateString());
+      }
     }
     get();
   }, []);
@@ -38,21 +64,21 @@ const Main = () => {
   //   get();
   // }, []);
 
-  async function postData() {
-    alert('zz');
-    try {
-      //응답 성공
-      const response = await axios.post('http://localhost:8000/attend', {
-        start: 'devstone',
-        end: '12345'
-      });
-      alert('성공');
-      console.log(response);
-    } catch (error) {
-      //응답 실패
-      console.error(error);
-    }
-  }
+  // async function postData() {
+  //   alert('zz');
+  //   try {
+  //     //응답 성공
+  //     const response = await axios.post('http://localhost:8000/attend', {
+  //       start: 'devstone',
+  //       end: '12345'
+  //     });
+  //     alert('성공');
+  //     console.log(response);
+  //   } catch (error) {
+  //     //응답 실패
+  //     console.error(error);
+  //   }
+  // }
 
   return (
     <Grid container spacing={2}>
@@ -92,12 +118,17 @@ const Main = () => {
                 </Typography>
               </Grid>
               <Grid item xs={8} sm={8} md={8} lg={8} sx={{ paddingRight: 5 }} align="right">
-                <Typography variant="text" align="right" sx={{ fontSize: 15 }}>
-                  2023년 10월 12일 목요일
-                  <br />
-                  오전 11 : 30 : 12
-                </Typography>
-                {/* <Chip label="오전 11 : 30 : 12" variant="outlined" /> */}
+                {attend ? (
+                  <Typography variant="text" align="right" sx={{ fontSize: 15 }}>
+                    {formattedDate}
+                    <br />
+                    {attend.attend_start}
+                  </Typography>
+                ) : (
+                  <Typography variant="text" sx={{ fontSize: 15, color: 'error' }}>
+                    미출근
+                  </Typography>
+                )}
               </Grid>
             </Grid>
           </Box>
@@ -109,30 +140,35 @@ const Main = () => {
                 </Typography>
               </Grid>
               <Grid item xs={8} sm={8} md={8} lg={8} sx={{ paddingRight: 5 }} align="right">
-                <Typography variant="text" sx={{ fontSize: 15 }}>
-                  2023년 10월 12일 목요일
-                  <br />
-                  오전 11 : 30 : 12
-                </Typography>
-                {/* <Chip label="오전 11 : 30 : 12" variant="outlined" /> */}
+                {attend ? (
+                  <Typography variant="text" sx={{ fontSize: 15 }}>
+                    {formattedDate}
+                    <br />
+                    {attend.attend_end}
+                  </Typography>
+                ) : (
+                  <Typography variant="text" sx={{ fontSize: 15, color: 'error' }}>
+                    미퇴근
+                  </Typography>
+                )}
               </Grid>
             </Grid>
           </Box>
           <Box mb={2}>
             <Grid container justifyContent="center" spacing={1}>
               <Grid item>
-                <Button variant="outlined" size="large">
-                  <Box mx={6} onClick={postData}>
-                    출근
-                  </Box>
-                </Button>
+                <form onSubmit={startSubmit}>
+                  <Button variant="outlined" size="large" type="submit">
+                    <Box mx={6}>출근</Box>
+                  </Button>
+                </form>
               </Grid>
               <Grid item>
-                <Button variant="contained" size="large">
-                  <Box mx={6}>
-                    퇴근
-                  </Box>
-                </Button>
+                <form onSubmit={endSubmit}>
+                  <Button variant="contained" size="large" type="submit">
+                    <Box mx={6}>퇴근</Box>
+                  </Button>
+                </form>
               </Grid>
             </Grid>
           </Box>
@@ -172,7 +208,7 @@ const Main = () => {
       </Grid>
 
       <Grid item xs={4}>
-        <MainCard>
+        <MainCard style={{ height: '415px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px' }}>
             <Typography align="left" variant="h5">
               휴가신청목록

@@ -5,7 +5,8 @@ import { useState } from 'react';
 import { Box, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 // project import
-import { Button, Chip } from '../../../node_modules/@mui/material/index';
+import { Button, Chip, Typography } from '../../../node_modules/@mui/material/index';
+import { useFormatter } from 'store/module';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -61,16 +62,16 @@ const headCells = [
     label: '휴가사용일수'
   },
   {
-    id: 'appDate',
+    id: 'first approver',
     align: 'center',
     disablePadding: false,
-    label: '결재일'
+    label: '1차결재자'
   },
   {
-    id: 'approver',
+    id: 'second approver',
     align: 'center',
     disablePadding: false,
-    label: '결재자'
+    label: '2차결재자'
   },
   {
     id: 'status',
@@ -118,9 +119,12 @@ const OrderStatus = ({ status }) => {
   let color;
   let title;
 
+  // 최종 결재 상태
   // 0 : 결재완료(승인)
   // 1 : 결재완료(반려)
-  // 2 : 결재대기
+  // 2 : 결재진행중
+  // 3 : 결재대기
+
   switch (status) {
     case 0:
       color = 'success';
@@ -132,6 +136,10 @@ const OrderStatus = ({ status }) => {
       break;
     case 2:
       color = 'primary';
+      title = '결재진행중';
+      break;
+    case 3:
+      color = 'warning';
       title = '결재대기';
   }
 
@@ -146,26 +154,48 @@ OrderStatus.propTypes = {
   status: PropTypes.number
 };
 
+// ==============================|| STATUS ||============================== //
+
+const LeaveStatus = ({ status }) => {
+  // 0 : 연차
+  // 1 : 오전반차
+  // 2 : 오후반차
+  // 3 : 공가
+  // 4 : 휴가취소
+  let title;
+  switch (status) {
+    case 0:
+      title = '연차';
+      break;
+    case 1:
+      title = '오전 반차';
+      break;
+    case 2:
+      title = '오후 반차';
+      break;
+    case 3:
+      title = '공가';
+      break;
+    case 4:
+      title = '휴가 취소';
+  }
+
+  return <Typography>{title}</Typography>;
+};
+
+LeaveStatus.propTypes = {
+  status: PropTypes.number
+};
+
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function AppLeaveTable({ requestLeaveCancel, handleOpen }) {
+export default function AppLeaveTable({ requestLeaveCancel, datas, handleOpen }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
-
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
-
-  function createData(leaveStart, leaveEnd, leaveType, leaveCnt, appDate, approver, status) {
-    return { leaveStart, leaveEnd, leaveType, leaveCnt, appDate, approver, status };
-  }
-
-  const datas = [
-    createData('2023/10/11', '2023/10/11', '연차', '1', '2023/10/07', '이유나 팀장', 0),
-    createData('2023/10/11', '2023/10/11', '반차(오전)', '0.5', '2023/10/07', '이유나 팀장', 0),
-    createData('2023/10/11', '2023/10/11', '연차', '1', '2023/10/07', '이유나 팀장', 1),
-    createData('2023/10/11', '2023/10/13', '연차', '3', '2023/10/07', '이유나 팀장', 0),
-    createData('2023/10/11', '2023/10/11', '연차', '1', '2023/10/07', '이유나 팀장', 0)
-  ];
+  // 날짜 형식
+  const { dateFormat } = useFormatter();
 
   return (
     <Box>
@@ -208,15 +238,17 @@ export default function AppLeaveTable({ requestLeaveCancel, handleOpen }) {
                   onClick={() => handleOpen(data)}
                 >
                   <TableCell component="th" id={labelId} scope="data" align="center">
-                    {data.leaveStart}
+                    {dateFormat(new Date(data.leaveapp_start))}
                   </TableCell>
-                  <TableCell align="center">{data.leaveEnd}</TableCell>
-                  <TableCell align="center">{data.leaveType}</TableCell>
-                  <TableCell align="center">{data.leaveCnt}</TableCell>
-                  <TableCell align="center">{data.appDate}</TableCell>
-                  <TableCell align="center">{data.approver}</TableCell>
+                  <TableCell align="center">{dateFormat(new Date(data.leaveapp_end))}</TableCell>
                   <TableCell align="center">
-                    <OrderStatus status={data.status} />
+                    <LeaveStatus status={data.leaveapp_type} />
+                  </TableCell>
+                  <TableCell align="center">{data.leaveapp_total}일</TableCell>
+                  <TableCell align="center">{data.firstapp_user_name}</TableCell>
+                  <TableCell align="center">{data.secondapp_user_name}</TableCell>
+                  <TableCell align="center">
+                    <OrderStatus status={data.leaveapp_status} />
                   </TableCell>
                   <TableCell align="center">
                     <Button variant="contained" size="small" onClick={requestLeaveCancel}>

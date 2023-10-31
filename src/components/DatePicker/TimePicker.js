@@ -12,11 +12,15 @@ export default function TimePicker2({ label, setTime }) {
   };
 
   const TimeChange = (time) => {
-    const hours = time.$H;
-    const minutes = time.$m;
+    const hour = time.$H;
+    const minute = time.$m;
+    const second = time.$s;
     const date = new Date();
-    date.setHours(hours, minutes, 0, 0);
-    setTime(date.toISOString());
+    date.setHours(hour, minute, second, 0);
+    let hours = date.getHours() >= 10 ? date.getHours() : '0' + date.getHours();
+    let minutes = date.getMinutes() >= 10 ? date.getMinutes() : '0' + date.getMinutes();
+    let seconds = date.getSeconds() >= 10 ? date.getSeconds() : '0' + date.getSeconds();
+    setTime(`${hours}:${minutes}:${seconds}`);
   };
 
   return (

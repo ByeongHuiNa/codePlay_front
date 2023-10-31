@@ -1,9 +1,5 @@
-// material-ui
-import { Typography } from '@mui/material';
-
 // project import
 import MainCard from 'components/MainCard';
-import InputSeach from 'components/Input/InputSearch';
 import { useAccessPage, useCriteria, useTabState } from 'store/module';
 import { Box, Button, Grid, Stack, Tab, Tabs } from '../../node_modules/@mui/material/index';
 import { useEffect, useState } from 'react';
@@ -32,7 +28,7 @@ const SettingAccess = () => {
   //화면 초기값 셋팅
   useEffect(() => {
     async function get() {
-      const endPoints = ['http://localhost:8000/role_count', 'http://localhost:8000/access_page_list'];
+      const endPoints = ['/role-count', '/access-page-list'];
       const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
       const tabs = [];
       for (let i of result[0].data) {
@@ -44,15 +40,15 @@ const SettingAccess = () => {
         tabs.push(tab_temp);
       }
       setTab(tabs);
-      setAccessPage(
-        result[1].data.reduce(
-          (groups, item) => ({
-            ...groups,
-            [item.page_default_role_no]: [...(groups[item.page_default_role_no] || []), { ...item, checked: item.page_no == 1 }]
-          }),
-          {}
-        )
-      );
+      // setAccessPage(
+      //   result[1].data.reduce(
+      //     (groups, item) => ({
+      //       ...groups,
+      //       [item.page_default_role_no]: [...(groups[item.page_default_role_no] || []), { ...item, checked: item.page_no == 1 }]
+      //     }),
+      //     {}
+      //   )
+      // );
       setIndex(0);
       setSearch('');
     }
@@ -62,12 +58,12 @@ const SettingAccess = () => {
   //index 값(탭) 변경시 테이블 변경 셋팅
   useEffect(() => {
     async function get() {
-      const result = await axios.get(`http://localhost:8000/role_access_page?role_level=${index}`);
+      const result = await axios.get(`/role-access-page?role_level=${index + 1}`);
       setAccessPage(
         result.data[0].access_page_list.reduce(
           (groups, item) => ({
             ...groups,
-            [item.page_default_role_no]: [...(groups[item.page_default_role_no] || []), { ...item, checked: item.role_level != null }]
+            [item.page_default_role_level]: [...(groups[item.page_default_role_level] || []), { ...item, checked: item.role_level != null }]
           }),
           {}
         )
@@ -100,10 +96,10 @@ const SettingAccess = () => {
       </div>
       <div role="tabpanel" hidden={value !== 1} id={`simple-tabpanel-${1}`} aria-labelledby={`simple-tab-${1}`} value={value}>
         <MainCard>
-          <Typography mt={2} variant="h4">
+          {/* <Typography mt={2} variant="h4">
             사용자명으로 검색
           </Typography>
-          <InputSeach isPersonIcon={true}></InputSeach>
+          <InputSeach isPersonIcon={true}></InputSeach> */}
           <SettingAuthorityTable />
         </MainCard>
       </div>

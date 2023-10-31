@@ -1,13 +1,15 @@
 import MainCard from 'components/MainCard';
+// eslint-disable-next-line no-unused-vars
 import { Avatar, Button, IconButton, MenuItem, Stack, TextField, Typography } from '../../../node_modules/@mui/material/index';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import { useDetailCardState, useTabState } from 'store/module';
+import { useDetailCardState, useTabState, useTableListState } from 'store/module';
 import { v4 as uuidv4 } from 'uuid';
 
 const AuthorityDetailCard = () => {
   //권한 고정(사용자, 근태담당자, 관리자, 메인관리자 추가 불가능)
-  const { setView, content, setContent } = useDetailCardState();
+  const { setView, content, setContent, id } = useDetailCardState();
+  const { tableContentList } = useTableListState();
   const { tab } = useTabState();
 
   function getToday() {
@@ -38,17 +40,20 @@ const AuthorityDetailCard = () => {
     temp.role.push(role);
     setContent(temp);
   };
+
   return (
     <MainCard>
       <Stack direction="row" justifyContent="center" mb={3}>
-        <Avatar src={content.user_profile} sx={{ width: 150, height: 150 }}></Avatar>
+        <Avatar src={tableContentList.find((e) => e.user_no == id).user_profile} sx={{ width: 150, height: 150 }}></Avatar>
       </Stack>
       <Stack direction="column" spacing={1}>
         <Stack direction="row" justifyContent="space-around">
-          <Typography variant="h4">{content.user_name}</Typography>
+          <Typography variant="h4">{tableContentList.find((e) => e.user_no == id).user_name}</Typography>
         </Stack>
         <Stack direction="row" justifyContent="space-around">
-          <Typography variant="body2"> {`${content.dept_name}/${content.user_position}`}</Typography>
+          <Typography variant="body2">
+            {`${tableContentList.find((e) => e.user_no == id).dept_name}/${tableContentList.find((e) => e.user_no == id).user_position}`}
+          </Typography>
         </Stack>
         {Object.keys(content).length > 0 &&
           content.role.map((value, index) => {
@@ -71,8 +76,9 @@ const AuthorityDetailCard = () => {
                         </MenuItem>
                       ))}
                 </TextField>
-                {value.role_level == 1 ? (
-                  <TextField select size="normal" sx={{ width: '8rem' }} defaultValue="1">
+                {value.role_level == 2 ? (
+                  <TextField select size="normal" sx={{ width: '8rem' }} value={content.attend_ma[0].dept_no}>
+                    {/* TODO: 부서전체를 번호와 이름으로 가져와야함 */}
                     <MenuItem value={1}>인사팀</MenuItem>
                   </TextField>
                 ) : (
@@ -84,6 +90,7 @@ const AuthorityDetailCard = () => {
               </Stack>
             );
           })}
+          {/* TODO: 저장하는것 구현예정 */}
         <Button onClick={() => setView(false)}>저장</Button>
       </Stack>
     </MainCard>

@@ -2,8 +2,9 @@ import * as React from 'react';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
 
-export default function BasicDatePicker({ label, setDate }) {
+export default function BasicDatePicker({ label, setDate, val }) {
   const datePickerFormat = 'YYYY-MM-DD';
   const datePickerUtils = {
     format: datePickerFormat,
@@ -17,6 +18,7 @@ export default function BasicDatePicker({ label, setDate }) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} dateFormats={datePickerUtils}>
       <DatePicker
+        value={dayjs(val)}
         label={label}
         slotProps={{
           textField: {
