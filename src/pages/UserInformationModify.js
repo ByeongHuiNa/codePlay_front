@@ -5,7 +5,7 @@ import { Typography, Button, Grid, Avatar } from '@mui/material';
 import MainCard from 'components/MainCard';
 import { Stack, TextField } from '../../node_modules/@mui/material/index';
 import { useLocation, useNavigate } from '../../node_modules/react-router-dom/dist/index';
-import { useHasDrity, useProfileState } from 'store/module';
+import { useHasDrity, useMangerProfileState } from 'store/module';
 import { useEffect } from 'react';
 import axios from '../../node_modules/axios/index';
 
@@ -18,7 +18,7 @@ const UserInformationModify = () => {
   }
   const location = useLocation();
 
-  const { profile, setProfile } = useProfileState();
+  const { profile, setProfile } = useMangerProfileState();
   const { setHasDrity } = useHasDrity();
   //TODO: ismodifyed 를 이용하여 unstable_usePrompt 로 변경이 됬는데, 주소를 옮길시 화면전환이 안되게 만들기
   //TODO: 로그인한 사용자의 user_no 가져올것.

@@ -71,7 +71,6 @@ export default function SettingAuthorityTable() {
     setView(true);
     setId(user_no);
     const result = await axios.get(`/role-query-user-detail?user_no=${user_no}`);
-    console.log(result.data[0].role);
     result.data[0].role.role.map((role) => (role['id'] = uuidv4()));
     setContent(result.data[0].role);
   }
