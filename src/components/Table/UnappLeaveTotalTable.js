@@ -96,6 +96,45 @@ OrderTableHead.propTypes = {
   orderBy: PropTypes.string
 };
 
+//휴가종류
+const Type = ({ type }) => {
+  let title;
+
+  // 0 : 연차
+  // 1 : 오전반차
+  // 2 : 오후반차
+  // 3 : 공가
+  // 4 : 휴가취소
+
+  switch (type) {
+    case 0:
+      title = '연차';
+      break;
+    case 1:
+      title = '오전반차';
+      break;
+    case 2:
+      title = '오후반차';
+      break;
+    case 3:
+      title = '공가';
+      break;
+    case 4:
+      title = '휴가취소';
+      break;
+  }
+
+  return (
+    <Stack direction="row" alignItems="center" justifyContent="center" spacing={1}>
+      {title}
+    </Stack>
+  );
+};
+
+Type.propTypes = {
+  type: PropTypes.number
+};
+
 // ==============================|| ORDER TABLE ||============================== //
 //결재대기 테이블
 export default function UnappLeaveTotalTable({ leaveCancel }) {
@@ -106,10 +145,13 @@ export default function UnappLeaveTotalTable({ leaveCancel }) {
 
   useEffect(() => {
     async function get() {
-      const endPoints = ['http://localhost:8000/leave_approval'];
-      const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
-      // result[0].data를 필터링하여 leave_status가 2인 데이터만 추출
-      const filteredData = result[0].data.filter((item) => item.leaveapp_status == 2);
+      //const endPoints = ['http://localhost:8000/leave_approval'];
+      //const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
+      const result = await axios.get('/user-leave-wait?user_no=1');
+      console.log('대기: ' + result.data);
+
+      // result[0].data를 필터링하여 leave_status가 3(결재대기)인 데이터만 추출
+      const filteredData = result.data.filter((item) => item.leaveapp_status == 3);
 
       setApp(filteredData);
     }
@@ -170,8 +212,11 @@ export default function UnappLeaveTotalTable({ leaveCancel }) {
                   {app.leaveapp_start}
                 </TableCell>
                 <TableCell align="center">{app.leaveapp_end}</TableCell>
-                <TableCell align="center">{app.leaveapp_type}</TableCell>
-                <TableCell align="center">{app.leaveapp_count}</TableCell>
+
+                <TableCell align="center">
+                  <Type type={app.leaveapp_type} />
+                </TableCell>
+                <TableCell align="center">{app.leaveapp_total}</TableCell>
                 <TableCell align="center">
                   <Button variant="contained" size="small" onClick={leaveCancel}>
                     취소

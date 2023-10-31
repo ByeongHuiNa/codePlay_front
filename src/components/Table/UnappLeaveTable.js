@@ -5,7 +5,8 @@ import { useState } from 'react';
 import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 // project import
-import { Button } from '../../../node_modules/@mui/material/index';
+import { Button, Typography } from '../../../node_modules/@mui/material/index';
+import { useFormatter } from 'store/module';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -32,6 +33,39 @@ function stableSort(array, comparator) {
   });
   return stabilizedThis.map((el) => el[0]);
 }
+
+// ==============================|| STATUS ||============================== //
+
+const LeaveStatus = ({ status }) => {
+  // 0 : 연차
+  // 1 : 오전반차
+  // 2 : 오후반차
+  // 3 : 공가
+  // 4 : 휴가취소
+  let title;
+  switch (status) {
+    case 0:
+      title = '연차';
+      break;
+    case 1:
+      title = '오전 반차';
+      break;
+    case 2:
+      title = '오후 반차';
+      break;
+    case 3:
+      title = '공가';
+      break;
+    case 4:
+      title = '휴가 취소';
+  }
+
+  return <Typography>{title}</Typography>;
+};
+
+LeaveStatus.propTypes = {
+  status: PropTypes.number
+};
 
 // ==============================|| ORDER TABLE - HEADER CELL ||============================== //
 
@@ -96,22 +130,13 @@ OrderTableHead.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function UnappLeaveTable({ leaveCancel }) {
+export default function UnappLeaveTable({ leaveCancel, handleOpen, datas }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
-
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
-
-  function createData(leaveStart, leaveEnd, leaveType, leaveCnt, appDate, approver, status) {
-    return { leaveStart, leaveEnd, leaveType, leaveCnt, appDate, approver, status };
-  }
-
-  const datas = [
-    createData('2023/10/11', '2023/10/11', '연차', '1'),
-    createData('2023/10/11', '2023/10/11', '반차(오전)', '0.5'),
-    createData('2023/10/11', '2023/10/13', '연차', '3')
-  ];
+  // 날짜 형식
+  const { dateFormat } = useFormatter();
 
   return (
     <Box>
@@ -152,15 +177,18 @@ export default function UnappLeaveTable({ leaveCancel }) {
                   tabIndex={-1}
                   key={data.date}
                   selected={isItemSelected}
+                  onClick={() => handleOpen(data)}
                 >
                   <TableCell component="th" id={labelId} scope="data" align="center">
-                    {data.leaveStart}
+                    {dateFormat(new Date(data.leaveapp_start))}
                   </TableCell>
-                  <TableCell align="center">{data.leaveEnd}</TableCell>
-                  <TableCell align="center">{data.leaveType}</TableCell>
-                  <TableCell align="center">{data.leaveCnt}</TableCell>
+                  <TableCell align="center">{dateFormat(new Date(data.leaveapp_end))}</TableCell>
                   <TableCell align="center">
-                    <Button variant="contained" size="small" onClick={leaveCancel}>
+                    <LeaveStatus status={data.leaveapp_type}/>
+                  </TableCell>
+                  <TableCell align="center">{data.leaveapp_total}일</TableCell>
+                  <TableCell align="center">
+                    <Button variant="contained" size="small" onClick={() => leaveCancel(data.leaveapp_no)}>
                       취소
                     </Button>
                   </TableCell>
