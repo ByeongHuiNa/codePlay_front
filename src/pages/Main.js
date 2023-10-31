@@ -22,9 +22,17 @@ const Main = () => {
   const [formattedDate, setFormattedDate] = useState('');
 
   const formData = {};
-  const handleFormSubmit = (e) => {
+
+  //출근기록
+  const startSubmit = (e) => {
     e.preventDefault();
     axios.post('/user-attend-today?user_no=1', formData);
+  };
+
+   //퇴근기록
+   const endSubmit = (e) => {
+    e.preventDefault();
+    axios.put('/user-attend-today?user_no=1', formData);
   };
 
   useEffect(() => {
@@ -149,16 +157,18 @@ const Main = () => {
           <Box mb={2}>
             <Grid container justifyContent="center" spacing={1}>
               <Grid item>
-                <form onSubmit={handleFormSubmit}>
+                <form onSubmit={startSubmit}>
                   <Button variant="outlined" size="large" type="submit">
                     <Box mx={6}>출근</Box>
                   </Button>
                 </form>
               </Grid>
               <Grid item>
-                <Button variant="contained" size="large" type="submit">
-                  <Box mx={6}>퇴근</Box>
-                </Button>
+                <form onSubmit={endSubmit}>
+                  <Button variant="contained" size="large" type="submit">
+                    <Box mx={6}>퇴근</Box>
+                  </Button>
+                </form>
               </Grid>
             </Grid>
           </Box>
