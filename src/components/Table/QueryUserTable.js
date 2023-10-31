@@ -185,7 +185,6 @@ export default function OrderTable() {
         </TableContainer>
       </Box>
       <Stack alignItems="center" mt={2}>
-        {/* TODO: count의 경우 조회한 데이터의 갯수를 불러올수 있을때 변경 */}
         <Pagination
           count={total_page}
           page={now_page}
