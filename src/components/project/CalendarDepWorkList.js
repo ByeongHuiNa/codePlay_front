@@ -31,7 +31,7 @@ export default function CalendarDepWorkList() {
                 <ListItemButton role={undefined} onClick={handleToggle()} dense>
                   <Grid container direction="row" justifyContent="flex-start" alignItems="center">
                     <ListItemAvatar>
-                      <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ width: 30, height: 30 }} />
+                      <Avatar alt="Remy Sharp" src="https://picsum.photos/200" sx={{ width: 30, height: 30 }} />
                     </ListItemAvatar>
                     <ListItemText primary={`이름 ${value}`} sx={{ ml: -1 }} />
                     <ListItemText primary={`일정 ${value}`} sx={{ ml: 1, textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} />

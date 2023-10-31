@@ -191,6 +191,25 @@ export const useCalendarMemoModal = create(
   }))
 );
 
+export const useCalendarGetScheduleList = create(
+  devtools((set) => ({
+    dataList: [],
+    scheduleList: [],
+    leaveList: [],
+    setDataList: (newDataList) => set(() => ({ dataList: newDataList })),
+    setScheduleList: (newScheduleList) => set(() => ({ scheduleList: newScheduleList })),
+    setLeaveList: (newLeaveList) => set(() => ({ leaveList: newLeaveList })),
+    addDataList: (newDataList) =>
+      set((state) => ({
+        dataList: [...state.dataList, newDataList]
+      })),
+    addScheduleList: (newScheduleList) =>
+      set((state) => ({
+        scheduleList: [...state.scheduleList, newScheduleList]
+      }))
+  }))
+);
+
 export const useFormatter = create(
   devtools(() => ({
     // Date 날짜 년/월/일 형식으로 변환

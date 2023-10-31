@@ -17,10 +17,8 @@ export default function CalendarDepWorkMemo() {
 
   const handleOnChange = (e) => {
     setValue(e.target.value);
-  }
-  const handleIconClick = () => {
-    
-  }
+  };
+  const handleIconClick = () => {};
   return (
     <>
       <List sx={{ width: '110%', maxWidth: 360, bgcolor: 'background.paper' }}>
@@ -31,7 +29,7 @@ export default function CalendarDepWorkMemo() {
                 <ListItem>
                   <ListItemButton role={undefined} onClick={() => setMemoView(true)} dense>
                     <ListItemAvatar>
-                      <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ width: 30, height: 30 }} />
+                      <Avatar alt="Remy Sharp" src="https://picsum.photos/200" sx={{ width: 30, height: 30 }} />
                     </ListItemAvatar>
                     <ListItemText>
                       <Grid container direction="column" justifyContent="center" alignItems="flex-start" sx={{ ml: -1 }}>
@@ -60,8 +58,8 @@ export default function CalendarDepWorkMemo() {
         fullWidth
         InputProps={{
           endAdornment: (
-            <IconButton color="primary" onClick={handleIconClick} >
-              <Done sx={{ml : 2}}/>
+            <IconButton color="primary" onClick={handleIconClick}>
+              <Done sx={{ ml: 2 }} />
             </IconButton>
           )
         }}

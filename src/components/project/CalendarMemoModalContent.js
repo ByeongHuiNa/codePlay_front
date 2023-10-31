@@ -18,7 +18,7 @@ export default function CalendarMemoModalContent() {
       <Divider />
       <Grid container direction="row" justifyContent="flex-start" alignItems="center" sx={{ mt: 3 }}>
         <ListItemAvatar>
-          <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ width: 40, height: 40, ml: 2 }} />
+          <Avatar alt="Remy Sharp" src="https://picsum.photos/200" sx={{ width: 40, height: 40, ml: 2 }} />
         </ListItemAvatar>
         <ListItemText>
           <Grid container direction="column" justifyContent="center" alignItems="flex-start" sx={{ ml: 2 }}>
