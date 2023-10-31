@@ -61,7 +61,7 @@ export default function VacationDonutChart() {
   const [options, setOptions] = useState(barChartOptions);
   const theme = useTheme();
   const { primary, secondary } = theme.palette.text;
-  const info = theme.palette.info.light;
+  const info = theme.palette.info.primary;
 
   const { leave, setLeave } = useLeaveState(); //휴가불러오기
   const [series, setSeries] = useState([0, 0]); //휴가데이터
@@ -74,7 +74,7 @@ export default function VacationDonutChart() {
       // const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
 
       setLeave(result.data);
-      setSeries([result.data.leave_remain, result.data.leave_use]);
+      setSeries([result.data.leave_use, result.data.leave_remain]);
     }
     get();
   }, []);
@@ -82,7 +82,7 @@ export default function VacationDonutChart() {
   useEffect(() => {
     setOptions((prevState) => ({
       ...prevState,
-      colors: [info],
+      colors: ['#90caf9', '#e3f2fd'],
       xaxis: {
         labels: {
           style: {
