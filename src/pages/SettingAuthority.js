@@ -7,7 +7,7 @@ import { Grid } from '../../node_modules/@mui/material/index';
 
 //icon import
 
-import { useCriteria, useDetailCardState, useTabState, useTableListState } from 'store/module';
+import { useCriteria, useDeptListState, useDetailCardState, useTabState, useTableListState } from 'store/module';
 import { useEffect } from 'react';
 import axios from '../../node_modules/axios/index';
 import SettingAuthorityTable from 'components/Table/SettingAuthorityTable';
@@ -25,11 +25,14 @@ const SettingAuthority = () => {
   const { setTableList } = useTableListState();
   const { view, setView } = useDetailCardState();
   const { setPage, setSearch } = useCriteria();
+  const { setDeptList } = useDeptListState();
+
   //화면 초기값 셋팅
   useEffect(() => {
+    setIndex(1);
     setIndex(0);
     async function get() {
-      const endPoints = ['/role-count'];
+      const endPoints = ['/role-count', '/dept-list'];
       const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
       const tabs = [];
       for (let i of result[0].data) {
@@ -44,6 +47,7 @@ const SettingAuthority = () => {
       setTab(tabs);
       setView(false);
       setSearch('');
+      setDeptList(result[1].data);
     }
     get();
   }, []);
