@@ -1,13 +1,13 @@
 // project import
 import MainCard from 'components/MainCard';
-import { useAccessPage, useCriteria, useTabState } from 'store/module';
-import { Box, Button, Grid, Stack, Tab, Tabs } from '../../node_modules/@mui/material/index';
+import { useAccessPage, useCriteria, useDetailCardState, useTabState, useTableListState } from 'store/module';
+import { Avatar, Box, Button, Grid, Stack, Tab, Tabs, Typography } from '../../node_modules/@mui/material/index';
 import { useEffect, useState } from 'react';
-import SettingAuthorityTable from 'components/Table/SettingAuthorityTable';
 import AccessTab from 'components/tab/AccessTab';
 import axios from '../../node_modules/axios/index';
 import AccessCheckbox from 'components/Checkbox/AccessCheckbox';
 import { useNavigate } from '../../node_modules/react-router-dom/dist/index';
+import SettingAccessTable from 'components/Table/SettingAccessTable';
 
 // ==============================|| 관리자 접근관리 PAGE ||============================== //
 
@@ -15,21 +15,29 @@ const SettingAccess = () => {
   const navigate = useNavigate();
 
   const [value, setVale] = useState(0);
+  const [customUser, setCustomUser] = useState(0);
   const handleChange = (event, newValue) => {
     setVale(newValue);
+    if (newValue == 0) {
+      setIndex(0);
+      setView(false);
+    } else {
+      setIndex(1);
+      setView(false);
+    }
   };
 
   //zustand로 관리할 값들
   const { setIndex, setTab, index } = useTabState();
-  const { setSearch } = useCriteria();
+  const { setTableList, tableContentList } = useTableListState();
+  const { setSearch, setPage } = useCriteria();
   const { setAccessPage } = useAccessPage();
-  // const { setRoleAccessPage } = useRoleAccessPage();
+  const { setView, view, id } = useDetailCardState();
 
   //화면 초기값 셋팅
   useEffect(() => {
     async function get() {
-      //TODO:'/access-page-list'
-      const endPoints = ['/role-count'];
+      const endPoints = ['/role-count', '/custom-access-count'];
       const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
       const tabs = [];
       for (let i of result[0].data) {
@@ -41,22 +49,23 @@ const SettingAccess = () => {
         tabs.push(tab_temp);
       }
       setTab(tabs);
-      // setAccessPage(
-      //   result[1].data.reduce(
-      //     (groups, item) => ({
-      //       ...groups,
-      //       [item.page_default_role_no]: [...(groups[item.page_default_role_no] || []), { ...item, checked: item.page_no == 1 }]
-      //     }),
-      //     {}
-      //   )
-      // );
+      setCustomUser(result[1].data[0].count);
       setIndex(0);
       setSearch('');
     }
     get();
   }, []);
+  //value 값(맞춤 접근탭) 변경시 테이블 변경 셋팅
+  useEffect(() => {
+    async function get() {
+      setPage(1);
+      const result = await axios.get(`/custom-user-list?&page=1&limit=7`);
+      setTableList(result.data);
+    }
+    get();
+  }, [value]);
 
-  //index 값(탭) 변경시 테이블 변경 셋팅
+  //index 값(권한별탭) 변경시 테이블 변경 셋팅
   useEffect(() => {
     async function get() {
       const result = await axios.get(`/role-access-page?role_level=${index + 1}`);
@@ -79,7 +88,7 @@ const SettingAccess = () => {
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
             <Tab label="권한별" />
-            <Tab label="개인 맞춤" />
+            <Tab label={`개인 맞춤 (${customUser})`} />
           </Tabs>
         </Box>
         <Stack direction="row" spacing={2}>
@@ -101,7 +110,23 @@ const SettingAccess = () => {
             사용자명으로 검색
           </Typography>
           <InputSeach isPersonIcon={true}></InputSeach> */}
-          <SettingAuthorityTable />
+          {view ? (
+            <>
+              <Stack direction="row" justifyContent="flex-start" alignItems="center" spacing={3} mb={3}>
+                <Avatar src={tableContentList.find((e) => e.user_no == id).user_profile} sx={{ width: 50, height: 50 }}></Avatar>
+                <Typography variant="h4">
+                  {`${tableContentList.find((e) => e.user_no == id).dept_name}/${
+                    tableContentList.find((e) => e.user_no == id).user_position
+                  }`}
+                </Typography>
+                <Typography variant="h4">{tableContentList.find((e) => e.user_no == id).user_name}</Typography>
+                <Typography variant="h4">접근 관리</Typography>
+              </Stack>
+              <AccessCheckbox />
+            </>
+          ) : (
+            <SettingAccessTable />
+          )}
         </MainCard>
       </div>
     </>
