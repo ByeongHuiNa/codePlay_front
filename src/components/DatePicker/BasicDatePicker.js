@@ -18,7 +18,7 @@ export default function BasicDatePicker({ label, setDate, val }) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} dateFormats={datePickerUtils}>
       <DatePicker
-        value={dayjs(val)}
+        value={val ? dayjs(val) : ''}
         label={label}
         slotProps={{
           textField: {

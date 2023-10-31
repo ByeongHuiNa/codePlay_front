@@ -280,7 +280,13 @@ export default function LeaveModal({ open, handleClose, data }) {
                 }}
               >
                 <Typography variant="h5" component="h5">
-                  {data.secondapp_status === 0 ? '승인' : data.firstapp_status === 1 ? '반려' : '결재대기'}
+                  {data.secondapp_status === 0
+                    ? '승인'
+                    : data.firstapp_status === 1
+                    ? '반려'
+                    : data.secondapp_status === 2
+                    ? '결재대기'
+                    : ''}
                 </Typography>
               </Box>
             </Grid>

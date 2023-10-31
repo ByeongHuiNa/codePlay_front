@@ -30,10 +30,15 @@ import { useLeaveTab } from 'store/module';
 import LeaveModal from 'components/Modal/LeaveModal';
 import AppAuto from 'components/AutoComplete/AppAuto';
 import axios from '../../node_modules/axios/index';
+import ModalM from 'components/Modal/ModalM';
+import CancelLeaveTable from 'components/Table/CancelLeaveTable';
+import UserLeaveInfoTable from 'components/Table/UserLeaveInfoTable';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
 const UserLeave = () => {
   const { index, setIndex } = useLeaveTab();
   const [selectedValue, setSelectedValue] = useState('annual');
+  const [selectedHalfValue, setHalfValue] = useState('am');
 
   const handleChange = (event, newValue) => {
     setIndex(newValue);
@@ -71,8 +76,13 @@ const UserLeave = () => {
   // 자동완성
   // 결재자 창에서 검색한 이름
   const [searchName, setSearchName] = useState('');
-  // 선택한 결재자 데이터
-  const [approver, setApprover] = useState({});
+  // 휴가 신청 객체
+  const [title, setTitle] = useState('');
+  const [reason, setReason] = useState('');
+  const [start, setStart] = useState(new Date().toISOString().slice(0, 10));
+  const [end, setEnd] = useState(new Date().toISOString().slice(0, 10));
+  const [firstApprover, setFirstApprover] = useState({});
+  const [secondApprover, setSecondApprover] = useState({});
 
   // 사원선택의 자동완성 창에서 검색어 변경(검색) 될 때마다 searchName 설정
   const handleSelectUser = (event, newValue) => {
@@ -112,6 +122,16 @@ const UserLeave = () => {
     axios.get(`/user-leave-request-recent?user_no=${user.user_no}`).then((res) => {
       setLeaveRequestRecent(res.data);
     });
+    // 폼 초기화
+    setTitle('');
+    setReason('');
+    setStart(new Date().toISOString().slice(0, 10));
+    setEnd(new Date().toISOString().slice(0, 10));
+    setFirstApprover({});
+    setSecondApprover({});
+    setSelectedValue('annual');
+    setHalfValue('am');
+    setSelectLeaveCancel({});
   }, [index]);
 
   useEffect(() => {
@@ -121,6 +141,90 @@ const UserLeave = () => {
     });
   }, [leaveRequestAwait]);
 
+  // 휴가 신청 버튼
+  function submitLeaveRequest() {
+    if (
+      Object.keys(firstApprover).length === 0 ||
+      Object.keys(secondApprover).length === 0 ||
+      Object.keys(start).length === 0 ||
+      Object.keys(end).length === 0
+    ) {
+      alert('날짜 선택하시고 결재자 선택하세요.');
+    } else {
+      axios
+        .post(`/user-leave-request?user_no=${user.user_no}`, {
+          leaveapp_title:
+            title === ''
+              ? `${user.user_name}(${
+                  selectedValue === 'annual'
+                    ? '연차'
+                    : selectedValue === 'public'
+                    ? '공가'
+                    : selectedHalfValue === 'am'
+                    ? '오전반차'
+                    : '오후반차'
+                })${
+                  selectedValue === 'half'
+                    ? 0.5
+                    : selectedValue === 'public'
+                    ? 0
+                    : Math.floor((new Date(end).getTime() - new Date(start).getTime()) / (1000 * 60 * 60 * 24)) + 1
+                }일`
+              : title,
+          leaveapp_content: reason,
+          leaveapp_start: new Date(start),
+          leaveapp_end: selectedValue === 'half' ? new Date(start) : new Date(end),
+          leaveapp_total:
+            selectedValue === 'half'
+              ? 0.5
+              : selectedValue === 'public'
+              ? 0
+              : Math.floor((new Date(end).getTime() - new Date(start).getTime()) / (1000 * 60 * 60 * 24)) + 1,
+          leaveapp_type: selectedValue === 'annual' ? 0 : selectedValue === 'public' ? 3 : selectedHalfValue === 'am' ? 1 : 2,
+          firstapp_no: firstApprover.user_no,
+          secondapp_no: secondApprover.user_no
+        })
+        .then((res) => {
+          alert('신청완료 ' + res);
+          setIndex(0);
+        });
+    }
+  }
+
+  // 휴가 취소 신청할 휴가 선택하는 모달창
+  const [openCancel, setOpenCancel] = useState(false); // 탭 0. 출/퇴근 전체 조회 : 최근 이상 근태 내역 전체보기
+  const handleOpenCancel = () => setOpenCancel(true); // 모달창 열기
+  const handleCloseCancel = () => setOpenCancel(false); // 모달창 닫기
+  // 모달창에서 휴가 클릭 시 선택되면서 모달창 닫기
+  const handleSelectCancel = (data) => {
+    handleCloseCancel();
+    setSelectLeaveCancel(data);
+  };
+
+  // 휴가 취소 신청할 휴가
+  const [selectLeaveCancel, setSelectLeaveCancel] = useState({});
+
+  // 휴가 취소 신청 버튼
+  function submitLeaveCancelRequest() {
+    if (Object.keys(selectLeaveCancel).length === 0 || Object.keys(firstApprover).length === 0) {
+      alert('날짜 선택하시고 결재자 선택하세요.');
+    } else {
+      axios
+        .post(`/user-leave-cancel-request?user_no=${user.user_no}`, {
+          leaveapp_title: title === '' ? `${user.user_name}(휴가취소)${selectLeaveCancel.leaveapp_total}일` : title,
+          leaveapp_content: reason,
+          leaveapp_start: new Date(selectLeaveCancel.leaveapp_start),
+          leaveapp_end: new Date(selectLeaveCancel.leaveapp_end),
+          leaveapp_total: selectLeaveCancel.leaveapp_total,
+          leaveapp_cancel_no: selectLeaveCancel.leaveapp_cancel_no,
+          firstapp_no: firstApprover.user_no
+        })
+        .then((res) => {
+          alert('신청완료 ' + res);
+          setIndex(0);
+        });
+    }
+  }
   // Chip 커스텀
   const MyChip = styled(Chip)`
     background-color: gray;
@@ -142,22 +246,17 @@ const UserLeave = () => {
     width: 1;
   `;
 
-  // 날짜 선택창 (연차, 반차, 공가별로 다르게 설정)
-  const selectLeave = (event) => {
-    setSelectedValue(event.target.value);
-  };
-
   let content;
   if (selectedValue === 'annual') {
     content = (
       <>
         <Box clone mt={2}>
           <MyChip label="시작날짜" />
-          <BasicDatePicker sx={{ width: '30px' }} />
+          <BasicDatePicker sx={{ width: '30px' }} setDate={setStart} val={start} />
         </Box>
         <Box clone mt={2}>
           <MyChip label="종료날짜" />
-          <BasicDatePicker sx={{ width: '30px' }} />
+          <BasicDatePicker sx={{ width: '30px' }} setDate={setEnd} val={end} />
         </Box>
       </>
     );
@@ -166,12 +265,18 @@ const UserLeave = () => {
       <>
         <Box clone mt={2}>
           <MyChip label="날짜" />
-          <BasicDatePicker sx={{ width: '30px' }} />
+          <BasicDatePicker sx={{ width: '30px' }} setDate={setStart} val={start} />
         </Box>
         <Box clone mt={2}>
           <MyChip label="반차 종류" />
           <FormControl sx={{ ml: 1 }}>
-            <RadioGroup row>
+            <RadioGroup
+              row
+              value={selectedHalfValue}
+              onChange={(e) => {
+                setHalfValue(e.target.value);
+              }}
+            >
               <FormControlLabel value="am" control={<Radio size="small" />} label="오전" />
               <FormControlLabel value="pm" control={<Radio size="small" />} label="오후" />
             </RadioGroup>
@@ -184,11 +289,11 @@ const UserLeave = () => {
       <>
         <Box clone mt={2}>
           <MyChip label="시작날짜" />
-          <BasicDatePicker sx={{ width: '30px' }} />
+          <BasicDatePicker sx={{ width: '30px' }} setDate={setStart} val={start} />
         </Box>
         <Box clone mt={2}>
           <MyChip label="종료날짜" />
-          <BasicDatePicker sx={{ width: '30px' }} />
+          <BasicDatePicker sx={{ width: '30px' }} setDate={setEnd} val={end} />
         </Box>
         <Box clone mt={2}>
           <MyChip label="증빙 업로드" />
@@ -200,9 +305,6 @@ const UserLeave = () => {
       </>
     );
   }
-
-  // 사용하지 않은 데이터
-  console.log(approver);
 
   return (
     <ComponentSkeleton>
@@ -254,34 +356,47 @@ const UserLeave = () => {
               </Grid>
               <Box clone mt={2}>
                 <MyChip label="제목" />
-                <TextField label="제목" id="title" size="small" />
+                <TextField
+                  label="제목"
+                  id="title"
+                  size="small"
+                  onChange={(e) => {
+                    setTitle(e.target.value);
+                  }}
+                />
               </Box>
               <Box clone mt={2} sx={{ display: 'flex' }}>
                 <MyChip label="1차 결재자" />
                 <AppAuto
                   label="1차 결재자"
-                  datas={allUsers}
+                  datas={allUsers.filter((data) => data !== secondApprover)}
                   handleSelectUser={handleSelectUser}
                   searchName={searchName}
                   setSearchName={setSearchName}
-                  setApprover={setApprover}
+                  setApprover={setFirstApprover}
                 />
               </Box>
               <Box clone mt={2} sx={{ display: 'flex' }}>
                 <MyChip label="2차 결재자" />
                 <AppAuto
                   label="2차 결재자"
-                  datas={allUsers}
+                  datas={allUsers.filter((data) => data !== firstApprover)}
                   handleSelectUser={handleSelectUser}
                   searchName={searchName}
                   setSearchName={setSearchName}
-                  setApprover={setApprover}
+                  setApprover={setSecondApprover}
                 />
               </Box>
               <Box clone mt={2}>
                 <MyChip label="휴가 종류" />
                 <FormControl sx={{ ml: 1 }}>
-                  <RadioGroup row value={selectedValue} onChange={selectLeave}>
+                  <RadioGroup
+                    row
+                    value={selectedValue}
+                    onChange={(e) => {
+                      setSelectedValue(e.target.value);
+                    }}
+                  >
                     <FormControlLabel value="annual" control={<Radio size="small" />} label="연차" />
                     <FormControlLabel value="half" control={<Radio size="small" />} label="반차" />
                     <FormControlLabel value="public" control={<Radio size="small" />} label="공가" />
@@ -296,18 +411,21 @@ const UserLeave = () => {
               </Box>
               <Box clone mt={2}>
                 <TextField
-                  id="title"
+                  id="reason"
                   multiline
                   rows={8}
                   sx={{
                     width: '100%'
+                  }}
+                  onChange={(e) => {
+                    setReason(e.target.value);
                   }}
                 />
               </Box>
               <Box clone mt={1}>
                 <Grid container justifyContent="right" spacing={1}>
                   <Grid item>
-                    <Button variant="contained" size="medium">
+                    <Button variant="contained" size="medium" onClick={submitLeaveRequest}>
                       완료
                     </Button>
                   </Grid>
@@ -328,7 +446,7 @@ const UserLeave = () => {
               </Grid>
               <Box clone mt={2}>
                 <MyChip label="제목" />
-                <TextField label="제목" id="title" size="small" />
+                <TextField label="제목" id="title" size="small" onChange={(e) => setTitle(e.target.value)} />
               </Box>
               <Box clone mt={2} sx={{ display: 'flex' }}>
                 <MyChip label="결재자" />
@@ -338,7 +456,7 @@ const UserLeave = () => {
                   handleSelectUser={handleSelectUser}
                   searchName={searchName}
                   setSearchName={setSearchName}
-                  setApprover={setApprover}
+                  setApprover={setFirstApprover}
                 />
               </Box>
               <Box clone mt={2}>
@@ -360,7 +478,26 @@ const UserLeave = () => {
                       </InputAdornment>
                     )
                   }}
+                  onClick={handleOpenCancel}
                 />
+              </Box>
+              <Box clone mt={2}>
+                <UserLeaveInfoTable data={selectLeaveCancel} />
+                {Object.keys(selectLeaveCancel).length === 0 && (
+                  <Box
+                    p={1}
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'center', // 수평 중앙 정렬
+                      alignItems: 'center' // 수직 중앙 정렬
+                    }}
+                  >
+                    <ErrorOutlineIcon fontSize="medium" color="secondary" sx={{ mx: 1 }} />
+                    <Typography size="small" color="secondary">
+                      선택된 휴가 없음
+                    </Typography>
+                  </Box>
+                )}
               </Box>
               <Box clone mt={2}>
                 <MyChip label="취소 사유" />
@@ -373,12 +510,13 @@ const UserLeave = () => {
                   sx={{
                     width: '100%'
                   }}
+                  onChange={(e) => setReason(e.target.value)}
                 />
               </Box>
               <Box clone mt={1}>
                 <Grid container justifyContent="right" spacing={1}>
                   <Grid item>
-                    <Button variant="contained" size="medium">
+                    <Button variant="contained" size="medium" onClick={submitLeaveCancelRequest}>
                       완료
                     </Button>
                   </Grid>
@@ -386,6 +524,22 @@ const UserLeave = () => {
               </Box>
             </Grid>
           </Grid>
+          <ModalM open={openCancel} handleClose={handleCloseCancel}>
+            <Grid container alignItems="center" direction="row" spacing={1} sx={{ mb: 2 }}>
+              <Grid item xs={3.4} md={3.4} lg={3.4}>
+                <Typography variant="h5">전체 휴가 신청 내역</Typography>
+              </Grid>
+              <Grid item xs={8.6} md={8.6} lg={8.6}></Grid>
+            </Grid>
+            <CancelLeaveTable datas={leaveRequestRecent} handleSelectCancel={handleSelectCancel} />
+            <Grid container justifyContent="right" spacing={1} sx={{ mt: 2 }}>
+              <Grid item>
+                <Button variant="contained" size="medium" onClick={handleCloseCancel}>
+                  닫기
+                </Button>
+              </Grid>
+            </Grid>
+          </ModalM>
         </BasicContainer>
       </BasicTab>
     </ComponentSkeleton>
