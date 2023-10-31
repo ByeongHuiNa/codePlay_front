@@ -167,7 +167,7 @@ const UserAttendance = () => {
   // 출퇴근 내역 검색 함수
   const searchAttendButton = () => {
     const startDate = new Date(searchStartDate).setHours(0, 0, 0, 0);
-    const endDate = new Date(searchEndDate).setHours(0, 0, 0, 0);
+    const endDate = new Date(searchEndDate).setHours(23, 59, 59, 0);
     if (startDate > endDate) {
       alert('종료일이 시작일보다 작을 수 없습니다.');
     } else if (!searchStartDate || !searchEndDate) {
