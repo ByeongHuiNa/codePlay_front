@@ -297,16 +297,16 @@ export default function CalendarClickDrawer() {
                   일정 수정
                 </Button>
                 <Button
-                    size="large"
-                    variant="contained"
-                    color="error"
-                    onClick={handleAddEventOnClick}
-                    sx={{
-                      mt: 2
-                    }}
-                  >
-                    일정 취소
-                  </Button>
+                  size="large"
+                  variant="contained"
+                  color="error"
+                  onClick={handleAddEventOnClick}
+                  sx={{
+                    mt: 2
+                  }}
+                >
+                  일정 취소
+                </Button>
               </>
             ) : (
               scheduleType && (

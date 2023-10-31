@@ -25,6 +25,7 @@ const SettingAttendancePolicy = () => {
 
   //화면 초기값 셋팅
   useEffect(() => {
+    setIndex(1);
     setIndex(0);
     async function get() {
       const endPoints = ['/policy-count'];

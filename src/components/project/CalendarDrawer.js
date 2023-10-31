@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import { useCalendarDate, useCalendarDrawer, useCalendarEvent } from 'store/module';
+import { useCalendarDate, useCalendarDrawer, useCalendarGetScheduleList } from 'store/module';
 import {
   Button,
   FormControl,
@@ -21,6 +21,7 @@ import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { DateField } from '@mui/x-date-pickers/DateField';
+import axios from '../../../node_modules/axios/index';
 
 export default function CalendarDrawer() {
   const { view, setView } = useCalendarDrawer();
@@ -119,10 +120,46 @@ export default function CalendarDrawer() {
   };
 
   //AddEventOnClick
-  const { event } = useCalendarEvent();
+  const { addScheduleList, addDataList } = useCalendarGetScheduleList();
 
   const handleAddEventOnClick = () => {
-    console.log(event);
+    const schedule = {
+      user_no: 1,
+      schedule_startday: startDate,
+      schedule_endday: endDate,
+      schedule_type: scheduleType,
+      schedule_title: tltle,
+      schedule_allday: allDayType,
+      schedule_description: content,
+      schedule_share: shareType,
+      schedule_cardview: false
+    };
+    axios.post(`/user-schedule`, schedule).then((response) => {
+      const scheduleListAdd = {
+        id: response.data,
+        title: tltle,
+        start: startDate,
+        end: endDate,
+        allDay: allDayType,
+        color: scheduleType === '개인 일정' ? '#ef9a9a' : '#90caf9',
+        textColor: scheduleType === '개인 일정' ? '#ffebee' : '#e3f2fd'
+      };
+      addDataList(schedule);
+      addScheduleList(scheduleListAdd);
+      console.log(schedule);
+      console.log(scheduleListAdd);
+    });
+
+    setView(false);
+    setScheduleType('');
+    setTltle('');
+    setContent('');
+    setStartDatePicker(false);
+    setEndDatePicker(false);
+    setAllDayType(true);
+    setShareType(false);
+    setLeaveType(false);
+    setLeaveHalfType(false);
   };
 
   const list = () => {

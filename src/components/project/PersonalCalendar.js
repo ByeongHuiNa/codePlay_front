@@ -8,10 +8,9 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
-import { INITIAL_EVENTS } from './event-utils';
 import CalendarVacationStatus from './CalendarVacationStatus';
 import CalendarWorkList from './CalendarWorkList';
-import { Stack } from '../../../node_modules/@mui/material/index';
+import { Stack, Typography } from '../../../node_modules/@mui/material/index';
 import { IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -19,7 +18,8 @@ import { useCalendarDate, useCalendarDrawer, useCalendarEvent, useCalendarEventC
 import CalendarWorkModal from './CalendarWorkModal';
 import CalendarWorkModalContent from './CalendarWorkModalContent';
 
-const PersonalCalendar = () => {
+// eslint-disable-next-line react/prop-types
+const PersonalCalendar = ({ events }) => {
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: '#fff',
     ...theme.typography.body2,
@@ -30,10 +30,9 @@ const PersonalCalendar = () => {
   //이벤트에 표기될 정보
   function renderEventContent(eventInfo) {
     return (
-      <>
-        <b>{eventInfo.timeText}</b>
-        <i>{eventInfo.event.title}</i>
-      </>
+      <Typography variant="body2" component="div">
+        {eventInfo.event.title}
+      </Typography>
     );
   }
 
@@ -158,7 +157,7 @@ const PersonalCalendar = () => {
                 initialView="dayGridMonth"
                 weekends="true"
                 editable={true}
-                initialEvents={INITIAL_EVENTS}
+                initialEvents={events}
                 eventContent={renderEventContent}
                 selectable={true}
                 select={handleDateSelect}

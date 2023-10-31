@@ -7,6 +7,8 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import PersonalCalendar from 'components/project/PersonalCalendar';
 import PublicCalendar from 'components/project/PublicCalendar';
+import { useCalendarGetScheduleList } from 'store/module';
+import axios from '../../node_modules/axios/index';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
@@ -34,10 +36,66 @@ function a11yProps(index) {
 
 const CalendarPage = () => {
   const [value, setValue] = React.useState(0);
+  const { scheduleList, leaveList, setScheduleList, setLeaveList, setDataList } = useCalendarGetScheduleList();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  const getScheduleList = () => {
+    axios
+      .get(`/user-schedulelist?user_no=1`)
+      .then((response) => {
+        const scheduleListAdd = response.data.map((list) => ({
+          id: list.schedule_no,
+          title: list.schedule_title,
+          start: list.schedule_startday,
+          end: list.schedule_endday,
+          allDay: list.schedule_allday,
+          color: list.schedule_type === '개인 일정' ? '#ef9a9a' : '#90caf9',
+          textColor: list.schedule_type === '개인 일정' ? '#ffebee' : '#e3f2fd'
+        }));
+        setDataList(response.data);
+        setScheduleList(scheduleListAdd);
+      })
+      .catch((error) => {
+        console.error('스케줄 리스트를 불러오는 중 오류 발생: ', error);
+      });
+  };
+
+  const getLeaveList = () => {
+    axios
+      .get(`/user-leavelist?user_no=1`)
+      .then((response) => {
+        const leaveListAdd = response.data
+          .filter((list) => list.leaveapp_status === 0) // list.leaveapp_status 값이 0인 항목만 필터링
+          .map((list) => ({
+            title: list.leaveapp_title,
+            start: list.leaveapp_start,
+            end: list.leaveapp_end,
+            color: '#a5d6a7',
+            textColor: '#e8f5e9'
+          }));
+        setLeaveList(leaveListAdd);
+        console.log(leaveListAdd);
+      })
+      .catch((error) => {
+        console.error('휴가 리스트를 불러오는 중 오류 발생: ', error);
+      });
+  };
+
+  // 이벤트 리스트
+  const [events, setEvents] = React.useState([]);
+
+  React.useEffect(() => {
+    getScheduleList();
+    getLeaveList();
+  }, []); // 비어있는 종속성 배열을 사용하여 초기 로딩 시에만 실행되도록 함
+
+  React.useEffect(() => {
+    // scheduleList 및 leaveList가 변경될 때마다 events 업데이트
+    setEvents([...scheduleList, ...leaveList]);
+  }, [scheduleList, leaveList]);
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -49,7 +107,7 @@ const CalendarPage = () => {
       </Box>
       <CustomTabPanel value={value} index={0}>
         {/* 개인 캘린더 컴포넌트 */}
-        <PersonalCalendar></PersonalCalendar>
+        <PersonalCalendar events={events}></PersonalCalendar>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
         {/* 공용 캘린더 컴포넌트 */}

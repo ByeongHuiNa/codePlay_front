@@ -76,7 +76,20 @@ export const useProfileState = create(
     setProfile: (newProfile) => set(() => ({ profile: newProfile }))
   }))
 );
-//TODO:관리자가 다른사람 프로필 수정할때 위에 프로필까지 수정되는 현상을 막기위해 하나 새로 만들기
+
+export const useMangerProfileState = create(
+  devtools((set) => ({
+    profile: {},
+    setProfile: (newProfile) => set(() => ({ profile: newProfile }))
+  }))
+);
+
+export const useDeptListState = create(
+  devtools((set) => ({
+    deptList: {},
+    setDeptList: (newDeptList) => set(() => ({ deptList: newDeptList }))
+  }))
+);
 
 export const useHasDrity = create(
   devtools((set) => ({
@@ -188,6 +201,25 @@ export const useCalendarMemoModal = create(
   devtools((set) => ({
     memoView: false,
     setMemoView: (newMemoView) => set(() => ({ memoView: newMemoView }))
+  }))
+);
+
+export const useCalendarGetScheduleList = create(
+  devtools((set) => ({
+    dataList: [],
+    scheduleList: [],
+    leaveList: [],
+    setDataList: (newDataList) => set(() => ({ dataList: newDataList })),
+    setScheduleList: (newScheduleList) => set(() => ({ scheduleList: newScheduleList })),
+    setLeaveList: (newLeaveList) => set(() => ({ leaveList: newLeaveList })),
+    addDataList: (newDataList) =>
+      set((state) => ({
+        dataList: [...state.dataList, newDataList]
+      })),
+    addScheduleList: (newScheduleList) =>
+      set((state) => ({
+        scheduleList: [...state.scheduleList, newScheduleList]
+      }))
   }))
 );
 
