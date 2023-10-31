@@ -193,8 +193,8 @@ Type.propTypes = {
 };
 
 // ==============================|| ORDER TABLE ||============================== //
-//승인, 반려 테이블
-export default function AppLeaveTotalTable({ requestLeaveCancel }) {
+//대기테이블
+export default function AppLeaveTotalTable({ requestLeaveCancel, month }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   //const [selected] = useState([]);
@@ -205,14 +205,14 @@ export default function AppLeaveTotalTable({ requestLeaveCancel }) {
     async function get() {
       //const endPoints = ['http://localhost:8000/leave_approval'];
       //const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
-      const result = await axios.get('/user-leave-request?user_no=1');
+      const result = await axios.get(`/user-leave-request?user_no=1&month=${month}`);
       // result[0].data를 필터링하여 leave_status가 1인 데이터만 추출
       //const filteredData = result[0].data.filter((item) => item.leaveapp_status === 0 || item.leaveapp_status === 1);
       console.log('result: ' + result.data);
       setApp(result.data);
     }
     get();
-  }, []);
+  }, [month]);
 
   const handleOpen = () => {
     setModalOpen(true);

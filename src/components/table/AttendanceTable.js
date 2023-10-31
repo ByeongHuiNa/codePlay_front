@@ -65,7 +65,13 @@ const headCells = [
     id: 'date',
     align: 'center',
     disablePadding: false,
-    label: '날짜'
+    label: '일자'
+  },
+  {
+    id: 'day',
+    align: 'center',
+    disablePadding: false,
+    label: '요일'
   },
   {
     id: 'start',
@@ -182,6 +188,7 @@ export default function AttendanceTable({ month }) {
   const [leave, setLeave] = useState(0);
   //const [selected] = useState([]);
   const { attendance, setAttendance } = useAttendanceState();
+  const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
 
 
   // let normal = 0;
@@ -309,7 +316,10 @@ export default function AttendanceTable({ month }) {
               // .slice(0, 5)
               .map((attendance) => {
                 const dateObject = new Date(attendance.attend_date);
+                const dateObject1 = new Date(attendance.attend_date);
                 const formattedDate = dateObject.toLocaleDateString();
+                const day = dateObject1.getDay();
+                const dayName = daysOfWeek[day];
                 return (
                   <TableRow
                     hover
@@ -321,6 +331,7 @@ export default function AttendanceTable({ month }) {
                     //selected={isItemSelected}
                   >
                     <TableCell align="center">{formattedDate}</TableCell>
+                    <TableCell align="center">{dayName}</TableCell>
                     <TableCell align="center">{attendance.attend_start}</TableCell>
                     <TableCell align="center">{attendance.attend_end}</TableCell>
                     <TableCell align="center">

@@ -18,21 +18,57 @@ const Main = () => {
   const { profile, setProfile } = useProfileState();
 
   const { attend, setAttend } = useTodayState();
+  
 
-  const [formattedDate, setFormattedDate] = useState('');
+  const [formattedDate, setFormattedDate] = useState();
 
   const formData = {};
 
   //출근기록
   const startSubmit = (e) => {
     e.preventDefault();
-    axios.post('/user-attend-today?user_no=1', formData);
+    axios
+      .post('/user-attend-today?user_no=1', formData)
+      .then(() => {
+        // 출근을 기록한 후 성공적으로 완료됐을 때 실행할 코드
+        alert('출근을 기록하였습니다.');
+        window.location.reload(); // 페이지 새로고침
+      })
+      .catch((error) => {
+        // 요청이 실패했을 때 실행할 코드
+        console.error('에러 발생: ', error);
+        // 에러 메시지를 표시하거나 다른 작업을 수행할 수 있습니다.
+      });
   };
 
-   //퇴근기록
-   const endSubmit = (e) => {
+  //퇴근기록
+  const endSubmit = (e) => {
     e.preventDefault();
-    axios.put('/user-attend-today?user_no=1', formData);
+    const currentDate = new Date();
+    const currentHour = currentDate.getHours();
+
+    // 6시 이전에 퇴근 버튼을 누르면 확인 메시지 표시
+    if (currentHour < 18) {
+      const confirmMessage = "6시 이전에 퇴근하시겠습니까?";
+      const userConfirmed = window.confirm(confirmMessage);
+
+      if (!userConfirmed) {
+        // 사용자가 취소한 경우
+        return;
+      }
+    }
+
+    axios.patch('/user-attend-today?user_no=1', formData)
+      .then(() => {
+        // 퇴근을 기록한 후 성공적으로 완료됐을 때 실행할 코드
+        alert('퇴근을 기록하였습니다.');
+        window.location.reload(); // 페이지 새로고침
+      })
+      .catch((error) => {
+        // 요청이 실패했을 때 실행할 코드
+        console.error('에러 발생: ', error);
+        // 에러 메시지를 표시하거나 다른 작업을 수행할 수 있습니다.
+      });
   };
 
   useEffect(() => {
@@ -48,11 +84,18 @@ const Main = () => {
       // null 값 검사
       if (attend && attend.attend_date) {
         const dateObject = new Date(attend.attend_date);
-        setFormattedDate(dateObject.toLocaleDateString());
+        setFormattedDate(
+          dateObject.toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            weekday: 'long'
+          })
+        );
       }
     }
     get();
-  }, []);
+  }, [attend]);
 
   // useEffect(() => {
   //   async function get() {
@@ -127,6 +170,7 @@ const Main = () => {
                 ) : (
                   <Typography variant="text" sx={{ fontSize: 15, color: 'error' }}>
                     미출근
+                    <br />
                   </Typography>
                 )}
               </Grid>
@@ -149,14 +193,15 @@ const Main = () => {
                 ) : (
                   <Typography variant="text" sx={{ fontSize: 15, color: 'error' }}>
                     미퇴근
+                    <br />
                   </Typography>
                 )}
               </Grid>
             </Grid>
           </Box>
-          <Box mb={2}>
-            <Grid container justifyContent="center" spacing={1}>
-              <Grid item>
+          <Box>
+            <Grid container justifyContent="center" spacing={1} sx={{mt:8}}>
+              <Grid item >
                 <form onSubmit={startSubmit}>
                   <Button variant="outlined" size="large" type="submit">
                     <Box mx={6}>출근</Box>
