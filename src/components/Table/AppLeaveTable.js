@@ -235,7 +235,9 @@ export default function AppLeaveTable({ requestLeaveCancel, datas, handleOpen })
                   tabIndex={-1}
                   key={data.date}
                   selected={isItemSelected}
-                  onClick={() => handleOpen(data)}
+                  onClick={() => {
+                    handleOpen(data);
+                  }}
                 >
                   <TableCell component="th" id={labelId} scope="data" align="center">
                     {dateFormat(new Date(data.leaveapp_start))}
