@@ -24,6 +24,7 @@ const AccessCheckbox = () => {
   return (
     <>
       {Object.keys(accessPage).length > 0 &&
+        Object.keys(tab).length > 0 &&
         Object.keys(accessPage).map((page_default_role_level) => {
           return (
             <Stack key={page_default_role_level} mb={2}>
