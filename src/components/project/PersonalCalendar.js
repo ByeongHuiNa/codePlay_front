@@ -14,7 +14,7 @@ import { Stack, Typography } from '../../../node_modules/@mui/material/index';
 import { IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import { useCalendarDate, useCalendarDrawer, useCalendarEvent, useCalendarEventClick } from 'store/module';
+import { useCalendarDate, useCalendarDrawer, useCalendarEvent, useCalendarEventClick, useCalendarGetScheduleList } from 'store/module';
 import CalendarWorkModal from './CalendarWorkModal';
 import CalendarWorkModalContent from './CalendarWorkModalContent';
 
@@ -78,11 +78,12 @@ const PersonalCalendar = ({ events }) => {
     setEvent(selectInfo);
   }
   //이벤트 클릭 시 수정하는 함수
-  const { setTitle, setAllDay } = useCalendarEventClick();
+  const { setTitle, setAllDay, setScheduleType, setShareType } = useCalendarEventClick();
+  const { dataList } = useCalendarGetScheduleList();
   function handleEventClick(clickInfo) {
     //종료일자 -1
     console.log(clickInfo.event);
-    if (clickInfo.event.endStr == !'') {
+    if (clickInfo.event.endStr !== '' && clickInfo.event.allDay == true) {
       var dateStr = clickInfo.event.endStr;
       var parts = dateStr.split('-');
       var year = parseInt(parts[0], 10);
@@ -108,15 +109,33 @@ const PersonalCalendar = ({ events }) => {
       }
 
       var newDateStr = newYear + '-' + String(newMonth).padStart(2, '0') + '-' + String(newDay).padStart(2, '0');
-    } else {
+    } else if (clickInfo.event.endStr == '') {
       newDateStr = clickInfo.event.startStr;
+    } else {
+      newDateStr = clickInfo.event.endStr;
     }
+    const ScheduleType =
+      clickInfo.event.backgroundColor === '#ef9a9a'
+        ? '개인 일정'
+        : clickInfo.event.backgroundColor === '#90caf9'
+        ? '회사 일정'
+        : '휴가 일정';
+
+    const desiredScheduleNo = clickInfo.event.id;
+    // dataList 배열에서 schedule_no 객체를 찾기
+    const targetObject = dataList.find((item) => item.schedule_no == desiredScheduleNo);
+    // schedule_no가 1인 객체가 존재하고 있다면 schedule_share 값을 가져옴
+    const scheduleShare = targetObject ? targetObject.schedule_share : null;
+    // scheduleShare에는 schedule_no가 1인 객체의 schedule_share 값이 저장
+
     setStartDate(clickInfo.event.startStr);
     setEndDate(newDateStr);
-    setClickView(true);
     setEvent(clickInfo.event);
     setTitle(clickInfo.event.title);
     setAllDay(clickInfo.event.allDay);
+    setScheduleType(ScheduleType);
+    setShareType(scheduleShare);
+    setClickView(true);
   }
   //CalendarWorkModal on/off
   const [calendarWorkModal, setCalendarWorkModal] = React.useState(false);

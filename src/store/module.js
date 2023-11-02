@@ -123,8 +123,8 @@ export const useCalendarDrawer = create(
 
 export const useCalendarDate = create(
   devtools((set) => ({
-    startDate: {},
-    endDate: {},
+    startDate: new Date(),
+    endDate: new Date(),
     setStartDate: (newStartDate) => set(() => ({ startDate: newStartDate })),
     setEndDate: (newEndDate) => set(() => ({ endDate: newEndDate }))
   }))
@@ -192,8 +192,12 @@ export const useCalendarEventClick = create(
   devtools((set) => ({
     title: '',
     allDay: false,
+    scheduleType: '',
+    shareType: false,
     setTitle: (newTitle) => set(() => ({ title: newTitle })),
-    setAllDay: (newAllDay) => set(() => ({ allDay: newAllDay }))
+    setAllDay: (newAllDay) => set(() => ({ allDay: newAllDay })),
+    setScheduleType: (newScheduleType) => set(() => ({ scheduleType: newScheduleType })),
+    setShareType: (newShareType) => set(() => ({ shareType: newShareType }))
   }))
 );
 
@@ -219,6 +223,24 @@ export const useCalendarGetScheduleList = create(
     addScheduleList: (newScheduleList) =>
       set((state) => ({
         scheduleList: [...state.scheduleList, newScheduleList]
+      })),
+    updateDataList: (updatedData) =>
+      set((state) => ({
+        dataList: state.dataList.map((item) => {
+          if (item.schedule_no == updatedData.schedule_no) {
+            return { ...item, ...updatedData };
+          }
+          return item;
+        })
+      })),
+    updateScheduleList: (updatedSchedule) =>
+      set((state) => ({
+        scheduleList: state.scheduleList.map((item) => {
+          if (item.id == updatedSchedule.id) {
+            return { ...item, ...updatedSchedule };
+          }
+          return item;
+        })
       }))
   }))
 );
