@@ -46,15 +46,26 @@ const CalendarPage = () => {
     axios
       .get(`/user-schedulelist?user_no=1`)
       .then((response) => {
-        const scheduleListAdd = response.data.map((list) => ({
-          id: list.schedule_no,
-          title: list.schedule_title,
-          start: list.schedule_startday,
-          end: list.schedule_endday,
-          allDay: list.schedule_allday,
-          color: list.schedule_type === '개인 일정' ? '#ef9a9a' : '#90caf9',
-          textColor: list.schedule_type === '개인 일정' ? '#ffebee' : '#e3f2fd'
-        }));
+        const scheduleListAdd = response.data.map((list) => {
+          const startDate = new Date(list.schedule_startday);
+          const endDate = new Date(list.schedule_endday);
+
+          // 날짜를 비교하여 start와 end 값이 같지 않은 경우에만 +1을 적용
+          if (startDate.getDate() !== endDate.getDate()) {
+            endDate.setDate(endDate.getDate() + 1);
+          }
+
+          return {
+            id: list.schedule_no,
+            title: list.schedule_title,
+            start: startDate,
+            end: endDate,
+            allDay: list.schedule_allday,
+            color: list.schedule_type === '개인 일정' ? '#ef9a9a' : '#90caf9',
+            textColor: list.schedule_type === '개인 일정' ? '#ffebee' : '#e3f2fd'
+          };
+        });
+
         setDataList(response.data);
         setScheduleList(scheduleListAdd);
       })
@@ -69,15 +80,25 @@ const CalendarPage = () => {
       .then((response) => {
         const leaveListAdd = response.data
           .filter((list) => list.leaveapp_status === 0) // list.leaveapp_status 값이 0인 항목만 필터링
-          .map((list) => ({
-            title: list.leaveapp_title,
-            start: list.leaveapp_start,
-            end: list.leaveapp_end,
-            color: '#a5d6a7',
-            textColor: '#e8f5e9'
-          }));
+          .map((list) => {
+            const startDate = new Date(list.leaveapp_start);
+            const endDate = new Date(list.leaveapp_end);
+
+            // 날짜를 비교하여 start와 end 값이 같지 않은 경우에만 +1을 적용
+            if (startDate.getDate() !== endDate.getDate()) {
+              endDate.setDate(endDate.getDate() + 1);
+            }
+
+            return {
+              title: list.leaveapp_title,
+              start: startDate,
+              end: endDate,
+              color: '#a5d6a7',
+              textColor: '#e8f5e9'
+            };
+          });
+
         setLeaveList(leaveListAdd);
-        console.log(leaveListAdd);
       })
       .catch((error) => {
         console.error('휴가 리스트를 불러오는 중 오류 발생: ', error);

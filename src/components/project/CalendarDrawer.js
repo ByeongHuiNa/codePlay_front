@@ -34,10 +34,10 @@ export default function CalendarDrawer() {
   };
 
   //제목 입력
-  const [tltle, setTltle] = React.useState('');
+  const [title, setTitle] = React.useState('');
 
   const handleTitleChange = (e) => {
-    setTltle(e.target.value);
+    setTitle(e.target.value);
   };
 
   //내용 입력
@@ -82,7 +82,7 @@ export default function CalendarDrawer() {
     }
     setView(open);
     setScheduleType('');
-    setTltle('');
+    setTitle('');
     setContent('');
     setStartDatePicker(false);
     setEndDatePicker(false);
@@ -105,7 +105,7 @@ export default function CalendarDrawer() {
   };
 
   const handleStartDateFieldOnAccept = (e) => {
-    setStartDate(e);
+    setStartDate(new Date(e));
     setStartDatePicker((pre) => !pre);
   };
 
@@ -115,7 +115,7 @@ export default function CalendarDrawer() {
   };
 
   const handleEndDateFieldOnAccept = (e) => {
-    setEndDate(e);
+    setEndDate(new Date(e));
     setEndDatePicker((pre) => !pre);
   };
 
@@ -128,18 +128,25 @@ export default function CalendarDrawer() {
       schedule_startday: startDate,
       schedule_endday: endDate,
       schedule_type: scheduleType,
-      schedule_title: tltle,
+      schedule_title: title,
       schedule_allday: allDayType,
       schedule_description: content,
       schedule_share: shareType,
       schedule_cardview: false
     };
     axios.post(`/user-schedule`, schedule).then((response) => {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+
+      // 날짜를 비교하여 start와 end 값이 같지 않은 경우에만 +1을 적용
+      if (start.getDate() !== end.getDate()) {
+        end.setDate(end.getDate() + 1);
+      }
       const scheduleListAdd = {
         id: response.data,
-        title: tltle,
-        start: startDate,
-        end: endDate,
+        title: title,
+        start: start,
+        end: end,
         allDay: allDayType,
         color: scheduleType === '개인 일정' ? '#ef9a9a' : '#90caf9',
         textColor: scheduleType === '개인 일정' ? '#ffebee' : '#e3f2fd'
@@ -152,7 +159,7 @@ export default function CalendarDrawer() {
 
     setView(false);
     setScheduleType('');
-    setTltle('');
+    setTitle('');
     setContent('');
     setStartDatePicker(false);
     setEndDatePicker(false);
@@ -204,7 +211,7 @@ export default function CalendarDrawer() {
             {/* 휴가일정을 선택하면 연차 및 반차 버튼, 일자를 선택할 수 있고 확인 및 취소 버튼을 포함하고있다 */}
             {scheduleType === '개인 일정' || scheduleType === '회사 일정' ? (
               <>
-                <TextField sx={{ mt: 3 }} id="outlined-basic" label="제목" onChange={handleTitleChange} value={tltle} />
+                <TextField sx={{ mt: 3 }} id="outlined-basic" label="제목" onChange={handleTitleChange} value={title} />
                 <Grid container direction="row" justifyContent="flex-start" alignItems="center">
                   <FormControlLabel
                     sx={{
