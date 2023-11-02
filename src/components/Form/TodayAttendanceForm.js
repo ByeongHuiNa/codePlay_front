@@ -13,20 +13,14 @@ const TodayAttendancdForm = () => {
 
   const formData = {};
 
-  useEffect(() => {
-    async function get() {
-      // const endPoints = ['/user-attend-today?user_no=1'];
-      // const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
+    // 함수를 밖으로 빼서 재사용 가능하도록 설정
+    const getAttendanceData = async () => {
       const result = await axios.get('/user-attend-today?user_no=1');
-      // const resultAttend = await axios.get('/user-attend-today?user_no=1');
-      setAttend(result.data);
-      console.log('zz:' + attend);
-      // const dateObject = new Date(attend.attend_date);
-      // setFormattedDate(dateObject.toLocaleDateString());
-
+      setAttend(result.data[0]);
+  
       // null 값 검사
-      if (attend && attend.attend_date) {
-        const dateObject = new Date(attend.attend_date);
+      if (result.data[0] && result.data[0].attend_date) {
+        const dateObject = new Date(result.data[0].attend_date);
         setFormattedDate(
           dateObject.toLocaleDateString('ko-KR', {
             year: 'numeric',
@@ -36,8 +30,10 @@ const TodayAttendancdForm = () => {
           })
         );
       }
-    }
-    get();
+    };
+
+  useEffect(() => {
+    getAttendanceData();
   }, []);
 
   //출근기록
@@ -47,7 +43,7 @@ const TodayAttendancdForm = () => {
       .post('/user-attend-today?user_no=1', formData)
       .then(() => {
         alert('출근을 기록하였습니다.');
-        //window.location.reload(); // 페이지 새로고침
+        getAttendanceData();
       })
       .catch((error) => {
         // 요청이 실패했을 때 실행할 코드
@@ -78,7 +74,8 @@ const TodayAttendancdForm = () => {
       .then(() => {
         // 퇴근을 기록한 후 성공적으로 완료됐을 때 실행할 코드
         alert('퇴근을 기록하였습니다.');
-        window.location.reload(); // 페이지 새로고침
+        getAttendanceData();
+      
       })
       .catch((error) => {
         // 요청이 실패했을 때 실행할 코드
