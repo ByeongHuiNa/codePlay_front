@@ -304,9 +304,11 @@ const ApprovalAttendance = () => {
                           alignItems: 'center'
                         }}
                       >
-                        <Box>
-                          <Typography variant="h4">결재 완료 </Typography>
-                          <Typography variant="text">총 {leaveApp + leaveUnapp}건</Typography>
+                        <Box sx={{ display: 'flex', alignItems:'center'}}>
+                          <Box ml={2}>
+                            <Typography variant="h4">결재 완료 </Typography>
+                            <Typography variant="text">총 {leaveApp + leaveUnapp}건</Typography>
+                          </Box>
                         </Box>
                       </Grid>
                       <Grid item xs={4} sm={4} md={4} lg={4}>
@@ -695,8 +697,8 @@ const ApprovalAttendance = () => {
                             <TextField
                               multiline
                               rows={3}
-                              defaultValue={selectAttendData.attendapp_reason}
-                              key={selectAttendData.attendapp_reason}
+                              defaultValue={selectAttendData.attendedit_reason}
+                              key={selectAttendData.attendedit_reason}
                               inputProps={{ readOnly: true }}
                               sx={{ width: '70%' }}
                             />
