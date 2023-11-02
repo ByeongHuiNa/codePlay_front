@@ -39,6 +39,12 @@ const TodayAttendancdForm = () => {
   //출근기록
   const startSubmit = (e) => {
     e.preventDefault();
+
+    if (attend && attend.attend_date) {
+      alert('이미 출근을 기록하였습니다.');
+      return; // 이미 출근한 경우 함수를 종료합니다.
+    }
+
     axios
       .post('/user-attend-today?user_no=1', formData)
       .then(() => {
@@ -55,6 +61,12 @@ const TodayAttendancdForm = () => {
   //퇴근기록
   const endSubmit = (e) => {
     e.preventDefault();
+
+    if (attend && attend.attend_end) {
+      alert('이미 퇴근을 기록하였습니다.');
+      return; // 이미 퇴근한 경우 함수를 종료합니다.
+    }
+
     const currentDate = new Date();
     const currentHour = currentDate.getHours();
 

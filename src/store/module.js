@@ -247,3 +247,11 @@ export const useFormatter = create(
     }
   }))
 );
+
+//사용자의 주간근무시간
+export const useWorkingHourState = create(
+  devtools((set) => ({
+    hours: {},
+    setHours: (newHours) => set(() => ({ hours: newHours }))
+  }))
+);
