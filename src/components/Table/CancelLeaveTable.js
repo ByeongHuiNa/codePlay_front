@@ -2,10 +2,37 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 
 // material-ui
-import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import { Stack, Typography } from '../../../node_modules/@mui/material/index';
-import Dot from 'components/@extended/Dot';
+import { Box, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+
+// project import
+import { Chip, Typography } from '../../../node_modules/@mui/material/index';
 import { useFormatter } from 'store/module';
+
+function descendingComparator(a, b, orderBy) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
+}
+
+function getComparator(order, orderBy) {
+  return order === 'desc' ? (a, b) => descendingComparator(a, b, orderBy) : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+function stableSort(array, comparator) {
+  const stabilizedThis = array.map((el, index) => [el, index]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) {
+      return order;
+    }
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map((el) => el[0]);
+}
 
 // ==============================|| ORDER TABLE - HEADER CELL ||============================== //
 
@@ -35,16 +62,16 @@ const headCells = [
     label: '휴가사용일수'
   },
   {
-    id: 'appDate',
+    id: 'first approver',
     align: 'center',
     disablePadding: false,
-    label: '1차 결재자'
+    label: '1차결재자'
   },
   {
-    id: 'approver',
+    id: 'second approver',
     align: 'center',
     disablePadding: false,
-    label: '2차 결재자'
+    label: '2차결재자'
   },
   {
     id: 'status',
@@ -66,7 +93,6 @@ function OrderTableHead({ order, orderBy }) {
             align={headCell.align}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
-            sx={{ height: '30px', p: 1 }}
           >
             {headCell.label}
           </TableCell>
@@ -87,9 +113,12 @@ const OrderStatus = ({ status }) => {
   let color;
   let title;
 
+  // 최종 결재 상태
   // 0 : 결재완료(승인)
   // 1 : 결재완료(반려)
-  // 2 : 결재대기
+  // 2 : 결재진행중
+  // 3 : 결재대기
+
   switch (status) {
     case 0:
       color = 'success';
@@ -104,14 +133,13 @@ const OrderStatus = ({ status }) => {
       title = '결재진행중';
       break;
     case 3:
-      color = 'primary';
+      color = 'warning';
       title = '결재대기';
   }
 
   return (
     <Stack direction="row" alignItems="center" justifyContent="center" spacing={1}>
-      <Dot color={color} />
-      <Typography>{title}</Typography>
+      <Chip label={title} color={color} />
     </Stack>
   );
 };
@@ -120,15 +148,47 @@ OrderStatus.propTypes = {
   status: PropTypes.number
 };
 
-OrderStatus.propTypes = {
+// ==============================|| STATUS ||============================== //
+
+const LeaveStatus = ({ status }) => {
+  // 0 : 연차
+  // 1 : 오전반차
+  // 2 : 오후반차
+  // 3 : 공가
+  // 4 : 휴가취소
+  let title;
+  switch (status) {
+    case 0:
+      title = '연차';
+      break;
+    case 1:
+      title = '오전 반차';
+      break;
+    case 2:
+      title = '오후 반차';
+      break;
+    case 3:
+      title = '공가';
+      break;
+    case 4:
+      title = '휴가 취소';
+  }
+
+  return <Typography>{title}</Typography>;
+};
+
+LeaveStatus.propTypes = {
   status: PropTypes.number
 };
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function UserLeaveInfoTable({ data }) {
+export default function CancelLeaveTable({ datas, handleSelectCancel }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
+  const [selected] = useState([]);
+  const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
+  // 날짜 형식
   const { dateFormat } = useFormatter();
 
   return (
@@ -140,23 +200,11 @@ export default function UserLeaveInfoTable({ data }) {
           position: 'relative',
           display: 'block',
           maxWidth: '100%',
-          height: `${Object.keys(data).length === 0 ? '47px' : '100px'}`,
-          padding: '0px',
-          '& td, & th': { whiteSpace: 'nowrap' },
-          '&::-webkit-scrollbar': {
-            width: 5
-          },
-          '&::-webkit-scrollbar-track': {
-            backgroundColor: 'white'
-          },
-          '&::-webkit-scrollbar-thumb': {
-            backgroundColor: 'gray',
-            borderRadius: 2
-          }
+          height: '500px',
+          '& td, & th': { whiteSpace: 'nowrap' }
         }}
       >
         <Table
-          stickyHeader
           aria-labelledby="tableTitle"
           sx={{
             '& .MuiTableCell-root:first-of-type': {
@@ -169,43 +217,37 @@ export default function UserLeaveInfoTable({ data }) {
         >
           <OrderTableHead order={order} orderBy={orderBy} />
           <TableBody>
-            <TableRow hover role="checkbox" sx={{ '&:last-child td, &:last-child th': { border: 0 } }} tabIndex={-1} key={data.leaveStart}>
-              {Object.keys(data).length !== 0 && (
-                <>
-                  <TableCell component="th" scope="data" align="center">
+            {stableSort(datas, getComparator(order, orderBy)).map((data, index) => {
+              const isItemSelected = isSelected(data.date);
+              const labelId = `enhanced-table-checkbox-${index}`;
+
+              return (
+                <TableRow
+                  hover
+                  role="checkbox"
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  aria-checked={isItemSelected}
+                  tabIndex={-1}
+                  key={data.date}
+                  selected={isItemSelected}
+                  onClick={() => handleSelectCancel(data)}
+                >
+                  <TableCell component="th" id={labelId} scope="data" align="center">
                     {dateFormat(new Date(data.leaveapp_start))}
                   </TableCell>
                   <TableCell align="center">{dateFormat(new Date(data.leaveapp_end))}</TableCell>
                   <TableCell align="center">
-                    {data.leaveapp_type === 0
-                      ? '연차'
-                      : data.leaveapp_type === 1
-                      ? '오전 반차'
-                      : data.leaveapp_type === 2
-                      ? '오후 반차'
-                      : '공가'}
+                    <LeaveStatus status={data.leaveapp_type} />
                   </TableCell>
-                  <TableCell align="center">{data.leaveapp_total}</TableCell>
+                  <TableCell align="center">{data.leaveapp_total}일</TableCell>
                   <TableCell align="center">{data.firstapp_user_name}</TableCell>
                   <TableCell align="center">{data.secondapp_user_name}</TableCell>
                   <TableCell align="center">
                     <OrderStatus status={data.leaveapp_status} />
                   </TableCell>
-                </>
-              )}
-              {/* {Object.keys(data).length === 0 && (
-                <Box
-                  p={1}
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'center', // 수평 중앙 정렬
-                    alignItems: 'center' // 수직 중앙 정렬
-                  }}
-                >
-                  <Typography variant="h5">선택된 날짜 없음</Typography>
-                </Box>
-              )} */}
-            </TableRow>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>

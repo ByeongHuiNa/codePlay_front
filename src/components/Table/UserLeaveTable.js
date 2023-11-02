@@ -182,7 +182,7 @@ export default function UserLeaveTable() {
     async function get() {
       // const endPoints = ['http://localhost:8000/leave_approval'];
       // const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
-      const result = await axios.get('/user-leave-request?user_no=1');
+      const result = await axios.get('/user-leave-request-main?user_no=1');
       // result[0].data를 필터링하여 leave_status가 1인 데이터만 추출
       //const filteredData = result[0].data.filter((item) => item.leave_status === 1);
 

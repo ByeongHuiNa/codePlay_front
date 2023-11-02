@@ -3,15 +3,16 @@ import MainCard from 'components/MainCard';
 import { Avatar, Button, IconButton, MenuItem, Stack, TextField, Typography } from '../../../node_modules/@mui/material/index';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import { useDetailCardState, useTabState, useTableListState } from 'store/module';
+import { useDeptListState, useDetailCardState, useTabState, useTableListState } from 'store/module';
 import { v4 as uuidv4 } from 'uuid';
+import axios from '../../../node_modules/axios/index';
 
 const AuthorityDetailCard = () => {
   //권한 고정(사용자, 근태담당자, 관리자, 메인관리자 추가 불가능)
   const { setView, content, setContent, id } = useDetailCardState();
   const { tableContentList } = useTableListState();
   const { tab } = useTabState();
-
+  const { deptList } = useDeptListState();
   function getToday() {
     var date = new Date();
     var year = date.getFullYear();
@@ -40,6 +41,21 @@ const AuthorityDetailCard = () => {
     temp.role.push(role);
     setContent(temp);
   };
+  //TODO:Attend_ma 로 변경시 객체에 내용 수정필요
+  // const changeAttend_ma = (value) => {
+  //   const temp = { ...content };
+  //   attend_ma = [{ ...attend_ma, dept_no: value }];
+  //   temp.attend_ma = attend_ma;
+  //   setContent(temp);
+  // };
+
+  async function save() {
+    const RoleQueryUserDetailRequestVo = {
+      user_no: id,
+      role: content
+    };
+    await axios.post(`/role-save`, RoleQueryUserDetailRequestVo);
+  }
 
   return (
     <MainCard>
@@ -77,9 +93,21 @@ const AuthorityDetailCard = () => {
                       ))}
                 </TextField>
                 {value.role_level == 2 ? (
-                  <TextField select size="normal" sx={{ width: '8rem' }} value={content.attend_ma[0].dept_no}>
-                    {/* TODO: 부서전체를 번호와 이름으로 가져와야함 */}
-                    <MenuItem value={1}>인사팀</MenuItem>
+                  //TODO:여러개의 담당부서를 가질시 아래 컴포넌트 수정해야함.
+                  <TextField
+                    select
+                    size="normal"
+                    sx={{ width: '8rem' }}
+                    value={content.attend_ma == null ? 1 : content.attend_ma[0].dept_no}
+                  >
+                    {Object.keys(deptList).length > 0 &&
+                      deptList.map((dept) => {
+                        return (
+                          <MenuItem key={dept.dept_no} value={dept.dept_no}>
+                            {dept.dept_name}
+                          </MenuItem>
+                        );
+                      })}
                   </TextField>
                 ) : (
                   ''
@@ -90,8 +118,14 @@ const AuthorityDetailCard = () => {
               </Stack>
             );
           })}
-          {/* TODO: 저장하는것 구현예정 */}
-        <Button onClick={() => setView(false)}>저장</Button>
+        <Button
+          onClick={() => {
+            setView(false);
+            save();
+          }}
+        >
+          저장
+        </Button>
       </Stack>
     </MainCard>
   );

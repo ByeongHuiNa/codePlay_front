@@ -24,6 +24,24 @@ const UserAttendanceTotalPage = () => {
   const [month1, setMonth1] = useState(new Date().getMonth() + 1);
   //결재완료 내역 이번달로 설정
   const [month2, setMonth2] = useState(new Date().getMonth() + 1);
+  const now = new Date(); // 현재 날짜와 시간
+  const currentDay = now.getDay(); // 현재 요일 (0: 일요일, 1: 월요일, ..., 6: 토요일)
+  
+  // 현재 주의 일요일 날짜를 계산
+  const startOfWeek = new Date(now);
+  startOfWeek.setDate(now.getDate() - currentDay);
+  
+  // 현재 주의 월요일부터 토요일까지의 날짜를 계산하고 포맷팅
+  const daysOfWeek = [];
+  const dateOptions = { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short' };
+  
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(startOfWeek);
+    date.setDate(startOfWeek.getDate() + i);
+    const formattedDate = date.toLocaleDateString('ko-KR', dateOptions);
+    daysOfWeek.push(formattedDate);
+  }
+  
 
   //const [open, setOpen] = useState(false);
 
@@ -53,7 +71,7 @@ const UserAttendanceTotalPage = () => {
     setMonth2(event.target.value);
   };
 
-  const [month3, setMonth3] = useState(new Date().getMonth() + 1);
+  const [month3, setMonth3] = useState(new Date().getMonth() + 1); //출퇴근현황 현재달
 
   const month3Change = (event) => {
     setMonth3(event.target.value);
@@ -83,7 +101,7 @@ const UserAttendanceTotalPage = () => {
           <Grid item xs={8} sm={8} md={8} lg={8}>
             <MainCard>
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <Typography variant="h5">{month3}월 결재대기내역</Typography>
+                <Typography variant="h5">{month1}월 결재대기내역</Typography>
 
                 <FormControl sx={{ marginLeft: 3 }}>
                   <InputLabel variant="standard" htmlFor="uncontrolled-native">
@@ -113,7 +131,7 @@ const UserAttendanceTotalPage = () => {
                 </FormControl>
               </div>
 
-              <UnappLeaveTotalTable />
+              <UnappLeaveTotalTable month={month1} />
             </MainCard>
           </Grid>
 
@@ -150,7 +168,7 @@ const UserAttendanceTotalPage = () => {
                   </NativeSelect>
                 </FormControl>
               </div>
-              <AppLeaveTotalTable handleOpen={handleOpen} handleClose={handleClose} />
+              <AppLeaveTotalTable handleOpen={handleOpen} handleClose={handleClose} month={month2}/>
 
               <Button onClick={handleOpen}>Open modal</Button>
               {modalOpen && <LeaveModal open={handleOpen} handleClose={handleClose} />}
@@ -170,25 +188,25 @@ const UserAttendanceTotalPage = () => {
               </Typography>
               <AttendChart
                 chart={{
-                  labels: ['10/07', '10/08', '10/09', '10/10', '10/11', '10/12', '10/13'],
+                  labels: daysOfWeek,
                   series: [
                     {
                       name: '정상근무',
                       type: 'column',
                       fill: 'solid',
-                      data: [6, 8, 10, 10, 4, 10, 0]
+                      data: [8, 8, 8, 8, 4, 8, 8]
                     },
                     {
                       name: '초과근무',
                       type: 'column',
                       fill: 'solid',
-                      data: [4, 0, 1, 1, 0, 1, 0]
+                      data: [0, 0, 0, 0, 0, 0, 0]
                     },
                     {
                       name: '휴가',
                       type: 'column',
                       fill: 'solid',
-                      data: [0, 0, 0, 0, 4, 0, 8]
+                      data: [0, 0, 0, 0, 4, 0, 0]
                     }
                   ]
                 }}
