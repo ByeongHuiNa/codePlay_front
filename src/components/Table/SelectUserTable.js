@@ -99,7 +99,7 @@ OrderTableHead.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function SelectUserTable({ value, datas, handleSingleCheck, handleAllCheck, checkItems, setSelectUserData, searchName }) {
+export default function SelectUserTable({ value, datas, handleSingleCheck, handleAllCheck, checkItems, searchName }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
@@ -167,7 +167,6 @@ export default function SelectUserTable({ value, datas, handleSingleCheck, handl
                     tabIndex={-1}
                     key={data.user_no}
                     selected={isItemSelected}
-                    onClick={setSelectUserData}
                   >
                     {value === 0 && (
                       <TableCell align="center">
@@ -182,7 +181,7 @@ export default function SelectUserTable({ value, datas, handleSingleCheck, handl
                       <Avatar src={data.user_profile} sx={{ width: 40, height: 40, margin: 'auto' }}></Avatar>
                     </TableCell>
                     <TableCell align="center">{data.user_name}</TableCell>
-                    <TableCell align="center">{data.dept.dept_name}</TableCell>
+                    <TableCell align="center">{data.dept_name}</TableCell>
                     <TableCell align="center">{data.user_position}</TableCell>
                   </TableRow>
                 );

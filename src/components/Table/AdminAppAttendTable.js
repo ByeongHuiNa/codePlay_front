@@ -4,6 +4,7 @@ import { useState } from 'react';
 // material-ui
 import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { Chip, Stack } from '../../../node_modules/@mui/material/index';
+import { useFormatter } from 'store/module';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -118,13 +119,12 @@ const OrderStatus = ({ status }) => {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function AdminAppAttendTable({ appAttendStatus, datas, setSelectAttendData }) {
+export default function AdminAppAttendTable({ datas, setSelectAttendData }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
-
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
-
+  const { dateFormat } = useFormatter();
   return (
     <Box>
       <TableContainer
@@ -165,13 +165,6 @@ export default function AdminAppAttendTable({ appAttendStatus, datas, setSelectA
             {stableSort(datas, getComparator(order, orderBy)).map((data, index) => {
               const isItemSelected = isSelected(data.date);
               const labelId = `enhanced-table-checkbox-${index}`;
-
-              if (appAttendStatus === 0 && (data.status === 0 || data.status === 1)) {
-                return;
-              } else if (appAttendStatus === 1 && data.status === 2) {
-                return;
-              }
-
               return (
                 <TableRow
                   hover
@@ -179,17 +172,19 @@ export default function AdminAppAttendTable({ appAttendStatus, datas, setSelectA
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   aria-checked={isItemSelected}
                   tabIndex={-1}
-                  key={data.date}
+                  key={data.attend_no}
                   selected={isItemSelected}
                   onClick={() => setSelectAttendData(data)}
                 >
                   <TableCell component="th" id={labelId} scope="data" align="center">
-                    {data.attendUser}
+                    {data.user_name}
                   </TableCell>
-                  <TableCell align="center">{data.attendDate}</TableCell>
-                  <TableCell align="center">{data.attendKind}</TableCell>
+                  <TableCell align="center">{dateFormat(new Date(data.attend_date))}</TableCell>
                   <TableCell align="center">
-                    <OrderStatus status={data.status} />
+                    {data.attendedit_kind === 0 ? '출근' : data.attendedit_kind === 1 ? '퇴근' : '출근, 퇴근'}
+                  </TableCell>
+                  <TableCell align="center">
+                    <OrderStatus status={data.attendapp_status} />
                   </TableCell>
                 </TableRow>
               );
