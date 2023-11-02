@@ -140,15 +140,15 @@ export const useAllApprovalState1 = create(
 //휴가결재내역(승인, 반려)
 export const useApprovalState2 = create(
   devtools((set) => ({
-    app: {},
-    setApp: (newApp) => set(() => ({ app: newApp }))
+    apps: [],
+    setApps: (newApps) => set(() => ({ apps: newApps }))
   }))
 );
 //휴가결재내역(대기)
 export const useUnApprovalState = create(
   devtools((set) => ({
-    app: {},
-    setApp: (newApp) => set(() => ({ app: newApp }))
+    apps: [],
+    setApps: (newApps) => set(() => ({ apps: newApps }))
   }))
 );
 

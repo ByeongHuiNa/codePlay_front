@@ -10,13 +10,13 @@ import LeaveModal from 'components/Modal/LeaveModal';
 // material-ui
 
 import BasicTab from 'components/tab/BasicTab';
-import ComponentSkeleton from './components-overview/ComponentSkeleton';
+
 //import OrderTable from './dashboard/OrdersTable';
 import AttendanceTable from 'components/Table/AttendanceTable';
 import AppLeaveTotalTable from 'components/Table/AppLeaveTotalTable';
 import VacationDonutChart from 'components/chart/VacationDonutChart';
 import UnappLeaveTotalTable from 'components/Table/UnappLeaveTotalTable';
-import { Button, FormControl, InputLabel, NativeSelect } from '../../node_modules/@mui/material/index';
+import { FormControl, NativeSelect } from '../../node_modules/@mui/material/index';
 import AttendChart from 'components/chart/AttendChart';
 
 const UserAttendanceTotalPage = () => {
@@ -43,14 +43,16 @@ const UserAttendanceTotalPage = () => {
   }
   
 
-  //const [open, setOpen] = useState(false);
 
+ 
+  // 휴가 신청 내역 확인 모달창
   const [modalOpen, setModalOpen] = useState(false);
-
-  const handleOpen = () => {
+  // 조회할 데이터 선택
+  const [modalData, setModalData] = useState({});
+  const handleOpen = (data) => {
+    setModalData(data);
     setModalOpen(true);
   };
-
   const handleClose = () => {
     setModalOpen(false);
   };
@@ -78,7 +80,7 @@ const UserAttendanceTotalPage = () => {
   };
 
   return (
-    <ComponentSkeleton>
+    <>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
           <Tab label="휴가" />
@@ -104,9 +106,9 @@ const UserAttendanceTotalPage = () => {
                 <Typography variant="h5">{month1}월 결재대기내역</Typography>
 
                 <FormControl sx={{ marginLeft: 3 }}>
-                  <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                  {/* <InputLabel variant="standard" htmlFor="uncontrolled-native">
                     월
-                  </InputLabel>
+                  </InputLabel> */}
                   <NativeSelect
                     defaultValue={month1}
                     onChange={month1Change}
@@ -131,7 +133,7 @@ const UserAttendanceTotalPage = () => {
                 </FormControl>
               </div>
 
-              <UnappLeaveTotalTable month={month1} />
+              <UnappLeaveTotalTable handleOpen={handleOpen} month={month1} />
             </MainCard>
           </Grid>
 
@@ -142,9 +144,7 @@ const UserAttendanceTotalPage = () => {
                 <Typography variant="h5">{month2}월 결재 진행/완료내역</Typography>
 
                 <FormControl sx={{ marginLeft: 3 }}>
-                  <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                    월
-                  </InputLabel>
+                  
                   <NativeSelect
                     defaultValue={month2}
                     onChange={month2Change}
@@ -168,10 +168,10 @@ const UserAttendanceTotalPage = () => {
                   </NativeSelect>
                 </FormControl>
               </div>
-              <AppLeaveTotalTable handleOpen={handleOpen} handleClose={handleClose} month={month2}/>
+              <AppLeaveTotalTable handleOpen={handleOpen} month={month2}/>
 
-              <Button onClick={handleOpen}>Open modal</Button>
-              {modalOpen && <LeaveModal open={handleOpen} handleClose={handleClose} />}
+              
+              <LeaveModal open={modalOpen} handleClose={handleClose} data={modalData}/>
             </MainCard>
           </Grid>
         </Grid>
@@ -219,9 +219,6 @@ const UserAttendanceTotalPage = () => {
                 <Typography variant="h5">{month3}월 출/퇴근 현황</Typography>
 
                 <FormControl sx={{ marginLeft: 3 }}>
-                  <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                    월
-                  </InputLabel>
                   <NativeSelect
                     defaultValue={month3}
                     onChange={month3Change}
@@ -257,7 +254,7 @@ const UserAttendanceTotalPage = () => {
           </Grid> */}
         </Grid>
       </BasicTab>
-    </ComponentSkeleton>
+      </>
   );
 };
 
