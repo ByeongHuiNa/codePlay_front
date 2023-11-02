@@ -66,6 +66,7 @@ const ModifyAttendance = () => {
     setLeaveKind('');
     setStartChecked(true);
     setEndChecked(false);
+    setSelectUser({});
   };
 
   // Tab : 0.출/퇴근 =============================================
@@ -215,6 +216,8 @@ const ModifyAttendance = () => {
   }, [checkItems]);
 
   // Tab : 1.휴가 ===============================================
+  // 선택한 사원
+  const [selectUser, setSelectUser] = useState({});
   // 선택한 휴가 데이터 값
   const [selectLeaveData, setSelectLeaveData] = useState({});
 
@@ -299,7 +302,7 @@ const ModifyAttendance = () => {
   return (
     <ComponentSkeleton>
       <Box clone mx={1}>
-        <BasicContainer>
+        <BasicContainer >
           <Grid container alignItems="center" justifyContent="space-between">
             <Grid item>
               <Typography variant="h4">근태 현황 수정</Typography>
@@ -308,7 +311,7 @@ const ModifyAttendance = () => {
           <Box mt={1} ml={1}>
             <Grid container alignItems="center" justifyContent="space-between">
               <Grid item xs={4} md={4} lg={4}>
-                <MainCard sx={{ pt: 2, mr: 1, height: '730px' }} content={false}>
+                <MainCard sx={{ pt: 2, mr: 1, height: '730px', borderRadius: 0 }} content={false}>
                   <Box
                     pr={2}
                     pl={2}
@@ -334,6 +337,8 @@ const ModifyAttendance = () => {
                     handleAllCheck={handleAllCheck}
                     handleSingleCheck={handleSingleCheck}
                     checkItems={checkItems}
+                    setSelectUser={setSelectUser}
+                    selectUser={selectUser}
                   />
                 </MainCard>
               </Grid>
@@ -424,7 +429,7 @@ const ModifyAttendance = () => {
                   )}
                   {checkItems.length <= 1 && (
                     <>
-                      <MainCard sx={{ mb: 1, pt: 2, height: '200px' }} content={false}>
+                      <MainCard sx={{ mb: 1, pt: 2, height: '200px', borderRadius: 0 }} content={false}>
                         <Grid container alignItems="center" direction="row" spacing={1} sx={{ pl: 2 }}>
                           <Grid item xs={1.5} md={1.5} lg={1.5}>
                             <Typography variant="h5">날짜 선택</Typography>
@@ -458,7 +463,7 @@ const ModifyAttendance = () => {
                           )}
                         </Box>
                       </MainCard>
-                      <MainCard sx={{ pt: 2, pr: 2, pl: 2, height: '490px' }} content={false}>
+                      <MainCard sx={{ pt: 2, pr: 2, pl: 2, height: '490px', borderRadius: 0 }} content={false}>
                         <Grid container spacing={1} justifyContent="center">
                           <Grid item xs={12} sm={12} md={12} lg={12}>
                             <Typography variant="h4">출/퇴근 수정</Typography>
@@ -566,7 +571,7 @@ const ModifyAttendance = () => {
                   </ModalM>
                 </ApprovalTab>
                 <ApprovalTab value={value} index={1} border={'none'}>
-                  <MainCard sx={{ pt: 2, pr: 2, pl: 2, height: '690px' }} content={false}>
+                  <MainCard sx={{ pt: 2, pr: 2, pl: 2, height: '690px', borderRadius: 0 }} content={false}>
                     <Grid container alignItems="center" justifyContent="space-between">
                       <Grid item>
                         <Typography variant="h4">휴가 수정</Typography>

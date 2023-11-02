@@ -125,52 +125,57 @@ const ApprovalAttendance = () => {
 
   // Card 커스텀
   const MyCardS = styled(Card)`
-    height: 70px;
+    height: 60px;
     display: flex;
     justify-content: center; // 수평 중앙 정렬
     align-items: center; // 수직 중앙 정렬
     box-shadow: none;
-    border: 1px solid #e6ebf1;
     border-radius: 15px;
   `;
 
   const MyCardM = styled(Card)`
-    height: 100%;
+    height: 98%;
     display: flex;
     justify-content: center; // 수평 중앙 정렬
     align-items: center; // 수직 중앙 정렬
     box-shadow: none;
-    border: 1px solid #e6ebf1;
     border-radius: 15px;
-    background-color: #e6f3ff;
+    background-color: ${() => (value1 === 0 ? (value2 === 1 ? '#6cbfef' : '#b9e5ff') : value3 === 1 ? '#6cbfef' : '#b9e5ff')};
     cursor: pointer;
+    transition: box-shadow 0.1s ease;
+    &:hover {
+      box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.3); // 마우스 호버 시 그림자를 주는 효과를 추가합니다.
+    }
     box-shadow: ${() =>
       value1 === 0
-        ? value2 === 0
-          ? '0px 2px 6px rgba(0, 0, 0, 0.2)'
+        ? value2 === 1
+          ? '0px 3px 6px rgba(0, 0, 0, 0.3)'
           : '0px 0px 0px 0px'
-        : value3 === 0
-        ? '0px 2px 6px rgba(0, 0, 0, 0.2)'
+        : value3 === 1
+        ? '0px 3px 6px rgba(0, 0, 0, 0.3)'
         : '0px 0px 0px 0px'};
   `;
 
   const MyCardAll = styled(Card)`
-    height: 100%;
+    height: 98%;
     display: flex;
     justify-content: center; // 수평 중앙 정렬
     align-items: center; // 수직 중앙 정렬
     box-shadow: none;
-    border: 1px solid #e6ebf1;
     border-radius: 15px;
-    background-color: #e6f3ff;
+    background-color: ${() => (value1 === 0 ? (value2 === 0 ? '#6cbfef' : '#b9e5ff') : value3 === 0 ? '#6cbfef' : '#b9e5ff')};
     cursor: pointer;
+    transition: box-shadow 0.1s ease;
+    &:hover {
+      box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.3); // 마우스 호버 시 그림자를 주는 효과를 추가합니다.
+    }
     box-shadow: ${() =>
       value1 === 0
-        ? value2 === 2
-          ? '0px 2px 6px rgba(0, 0, 0, 0.2)'
+        ? value2 === 0
+          ? '0px 3px 6px rgba(0, 0, 0, 0.3)'
           : '0px 0px 0px 0px'
-        : value3 === 2
-        ? '0px 2px 6px rgba(0, 0, 0, 0.2)'
+        : value3 === 0
+        ? '0px 3px 6px rgba(0, 0, 0, 0.3)'
         : '0px 0px 0px 0px'};
   `;
 
@@ -178,17 +183,20 @@ const ApprovalAttendance = () => {
     display: flex;
     flex-direction: column;
     box-shadow: none;
-    border: 1px solid #e6ebf1;
     border-radius: 15px;
-    background-color: #e6f3ff;
+    background-color: ${() => (value1 === 0 ? (value2 === 2 ? '#6cbfef' : '#b9e5ff') : value3 === 2 ? '#6cbfef' : '#b9e5ff')};
     cursor: pointer;
+    transition: box-shadow 0.1s ease;
+    &:hover {
+      box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.3); // 마우스 호버 시 그림자를 주는 효과를 추가합니다.
+    }
     box-shadow: ${() =>
       value1 === 0
-        ? value2 === 1
-          ? '0px 2px 6px rgba(0, 0, 0, 0.2)'
+        ? value2 === 2
+          ? '0px 3px 6px rgba(0, 0, 0, 0.3)'
           : '0px 0px 0px 0px'
-        : value3 === 1
-        ? '0px 2px 6px rgba(0, 0, 0, 0.2)'
+        : value3 === 2
+        ? '0px 3px 6px rgba(0, 0, 0, 0.3)'
         : '0px 0px 0px 0px'};
   `;
 
@@ -260,7 +268,7 @@ const ApprovalAttendance = () => {
               <Grid item xs={2.5} sm={2.5} md={2.5} lg={2.5}>
                 <MyCardAll
                   onClick={() => {
-                    setValue2(2);
+                    setValue2(0);
                     setSelectLeaveData({});
                   }}
                 >
@@ -273,7 +281,7 @@ const ApprovalAttendance = () => {
               <Grid item xs={2.5} sm={2.5} md={2.5} lg={2.5}>
                 <MyCardM
                   onClick={() => {
-                    setValue2(0);
+                    setValue2(1);
                     setSelectLeaveData({});
                   }}
                 >
@@ -286,11 +294,11 @@ const ApprovalAttendance = () => {
               <Grid item xs={7} sm={7} md={7} lg={7}>
                 <MyCardL
                   onClick={() => {
-                    setValue2(1);
+                    setValue2(2);
                     setSelectLeaveData({});
                   }}
                 >
-                  <CardContent sx={{ textAlign: 'center' }}>
+                  <CardContent sx={{ textAlign: 'center', padding: '18px' }}>
                     <Grid container spacing={2}>
                       <Grid
                         item
@@ -304,7 +312,7 @@ const ApprovalAttendance = () => {
                           alignItems: 'center'
                         }}
                       >
-                        <Box sx={{ display: 'flex', alignItems:'center'}}>
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
                           <Box ml={2}>
                             <Typography variant="h4">결재 완료 </Typography>
                             <Typography variant="text">총 {leaveApp + leaveUnapp}건</Typography>
@@ -341,30 +349,30 @@ const ApprovalAttendance = () => {
                 <Grid item xs={6} md={6} lg={6}>
                   <Box sx={{ borderBottom: 1, border: '0px' }}>
                     <MyTabs value={value2} onChange={handleChange2} aria-label="basic tabs example">
-                      <MyTab label="대기" index="0" />
-                      <MyTab label="완료" index="1" />
-                      <MyTab label="전체" index="2" />
+                      <MyTab label="전체" index="0" />
+                      <MyTab label="대기" index="1" />
+                      <MyTab label="완료" index="2" />
                     </MyTabs>
                   </Box>
                   <ApprovalTab value={value2} index={0}>
-                    <Box pt={3} pb={3}>
+                    <Box pb={3}>
+                      <AdminAppLeaveTable datas={leaveAppDatas} setSelectLeaveData={setSelectLeaveData} />
+                    </Box>
+                  </ApprovalTab>
+                  <ApprovalTab value={value2} index={1}>
+                    <Box pb={3}>
                       <AdminAppLeaveTable
                         datas={leaveAppDatas.filter((data) => data.leaveappln_status === 2)}
                         setSelectLeaveData={setSelectLeaveData}
                       />
                     </Box>
                   </ApprovalTab>
-                  <ApprovalTab value={value2} index={1}>
-                    <Box pt={3} pb={3}>
+                  <ApprovalTab value={value2} index={2}>
+                    <Box pb={3}>
                       <AdminAppLeaveTable
                         datas={leaveAppDatas.filter((data) => data.leaveappln_status === 0 || data.leaveappln_status === 1)}
                         setSelectLeaveData={setSelectLeaveData}
                       />
-                    </Box>
-                  </ApprovalTab>
-                  <ApprovalTab value={value2} index={2}>
-                    <Box pt={3} pb={3}>
-                      <AdminAppLeaveTable datas={leaveAppDatas} setSelectLeaveData={setSelectLeaveData} />
                     </Box>
                   </ApprovalTab>
                 </Grid>
@@ -375,8 +383,6 @@ const ApprovalAttendance = () => {
                       marginLeft: '5px',
                       border: '1px solid #e6ebf1',
                       height: '740px',
-                      borderBottomLeftRadius: '8px',
-                      borderBottomRightRadius: '8px',
                       p: 3
                     }}
                   >
@@ -520,7 +526,7 @@ const ApprovalAttendance = () => {
               <Grid item xs={2.5} sm={2.5} md={2.5} lg={2.5}>
                 <MyCardAll
                   onClick={() => {
-                    setValue3(2);
+                    setValue3(0);
                     setSelectAttendData({});
                   }}
                 >
@@ -533,7 +539,7 @@ const ApprovalAttendance = () => {
               <Grid item xs={2.5} sm={2.5} md={2.5} lg={2.5}>
                 <MyCardM
                   onClick={() => {
-                    setValue3(0);
+                    setValue3(1);
                     setSelectAttendData({});
                   }}
                 >
@@ -546,7 +552,7 @@ const ApprovalAttendance = () => {
               <Grid item xs={7} sm={7} md={7} lg={7}>
                 <MyCardL
                   onClick={() => {
-                    setValue3(1);
+                    setValue3(2);
                     setSelectAttendData({});
                   }}
                 >
@@ -599,30 +605,30 @@ const ApprovalAttendance = () => {
                 <Grid item xs={6} md={6} lg={6}>
                   <Box sx={{ borderBottom: 1, border: '0px' }}>
                     <MyTabs value={value3} onChange={handleChange3} aria-label="basic tabs example">
-                      <MyTab label="대기" index="0" />
-                      <MyTab label="완료" index="1" />
-                      <MyTab label="전체" index="2" />
+                      <MyTab label="전체" index="0" />
+                      <MyTab label="대기" index="1" />
+                      <MyTab label="완료" index="2" />
                     </MyTabs>
                   </Box>
                   <ApprovalTab value={value3} index={0}>
-                    <Box pt={3} pb={3}>
+                    <Box pb={3}>
+                      <AdminAppAttendTable datas={attendAppDatas} setSelectAttendData={setSelectAttendData} />
+                    </Box>
+                  </ApprovalTab>
+                  <ApprovalTab value={value3} index={1}>
+                    <Box pb={3}>
                       <AdminAppAttendTable
                         datas={attendAppDatas.filter((data) => data.attendapp_status === 2)}
                         setSelectAttendData={setSelectAttendData}
                       />
                     </Box>
                   </ApprovalTab>
-                  <ApprovalTab value={value3} index={1}>
-                    <Box pt={3} pb={3}>
+                  <ApprovalTab value={value3} index={2}>
+                    <Box pb={3}>
                       <AdminAppAttendTable
                         datas={attendAppDatas.filter((data) => data.attendapp_status === 0 || data.attendapp_status === 1)}
                         setSelectAttendData={setSelectAttendData}
                       />
-                    </Box>
-                  </ApprovalTab>
-                  <ApprovalTab value={value3} index={2}>
-                    <Box pt={3} pb={3}>
-                      <AdminAppAttendTable datas={attendAppDatas} setSelectAttendData={setSelectAttendData} />
                     </Box>
                   </ApprovalTab>
                 </Grid>
@@ -632,9 +638,7 @@ const ApprovalAttendance = () => {
                       marginTop: '36px',
                       marginLeft: '5px',
                       border: '1px solid #e6ebf1',
-                      height: '540px',
-                      borderBottomLeftRadius: '8px',
-                      borderBottomRightRadius: '8px',
+                      height: '740px',
                       py: 3
                     }}
                   >

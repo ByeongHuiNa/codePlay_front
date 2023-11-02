@@ -99,7 +99,16 @@ OrderTableHead.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function SelectUserTable({ value, datas, handleSingleCheck, handleAllCheck, checkItems, searchName }) {
+export default function SelectUserTable({
+  value,
+  datas,
+  handleSingleCheck,
+  handleAllCheck,
+  checkItems,
+  searchName,
+  setSelectUser,
+  selectUser
+}) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
@@ -162,11 +171,15 @@ export default function SelectUserTable({ value, datas, handleSingleCheck, handl
                   <TableRow
                     hover
                     role="checkbox"
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    sx={{
+                      '&:last-child td, &:last-child th': { border: 0 },
+                      backgroundColor: value === 1 && data === selectUser ? '#e4e3e3' : 'inherit'
+                    }}
                     aria-checked={isItemSelected}
                     tabIndex={-1}
                     key={data.user_no}
                     selected={isItemSelected}
+                    onClick={() => setSelectUser(data)}
                   >
                     {value === 0 && (
                       <TableCell align="center">
