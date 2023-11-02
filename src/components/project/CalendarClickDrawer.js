@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import { useCalendarDate, useCalendarDrawer, useCalendarEvent, useCalendarEventClick } from 'store/module';
+import { useCalendarDate, useCalendarDrawer, useCalendarEvent, useCalendarEventClick, useCalendarGetScheduleList } from 'store/module';
 import {
   Button,
   FormControl,
@@ -21,16 +21,16 @@ import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { DateField } from '@mui/x-date-pickers/DateField';
+import axios from '../../../node_modules/axios/index';
 
 export default function CalendarClickDrawer() {
   //AddEventOnClick
-  const { event } = useCalendarEvent();
-  const { title, setTitle, allDay, setAllDay } = useCalendarEventClick();
+  const { title, setTitle, allDay, setAllDay, shareType, setShareType } = useCalendarEventClick();
 
   const { clickView, setClickView } = useCalendarDrawer();
 
   //일정종류
-  const [scheduleType, setScheduleType] = React.useState('');
+  const { scheduleType, setScheduleType } = useCalendarEventClick();
 
   const handleSelectChange = (event) => {
     setScheduleType(event.target.value);
@@ -50,7 +50,11 @@ export default function CalendarClickDrawer() {
 
   //AllDay스위치 on/off
   const handleAllDayTypeSwitchChange = () => {
-    setAllDay((pre) => !pre);
+    if (allDay == true) {
+      setAllDay(false);
+    } else {
+      setAllDay(true);
+    }
   };
 
   //LEAVETYPE스위치 on/off
@@ -67,11 +71,12 @@ export default function CalendarClickDrawer() {
     setLeaveHalfType((pre) => !pre);
   };
 
-  //공유 스위치 on/off
-  const [shareType, setShareType] = React.useState(false);
-
   const handleShareTypeSwitchChange = () => {
-    setShareType((pre) => !pre);
+    if (shareType == true) {
+      setShareType(false);
+    } else {
+      setShareType(true);
+    }
   };
 
   //Drawer on/off
@@ -104,7 +109,7 @@ export default function CalendarClickDrawer() {
   };
 
   const handleStartDateFieldOnAccept = (e) => {
-    setStartDate(e);
+    setStartDate(new Date(e));
     setStartDatePicker((pre) => !pre);
   };
 
@@ -114,12 +119,52 @@ export default function CalendarClickDrawer() {
   };
 
   const handleEndDateFieldOnAccept = (e) => {
-    setEndDate(e);
+    setEndDate(new Date(e));
     setEndDatePicker((pre) => !pre);
   };
 
-  const handleAddEventOnClick = () => {
-    console.log(event);
+  const { dataList, scheduleList, updateScheduleList, updateDataList } = useCalendarGetScheduleList();
+  const { event } = useCalendarEvent();
+
+  const handleUpdateEventOnClick = () => {
+    console.log(event.id);
+    const schedule = {
+      schedule_no: parseInt(event.id),
+      schedule_startday: startDate,
+      schedule_endday: endDate,
+      schedule_type: scheduleType,
+      schedule_title: title,
+      schedule_allday: allDay,
+      schedule_description: content,
+      schedule_share: shareType,
+      schedule_cardview: false
+    };
+    axios.patch(`/user-schedule`, schedule).then(() => {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+
+      // 날짜를 비교하여 start와 end 값이 같지 않은 경우에만 +1을 적용
+      if (start.getDate() !== end.getDate() && allDay == true) {
+        end.setDate(end.getDate() + 1);
+      }
+      const scheduleListAdd = {
+        id: event.id,
+        title: title,
+        start: start,
+        end: end,
+        allDay: allDay,
+        color: scheduleType === '개인 일정' ? '#ef9a9a' : '#90caf9',
+        textColor: scheduleType === '개인 일정' ? '#ffebee' : '#e3f2fd'
+      };
+      updateDataList(schedule);
+      updateScheduleList(scheduleListAdd);
+      console.log(schedule);
+      console.log(scheduleListAdd);
+      console.log(dataList);
+      console.log(scheduleList);
+    });
+
+    setClickView(false);
   };
 
   const list = () => {
@@ -289,7 +334,7 @@ export default function CalendarClickDrawer() {
                   size="large"
                   variant="contained"
                   color="primary"
-                  onClick={handleAddEventOnClick}
+                  onClick={handleUpdateEventOnClick}
                   sx={{
                     mt: 28
                   }}
@@ -300,7 +345,7 @@ export default function CalendarClickDrawer() {
                   size="large"
                   variant="contained"
                   color="error"
-                  onClick={handleAddEventOnClick}
+                  onClick={handleUpdateEventOnClick}
                   sx={{
                     mt: 2
                   }}
@@ -382,7 +427,7 @@ export default function CalendarClickDrawer() {
                     size="large"
                     variant="contained"
                     color="error"
-                    onClick={handleAddEventOnClick}
+                    onClick={handleUpdateEventOnClick}
                     sx={{
                       mt: 62
                     }}
