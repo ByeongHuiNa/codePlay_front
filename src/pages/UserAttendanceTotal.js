@@ -4,58 +4,81 @@ import { Typography, Grid, Tabs, Tab, Box } from '@mui/material';
 
 // project import
 import MainCard from 'components/MainCard';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import LeaveModal from 'components/Modal/LeaveModal';
 
 // material-ui
 
 import BasicTab from 'components/tab/BasicTab';
-import ComponentSkeleton from './components-overview/ComponentSkeleton';
-//import OrderTable from './dashboard/OrdersTable';
 import AttendanceTable from 'components/Table/AttendanceTable';
 import AppLeaveTotalTable from 'components/Table/AppLeaveTotalTable';
 import VacationDonutChart from 'components/chart/VacationDonutChart';
 import UnappLeaveTotalTable from 'components/Table/UnappLeaveTotalTable';
-import { Button, FormControl, InputLabel, NativeSelect } from '../../node_modules/@mui/material/index';
+import { FormControl, NativeSelect } from '../../node_modules/@mui/material/index';
 import AttendChart from 'components/chart/AttendChart';
+import axios from '../../node_modules/axios/index';
+import { useWorkingHourState } from 'store/module';
 
 const UserAttendanceTotalPage = () => {
   //결재대기 내역 이번달로 설정
   const [month1, setMonth1] = useState(new Date().getMonth() + 1);
   //결재완료 내역 이번달로 설정
   const [month2, setMonth2] = useState(new Date().getMonth() + 1);
-  const now = new Date(); // 현재 날짜와 시간
-  const currentDay = now.getDay(); // 현재 요일 (0: 일요일, 1: 월요일, ..., 6: 토요일)
+
+  const { hours, setHours } = useWorkingHourState();
+
+  const [time, setTime] = useState([]);
   
-  // 현재 주의 일요일 날짜를 계산
+
+  useEffect(() => {
+    async function get() {
+      const result = await axios.get('/user-attend-total?user_no=1');
+      setHours(result.data);
+      console.log('dsadas: ' + hours);
+      const attendTotalArray = result.data.map(item => item.attend_total);
+      console.log("attendtotal : " + attendTotalArray);
+
+      const convertedArray = attendTotalArray.map(timeString => {
+        const parts = timeString.split(":"); // 시, 분, 초를 배열로 분리
+        const hours = parseInt(parts[0], 10); // 시간 부분을 정수로 변환
+        const minutes = parseInt(parts[1], 10); // 분 부분을 정수로 변환
+        return `${hours}.${minutes}`; // 변환된 형식으로 반환
+      });
+      setTime(convertedArray);
+
+      console.log("convert: " + convertedArray);
+    }
+    get();
+  }, []);
+  const now = new Date(); // 현재 날짜와 시간
+  const currentDay = now.getDay() - 1; // 현재 요일 (0: 일요일, 1: 월요일, ..., 6: 토요일)
+
+  // 현재 주의 월요일 날짜를 계산
   const startOfWeek = new Date(now);
   startOfWeek.setDate(now.getDate() - currentDay);
-  
-  // 현재 주의 월요일부터 토요일까지의 날짜를 계산하고 포맷팅
+
+  // 현재 주의 월요일부터 일요일까지의 날짜를 계산하고 포맷팅
   const daysOfWeek = [];
   const dateOptions = { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short' };
-  
+
   for (let i = 0; i < 7; i++) {
     const date = new Date(startOfWeek);
     date.setDate(startOfWeek.getDate() + i);
     const formattedDate = date.toLocaleDateString('ko-KR', dateOptions);
     daysOfWeek.push(formattedDate);
   }
-  
 
-  //const [open, setOpen] = useState(false);
-
+  // 휴가 신청 내역 확인 모달창
   const [modalOpen, setModalOpen] = useState(false);
-
-  const handleOpen = () => {
+  // 조회할 데이터 선택
+  const [modalData, setModalData] = useState({});
+  const handleOpen = (data) => {
+    setModalData(data);
     setModalOpen(true);
   };
-
   const handleClose = () => {
     setModalOpen(false);
   };
-  // const handleOpen = () => setOpen(true);
-  // const handleClose = () => setOpen(false);
 
   const [value, setValue] = useState(0);
 
@@ -78,7 +101,7 @@ const UserAttendanceTotalPage = () => {
   };
 
   return (
-    <ComponentSkeleton>
+    <>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
           <Tab label="휴가" />
@@ -104,9 +127,9 @@ const UserAttendanceTotalPage = () => {
                 <Typography variant="h5">{month1}월 결재대기내역</Typography>
 
                 <FormControl sx={{ marginLeft: 3 }}>
-                  <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                  {/* <InputLabel variant="standard" htmlFor="uncontrolled-native">
                     월
-                  </InputLabel>
+                  </InputLabel> */}
                   <NativeSelect
                     defaultValue={month1}
                     onChange={month1Change}
@@ -131,7 +154,7 @@ const UserAttendanceTotalPage = () => {
                 </FormControl>
               </div>
 
-              <UnappLeaveTotalTable month={month1} />
+              <UnappLeaveTotalTable handleOpen={handleOpen} month={month1} />
             </MainCard>
           </Grid>
 
@@ -142,9 +165,6 @@ const UserAttendanceTotalPage = () => {
                 <Typography variant="h5">{month2}월 결재 진행/완료내역</Typography>
 
                 <FormControl sx={{ marginLeft: 3 }}>
-                  <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                    월
-                  </InputLabel>
                   <NativeSelect
                     defaultValue={month2}
                     onChange={month2Change}
@@ -168,10 +188,9 @@ const UserAttendanceTotalPage = () => {
                   </NativeSelect>
                 </FormControl>
               </div>
-              <AppLeaveTotalTable handleOpen={handleOpen} handleClose={handleClose} month={month2}/>
+              <AppLeaveTotalTable handleOpen={handleOpen} month={month2} />
 
-              <Button onClick={handleOpen}>Open modal</Button>
-              {modalOpen && <LeaveModal open={handleOpen} handleClose={handleClose} />}
+              <LeaveModal open={modalOpen} handleClose={handleClose} data={modalData} />
             </MainCard>
           </Grid>
         </Grid>
@@ -194,19 +213,21 @@ const UserAttendanceTotalPage = () => {
                       name: '정상근무',
                       type: 'column',
                       fill: 'solid',
-                      data: [8, 8, 8, 8, 4, 8, 8]
+                      data: time
                     },
-                    {
-                      name: '초과근무',
-                      type: 'column',
-                      fill: 'solid',
-                      data: [0, 0, 0, 0, 0, 0, 0]
-                    },
+                    // ,
+                    // {
+                    //   name: '초과근무',
+                    //   type: 'column',
+                    //   fill: 'solid',
+                    //   data: [0, 0, 0, 0, 0, 0, 0]
+                    // },
+
                     {
                       name: '휴가',
                       type: 'column',
                       fill: 'solid',
-                      data: [0, 0, 0, 0, 4, 0, 0]
+                      data: [0, 0, 0, 0, 0, 0, 0]
                     }
                   ]
                 }}
@@ -219,9 +240,6 @@ const UserAttendanceTotalPage = () => {
                 <Typography variant="h5">{month3}월 출/퇴근 현황</Typography>
 
                 <FormControl sx={{ marginLeft: 3 }}>
-                  <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                    월
-                  </InputLabel>
                   <NativeSelect
                     defaultValue={month3}
                     onChange={month3Change}
@@ -245,7 +263,7 @@ const UserAttendanceTotalPage = () => {
                   </NativeSelect>
                 </FormControl>
               </div>
-              <AttendanceTable month={month3}/>
+              <AttendanceTable month={month3} />
             </MainCard>
           </Grid>
 
@@ -257,7 +275,7 @@ const UserAttendanceTotalPage = () => {
           </Grid> */}
         </Grid>
       </BasicTab>
-    </ComponentSkeleton>
+    </>
   );
 };
 
