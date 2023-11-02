@@ -140,15 +140,15 @@ export const useAllApprovalState1 = create(
 //휴가결재내역(승인, 반려)
 export const useApprovalState2 = create(
   devtools((set) => ({
-    app: {},
-    setApp: (newApp) => set(() => ({ app: newApp }))
+    apps: [],
+    setApps: (newApps) => set(() => ({ apps: newApps }))
   }))
 );
 //휴가결재내역(대기)
 export const useUnApprovalState = create(
   devtools((set) => ({
-    app: {},
-    setApp: (newApp) => set(() => ({ app: newApp }))
+    apps: [],
+    setApps: (newApps) => set(() => ({ apps: newApps }))
   }))
 );
 
@@ -267,5 +267,13 @@ export const useFormatter = create(
       let seconds = date.getSeconds() >= 10 ? date.getSeconds() : '0' + date.getSeconds();
       return `${hours}:${minutes}:${seconds}`;
     }
+  }))
+);
+
+//사용자의 주간근무시간
+export const useWorkingHourState = create(
+  devtools((set) => ({
+    hours: {},
+    setHours: (newHours) => set(() => ({ hours: newHours }))
   }))
 );

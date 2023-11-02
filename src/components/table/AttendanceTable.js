@@ -163,6 +163,10 @@ const AttendanceStatus = ({ status }) => {
     case '결근':
       color = 'error';
       title = '결근';
+      break;
+    default:
+      color = 'error';
+      title = '결근';
   }
 
   return (
@@ -208,6 +212,7 @@ export default function AttendanceTable({ month }) {
       const result = await axios.get(`/user-attend-month?user_no=1&month=${month}`);
 
       setAttendance(result.data);
+      console.log("attendance: " + attendance);
       console.log('zzzz: ' + result.data.length);
 
       setTotal(result.data.length);
