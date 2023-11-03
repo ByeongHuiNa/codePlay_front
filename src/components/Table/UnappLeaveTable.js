@@ -177,14 +177,21 @@ export default function UnappLeaveTable({ leaveCancel, handleOpen, datas }) {
                   tabIndex={-1}
                   key={data.date}
                   selected={isItemSelected}
-                  onClick={() => handleOpen(data)}
+                  onClick={(event) => {
+                    // 버튼이 클릭되었을 때 이벤트 전파를 중지
+                    if (event.target.tagName.toLowerCase() === 'button') {
+                      event.stopPropagation();
+                    } else {
+                      handleOpen(data);
+                    }
+                  }}
                 >
                   <TableCell component="th" id={labelId} scope="data" align="center">
                     {dateFormat(new Date(data.leaveapp_start))}
                   </TableCell>
                   <TableCell align="center">{dateFormat(new Date(data.leaveapp_end))}</TableCell>
                   <TableCell align="center">
-                    <LeaveStatus status={data.leaveapp_type}/>
+                    <LeaveStatus status={data.leaveapp_type} />
                   </TableCell>
                   <TableCell align="center">{data.leaveapp_total}일</TableCell>
                   <TableCell align="center">

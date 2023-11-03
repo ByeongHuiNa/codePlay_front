@@ -34,6 +34,7 @@ import ModalM from 'components/Modal/ModalM';
 import CancelLeaveTable from 'components/Table/CancelLeaveTable';
 import UserLeaveInfoTable from 'components/Table/UserLeaveInfoTable';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
 
 const UserLeave = () => {
   const { index, setIndex } = useLeaveTab();
@@ -57,7 +58,8 @@ const UserLeave = () => {
   };
 
   // 결재 완료 된 휴가 취소 신청 (결재 받은 뒤 취소 처리)
-  const requestLeaveCancel = () => {
+  const requestLeaveCancel = (data) => {
+    setSelectLeaveCancel(data);
     setIndex(2);
   };
 
@@ -131,7 +133,9 @@ const UserLeave = () => {
     setSecondApprover({});
     setSelectedValue('annual');
     setHalfValue('am');
-    setSelectLeaveCancel({});
+    if (index === 0 || index === 1) {
+      setSelectLeaveCancel({});
+    }
   }, [index]);
 
   useEffect(() => {
@@ -365,6 +369,12 @@ const UserLeave = () => {
                   }}
                 />
               </Box>
+              <Box clone mt={1} sx={{ display: 'flex', alignItems: 'center' }}>
+                <EditNoteRoundedIcon fontSize="medium" color="secondary" sx={{ mx: 1 }} />
+                <Typography size="small" color="secondary">
+                  제목은 입력하지 않을 시 자동 지정됩니다.
+                </Typography>
+              </Box>
               <Box clone mt={2} sx={{ display: 'flex' }}>
                 <MyChip label="1차 결재자" />
                 <AppAuto
@@ -447,6 +457,12 @@ const UserLeave = () => {
               <Box clone mt={2}>
                 <MyChip label="제목" />
                 <TextField label="제목" id="title" size="small" onChange={(e) => setTitle(e.target.value)} />
+              </Box>
+              <Box clone mt={1} sx={{ display: 'flex', alignItems: 'center' }}>
+                <EditNoteRoundedIcon fontSize="medium" color="secondary" sx={{ mx: 1 }} />
+                <Typography size="small" color="secondary">
+                  제목은 입력하지 않을 시 자동 지정됩니다.
+                </Typography>
               </Box>
               <Box clone mt={2} sx={{ display: 'flex' }}>
                 <MyChip label="결재자" />
