@@ -156,7 +156,7 @@ export default function UnappLeaveTotalTable({ leaveCancel, month, handleOpen })
       setApps(result.data);
     }
     get();
-  }, [month, apps]);
+  }, [month]);
 
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
 

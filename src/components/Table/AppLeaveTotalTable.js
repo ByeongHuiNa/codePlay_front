@@ -4,10 +4,13 @@ import { useEffect, useState } from 'react';
 // material-ui
 import { Box, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
+
 // project import
 import { Button, Chip, Pagination } from '../../../node_modules/@mui/material/index';
 import { useApprovalState2 } from 'store/module';
 import axios from '../../../node_modules/axios/index';
+import { useNavigate } from '../../../node_modules/react-router-dom/dist/index';
+
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -193,11 +196,17 @@ Type.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 //대기테이블
-export default function AppLeaveTotalTable({ requestLeaveCancel, month, handleOpen }) {
+export default function AppLeaveTotalTable({  month, handleOpen }) { //requestLeaveCancel,
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
   const { apps, setApps } = useApprovalState2();
+
+  let navigate = useNavigate();
+
+  function cancelClick() {
+    navigate('/userleave');
+  }
 
   useEffect(() => {
     async function get() {
@@ -288,7 +297,7 @@ export default function AppLeaveTotalTable({ requestLeaveCancel, month, handleOp
                     <OrderStatus status={app.leaveapp_status} />
                   </TableCell>
                   <TableCell align="center">
-                    <Button variant="contained" size="small" onClick={requestLeaveCancel}>
+                    <Button variant="contained" size="small" onClick={cancelClick}>
                       취소신청
                     </Button>
                   </TableCell>
