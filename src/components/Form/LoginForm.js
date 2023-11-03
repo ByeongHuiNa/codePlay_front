@@ -26,6 +26,7 @@ import AnimateButton from 'components/@extended/AnimateButton';
 
 // assets
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
+import axios from '../../../node_modules/axios/index';
 
 // ============================|| LOGIN FORM ||============================ //
 
@@ -46,14 +47,14 @@ const LoginForm = () => {
       <Formik
         initialValues={{
           email: 'info@codedthemes.com',
-          password: '123456',
-          submit: null
+          password: '123456'
         }}
         validationSchema={Yup.object().shape({
           email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
           password: Yup.string().max(255).required('Password is required')
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+          axios.post('/login', values);
           try {
             setStatus({ success: false });
             setSubmitting(false);
