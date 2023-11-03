@@ -12,21 +12,21 @@ import axios from '../../node_modules/axios/index';
 import SettingAttendancePolicyTable from 'components/Table/SettingAttendancePolicyTable';
 import SettingTab from 'components/tab/SettingTab';
 import AttendancePolicyDetailCard from 'components/Card/AttendancePolicyDetailCard';
+import InputSearch from 'components/Input/InputSearch';
 
 //zustand import
 
 // ==============================|| 관리자 출퇴근 정책관리 PAGE ||============================== //
 
 const SettingAttendancePolicy = () => {
-  const { setIndex, setTab, index } = useTabState();
+  const { setIndex, setTab, tab, index } = useTabState();
   const { setTableList } = useTableListState();
   const { view, setView } = useDetailCardState();
-  const { setPage, setSearch, now_page } = useCriteria();
+  const { setPage, setSearch, now_page, search, setTotalPage } = useCriteria();
 
   //화면 초기값 셋팅
   useEffect(() => {
-    setIndex(1);
-    setIndex(0);
+    get();
     async function get() {
       const endPoints = ['/policy-count'];
       const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
@@ -36,7 +36,7 @@ const SettingAttendancePolicy = () => {
           id: i.policy_no,
           name: i.policy_name,
           number: i.count,
-          total: Math.floor(i.count / 7) + (i.count % 7) == 0 ? 0 : 1
+          total: Math.floor(i.count / 7) + (i.count % 7 == 0 ? 0 : 1)
         };
         tabs.push(tab_temp);
       }
@@ -44,7 +44,7 @@ const SettingAttendancePolicy = () => {
       setView(false);
       setSearch('');
     }
-    get();
+    setIndex(0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -54,6 +54,9 @@ const SettingAttendancePolicy = () => {
       const result = await axios.get(`/user-policy-list?policy_no=${index + 1}&page=1&limit=7`);
       setTableList(result.data);
       setView(false);
+      if (Object.keys(tab).length > 0) {
+        setTotalPage(tab[index].total);
+      }
     }
     get();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -69,12 +72,12 @@ const SettingAttendancePolicy = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [now_page]);
 
-  //TODO:user_name으로 검색되게
-  // async function search_user(search) {
-  //   setPage(1);
-  //   const result = await axios.get(`/user-policy-list?user_name=${search}&page=1&limit=${limit}`);
-  //   setTableList(result.data);
-  // }
+  async function search_user(search) {
+    setPage(1);
+    const result = await axios.get(`/user-policy-list?policy_no=${index + 1}&user_name=${search}&page=1&limit=7`);
+    setTableList(result.data);
+    setTotalPage(result.headers['x-total-count']);
+  }
 
   return (
     <>
@@ -82,9 +85,8 @@ const SettingAttendancePolicy = () => {
       <Grid container direction="row">
         <Grid item xs={view == 1 ? 8 : 12}>
           <MainCard>
-            {/* TODO: 추후 기능 구현 
             <Typography variant="h4">사용자명으로 검색</Typography>
-            <InputSeach isPersonIcon={true} onClick={() => search_user(search)}></InputSeach> */}
+            <InputSearch isPersonIcon={true} onClick={() => search_user(search)}></InputSearch>
             <SettingTab></SettingTab>
             <SettingAttendancePolicyTable />
           </MainCard>

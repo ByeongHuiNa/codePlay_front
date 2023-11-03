@@ -17,8 +17,8 @@ const AttendancePolicyDetailCard = () => {
   const changeInput = (value) => {
     const temp = { ...content };
     temp.policy_no = value;
-    temp[`standard_start_time`] = dayjs(`0000T${8 + Number(value)}`);
-    temp[`standard_end_time`] = dayjs(`0000T${17 + Number(value)}`);
+    temp[`standard_start_time`] = dayjs(`0000T${7 + Number(value)}`);
+    temp[`standard_end_time`] = dayjs(`0000T${16 + Number(value)}`);
     setContent(temp);
   };
 

@@ -101,7 +101,9 @@ const SettingAccess = () => {
       <div role="tabpanel" hidden={value !== 0} id={`simple-tabpanel-${0}`} aria-labelledby={`simple-tab-${0}`} value={value}>
         <MainCard>
           <AccessTab />
-          <AccessCheckbox />
+          <Stack direction="row" spacing={9} mt={2}>
+            <AccessCheckbox />
+          </Stack>
         </MainCard>
       </div>
       <div role="tabpanel" hidden={value !== 1} id={`simple-tabpanel-${1}`} aria-labelledby={`simple-tab-${1}`} value={value}>
@@ -122,7 +124,9 @@ const SettingAccess = () => {
                 <Typography variant="h4">{tableContentList.find((e) => e.user_no == id).user_name}</Typography>
                 <Typography variant="h4">접근 관리</Typography>
               </Stack>
-              <AccessCheckbox />
+              <Stack direction="row" spacing={9} mt={2}>
+                <AccessCheckbox />
+              </Stack>
             </>
           ) : (
             <SettingAccessTable />
