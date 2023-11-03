@@ -35,14 +35,25 @@ const UserAttendanceTotalPage = () => {
       const result = await axios.get('/user-attend-total?user_no=1');
       setHours(result.data);
       console.log('dsadas: ' + hours);
-      const attendTotalArray = result.data.map(item => item.attend_total);
+      const currentTime = new Date(); // 현재 시간 가져오기
+      const attendTotalArray = result.data.map(item => {
+        const attendTotal = item.attend_total ? item.attend_total : calculateAttendTotal(item.attend_start, currentTime);
+        return {
+          attend_total: attendTotal,
+        };
+      });
       console.log("attendtotal : " + attendTotalArray);
 
-      const convertedArray = attendTotalArray.map(timeString => {
-        const parts = timeString.split(":"); // 시, 분, 초를 배열로 분리
-        const hours = parseInt(parts[0], 10); // 시간 부분을 정수로 변환
-        const minutes = parseInt(parts[1], 10); // 분 부분을 정수로 변환
-        return `${hours}.${minutes}`; // 변환된 형식으로 반환
+      const convertedArray = attendTotalArray.map(item => {
+        if (item.attend_total) {
+          const totalParts = item.attend_total.split(":");
+          const totalHours = parseInt(totalParts[0], 10);
+          const totalMinutes = parseInt(totalParts[1], 10);
+          return `${totalHours}.${totalMinutes}`;
+        } else {
+          // attend_total이 null인 경우 대체값 또는 원하는 처리
+          return "대체값 또는 원하는 처리";
+        }
       });
       setTime(convertedArray);
 
@@ -50,8 +61,22 @@ const UserAttendanceTotalPage = () => {
     }
     get();
   }, []);
+
+  function calculateAttendTotal(attendStart, currentTime) {
+    const startParts = attendStart.split(":");
+    const startHours = parseInt(startParts[0], 10);
+    const startMinutes = parseInt(startParts[1], 10);
+  
+    const hoursDiff = currentTime.getHours() - startHours;
+    const minutesDiff = currentTime.getMinutes() - startMinutes;
+  
+    const totalHours = hoursDiff < 0 ? 0 : hoursDiff;
+    const totalMinutes = minutesDiff < 0 ? 0 : minutesDiff;
+  
+    return `${totalHours}:${totalMinutes}`;
+  }
   const now = new Date(); // 현재 날짜와 시간
-  const currentDay = now.getDay() - 1; // 현재 요일 (0: 일요일, 1: 월요일, ..., 6: 토요일)
+  const currentDay = now.getDay()-1; // 현재 요일 (0: 일요일, 1: 월요일, ..., 6: 토요일)
 
   // 현재 주의 월요일 날짜를 계산
   const startOfWeek = new Date(now);
@@ -98,6 +123,14 @@ const UserAttendanceTotalPage = () => {
 
   const month3Change = (event) => {
     setMonth3(event.target.value);
+  };
+
+  // 결재 대기 중인 휴가 취소 (바로 취소 가능)
+  const leaveCancel = (leaveapp_no) => {
+    axios.delete(`/user-leave-request-await?leaveapp_no=${leaveapp_no}`).then((res) => {
+      alert(res.data + ' 선택한 휴가 취소 완료');
+      
+    });
   };
 
   return (
@@ -154,7 +187,7 @@ const UserAttendanceTotalPage = () => {
                 </FormControl>
               </div>
 
-              <UnappLeaveTotalTable handleOpen={handleOpen} month={month1} />
+              <UnappLeaveTotalTable handleOpen={handleOpen} month={month1} leaveCancel={leaveCancel} />
             </MainCard>
           </Grid>
 
@@ -222,12 +255,11 @@ const UserAttendanceTotalPage = () => {
                     //   fill: 'solid',
                     //   data: [0, 0, 0, 0, 0, 0, 0]
                     // },
-
                     {
                       name: '휴가',
                       type: 'column',
                       fill: 'solid',
-                      data: [0, 0, 0, 0, 0, 0, 0]
+                      data: []
                     }
                   ]
                 }}
