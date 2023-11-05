@@ -11,29 +11,34 @@ const TodayAttendancdForm = () => {
 
   const [formattedDate, setFormattedDate] = useState();
 
+  const [ip, setIp] = useState();
+
   const formData = {};
 
-    // 함수를 밖으로 빼서 재사용 가능하도록 설정
-    const getAttendanceData = async () => {
-      const result = await axios.get('/user-attend-today?user_no=1');
-      setAttend(result.data[0]);
-  
-      // null 값 검사
-      if (result.data[0] && result.data[0].attend_date) {
-        const dateObject = new Date(result.data[0].attend_date);
-        setFormattedDate(
-          dateObject.toLocaleDateString('ko-KR', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            weekday: 'long'
-          })
-        );
-      }
-    };
+  // 함수를 밖으로 빼서 재사용 가능하도록 설정
+  const getAttendanceData = async () => {
+    const result = await axios.get('/user-attend-today?user_no=1');
+    setAttend(result.data[0]);
+
+    // null 값 검사
+    if (result.data[0] && result.data[0].attend_date) {
+      const dateObject = new Date(result.data[0].attend_date);
+      setFormattedDate(
+        dateObject.toLocaleDateString('ko-KR', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          weekday: 'long'
+        })
+      );
+    }
+  };
 
   useEffect(() => {
     getAttendanceData();
+    axios.get('https://geolocation-db.com/json/').then((res) => {
+      setIp(res.data.IPv4);
+    });
   }, []);
 
   //출근기록
@@ -44,6 +49,7 @@ const TodayAttendancdForm = () => {
       alert('이미 출근을 기록하였습니다.');
       return; // 이미 출근한 경우 함수를 종료합니다.
     }
+    console.log('아이피주소는: ' + ip);
 
     axios
       .post('/user-attend-today?user_no=1', formData)
@@ -87,7 +93,6 @@ const TodayAttendancdForm = () => {
         // 퇴근을 기록한 후 성공적으로 완료됐을 때 실행할 코드
         alert('퇴근을 기록하였습니다.');
         getAttendanceData();
-      
       })
       .catch((error) => {
         // 요청이 실패했을 때 실행할 코드
