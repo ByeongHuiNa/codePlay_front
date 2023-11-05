@@ -14,8 +14,6 @@ import { Pagination } from '../../../node_modules/@mui/material/index';
 import { useAllLeaveState } from 'store/module';
 import axios from '../../../node_modules/axios/index';
 
-
-
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -150,9 +148,9 @@ export default function VacationCountTable() {
   useEffect(() => {
     async function get() {
       //const endPoints = ['http://localhost:8000/user_leave'];
-      const result = await axios.get('/see-all-leave?dept_no=1');
+      const result = await axios.get(`/see-all-leave?dept_no=1`);
       //const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
-       // result[0].data를 필터링하여 leave_status가 1인 데이터만 추출
+      // result[0].data를 필터링하여 leave_status가 1인 데이터만 추출
       //const filteredData = result[0].data.filter((item) => item.leave_status === 1);
       setAllLeave(result.data);
     }
@@ -186,11 +184,11 @@ export default function VacationCountTable() {
         >
           <VacationCountTableHead order={order} orderBy={orderBy} />
           <TableBody>
-          {stableSort(allLeave, getComparator(order, orderBy)).map((allLeave, index) => {
+            {stableSort(allLeave, getComparator(order, orderBy)).map((allLeave, index) => {
               const isItemSelected = isSelected(allLeave.date);
               const labelId = `enhanced-table-checkbox-${index}`;
 
-              return(
+              return (
                 <TableRow
                   hover
                   role="checkbox"
@@ -209,12 +207,9 @@ export default function VacationCountTable() {
                   <TableCell align="center">{allLeave.leave_total}</TableCell>
                   <TableCell align="center">{allLeave.leave_use}</TableCell>
                   <TableCell align="center">{allLeave.leave_remain}</TableCell>
-                  
-                  
                 </TableRow>
               );
-            
-              })}
+            })}
           </TableBody>
           {/* <TableBody>
             {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
@@ -252,6 +247,5 @@ export default function VacationCountTable() {
         <Pagination count={5} variant="outlined" shape="rounded" />
       </Stack>
     </Box>
-    
   );
 }
