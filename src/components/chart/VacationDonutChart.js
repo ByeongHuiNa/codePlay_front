@@ -27,8 +27,12 @@ export default function VacationDonutChart() {
               showAlways: true,
               show: true,
               label: '전체 휴가',
-              fontSize: '12px',
+              fontSize: '14px',
               color: 'black'
+            },
+            value: {
+              fontSize: '17px',
+              offsetY: 0.5
             }
           }
         }
@@ -101,10 +105,10 @@ export default function VacationDonutChart() {
     <>
       <Grid>
         <ReactApexChart options={options} series={series} type="donut" height={190} />
-        <Grid container rowSpacing={4} columnSpacing={1} sx={{ mt: 0.5 }}>
+        <Grid container rowSpacing={4} columnSpacing={1} sx={{ mt: -2 }}>
           <Grid item xs={4}>
             <MainCard>
-              <Typography variant="h5" style={{ textAlign: 'center' }}>
+              <Typography style={{ textAlign: 'center', fontSize: '1rem' }} sx={{ mb: 2 }}>
                 전체 휴가
               </Typography>
               <Typography variant="h5" style={{ textAlign: 'center' }}>
@@ -114,7 +118,7 @@ export default function VacationDonutChart() {
           </Grid>
           <Grid item xs={4}>
             <MainCard>
-              <Typography variant="h5" style={{ textAlign: 'center' }}>
+              <Typography style={{ textAlign: 'center', fontSize: '1rem' }} sx={{ mb: 2 }}>
                 사용 휴가
               </Typography>
               <Typography variant="h5" style={{ textAlign: 'center' }}>
@@ -124,7 +128,7 @@ export default function VacationDonutChart() {
           </Grid>
           <Grid item xs={4}>
             <MainCard>
-              <Typography variant="h5" style={{ textAlign: 'center' }}>
+              <Typography style={{ textAlign: 'center', fontSize: '1rem' }} sx={{ mb: 2 }}>
                 잔여 휴가
               </Typography>
               <Typography variant="h5" style={{ textAlign: 'center' }}>

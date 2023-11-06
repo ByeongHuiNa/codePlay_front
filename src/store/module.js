@@ -241,6 +241,14 @@ export const useCalendarGetScheduleList = create(
           }
           return item;
         })
+      })),
+    deleteDataList: (deleteData) =>
+      set((state) => ({
+        dataList: state.dataList.filter((item) => item.schedule_no != deleteData)
+      })),
+    deleteScheduleList: (deleteScheduleList) =>
+      set((state) => ({
+        scheduleList: state.scheduleList.filter((item) => item.id != deleteScheduleList)
       }))
   }))
 );
