@@ -64,7 +64,7 @@ const UserAttendance = () => {
     setSelectAttendData({});
     setStartChecked(false);
     setEndChecked(false);
-    // searchInitial();
+    searchInitial();
   };
 
   // 탭 0. 출/퇴근 수정 =========================================
