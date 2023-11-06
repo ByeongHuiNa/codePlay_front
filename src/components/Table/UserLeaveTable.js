@@ -203,7 +203,7 @@ export default function UserLeaveTable() {
   // ];
 
   return (
-    <Box sx={{ width: '103%' }}>
+    <Box sx={{ width: '105%' }}>
       <TableContainer
         sx={{
           width: '100%',

@@ -160,8 +160,6 @@ export default function UnappLeaveTotalTable({ leaveCancel, month, handleOpen })
 
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
 
-  
-
   return (
     <Box>
       <TableContainer
@@ -188,40 +186,47 @@ export default function UnappLeaveTotalTable({ leaveCancel, month, handleOpen })
         >
           <OrderTableHead order={order} orderBy={orderBy} />
           <TableBody>
-          {stableSort(apps, getComparator(order, orderBy)).map((app, index) => {
+            {stableSort(apps, getComparator(order, orderBy)).map((app, index) => {
               const isItemSelected = isSelected(app.date);
               const labelId = `enhanced-table-checkbox-${index}`;
 
-              return(
-              <TableRow
-                hover
-                role="checkbox"
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                aria-checked={isItemSelected}
-                tabIndex={-1}
-                key={app.data}
-                selected={isItemSelected}
-                onClick={() => {
-                  handleOpen(app);
-                }}
-              >
-                <TableCell component="th" id={labelId} scope="data" align="center">
-                  {app.leaveapp_start}
-                </TableCell>
-                <TableCell align="center">{app.leaveapp_end}</TableCell>
+              return (
+                <TableRow
+                  hover
+                  role="checkbox"
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  aria-checked={isItemSelected}
+                  tabIndex={-1}
+                  key={app.data}
+                  selected={isItemSelected}
+                  onClick={() => {
+                    handleOpen(app);
+                  }}
+                >
+                  <TableCell component="th" id={labelId} scope="data" align="center">
+                    {app.leaveapp_start}
+                  </TableCell>
+                  <TableCell align="center">{app.leaveapp_end}</TableCell>
 
-                <TableCell align="center">
-                  <Type type={app.leaveapp_type} />
-                </TableCell>
-                <TableCell align="center">{app.leaveapp_total}</TableCell>
-                <TableCell align="center">
-                  <Button variant="contained" size="small" onClick={leaveCancel}>
-                    취소
-                  </Button>
-                </TableCell>
-              </TableRow>
+                  <TableCell align="center">
+                    <Type type={app.leaveapp_type} />
+                  </TableCell>
+                  <TableCell align="center">{app.leaveapp_total}</TableCell>
+                  <TableCell align="center">
+                    <Button
+                      variant="contained"
+                      size="small"
+                      onClick={(e) => {
+                        e.stopPropagation(); // 이벤트 버블링 중지
+                        leaveCancel(app.leaveapp_no);
+                      }}
+                    >
+                      취소
+                    </Button>
+                  </TableCell>
+                </TableRow>
               );
-              })}
+            })}
 
             {/* {stableSort(datas, getComparator(order, orderBy)).map((data, index) => {
               const isItemSelected = isSelected(data.date);
