@@ -94,10 +94,10 @@ const CalendarPage = () => {
               start: startDate,
               end: endDate,
               color: '#a5d6a7',
-              textColor: '#e8f5e9'
+              textColor: '#e8f5e9',
+              allDay: list.leaveapp_type === 0 || list.leaveapp_type === 3 ? true : false
             };
           });
-
         setLeaveList(leaveListAdd);
       })
       .catch((error) => {
