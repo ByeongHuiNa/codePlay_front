@@ -11,9 +11,7 @@ function ApprovalTab(props) {
       {value === index && props.border !== 'none' ? (
         <Box
           sx={{
-            border: '1px solid #e6ebf1',
-            borderBottomLeftRadius: '8px',
-            borderBottomRightRadius: '8px'
+            border: '1px solid #e6ebf1'
           }}
         >
           <Typography>{children}</Typography>

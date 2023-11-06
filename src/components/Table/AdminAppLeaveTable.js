@@ -3,8 +3,9 @@ import { useState } from 'react';
 
 // material-ui
 import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import { Chip, Stack } from '../../../node_modules/@mui/material/index';
+import { Stack, Typography } from '../../../node_modules/@mui/material/index';
 import { useFormatter } from 'store/module';
+import Dot from 'components/@extended/Dot';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -119,7 +120,8 @@ const OrderStatus = ({ status }) => {
 
   return (
     <Stack direction="row" alignItems="center" justifyContent="center" spacing={1}>
-      <Chip label={title} color={color} />
+      <Dot color={color} />
+      <Typography>{title}</Typography>
     </Stack>
   );
 };
@@ -182,7 +184,7 @@ export default function AdminAppLeaveTable({ datas, setSelectLeaveData }) {
           position: 'relative',
           display: 'block',
           maxWidth: '100%',
-          height: '692px',
+          height: '712px',
           padding: '0px',
           '& td, & th': { whiteSpace: 'nowrap' },
           '&::-webkit-scrollbar': {
