@@ -94,7 +94,7 @@ const UserLeave = () => {
   // 로그인 한 사용자
   const user = {
     user_no: 1,
-    user_name: '이유나',
+    user_name: '김철수',
     user_position: '팀장',
     dept: {
       dept_no: 1,
@@ -220,7 +220,7 @@ const UserLeave = () => {
           leaveapp_start: new Date(selectLeaveCancel.leaveapp_start),
           leaveapp_end: new Date(selectLeaveCancel.leaveapp_end),
           leaveapp_total: selectLeaveCancel.leaveapp_total,
-          leaveapp_cancel_no: selectLeaveCancel.leaveapp_cancel_no,
+          leaveapp_cancel_no: selectLeaveCancel.leaveapp_no,
           firstapp_no: firstApprover.user_no
         })
         .then((res) => {
@@ -330,7 +330,7 @@ const UserLeave = () => {
             <BasicContainer>
               <Grid container alignItems="center" justifyContent="space-between">
                 <Grid item>
-                  <Typography variant="h5">결재 대기 내역</Typography>
+                  <Typography variant="h4">결재 대기 내역</Typography>
                 </Grid>
               </Grid>
               <UnappLeaveTable leaveCancel={leaveCancel} datas={leaveRequestAwait} handleOpen={handleOpen} />
@@ -340,7 +340,7 @@ const UserLeave = () => {
             <BasicContainer>
               <Grid container alignItems="center" justifyContent="space-between">
                 <Grid item>
-                  <Typography variant="h5">최근 결재 완료 내역</Typography>
+                  <Typography variant="h5">결재 진행중인 최근 내역</Typography>
                 </Grid>
               </Grid>
               <AppLeaveTable requestLeaveCancel={requestLeaveCancel} datas={leaveRequestRecent.slice(0, 7)} handleOpen={handleOpen} />
@@ -547,7 +547,12 @@ const UserLeave = () => {
               </Grid>
               <Grid item xs={8.6} md={8.6} lg={8.6}></Grid>
             </Grid>
-            <CancelLeaveTable datas={leaveRequestRecent} handleSelectCancel={handleSelectCancel} />
+            <CancelLeaveTable
+              datas={leaveRequestRecent
+                .filter((data) => data.leaveapp_type !== 4)
+                .filter((data) => data.leaveapp_status !== 1 && data.leaveapp_status !== 2)}
+              handleSelectCancel={handleSelectCancel}
+            />
             <Grid container justifyContent="right" spacing={1} sx={{ mt: 2 }}>
               <Grid item>
                 <Button variant="contained" size="medium" onClick={handleCloseCancel}>
