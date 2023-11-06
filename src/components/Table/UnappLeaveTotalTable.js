@@ -9,31 +9,31 @@ import { Button, Pagination, Stack } from '../../../node_modules/@mui/material/i
 import { useUnApprovalState } from 'store/module';
 import axios from '../../../node_modules/axios/index';
 
-// function descendingComparator(a, b, orderBy) {
-//   if (b[orderBy] < a[orderBy]) {
-//     return -1;
-//   }
-//   if (b[orderBy] > a[orderBy]) {
-//     return 1;
-//   }
-//   return 0;
-// }
+function descendingComparator(a, b, orderBy) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
+}
 
-// function getComparator(order, orderBy) {
-//   return order === 'desc' ? (a, b) => descendingComparator(a, b, orderBy) : (a, b) => -descendingComparator(a, b, orderBy);
-// }
+function getComparator(order, orderBy) {
+  return order === 'desc' ? (a, b) => descendingComparator(a, b, orderBy) : (a, b) => -descendingComparator(a, b, orderBy);
+}
 
-// function stableSort(array, comparator) {
-//   const stabilizedThis = array.map((el, index) => [el, index]);
-//   stabilizedThis.sort((a, b) => {
-//     const order = comparator(a[0], b[0]);
-//     if (order !== 0) {
-//       return order;
-//     }
-//     return a[1] - b[1];
-//   });
-//   return stabilizedThis.map((el) => el[0]);
-// }
+function stableSort(array, comparator) {
+  const stabilizedThis = array.map((el, index) => [el, index]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) {
+      return order;
+    }
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map((el) => el[0]);
+}
 
 // ==============================|| ORDER TABLE - HEADER CELL ||============================== //
 
@@ -137,11 +137,11 @@ Type.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 //결재대기 테이블
-export default function UnappLeaveTotalTable({ leaveCancel, month }) {
+export default function UnappLeaveTotalTable({ leaveCancel, month, handleOpen }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
-  //const [selected] = useState([]);
-  const { app, setApp } = useUnApprovalState();
+  const [selected] = useState([]);
+  const { apps, setApps } = useUnApprovalState();
 
   useEffect(() => {
     async function get() {
@@ -151,24 +151,14 @@ export default function UnappLeaveTotalTable({ leaveCancel, month }) {
       console.log('대기: ' + result.data);
 
       // result[0].data를 필터링하여 leave_status가 3(결재대기)인 데이터만 추출
-      const filteredData = result.data.filter((item) => item.leaveapp_status == 3);
+      //const filteredData = result.data.filter((item) => item.leaveapp_status == 3);
 
-      setApp(filteredData);
+      setApps(result.data);
     }
     get();
   }, [month]);
 
-  //const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
-
-  // function createData(leaveStart, leaveEnd, leaveType, leaveCnt, appDate, approver, status) {
-  //   return { leaveStart, leaveEnd, leaveType, leaveCnt, appDate, approver, status };
-  // }
-
-  // const datas = [
-  //   createData('2023/10/11', '2023/10/11', '연차', '1'),
-  //   createData('2023/10/11', '2023/10/11', '반차(오전)', '0.5'),
-  //   createData('2023/10/11', '2023/10/13', '연차', '3')
-  // ];
+  const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
 
   return (
     <Box>
@@ -196,34 +186,47 @@ export default function UnappLeaveTotalTable({ leaveCancel, month }) {
         >
           <OrderTableHead order={order} orderBy={orderBy} />
           <TableBody>
-            {Object.values(app).map((app) => (
-              //const isItemSelected = isSelected(appwait.date);
-              //const labelId = `enhanced-table-checkbox-${index}`;
-              <TableRow
-                hover
-                role="checkbox"
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                // aria-checked={isItemSelected}
-                tabIndex={-1}
-                key={app.leaveapp_no}
-                // selected={isItemSelected}
-              >
-                <TableCell component="th" id={app.leaveapp_no} scope="data" align="center">
-                  {app.leaveapp_start}
-                </TableCell>
-                <TableCell align="center">{app.leaveapp_end}</TableCell>
+            {stableSort(apps, getComparator(order, orderBy)).map((app, index) => {
+              const isItemSelected = isSelected(app.date);
+              const labelId = `enhanced-table-checkbox-${index}`;
 
-                <TableCell align="center">
-                  <Type type={app.leaveapp_type} />
-                </TableCell>
-                <TableCell align="center">{app.leaveapp_total}</TableCell>
-                <TableCell align="center">
-                  <Button variant="contained" size="small" onClick={leaveCancel}>
-                    취소
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
+              return (
+                <TableRow
+                  hover
+                  role="checkbox"
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  aria-checked={isItemSelected}
+                  tabIndex={-1}
+                  key={app.data}
+                  selected={isItemSelected}
+                  onClick={() => {
+                    handleOpen(app);
+                  }}
+                >
+                  <TableCell component="th" id={labelId} scope="data" align="center">
+                    {app.leaveapp_start}
+                  </TableCell>
+                  <TableCell align="center">{app.leaveapp_end}</TableCell>
+
+                  <TableCell align="center">
+                    <Type type={app.leaveapp_type} />
+                  </TableCell>
+                  <TableCell align="center">{app.leaveapp_total}</TableCell>
+                  <TableCell align="center">
+                    <Button
+                      variant="contained"
+                      size="small"
+                      onClick={(e) => {
+                        e.stopPropagation(); // 이벤트 버블링 중지
+                        leaveCancel(app.leaveapp_no);
+                      }}
+                    >
+                      취소
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
 
             {/* {stableSort(datas, getComparator(order, orderBy)).map((data, index) => {
               const isItemSelected = isSelected(data.date);

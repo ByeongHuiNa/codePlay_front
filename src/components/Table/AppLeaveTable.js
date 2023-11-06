@@ -5,8 +5,9 @@ import { useState } from 'react';
 import { Box, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 // project import
-import { Button, Chip, Typography } from '../../../node_modules/@mui/material/index';
+import { Button, Typography } from '../../../node_modules/@mui/material/index';
 import { useFormatter } from 'store/module';
+import Dot from 'components/@extended/Dot';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -145,7 +146,8 @@ const OrderStatus = ({ status }) => {
 
   return (
     <Stack direction="row" alignItems="center" justifyContent="center" spacing={1}>
-      <Chip label={title} color={color} />
+      <Dot color={color} />
+      <Typography>{title}</Typography>
     </Stack>
   );
 };
@@ -235,8 +237,13 @@ export default function AppLeaveTable({ requestLeaveCancel, datas, handleOpen })
                   tabIndex={-1}
                   key={data.date}
                   selected={isItemSelected}
-                  onClick={() => {
-                    handleOpen(data);
+                  onClick={(event) => {
+                    // 버튼이 클릭되었을 때 이벤트 전파를 중지
+                    if (event.target.tagName.toLowerCase() === 'button') {
+                      event.stopPropagation();
+                    } else {
+                      handleOpen(data);
+                    }
                   }}
                 >
                   <TableCell component="th" id={labelId} scope="data" align="center">
@@ -253,9 +260,22 @@ export default function AppLeaveTable({ requestLeaveCancel, datas, handleOpen })
                     <OrderStatus status={data.leaveapp_status} />
                   </TableCell>
                   <TableCell align="center">
-                    <Button variant="contained" size="small" onClick={requestLeaveCancel}>
-                      취소신청
-                    </Button>
+                    {data.leaveapp_status === 0 && (
+                      <Button
+                        variant="contained"
+                        size="small"
+                        onClick={() => {
+                          requestLeaveCancel(data);
+                        }}
+                      >
+                        취소신청
+                      </Button>
+                    )}
+                    {data.leaveapp_status !== 0 && (
+                      <Button variant="contained" color="secondary" size="small" disable>
+                        취소신청
+                      </Button>
+                    )}
                   </TableCell>
                 </TableRow>
               );

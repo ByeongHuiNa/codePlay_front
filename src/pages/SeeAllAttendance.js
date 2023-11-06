@@ -13,9 +13,13 @@ import SearchIcon from '@mui/icons-material/Search';
 
 import { useEffect, useState } from 'react';
 import MainCard from 'components/MainCard';
+import { useGetDeptState } from 'store/module';
+import axios from '../../node_modules/axios/index';
 
 const SeeAllAttendance = () => {
   const [userInput, setUserInput] = useState(''); //사원검색창 입력값
+
+  const { depts, setDepts } = useGetDeptState();
 
   const getValue = (e) => {
     setUserInput(e.target.value.toLowerCase());
@@ -70,12 +74,25 @@ const SeeAllAttendance = () => {
     // 주차를 갱신
     setCurrentWeek(currentWeek + 1);
   };
+
   useEffect(() => {
     // 현재 날짜를 가져오고 그 날짜의 주차를 계산
     const now = new Date();
     const startOfYear = new Date(now.getFullYear(), 0, 1);
     const weekNumber = Math.ceil(((now - startOfYear) / 86400000 + 1) / 7);
     setCurrentWeek(weekNumber);
+
+    const fetchData = async () => {
+      try {
+        const result = await axios.get('/see-all-dept');
+        setDepts(result.data);
+        console.log("depts: " +  depts);
+      } catch (error) {
+        console.error("Error fetching department data:", error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (
@@ -92,11 +109,8 @@ const SeeAllAttendance = () => {
           <Grid item xs={6}>
             <MainCard>
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Typography variant="h5">{dept ? `${dept} 부서 출/퇴근 현황` : '개발 부서 휴가보유 현황 '}</Typography>
+                <Typography variant="h5">{dept ? `${dept} 부서 휴가보유 현황` : '개발 부서 휴가보유 현황 '}</Typography>
                 <FormControl sx={{ marginLeft: 3 }}>
-                  <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                    부서
-                  </InputLabel>
                   <NativeSelect
                     onChange={handleChange2}
                     inputProps={{
@@ -104,6 +118,7 @@ const SeeAllAttendance = () => {
                       id: 'uncontrolled-native'
                     }}
                   >
+            
                     <option value={'개발'}>개발부서</option>
                     <option value={'인사'}>인사부서</option>
                     <option value={'회계'}>회계부서</option>

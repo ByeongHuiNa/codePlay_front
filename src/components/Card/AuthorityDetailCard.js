@@ -25,6 +25,9 @@ const AuthorityDetailCard = () => {
   const addRole = () => {
     const temp = { ...content };
     temp.role.push({ id: uuidv4(), role_level: 1, role_designated_date: getToday() });
+    if (temp.attend_ma == null) {
+      temp.attend_ma = [{ dept_no: 1 }];
+    }
     setContent(temp);
   };
 
@@ -41,13 +44,13 @@ const AuthorityDetailCard = () => {
     temp.role.push(role);
     setContent(temp);
   };
-  //TODO:Attend_ma 로 변경시 객체에 내용 수정필요
-  // const changeAttend_ma = (value) => {
-  //   const temp = { ...content };
-  //   attend_ma = [{ ...attend_ma, dept_no: value }];
-  //   temp.attend_ma = attend_ma;
-  //   setContent(temp);
-  // };
+
+  const changeAttend_ma = (value) => {
+    const temp = { ...content };
+    const attend_ma = [{ dept_no: value }];
+    temp.attend_ma = attend_ma;
+    setContent(temp);
+  };
 
   async function save() {
     const RoleQueryUserDetailRequestVo = {
@@ -98,7 +101,8 @@ const AuthorityDetailCard = () => {
                     select
                     size="normal"
                     sx={{ width: '8rem' }}
-                    value={content.attend_ma == null ? 1 : content.attend_ma[0].dept_no}
+                    value={content.attend_ma[0].dept_no}
+                    onChange={(e) => changeAttend_ma(e.target.value)}
                   >
                     {Object.keys(deptList).length > 0 &&
                       deptList.map((dept) => {

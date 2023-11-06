@@ -64,7 +64,7 @@ const UserAttendance = () => {
     setSelectAttendData({});
     setStartChecked(false);
     setEndChecked(false);
-    // searchInitial();
+    searchInitial();
   };
 
   // 탭 0. 출/퇴근 수정 =========================================
@@ -167,7 +167,7 @@ const UserAttendance = () => {
   // 출퇴근 내역 검색 함수
   const searchAttendButton = () => {
     const startDate = new Date(searchStartDate).setHours(0, 0, 0, 0);
-    const endDate = new Date(searchEndDate).setHours(0, 0, 0, 0);
+    const endDate = new Date(searchEndDate).setHours(23, 59, 59, 0);
     if (startDate > endDate) {
       alert('종료일이 시작일보다 작을 수 없습니다.');
     } else if (!searchStartDate || !searchEndDate) {
@@ -188,7 +188,7 @@ const UserAttendance = () => {
   // 출퇴근 수정 내역 검색 함수
   const searchAttendEditButton = () => {
     const startDate = new Date(searchStartDate).setHours(0, 0, 0, 0);
-    const endDate = new Date(searchEndDate).setHours(0, 0, 0, 0);
+    const endDate = new Date(searchEndDate).setHours(23, 59, 59, 0);
     if (startDate > endDate) {
       alert('종료일이 시작일보다 작을 수 없습니다.');
     } else if (!searchStartDate || !searchEndDate) {
@@ -311,7 +311,7 @@ const UserAttendance = () => {
           <BasicContainer>
             <Grid container alignItems="center" justifyContent="space-between">
               <Grid item xs={4} md={4} lg={4}>
-                <MainCard sx={{ mr: 1, pt: 2, height: '740px' }} content={false}>
+                <MainCard sx={{ mr: 1, pt: 2, height: '740px', borderRadius: 0 }} content={false}>
                   <Box ml={2} mr={1} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <Typography variant="h5">최근 이상 근태 내역</Typography>
                     <Button onClick={handleOpenAll}>전체보기</Button>
@@ -331,7 +331,7 @@ const UserAttendance = () => {
               <Grid item xs={8} md={8} lg={8}>
                 <Grid container direction="column">
                   <Grid item xs={5} md={5} lg={5}>
-                    <MainCard sx={{ pt: 2, height: '150px' }} content={false}>
+                    <MainCard sx={{ pt: 2, height: '150px', borderRadius: 0 }} content={false}>
                       <Grid container alignItems="center" direction="row" spacing={1} sx={{ pl: 2 }}>
                         <Grid item>
                           <Typography variant="h5">선택된 날짜</Typography>
@@ -358,7 +358,7 @@ const UserAttendance = () => {
                     </MainCard>
                   </Grid>
                   <Grid item xs={7} md={7} lg={7}>
-                    <MainCard sx={{ mt: 1, pt: 2, pr: 2, pl: 2, height: '580px' }} content={false}>
+                    <MainCard sx={{ mt: 1, pt: 2, pr: 2, pl: 2, height: '580px', borderRadius: 0 }} content={false}>
                       <Grid container spacing={1} justifyContent="center">
                         <Grid item xs={12} sm={12} md={12} lg={12}>
                           <Typography variant="h5">출/퇴근 수정</Typography>
@@ -523,26 +523,35 @@ const UserAttendance = () => {
         <Box clone mx={1} my={1} pb={2}>
           <BasicContainer sx={{ height: '760px' }}>
             <Grid container>
-              <Grid item xs={3} md={3} lg={3}>
+              <Grid item xs={6} md={6} lg={6}>
                 <Typography variant="h4">출/퇴근 수정 요청 목록</Typography>
               </Grid>
-              <Grid item xs={9} md={9} lg={9}>
-                <Grid container justifyContent="right" spacing={1}>
-                  <Grid item>
-                    <BasicDatePicker setDate={setSearchStartDate} val={searchStartDate} />
-                  </Grid>
-                  <Grid item>
-                    <BasicDatePicker setDate={setSearchEndDate} val={searchEndDate} />
-                  </Grid>
-                  <Grid item sx={{ mt: 0.3 }}>
-                    <Button variant="contained" color="secondary" onClick={searchAttendEditButton}>
-                      조회
-                    </Button>
-                  </Grid>
-                  <Grid item sx={{ mt: 0.3 }}>
-                    <Button variant="contained" color="secondary" onClick={searchInitial}>
-                      초기화
-                    </Button>
+              <Grid item xs={6} md={6} lg={6}>
+                <Grid container direction="row" spacing={1} sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Grid container direction="column">
+                    <Grid item>
+                      <Typography variant="h5" sx={{ color: 'gray', fontWeight: 550 }}>
+                        검색할 수정 날짜 기간
+                      </Typography>
+                    </Grid>
+                    <Grid item sx={{ display: 'flex', mt: 1 }}>
+                      <Box mr={1}>
+                        <BasicDatePicker setDate={setSearchStartDate} val={searchStartDate} />
+                      </Box>
+                      <Box mr={1}>
+                        <BasicDatePicker setDate={setSearchEndDate} val={searchEndDate} />
+                      </Box>
+                      <Box mr={0.5} mt={0.3}>
+                        <Button variant="contained" color="secondary" onClick={searchAttendEditButton}>
+                          조회
+                        </Button>
+                      </Box>
+                      <Box mt={0.3}>
+                        <Button variant="contained" color="secondary" onClick={searchInitial}>
+                          초기화
+                        </Button>
+                      </Box>
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>

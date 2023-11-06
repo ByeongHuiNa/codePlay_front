@@ -140,15 +140,15 @@ export const useAllApprovalState1 = create(
 //휴가결재내역(승인, 반려)
 export const useApprovalState2 = create(
   devtools((set) => ({
-    app: {},
-    setApp: (newApp) => set(() => ({ app: newApp }))
+    apps: [],
+    setApps: (newApps) => set(() => ({ apps: newApps }))
   }))
 );
 //휴가결재내역(대기)
 export const useUnApprovalState = create(
   devtools((set) => ({
-    app: {},
-    setApp: (newApp) => set(() => ({ app: newApp }))
+    apps: [],
+    setApps: (newApps) => set(() => ({ apps: newApps }))
   }))
 );
 
@@ -162,7 +162,7 @@ export const useLeaveState = create(
 //모든 사용자의 휴가보유 현황
 export const useAllLeaveState = create(
   devtools((set) => ({
-    allLeave: {},
+    allLeave: [],
     setAllLeave: (newAllLeave) => set(() => ({ allLeave: newAllLeave }))
   }))
 );
@@ -275,5 +275,20 @@ export const useFormatter = create(
       let seconds = date.getSeconds() >= 10 ? date.getSeconds() : '0' + date.getSeconds();
       return `${hours}:${minutes}:${seconds}`;
     }
+  }))
+);
+
+//사용자의 주간근무시간
+export const useWorkingHourState = create(
+  devtools((set) => ({
+    hours: {},
+    setHours: (newHours) => set(() => ({ hours: newHours }))
+  }))
+);
+//모든 부서목록
+export const useGetDeptState = create(
+  devtools((set) => ({
+    depts: [],
+    setDepts: (newDepts) => set(() => ({ depts, newDepts }))
   }))
 );

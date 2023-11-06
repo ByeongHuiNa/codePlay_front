@@ -185,7 +185,7 @@ export default function UserLeaveInfoTable({ data }) {
                       ? '오후 반차'
                       : '공가'}
                   </TableCell>
-                  <TableCell align="center">{data.leaveapp_total}</TableCell>
+                  <TableCell align="center">{data.leaveapp_total}일</TableCell>
                   <TableCell align="center">{data.firstapp_user_name}</TableCell>
                   <TableCell align="center">{data.secondapp_user_name}</TableCell>
                   <TableCell align="center">

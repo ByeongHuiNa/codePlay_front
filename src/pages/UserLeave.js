@@ -34,6 +34,7 @@ import ModalM from 'components/Modal/ModalM';
 import CancelLeaveTable from 'components/Table/CancelLeaveTable';
 import UserLeaveInfoTable from 'components/Table/UserLeaveInfoTable';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
 
 const UserLeave = () => {
   const { index, setIndex } = useLeaveTab();
@@ -57,7 +58,8 @@ const UserLeave = () => {
   };
 
   // 결재 완료 된 휴가 취소 신청 (결재 받은 뒤 취소 처리)
-  const requestLeaveCancel = () => {
+  const requestLeaveCancel = (data) => {
+    setSelectLeaveCancel(data);
     setIndex(2);
   };
 
@@ -92,7 +94,7 @@ const UserLeave = () => {
   // 로그인 한 사용자
   const user = {
     user_no: 1,
-    user_name: '이유나',
+    user_name: '김철수',
     user_position: '팀장',
     dept: {
       dept_no: 1,
@@ -131,7 +133,9 @@ const UserLeave = () => {
     setSecondApprover({});
     setSelectedValue('annual');
     setHalfValue('am');
-    setSelectLeaveCancel({});
+    if (index === 0 || index === 1) {
+      setSelectLeaveCancel({});
+    }
   }, [index]);
 
   useEffect(() => {
@@ -216,7 +220,7 @@ const UserLeave = () => {
           leaveapp_start: new Date(selectLeaveCancel.leaveapp_start),
           leaveapp_end: new Date(selectLeaveCancel.leaveapp_end),
           leaveapp_total: selectLeaveCancel.leaveapp_total,
-          leaveapp_cancel_no: selectLeaveCancel.leaveapp_cancel_no,
+          leaveapp_cancel_no: selectLeaveCancel.leaveapp_no,
           firstapp_no: firstApprover.user_no
         })
         .then((res) => {
@@ -326,7 +330,7 @@ const UserLeave = () => {
             <BasicContainer>
               <Grid container alignItems="center" justifyContent="space-between">
                 <Grid item>
-                  <Typography variant="h5">결재 대기 내역</Typography>
+                  <Typography variant="h4">결재 대기 내역</Typography>
                 </Grid>
               </Grid>
               <UnappLeaveTable leaveCancel={leaveCancel} datas={leaveRequestAwait} handleOpen={handleOpen} />
@@ -336,7 +340,7 @@ const UserLeave = () => {
             <BasicContainer>
               <Grid container alignItems="center" justifyContent="space-between">
                 <Grid item>
-                  <Typography variant="h5">최근 결재 완료 내역</Typography>
+                  <Typography variant="h5">결재 진행중인 최근 내역</Typography>
                 </Grid>
               </Grid>
               <AppLeaveTable requestLeaveCancel={requestLeaveCancel} datas={leaveRequestRecent.slice(0, 7)} handleOpen={handleOpen} />
@@ -364,6 +368,12 @@ const UserLeave = () => {
                     setTitle(e.target.value);
                   }}
                 />
+              </Box>
+              <Box clone mt={1} sx={{ display: 'flex', alignItems: 'center' }}>
+                <EditNoteRoundedIcon fontSize="medium" color="secondary" sx={{ mx: 1 }} />
+                <Typography size="small" color="secondary">
+                  제목은 입력하지 않을 시 자동 지정됩니다.
+                </Typography>
               </Box>
               <Box clone mt={2} sx={{ display: 'flex' }}>
                 <MyChip label="1차 결재자" />
@@ -448,6 +458,12 @@ const UserLeave = () => {
                 <MyChip label="제목" />
                 <TextField label="제목" id="title" size="small" onChange={(e) => setTitle(e.target.value)} />
               </Box>
+              <Box clone mt={1} sx={{ display: 'flex', alignItems: 'center' }}>
+                <EditNoteRoundedIcon fontSize="medium" color="secondary" sx={{ mx: 1 }} />
+                <Typography size="small" color="secondary">
+                  제목은 입력하지 않을 시 자동 지정됩니다.
+                </Typography>
+              </Box>
               <Box clone mt={2} sx={{ display: 'flex' }}>
                 <MyChip label="결재자" />
                 <AppAuto
@@ -531,7 +547,12 @@ const UserLeave = () => {
               </Grid>
               <Grid item xs={8.6} md={8.6} lg={8.6}></Grid>
             </Grid>
-            <CancelLeaveTable datas={leaveRequestRecent} handleSelectCancel={handleSelectCancel} />
+            <CancelLeaveTable
+              datas={leaveRequestRecent
+                .filter((data) => data.leaveapp_type !== 4)
+                .filter((data) => data.leaveapp_status !== 1 && data.leaveapp_status !== 2)}
+              handleSelectCancel={handleSelectCancel}
+            />
             <Grid container justifyContent="right" spacing={1} sx={{ mt: 2 }}>
               <Grid item>
                 <Button variant="contained" size="medium" onClick={handleCloseCancel}>

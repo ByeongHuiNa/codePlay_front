@@ -3,13 +3,14 @@
 
 // project import
 import MainCard from 'components/MainCard';
-import { Avatar, Box, Button, Grid, Link, Typography } from '../../node_modules/@mui/material/index';
+import { Avatar, Box, Grid, Link, Typography } from '../../node_modules/@mui/material/index';
 import VacationDonutChart from 'components/chart/VacationDonutChart';
 import AttendChart from 'components/chart/AttendChart';
 import UserLeaveTable from 'components/Table/UserLeaveTable';
-import { useProfileState, useTodayState } from 'store/module';
+import { useProfileState, useWorkingHourState } from 'store/module';
 import { useEffect, useState } from 'react';
 import axios from '../../node_modules/axios/index';
+import TodayAttendancdForm from 'components/Form/TodayAttendanceForm';
 
 // ==============================|| 로그인 이후 무조건 들어올 메인페이지 ||============================== //
 
@@ -17,111 +18,80 @@ const Main = () => {
   //화면 초기값 셋팅
   const { profile, setProfile } = useProfileState();
 
-  const { attend, setAttend } = useTodayState();
-  
+  const { hours, setHours } = useWorkingHourState();
 
-  const [formattedDate, setFormattedDate] = useState();
-
-  const formData = {};
-
-  //출근기록
-  const startSubmit = (e) => {
-    e.preventDefault();
-    axios
-      .post('/user-attend-today?user_no=1', formData)
-      .then(() => {
-        // 출근을 기록한 후 성공적으로 완료됐을 때 실행할 코드
-        alert('출근을 기록하였습니다.');
-        window.location.reload(); // 페이지 새로고침
-      })
-      .catch((error) => {
-        // 요청이 실패했을 때 실행할 코드
-        console.error('에러 발생: ', error);
-        // 에러 메시지를 표시하거나 다른 작업을 수행할 수 있습니다.
-      });
-  };
-
-  //퇴근기록
-  const endSubmit = (e) => {
-    e.preventDefault();
-    const currentDate = new Date();
-    const currentHour = currentDate.getHours();
-
-    // 6시 이전에 퇴근 버튼을 누르면 확인 메시지 표시
-    if (currentHour < 18) {
-      const confirmMessage = "6시 이전에 퇴근하시겠습니까?";
-      const userConfirmed = window.confirm(confirmMessage);
-
-      if (!userConfirmed) {
-        // 사용자가 취소한 경우
-        return;
-      }
-    }
-
-    axios.patch('/user-attend-today?user_no=1', formData)
-      .then(() => {
-        // 퇴근을 기록한 후 성공적으로 완료됐을 때 실행할 코드
-        alert('퇴근을 기록하였습니다.');
-        window.location.reload(); // 페이지 새로고침
-      })
-      .catch((error) => {
-        // 요청이 실패했을 때 실행할 코드
-        console.error('에러 발생: ', error);
-        // 에러 메시지를 표시하거나 다른 작업을 수행할 수 있습니다.
-      });
-  };
+  const [time, setTime] = useState([]);
 
   useEffect(() => {
     async function get() {
-      const endPoints = ['/user-information?user_no=1', '/user-attend-today?user_no=1'];
+      const endPoints = ['/user-information?user_no=1'];
       const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
       setProfile(result[0].data[0]);
+
+      const result2 = await axios.get('/user-attend-total?user_no=1');
+      setHours(result2.data);
+      console.log('dsadas: ' + hours);
+      const currentTime = new Date(); // 현재 시간 가져오기
+      const attendTotalArray = result2.data.map(item => {
+        const attendTotal = item.attend_total ? item.attend_total : calculateAttendTotal(item.attend_start, currentTime);
+        return {
+          attend_total: attendTotal,
+        };
+      });
+   
+      console.log("attendtotal : " + attendTotalArray);
+
+      const convertedArray = attendTotalArray.map(item => {
+        if (item.attend_total) {
+          const totalParts = item.attend_total.split(":");
+          const totalHours = parseInt(totalParts[0], 10);
+          const totalMinutes = parseInt(totalParts[1], 10);
+          return `${totalHours}.${totalMinutes}`;
+        } else {
+          // attend_total이 null인 경우 대체값 또는 원하는 처리
+          return "대체값 또는 원하는 처리";
+        }
+      });
+      setTime(convertedArray);
       // const resultAttend = await axios.get('/user-attend-today?user_no=1');
-      setAttend(result[1].data[0]);
+
       // const dateObject = new Date(attend.attend_date);
       // setFormattedDate(dateObject.toLocaleDateString());
-
-      // null 값 검사
-      if (attend && attend.attend_date) {
-        const dateObject = new Date(attend.attend_date);
-        setFormattedDate(
-          dateObject.toLocaleDateString('ko-KR', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            weekday: 'long'
-          })
-        );
-      }
     }
     get();
-  }, [attend]);
+  }, []);
+  function calculateAttendTotal(attendStart, currentTime) {
+    const startParts = attendStart.split(":");
+    const startHours = parseInt(startParts[0], 10);
+    const startMinutes = parseInt(startParts[1], 10);
+  
+    const hoursDiff = currentTime.getHours() - startHours;
+    const minutesDiff = currentTime.getMinutes() - startMinutes;
+  
+    const totalHours = hoursDiff < 0 ? 0 : hoursDiff;
+    const totalMinutes = minutesDiff < 0 ? 0 : minutesDiff;
+  
+    return `${totalHours}:${totalMinutes}`;
+  }
+  const now = new Date(); // 현재 날짜와 시간
+  const currentDay = now.getDay() - 1; // 현재 요일 (0: 일요일, 1: 월요일, ..., 6: 토요일)
 
-  // useEffect(() => {
-  //   async function get() {
-  //     const endPoints = ['http://localhost:8000/attendance'];
-  //     const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
-  //     setAttend(result[0].data[0]);
-  //     console.log("zz: " + result[0].data[0]);
-  //   }
-  //   get();
-  // }, []);
+  // 현재 주의 월요일 날짜를 계산
+  const startOfWeek = new Date(now);
+  startOfWeek.setDate(now.getDate() - currentDay);
 
-  // async function postData() {
-  //   alert('zz');
-  //   try {
-  //     //응답 성공
-  //     const response = await axios.post('http://localhost:8000/attend', {
-  //       start: 'devstone',
-  //       end: '12345'
-  //     });
-  //     alert('성공');
-  //     console.log(response);
-  //   } catch (error) {
-  //     //응답 실패
-  //     console.error(error);
-  //   }
-  // }
+  // 현재 주의 월요일부터 일요일까지의 날짜를 계산하고 포맷팅
+  const daysOfWeek = [];
+  const dateOptions = {  month: '2-digit', day: '2-digit'};
+
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(startOfWeek);
+    date.setDate(startOfWeek.getDate() + i);
+    const formattedDate = date.toLocaleDateString('ko-KR', dateOptions);
+    daysOfWeek.push(formattedDate);
+  }
+
+  
 
   return (
     <Grid container spacing={2}>
@@ -149,75 +119,7 @@ const Main = () => {
         )}
       </Grid>
       <Grid item xs={4} sm={4} md={4} lg={4}>
-        <MainCard sx={{ height: '350px' }}>
-          <Typography align="left" variant="h5">
-            출/퇴근
-          </Typography>
-          <Box mt={4} mb={4} ml={3}>
-            <Grid container justifyContent="center" spacing={1}>
-              <Grid item xs={3} sm={3} md={3} lg={3}>
-                <Typography align="center" color="text.secondary">
-                  출근 시간
-                </Typography>
-              </Grid>
-              <Grid item xs={8} sm={8} md={8} lg={8} sx={{ paddingRight: 5 }} align="right">
-                {attend ? (
-                  <Typography variant="text" align="right" sx={{ fontSize: 15 }}>
-                    {formattedDate}
-                    <br />
-                    {attend.attend_start}
-                  </Typography>
-                ) : (
-                  <Typography variant="text" sx={{ fontSize: 15, color: 'error' }}>
-                    미출근
-                    <br />
-                  </Typography>
-                )}
-              </Grid>
-            </Grid>
-          </Box>
-          <Box my={4} ml={3}>
-            <Grid container justifyContent="center" spacing={1}>
-              <Grid item xs={3} sm={3} md={3} lg={3}>
-                <Typography align="center" color="text.secondary">
-                  퇴근 시간
-                </Typography>
-              </Grid>
-              <Grid item xs={8} sm={8} md={8} lg={8} sx={{ paddingRight: 5 }} align="right">
-                {attend ? (
-                  <Typography variant="text" sx={{ fontSize: 15 }}>
-                    {formattedDate}
-                    <br />
-                    {attend.attend_end}
-                  </Typography>
-                ) : (
-                  <Typography variant="text" sx={{ fontSize: 15, color: 'error' }}>
-                    미퇴근
-                    <br />
-                  </Typography>
-                )}
-              </Grid>
-            </Grid>
-          </Box>
-          <Box>
-            <Grid container justifyContent="center" spacing={1} sx={{mt:8}}>
-              <Grid item >
-                <form onSubmit={startSubmit}>
-                  <Button variant="outlined" size="large" type="submit">
-                    <Box mx={6}>출근</Box>
-                  </Button>
-                </form>
-              </Grid>
-              <Grid item>
-                <form onSubmit={endSubmit}>
-                  <Button variant="contained" size="large" type="submit">
-                    <Box mx={6}>퇴근</Box>
-                  </Button>
-                </form>
-              </Grid>
-            </Grid>
-          </Box>
-        </MainCard>
+        <TodayAttendancdForm />
       </Grid>
       <Grid item xs={4} sm={4} md={4} lg={4}>
         <MainCard>
@@ -226,25 +128,25 @@ const Main = () => {
           </Typography>
           <AttendChart
             chart={{
-              labels: ['10/07', '10/08', '10/09', '10/10', '10/11', '10/12', '10/13'],
+              labels: daysOfWeek,
               series: [
                 {
                   name: '정상근무',
                   type: 'column',
                   fill: 'solid',
-                  data: [0, 8, 10, 10, 4, 10, 0]
+                  data: time
                 },
                 {
                   name: '초과근무',
                   type: 'column',
                   fill: 'solid',
-                  data: [4, 0, 1, 1, 0, 1, 0]
+                  data: [0, 0, 0, 0, 0, 0, 0]
                 },
                 {
                   name: '휴가',
                   type: 'column',
                   fill: 'solid',
-                  data: [0, 0, 0, 0, 4, 0, 8]
+                  data: [0, 0, 0, 0, 0, 0, 0]
                 }
               ]
             }}

@@ -3,7 +3,9 @@ import { useState } from 'react';
 
 // material-ui
 import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import { Chip, Stack } from '../../../node_modules/@mui/material/index';
+import { Stack, Typography } from '../../../node_modules/@mui/material/index';
+import { useFormatter } from 'store/module';
+import Dot from 'components/@extended/Dot';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -118,19 +120,60 @@ const OrderStatus = ({ status }) => {
 
   return (
     <Stack direction="row" alignItems="center" justifyContent="center" spacing={1}>
-      <Chip label={title} color={color} />
+      <Dot color={color} />
+      <Typography>{title}</Typography>
     </Stack>
   );
 };
 
+//휴가종류
+const Type = ({ type }) => {
+  let title;
+
+  // 0 : 연차
+  // 1 : 오전반차
+  // 2 : 오후반차
+  // 3 : 공가
+  // 4 : 휴가취소
+
+  switch (type) {
+    case 0:
+      title = '연차';
+      break;
+    case 1:
+      title = '오전반차';
+      break;
+    case 2:
+      title = '오후반차';
+      break;
+    case 3:
+      title = '공가';
+      break;
+    case 4:
+      title = '휴가취소';
+      break;
+  }
+
+  return (
+    <Stack direction="row" alignItems="center" justifyContent="center" spacing={1}>
+      {title}
+    </Stack>
+  );
+};
+
+Type.propTypes = {
+  type: PropTypes.number
+};
+
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function AdminAppLeaveTable({ appLeaveStatus, datas, setSelectLeaveData }) {
+export default function AdminAppLeaveTable({ datas, setSelectLeaveData }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
-
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
+  // 날짜 형식
+  const { dateFormat } = useFormatter();
 
   return (
     <Box>
@@ -141,7 +184,7 @@ export default function AdminAppLeaveTable({ appLeaveStatus, datas, setSelectLea
           position: 'relative',
           display: 'block',
           maxWidth: '100%',
-          height: '492px',
+          height: '712px',
           padding: '0px',
           '& td, & th': { whiteSpace: 'nowrap' },
           '&::-webkit-scrollbar': {
@@ -173,13 +216,6 @@ export default function AdminAppLeaveTable({ appLeaveStatus, datas, setSelectLea
             {stableSort(datas, getComparator(order, orderBy)).map((data, index) => {
               const isItemSelected = isSelected(data.date);
               const labelId = `enhanced-table-checkbox-${index}`;
-
-              if (appLeaveStatus === 0 && (data.status === 0 || data.status === 1)) {
-                return;
-              } else if (appLeaveStatus === 1 && data.status === 2) {
-                return;
-              }
-
               return (
                 <TableRow
                   hover
@@ -187,18 +223,20 @@ export default function AdminAppLeaveTable({ appLeaveStatus, datas, setSelectLea
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   aria-checked={isItemSelected}
                   tabIndex={-1}
-                  key={data.date}
+                  key={data.leaveapp_no}
                   selected={isItemSelected}
                   onClick={() => setSelectLeaveData(data)}
                 >
                   <TableCell component="th" id={labelId} scope="data" align="center">
-                    {data.leaveUser}
+                    {data.user_name}
                   </TableCell>
-                  <TableCell align="center">{data.leaveKind}</TableCell>
-                  <TableCell align="center">{data.leaveStart}</TableCell>
-                  <TableCell align="center">{data.leaveEnd}</TableCell>
                   <TableCell align="center">
-                    <OrderStatus status={data.status} />
+                    <Type type={data.leaveapp_type} />
+                  </TableCell>
+                  <TableCell align="center">{dateFormat(new Date(data.leaveapp_start))}</TableCell>
+                  <TableCell align="center">{dateFormat(new Date(data.leaveapp_end))}</TableCell>
+                  <TableCell align="center">
+                    <OrderStatus status={data.leaveappln_status} />
                   </TableCell>
                 </TableRow>
               );
