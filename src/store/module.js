@@ -162,7 +162,7 @@ export const useLeaveState = create(
 //모든 사용자의 휴가보유 현황
 export const useAllLeaveState = create(
   devtools((set) => ({
-    allLeave: {},
+    allLeave: [],
     setAllLeave: (newAllLeave) => set(() => ({ allLeave: newAllLeave }))
   }))
 );
@@ -275,5 +275,12 @@ export const useWorkingHourState = create(
   devtools((set) => ({
     hours: {},
     setHours: (newHours) => set(() => ({ hours: newHours }))
+  }))
+);
+//모든 부서목록
+export const useGetDeptState = create(
+  devtools((set) => ({
+    depts: [],
+    setDepts: (newDepts) => set(() => ({ depts, newDepts }))
   }))
 );

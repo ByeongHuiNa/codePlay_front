@@ -17,7 +17,6 @@ import UnappLeaveTotalTable from 'components/Table/UnappLeaveTotalTable';
 import { FormControl, NativeSelect } from '../../node_modules/@mui/material/index';
 import AttendChart from 'components/chart/AttendChart';
 import axios from '../../node_modules/axios/index';
-import { useWorkingHourState } from 'store/module';
 
 const UserAttendanceTotalPage = () => {
   //결재대기 내역 이번달로 설정
@@ -27,40 +26,43 @@ const UserAttendanceTotalPage = () => {
 
   const { hours, setHours } = useWorkingHourState();
 
+
   const [time, setTime] = useState([]);
   
 
   useEffect(() => {
-    async function get() {
-      const result = await axios.get('/user-attend-total?user_no=1');
-      setHours(result.data);
-      console.log('dsadas: ' + hours);
-      const currentTime = new Date(); // 현재 시간 가져오기
-      const attendTotalArray = result.data.map(item => {
-        const attendTotal = item.attend_total ? item.attend_total : calculateAttendTotal(item.attend_start, currentTime);
-        return {
-          attend_total: attendTotal,
-        };
-      });
-      console.log("attendtotal : " + attendTotalArray);
-
-      const convertedArray = attendTotalArray.map(item => {
-        if (item.attend_total) {
-          const totalParts = item.attend_total.split(":");
-          const totalHours = parseInt(totalParts[0], 10);
-          const totalMinutes = parseInt(totalParts[1], 10);
-          return `${totalHours}.${totalMinutes}`;
-        } else {
-          // attend_total이 null인 경우 대체값 또는 원하는 처리
-          return "대체값 또는 원하는 처리";
-        }
-      });
-      setTime(convertedArray);
-
-      console.log("convert: " + convertedArray);
-    }
+    
     get();
   }, []);
+
+  async function get() {
+    const result = await axios.get('/user-attend-total?user_no=1');
+    setHours(result.data);
+    console.log('dsadas: ' + hours);
+    const currentTime = new Date(); // 현재 시간 가져오기
+    const attendTotalArray = result.data.map(item => {
+      const attendTotal = item.attend_total ? item.attend_total : calculateAttendTotal(item.attend_start, currentTime);
+      return {
+        attend_total: attendTotal,
+      };
+    });
+    console.log("attendtotal : " + attendTotalArray);
+
+    const convertedArray = attendTotalArray.map(item => {
+      if (item.attend_total) {
+        const totalParts = item.attend_total.split(":");
+        const totalHours = parseInt(totalParts[0], 10);
+        const totalMinutes = parseInt(totalParts[1], 10);
+        return `${totalHours}.${totalMinutes}`;
+      } else {
+        // attend_total이 null인 경우 대체값 또는 원하는 처리
+        return "대체값 또는 원하는 처리";
+      }
+    });
+    setTime(convertedArray);
+
+    console.log("convert: " + convertedArray);
+  }
 
   function calculateAttendTotal(attendStart, currentTime) {
     const startParts = attendStart.split(":");
