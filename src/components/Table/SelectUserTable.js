@@ -6,6 +6,7 @@ import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow }
 
 // project import
 import { Avatar, Checkbox } from '../../../node_modules/@mui/material/index';
+import axios from '../../../node_modules/axios/index';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -107,6 +108,7 @@ export default function SelectUserTable({
   checkItems,
   searchName,
   setSelectUser,
+  setLeaveData,
   selectUser
 }) {
   const [order] = useState('asc');
@@ -179,7 +181,15 @@ export default function SelectUserTable({
                     tabIndex={-1}
                     key={data.user_no}
                     selected={isItemSelected}
-                    onClick={() => setSelectUser(data)}
+                    onClick={async () => {
+                      try {
+                        const response = await axios.get(`/user-leave?user_no=${data.user_no}`);
+                        setLeaveData(response.data);
+                        setSelectUser(data);
+                      } catch (error) {
+                        console.error('Error fetching user leave data:', error);
+                      }
+                    }}
                   >
                     {value === 0 && (
                       <TableCell align="center">
