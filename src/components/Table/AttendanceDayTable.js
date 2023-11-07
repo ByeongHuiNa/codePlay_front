@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 // material-ui
@@ -11,18 +11,7 @@ import { Box, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHea
 // project import
 import Dot from 'components/@extended/Dot';
 import { Pagination } from '../../../node_modules/@mui/material/index';
-
-function createData(name, position, start, end, hours, status) {
-  return { name, position, start, end, hours, status };
-}
-
-const rows = [
-  createData('나병희', '주임', '09:00', '18:00', 8, 0),
-  createData('홍길동', '연구원', '10:00', '18:00', 7, 2),
-  createData('이순신', '팀장', '09:00', '18:00', 8, 1),
-  createData('아무개', '주임', '09:00', '14:00', 4, 3),
-  createData('나병희', '주임', '00:00', '00:00', 0, 4)
-];
+import axios from '../../../node_modules/axios/index';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -130,23 +119,39 @@ const AttendanceDayStatus = ({ status }) => {
   // 4 : 결근(출근 혹은 퇴근누락))
 
   switch (status) {
-    case 0:
+    case '정상':
       color = 'success';
       title = '정상';
       break;
-    case 1:
+    case '휴가(연차)':
       color = 'primary';
-      title = '휴가';
+      title = '휴가(연차)';
       break;
-    case 2:
+    case '휴가(오전반차)':
+      color = 'primary';
+      title = '휴가(오전반차)';
+      break;
+    case '휴가(오후반차)':
+      color = 'primary';
+      title = '휴가(오후반차)';
+      break;
+    case '휴가(공가)':
+      color = 'primary';
+      title = '휴가(공가)';
+      break;
+    case '지각':
       color = 'secondary';
       title = '지각';
       break;
-    case 3:
+    case '조퇴':
       color = 'warning';
       title = '조퇴';
       break;
-    case 4:
+    case '결근':
+      color = 'error';
+      title = '결근';
+      break;
+    default:
       color = 'error';
       title = '결근';
   }
@@ -160,18 +165,35 @@ const AttendanceDayStatus = ({ status }) => {
 };
 
 AttendanceDayStatus.propTypes = {
-  status: PropTypes.number
+  status: PropTypes.string
 };
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function AttendanceDayTable() {
+export default function AttendanceDayTable({ depts, filterDate }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
+  console.log("filterDate: " + filterDate);
+  
+
+  const [attend, setAttend] = useState([]);
 
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
-
+  useEffect(() => {
+    async function get() {
+      //const endPoints = ['http://localhost:8000/user_leave'];
+      const result = await axios.get(`/see-all-attendance-day?dept_no=${depts}`);
+      //const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
+      // result[0].data를 필터링하여 leave_status가 1인 데이터만 추출
+      //const filteredData = result[0].data.filter((item) => item.leave_status === 1);
+      setAttend(result.data);
+     
+      // console.log("today: " + filterDate);
+      // console.log("attend_date: " + result.data[0].attend_date);
+    }
+    get();
+  }, [depts]);
   return (
     <Box>
       <TableContainer
@@ -197,34 +219,37 @@ export default function AttendanceDayTable() {
         >
           <AttendanceDayTableHead order={order} orderBy={orderBy} />
           <TableBody>
-            {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
-              const isItemSelected = isSelected(row.date);
+            {stableSort(attend, getComparator(order, orderBy)).map((attend, index) => {
+              const isItemSelected = isSelected(attend.date);
               const labelId = `enhanced-table-checkbox-${index}`;
-
-              return (
-                <TableRow
-                  hover
-                  role="checkbox"
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                  aria-checked={isItemSelected}
-                  tabIndex={-1}
-                  key={row.trackingNo}
-                  selected={isItemSelected}
-                >
-                  <TableCell component="th" id={labelId} scope="row" align="center">
-                    <Link color="secondary" component={RouterLink} to="">
-                      {row.name}
-                    </Link>
-                  </TableCell>
-                  <TableCell align="center">{row.position}</TableCell>
-                  <TableCell align="center">{row.start}</TableCell>
-                  <TableCell align="center">{row.end}</TableCell>
-                  <TableCell align="center">{row.hours}</TableCell>
-                  <TableCell align="center">
-                    <AttendanceDayStatus status={row.status} />
-                  </TableCell>
-                </TableRow>
-              );
+              if (attend.attend_date) {
+                return (
+                  <TableRow
+                    hover
+                    role="checkbox"
+                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    aria-checked={isItemSelected}
+                    tabIndex={-1}
+                    key={attend.attend_no}
+                    selected={isItemSelected}
+                  >
+                    <TableCell component="th" id={labelId} scope="row" align="center">
+                      <Link color="secondary" component={RouterLink} to="">
+                        {attend.user_name}
+                      </Link>
+                    </TableCell>
+                    <TableCell align="center">{attend.user_position}</TableCell>
+                    <TableCell align="center">{attend.attend_start}</TableCell>
+                    <TableCell align="center">{attend.attend_end}</TableCell>
+                    <TableCell align="center">{attend.attend_total}</TableCell>
+                    <TableCell align="center">{attend.attend_date}</TableCell>
+                    {/* todo날짜데이터 필터링 */}
+                    <TableCell align="center">
+                      <AttendanceDayStatus status={attend.attend_status} />
+                    </TableCell>
+                  </TableRow>
+                );
+              }
             })}
           </TableBody>
         </Table>
