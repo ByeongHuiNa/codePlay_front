@@ -123,7 +123,7 @@ export default function CalendarClickDrawer() {
     setEndDatePicker((pre) => !pre);
   };
 
-  const { dataList, scheduleList, updateScheduleList, updateDataList } = useCalendarGetScheduleList();
+  const { dataList, scheduleList, updateScheduleList, updateDataList, deleteDataList, deleteScheduleList } = useCalendarGetScheduleList();
   const { event } = useCalendarEvent();
 
   const handleUpdateEventOnClick = () => {
@@ -167,6 +167,14 @@ export default function CalendarClickDrawer() {
     setClickView(false);
   };
 
+  const handleDeleteEventOnClick = () => {
+    axios.delete(`/user-schedule?schedule_no=${parseInt(event.id)}`).then(() => {
+      deleteDataList(event.id);
+      deleteScheduleList(event.id);
+    });
+    setClickView(false);
+  };
+
   const list = () => {
     return (
       <Box sx={{ width: 400 }} role="presentation">
@@ -194,17 +202,32 @@ export default function CalendarClickDrawer() {
         <Grid container direction="column" justifyContent="flex-start" alignItems="center" spacing={2}>
           <FormControl sx={{ width: '80%', mt: 2 }}>
             <InputLabel id="demo-simple-select-label">일정</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              label="일정"
-              value={scheduleType}
-              onChange={handleSelectChange}
-            >
-              <MenuItem value={'개인 일정'}>개인 일정</MenuItem>
-              <MenuItem value={'회사 일정'}>회사 일정</MenuItem>
-              <MenuItem value={'휴가 일정'}>휴가 일정</MenuItem>
-            </Select>
+            {scheduleType === '휴가 일정' ? (
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="일정"
+                value={scheduleType}
+                onChange={handleSelectChange}
+                disabled
+              >
+                <MenuItem value={'휴가 일정'}>휴가 일정</MenuItem>
+              </Select>
+            ) : (
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="일정"
+                value={scheduleType}
+                onChange={handleSelectChange}
+              >
+                <MenuItem value={'개인 일정'}>개인 일정</MenuItem>
+                <MenuItem value={'회사 일정'}>회사 일정</MenuItem>
+                <MenuItem value={'휴가 일정'} disabled>
+                  휴가 일정
+                </MenuItem>
+              </Select>
+            )}
             {/* 개인일정 및 회사일정을 선택하면 제목, All Day 버튼, 일자, 메모, 공유 버튼을 작성할 수 있는 폼을 제공한다. */}
             {/* 휴가일정을 선택하면 연차 및 반차 버튼, 일자를 선택할 수 있고 확인 및 취소 버튼을 포함하고있다 */}
             {scheduleType === '개인 일정' || scheduleType === '회사 일정' ? (
@@ -345,7 +368,7 @@ export default function CalendarClickDrawer() {
                   size="large"
                   variant="contained"
                   color="error"
-                  onClick={handleUpdateEventOnClick}
+                  onClick={handleDeleteEventOnClick}
                   sx={{
                     mt: 2
                   }}

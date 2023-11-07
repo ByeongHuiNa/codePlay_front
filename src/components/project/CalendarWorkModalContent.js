@@ -9,6 +9,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import { useCalendarGetScheduleList } from 'store/module';
 
 function not(a, b) {
   return a.filter((value) => b.indexOf(value) === -1);
@@ -24,9 +25,29 @@ function union(a, b) {
 
 // eslint-disable-next-line react/prop-types
 export default function CalendarWorkModalContent({ handleClose }) {
+  // eslint-disable-next-line no-unused-vars
+  const { dataList, updateDataList } = useCalendarGetScheduleList();
   const [checked, setChecked] = React.useState([]);
-  const [left, setLeft] = React.useState([0, 1, 2, 3]);
-  const [right, setRight] = React.useState([4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]);
+  const [left, setLeft] = React.useState([]);
+  const [right, setRight] = React.useState([]);
+
+  // dataList를 한 번만 순회하여 left와 right 배열에 업데이트
+  React.useEffect(() => {
+    // dataList를 한 번만 순회하여 left와 right 배열에 업데이트
+    const leftArray = [];
+    const rightArray = [];
+
+    dataList.forEach((item) => {
+      if (item.schedule_cardview) {
+        leftArray.push(item);
+      } else {
+        rightArray.push(item);
+      }
+    });
+
+    setLeft(leftArray);
+    setRight(rightArray);
+  }, [dataList]);
 
   const leftChecked = intersection(checked, left);
   const rightChecked = intersection(checked, right);
@@ -66,59 +87,84 @@ export default function CalendarWorkModalContent({ handleClose }) {
     setChecked(not(checked, rightChecked));
   };
 
-  const customList = (title, items) => (
-    <Card sx={{ mt: 7, backgroundColor: '#e3f2fd' }}>
-      <CardHeader
-        sx={{ px: 2, py: 1 }}
-        avatar={
-          <Checkbox
-            onClick={handleToggleAll(items)}
-            checked={numberOfChecked(items) === items.length && items.length !== 0}
-            indeterminate={numberOfChecked(items) !== items.length && numberOfChecked(items) !== 0}
-            disabled={items.length === 0}
-            inputProps={{
-              'aria-label': 'all items selected'
-            }}
-          />
-        }
-        title={title}
-        subheader={`${numberOfChecked(items)}/${items.length} selected`}
-      />
-      <Divider />
-      <List
-        sx={{
-          width: '100%',
-          height: 400,
-          bgcolor: 'background.paper',
-          overflow: 'auto'
-        }}
-        dense
-        component="div"
-        role="list"
-      >
-        {items.map((value) => {
-          const labelId = `transfer-list-all-item-${value}-label`;
+  const handleSave = () => {
+    console.log(left);
+    console.log(right);
+  };
 
-          return (
-            <ListItem key={value} role="listitem" button onClick={handleToggle(value)}>
-              <ListItemIcon>
-                <Checkbox
-                  checked={checked.indexOf(value) !== -1}
-                  tabIndex={-1}
-                  disableRipple
-                  inputProps={{
-                    'aria-labelledby': labelId
-                  }}
-                />
-              </ListItemIcon>
-              <ListItemText id={labelId} primary={`일정의 타이틀 ${value + 1}`} sx={{ ml: 2, overflow: 'auto' }} />
-              <ListItemText primary={`2023-10-18 ~ 2023-10-19`} sx={{ mr: -2, overflow: 'auto' }} />
-            </ListItem>
-          );
-        })}
-      </List>
-    </Card>
-  );
+  const customList = (title, items) => {
+    items.sort((a, b) => {
+      const dateA = new Date(a.schedule_startday);
+      const dateB = new Date(b.schedule_startday);
+      return dateA - dateB;
+    });
+    return (
+      <Card sx={{ mt: 7, backgroundColor: '#e3f2fd' }}>
+        <CardHeader
+          sx={{ px: 2, py: 1 }}
+          avatar={
+            <Checkbox
+              onClick={handleToggleAll(items)}
+              checked={numberOfChecked(items) === items.length && items.length !== 0}
+              indeterminate={numberOfChecked(items) !== items.length && numberOfChecked(items) !== 0}
+              disabled={items.length === 0}
+              inputProps={{
+                'aria-label': 'all items selected'
+              }}
+            />
+          }
+          title={title}
+          subheader={`${numberOfChecked(items)}/${items.length} selected`}
+        />
+        <Divider />
+        <List
+          sx={{
+            width: '100%',
+            height: 400,
+            bgcolor: 'background.paper',
+            overflow: 'auto'
+          }}
+          dense
+          component="div"
+          role="list"
+        >
+          {items.map((value) => {
+            const labelId = `${value.schedule_no}`;
+            const originalStartDateString = value.schedule_startday; // 예: "2023-11-04 00:00:00.000"
+            const startDateWithoutTime = new Date(originalStartDateString);
+            const yearStart = startDateWithoutTime.getFullYear();
+            const monthStart = startDateWithoutTime.getMonth() + 1; // 월은 0부터 시작하므로 1을 더해줍니다.
+            const dayStart = startDateWithoutTime.getDate();
+            const formattedStartDate = `${yearStart}-${monthStart}-${dayStart}`; // "2023-11-04"
+
+            const originalEndDateString = value.schedule_endday; // 예: "2023-11-05 00:00:00.000"
+            const endDateWithoutTime = new Date(originalEndDateString);
+            const yearEnd = endDateWithoutTime.getFullYear();
+            const monthEnd = endDateWithoutTime.getMonth() + 1; // 월은 0부터 시작하므로 1을 더해줍니다.
+            const dayEnd = endDateWithoutTime.getDate();
+            const formattedEndDate = `${yearEnd}-${monthEnd}-${dayEnd}`; // "2023-11-05"
+
+            return (
+              <ListItem key={value} role="listitem" button onClick={handleToggle(value)}>
+                <ListItemIcon>
+                  <Checkbox
+                    checked={checked.indexOf(value) !== -1}
+                    tabIndex={-1}
+                    disableRipple
+                    inputProps={{
+                      'aria-labelledby': labelId
+                    }}
+                  />
+                </ListItemIcon>
+                <ListItemText id={labelId} primary={`${value.schedule_title}`} sx={{ ml: 2, overflow: 'auto' }} />
+                <ListItemText primary={`${formattedStartDate} ~ ${formattedEndDate}`} sx={{ mr: -2, overflow: 'auto' }} />
+              </ListItem>
+            );
+          })}
+        </List>
+      </Card>
+    );
+  };
 
   return (
     <>
@@ -160,7 +206,7 @@ export default function CalendarWorkModalContent({ handleClose }) {
           size="large"
           variant="contained"
           color="primary" // 확인 버튼은 primary 스타일
-          onClick={handleClose} // handleConfirm 함수를 호출하도록 설정
+          onClick={handleSave} // handleConfirm 함수를 호출하도록 설정
           sx={{ mt: 6, mr: 2 }} // 상단 여백 및 우측 여백 설정
         >
           저장

@@ -26,10 +26,14 @@ import AnimateButton from 'components/@extended/AnimateButton';
 
 // assets
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
+import axios from '../../../node_modules/axios/index';
+import { useNavigate } from '../../../node_modules/react-router-dom/dist/index';
 
 // ============================|| LOGIN FORM ||============================ //
 
 const LoginForm = () => {
+  let navigate = useNavigate();
+
   const [checked, setChecked] = React.useState(false);
 
   const [showPassword, setShowPassword] = React.useState(false);
@@ -45,15 +49,19 @@ const LoginForm = () => {
     <>
       <Formik
         initialValues={{
-          email: 'info@codedthemes.com',
-          password: '123456',
-          submit: null
+          user_email: 'hong@aaa.com',
+          user_password: '1234'
         }}
         validationSchema={Yup.object().shape({
-          email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-          password: Yup.string().max(255).required('Password is required')
+          user_email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
+          user_password: Yup.string().max(255).required('Password is required')
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+          axios.post('/login', values).then((res) => {
+            console.log(res.headers['authorization']);
+            localStorage.setItem('token', res.headers['authorization']);
+            navigate('/main');
+          });
           try {
             setStatus({ success: false });
             setSubmitting(false);
@@ -69,12 +77,12 @@ const LoginForm = () => {
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="email-login">Email Address</InputLabel>
+                  <InputLabel htmlFor="email-login">이메일</InputLabel>
                   <OutlinedInput
                     id="email-login"
                     type="email"
-                    value={values.email}
-                    name="email"
+                    value={values.user_email}
+                    name="user_email"
                     onBlur={handleBlur}
                     onChange={handleChange}
                     placeholder="Enter email address"
@@ -90,14 +98,14 @@ const LoginForm = () => {
               </Grid>
               <Grid item xs={12}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="password-login">Password</InputLabel>
+                  <InputLabel htmlFor="password-login">비밀번호</InputLabel>
                   <OutlinedInput
                     fullWidth
                     error={Boolean(touched.password && errors.password)}
                     id="-password-login"
                     type={showPassword ? 'text' : 'password'}
-                    value={values.password}
-                    name="password"
+                    value={values.user_password}
+                    name="user_password"
                     onBlur={handleBlur}
                     onChange={handleChange}
                     endAdornment={

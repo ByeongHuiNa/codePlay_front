@@ -8,7 +8,6 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
-import CalendarVacationStatus from './CalendarVacationStatus';
 import CalendarWorkList from './CalendarWorkList';
 import { Stack, Typography } from '../../../node_modules/@mui/material/index';
 import { IconButton } from '@mui/material';
@@ -17,6 +16,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import { useCalendarDate, useCalendarDrawer, useCalendarEvent, useCalendarEventClick, useCalendarGetScheduleList } from 'store/module';
 import CalendarWorkModal from './CalendarWorkModal';
 import CalendarWorkModalContent from './CalendarWorkModalContent';
+import VacationDonutChart from 'components/chart/VacationDonutChart';
 
 // eslint-disable-next-line react/prop-types
 const PersonalCalendar = ({ events }) => {
@@ -81,9 +81,17 @@ const PersonalCalendar = ({ events }) => {
   const { setTitle, setAllDay, setScheduleType, setShareType } = useCalendarEventClick();
   const { dataList } = useCalendarGetScheduleList();
   function handleEventClick(clickInfo) {
-    //종료일자 -1
+    const ScheduleType =
+      clickInfo.event.backgroundColor === '#ef9a9a'
+        ? '개인 일정'
+        : clickInfo.event.backgroundColor === '#90caf9'
+        ? '회사 일정'
+        : '휴가 일정';
     console.log(clickInfo.event);
-    if (clickInfo.event.endStr !== '' && clickInfo.event.allDay == true) {
+    if (
+      (clickInfo.event.endStr !== '' && clickInfo.event.allDay == true) ||
+      (clickInfo.event.endStr !== '' && ScheduleType == '휴가 일정' && clickInfo.event.allDay == true)
+    ) {
       var dateStr = clickInfo.event.endStr;
       var parts = dateStr.split('-');
       var year = parseInt(parts[0], 10);
@@ -114,12 +122,6 @@ const PersonalCalendar = ({ events }) => {
     } else {
       newDateStr = clickInfo.event.endStr;
     }
-    const ScheduleType =
-      clickInfo.event.backgroundColor === '#ef9a9a'
-        ? '개인 일정'
-        : clickInfo.event.backgroundColor === '#90caf9'
-        ? '회사 일정'
-        : '휴가 일정';
 
     const desiredScheduleNo = clickInfo.event.id;
     // dataList 배열에서 schedule_no 객체를 찾기
@@ -189,7 +191,7 @@ const PersonalCalendar = ({ events }) => {
           <Grid item xs={3} container direction="column" justifyContent="space-between" alignItems="stretch">
             <Grid item>
               <Item>
-                <Grid container direction="row" justifyContent="space-between" alignItems="flex-start">
+                <Grid container direction="row" justifyContent="space-between" alignItems="flex-start" sx={{ mb: 2 }}>
                   <Grid pl>
                     <h3>휴가 현황</h3>
                   </Grid>
@@ -197,7 +199,7 @@ const PersonalCalendar = ({ events }) => {
                     <h4>더보기</h4>
                   </Grid>
                 </Grid>
-                <CalendarVacationStatus />
+                <VacationDonutChart />
               </Item>
             </Grid>
 

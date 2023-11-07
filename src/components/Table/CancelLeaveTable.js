@@ -5,8 +5,9 @@ import { useState } from 'react';
 import { Box, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 // project import
-import { Chip, Typography } from '../../../node_modules/@mui/material/index';
+import { Typography } from '../../../node_modules/@mui/material/index';
 import { useFormatter } from 'store/module';
+import Dot from 'components/@extended/Dot';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -139,7 +140,8 @@ const OrderStatus = ({ status }) => {
 
   return (
     <Stack direction="row" alignItems="center" justifyContent="center" spacing={1}>
-      <Chip label={title} color={color} />
+      <Dot color={color} />
+      <Typography>{title}</Typography>
     </Stack>
   );
 };
@@ -201,7 +203,17 @@ export default function CancelLeaveTable({ datas, handleSelectCancel }) {
           display: 'block',
           maxWidth: '100%',
           height: '500px',
-          '& td, & th': { whiteSpace: 'nowrap' }
+          '& td, & th': { whiteSpace: 'nowrap' },
+          '&::-webkit-scrollbar': {
+            width: 5
+          },
+          '&::-webkit-scrollbar-track': {
+            backgroundColor: 'white'
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: 'gray',
+            borderRadius: 2
+          }
         }}
       >
         <Table
