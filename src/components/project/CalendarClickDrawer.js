@@ -24,8 +24,10 @@ import { DateField } from '@mui/x-date-pickers/DateField';
 import axios from '../../../node_modules/axios/index';
 
 export default function CalendarClickDrawer() {
+  const { dataList, scheduleList, updateScheduleList, updateDataList, deleteDataList, deleteScheduleList } = useCalendarGetScheduleList();
+  const { event } = useCalendarEvent();
   //AddEventOnClick
-  const { title, setTitle, allDay, setAllDay, shareType, setShareType } = useCalendarEventClick();
+  const { title, setTitle, allDay, setAllDay, shareType, setShareType, content, setContent } = useCalendarEventClick();
 
   const { clickView, setClickView } = useCalendarDrawer();
 
@@ -40,9 +42,6 @@ export default function CalendarClickDrawer() {
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
   };
-
-  //내용 입력
-  const [content, setContent] = React.useState('');
 
   const handleContentChange = (e) => {
     setContent(e.target.value);
@@ -90,8 +89,6 @@ export default function CalendarClickDrawer() {
     setContent('');
     setStartDatePicker(false);
     setEndDatePicker(false);
-    setAllDay(true);
-    setShareType(false);
     setLeaveType(false);
     setLeaveHalfType(false);
   };
@@ -123,9 +120,6 @@ export default function CalendarClickDrawer() {
     setEndDatePicker((pre) => !pre);
   };
 
-  const { dataList, scheduleList, updateScheduleList, updateDataList, deleteDataList, deleteScheduleList } = useCalendarGetScheduleList();
-  const { event } = useCalendarEvent();
-
   const handleUpdateEventOnClick = () => {
     console.log(event.id);
     const schedule = {
@@ -136,8 +130,7 @@ export default function CalendarClickDrawer() {
       schedule_title: title,
       schedule_allday: allDay,
       schedule_description: content,
-      schedule_share: shareType,
-      schedule_cardview: false
+      schedule_share: shareType
     };
     axios.patch(`/user-schedule`, schedule).then(() => {
       const start = new Date(startDate);
