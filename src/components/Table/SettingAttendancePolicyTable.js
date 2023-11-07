@@ -62,8 +62,8 @@ export default function SettingAttendancePolicyTable() {
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
   const { tableContentList } = useTableListState();
   const { setView, setId, setContent } = useDetailCardState();
-  const { now_page, setPage } = useCriteria();
-  const { tab, index } = useTabState();
+  const { now_page, setPage, totalPage } = useCriteria();
+  useTabState();
 
   async function clickPolicyModify(user_no) {
     setView(true);
@@ -131,17 +131,15 @@ export default function SettingAttendancePolicyTable() {
         </TableContainer>
       </Box>
       <Stack alignItems="center" mt={2}>
-        {Object.keys(tab).length > 0 && (
-          <Pagination
-            count={tab[index].total}
-            page={now_page}
-            onChange={(event, page) => {
-              setPage(page);
-            }}
-            variant="outlined"
-            shape="rounded"
-          />
-        )}
+        <Pagination
+          count={totalPage}
+          page={now_page}
+          onChange={(event, page) => {
+            setPage(page);
+          }}
+          variant="outlined"
+          shape="rounded"
+        />
       </Stack>
     </>
   );
