@@ -4,13 +4,11 @@ import { useEffect, useState } from 'react';
 // material-ui
 import { Box, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
-
 // project import
 import { Button, Chip, Pagination } from '../../../node_modules/@mui/material/index';
 import { useApprovalState2 } from 'store/module';
 import axios from '../../../node_modules/axios/index';
 import { useNavigate } from '../../../node_modules/react-router-dom/dist/index';
-
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -196,7 +194,8 @@ Type.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 //대기테이블
-export default function AppLeaveTotalTable({  month, handleOpen }) { //requestLeaveCancel,
+export default function AppLeaveTotalTable({ month, handleOpen, user_no }) {
+  //requestLeaveCancel,
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
@@ -212,7 +211,7 @@ export default function AppLeaveTotalTable({  month, handleOpen }) { //requestLe
     async function get() {
       //const endPoints = ['http://localhost:8000/leave_approval'];
       //const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
-      const result = await axios.get(`/user-leave-request?user_no=1&month=${month}`);
+      const result = await axios.get(`/user-leave-request?user_no=${user_no}&month=${month}`);
       // result[0].data를 필터링하여 leave_status가 1인 데이터만 추출
       //const filteredData = result[0].data.filter((item) => item.leaveapp_status === 0 || item.leaveapp_status === 1);
       console.log('result: ' + result.data);
@@ -221,7 +220,6 @@ export default function AppLeaveTotalTable({  month, handleOpen }) { //requestLe
     get();
   }, [month]);
 
-  
   // const handleClose = () => {
   //   setModalOpen(false);
   // };

@@ -8,7 +8,7 @@ import MainCard from 'components/MainCard';
 import { useLeaveState } from 'store/module';
 import axios from '../../../node_modules/axios/index';
 
-export default function VacationDonutChart() {
+export default function VacationDonutChart({ user_no }) {
   // chart options
   const barChartOptions = {
     chart: {
@@ -72,7 +72,7 @@ export default function VacationDonutChart() {
 
   useEffect(() => {
     async function get() {
-      const result = await axios.get('/user-leave?user_no=1');
+      const result = await axios.get(`/user-leave?user_no=${user_no}`);
 
       // const endPoints = ['http://localhost:8000/user_leave'];
       // const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
