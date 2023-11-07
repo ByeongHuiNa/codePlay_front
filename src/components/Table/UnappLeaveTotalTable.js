@@ -137,7 +137,7 @@ Type.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 //결재대기 테이블
-export default function UnappLeaveTotalTable({ leaveCancel, month, handleOpen }) {
+export default function UnappLeaveTotalTable({ leaveCancel, month, handleOpen, user_no }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
@@ -147,7 +147,7 @@ export default function UnappLeaveTotalTable({ leaveCancel, month, handleOpen })
     async function get() {
       //const endPoints = ['http://localhost:8000/leave_approval'];
       //const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
-      const result = await axios.get(`/user-leave-wait?user_no=1&month=${month}`);
+      const result = await axios.get(`/user-leave-wait?user_no=${user_no}&month=${month}`);
       console.log('대기: ' + result.data);
 
       // result[0].data를 필터링하여 leave_status가 3(결재대기)인 데이터만 추출

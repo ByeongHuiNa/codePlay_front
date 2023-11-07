@@ -151,6 +151,7 @@ export default function CalendarDrawer() {
         color: scheduleType === '개인 일정' ? '#ef9a9a' : '#90caf9',
         textColor: scheduleType === '개인 일정' ? '#ffebee' : '#e3f2fd'
       };
+      schedule.schedule_no = response.data;
       addDataList(schedule);
       addScheduleList(scheduleListAdd);
       console.log(schedule);

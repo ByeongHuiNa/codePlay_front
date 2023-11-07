@@ -18,6 +18,7 @@ import { FormControl, NativeSelect } from '../../node_modules/@mui/material/inde
 import AttendChart from 'components/chart/AttendChart';
 import axios from '../../node_modules/axios/index';
 import { useWorkingHourState } from 'store/module';
+import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
 
 const UserAttendanceTotalPage = () => {
   //결재대기 내역 이번달로 설정
@@ -26,6 +27,10 @@ const UserAttendanceTotalPage = () => {
   const [month2, setMonth2] = useState(new Date().getMonth() + 1);
 
   const { hours, setHours } = useWorkingHourState();
+
+  //token 값을 decode해주는 코드
+  const token = jwtDecode(localStorage.getItem('token').slice(7));
+  console.log("token@@@: " + token.user_no);
 
 
   const [time, setTime] = useState([]);
@@ -37,7 +42,7 @@ const UserAttendanceTotalPage = () => {
   }, []);
 
   async function get() {
-    const result = await axios.get('/user-attend-total?user_no=1');
+    const result = await axios.get(`/user-attend-total?user_no=${token.user_no}`);
     setHours(result.data);
     console.log('dsadas: ' + hours);
     const currentTime = new Date(); // 현재 시간 가져오기
@@ -153,7 +158,7 @@ const UserAttendanceTotalPage = () => {
           <Grid item xs={4} sm={4} md={4} lg={4}>
             <MainCard>
               <Typography variant="h5">휴가현황</Typography>
-              <VacationDonutChart />
+              <VacationDonutChart user_no={token.user_no}/>
             </MainCard>
           </Grid>
           {/* row 2 */}
@@ -190,7 +195,7 @@ const UserAttendanceTotalPage = () => {
                 </FormControl>
               </div>
 
-              <UnappLeaveTotalTable handleOpen={handleOpen} month={month1} leaveCancel={leaveCancel} />
+              <UnappLeaveTotalTable handleOpen={handleOpen} month={month1} leaveCancel={leaveCancel} user_no={token.user_no}/>
             </MainCard>
           </Grid>
 
@@ -224,7 +229,7 @@ const UserAttendanceTotalPage = () => {
                   </NativeSelect>
                 </FormControl>
               </div>
-              <AppLeaveTotalTable handleOpen={handleOpen} month={month2} />
+              <AppLeaveTotalTable handleOpen={handleOpen} month={month2} user_no={token.user_no}/>
 
               <LeaveModal open={modalOpen} handleClose={handleClose} data={modalData} />
             </MainCard>
@@ -251,13 +256,13 @@ const UserAttendanceTotalPage = () => {
                       fill: 'solid',
                       data: time
                     },
-                    // ,
-                    // {
-                    //   name: '초과근무',
-                    //   type: 'column',
-                    //   fill: 'solid',
-                    //   data: [0, 0, 0, 0, 0, 0, 0]
-                    // },
+                    
+                    {
+                      name: '초과근무',
+                      type: 'column',
+                      fill: 'solid',
+                      data: [0, 0, 0, 0, 0, 0, 0]
+                    },
                     {
                       name: '휴가',
                       type: 'column',
@@ -298,7 +303,7 @@ const UserAttendanceTotalPage = () => {
                   </NativeSelect>
                 </FormControl>
               </div>
-              <AttendanceTable month={month3} />
+              <AttendanceTable month={month3} user_no={token.user_no}/>
             </MainCard>
           </Grid>
 

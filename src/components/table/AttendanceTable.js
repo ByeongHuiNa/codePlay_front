@@ -183,7 +183,7 @@ AttendanceStatus.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function AttendanceTable({ month }) {
+export default function AttendanceTable({ month, user_no }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [total, setTotal] = useState(0);
@@ -192,8 +192,7 @@ export default function AttendanceTable({ month }) {
   const [leave, setLeave] = useState(0);
   //const [selected] = useState([]);
   const { attendance, setAttendance } = useAttendanceState();
-  const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
-
+  const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
 
   // let normal = 0;
   // let notnormal = 0;
@@ -209,36 +208,34 @@ export default function AttendanceTable({ month }) {
       //const endPoints = ['http://localhost:8000/attendance'];
       //const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
       // result[0].data를 필터링하여 leave_status가 1인 데이터만 추출
-      const result = await axios.get(`/user-attend-month?user_no=1&month=${month}`);
+      const result = await axios.get(`/user-attend-month?user_no=${user_no}&month=${month}`);
 
       setAttendance(result.data);
-      console.log("attendance: " + attendance);
+      console.log('attendance: ' + attendance);
       console.log('zzzz: ' + result.data.length);
 
       setTotal(result.data.length);
 
-          // 변수 초기화
-          let normalCount = 0;
-          let oddCount = 0;
-          let leaveCount = 0;
-    
-          // "attendance" 배열을 반복하여 상태별로 개수 계산
-          result.data.forEach((item) => {
-            if (item.attend_status === '정상') {
-              normalCount++;
-            } else if (item.attend_status === '지각' || item.attend_status === '조퇴' || item.attend_status === '결근') {
-              oddCount++;
-            } else if (item.attend_status.includes('휴가')) {
-              leaveCount++;
-            }
-          });
-    
-          setTotal(result.data.length);
-          setNormal(normalCount);
-          setOdd(oddCount);
-          setLeave(leaveCount);
+      // 변수 초기화
+      let normalCount = 0;
+      let oddCount = 0;
+      let leaveCount = 0;
 
-    
+      // "attendance" 배열을 반복하여 상태별로 개수 계산
+      result.data.forEach((item) => {
+        if (item.attend_status === '정상') {
+          normalCount++;
+        } else if (item.attend_status === '지각' || item.attend_status === '조퇴' || item.attend_status === '결근') {
+          oddCount++;
+        } else if (item.attend_status.includes('휴가')) {
+          leaveCount++;
+        }
+      });
+
+      setTotal(result.data.length);
+      setNormal(normalCount);
+      setOdd(oddCount);
+      setLeave(leaveCount);
     }
     get();
   }, [month]);
@@ -300,7 +297,7 @@ export default function AttendanceTable({ month }) {
           maxWidth: '100%',
           '& td, & th': { whiteSpace: 'nowrap' },
           // maxHeight를 설정하여 테이블 높이를 제한
-          maxHeight: '400px', // 원하는 높이로 변경하세요
+          maxHeight: '400px' // 원하는 높이로 변경하세요
         }}
       >
         <Table
@@ -346,35 +343,6 @@ export default function AttendanceTable({ month }) {
                 );
               })}
           </TableBody>
-          {/* <TableBody>
-            {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
-              const isItemSelected = isSelected(row.date);
-              const labelId = `enhanced-table-checkbox-${index}`;
-
-              return (
-                <TableRow
-                  hover
-                  role="checkbox"
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                  aria-checked={isItemSelected}
-                  tabIndex={-1}
-                  key={row.trackingNo}
-                  selected={isItemSelected}
-                >
-                  <TableCell component="th" id={labelId} scope="row" align="center">
-                    <Link color="secondary" component={RouterLink} to="">
-                      {row.date}
-                    </Link>
-                  </TableCell>
-                  <TableCell align="center">{row.start}</TableCell>
-                  <TableCell align="center">{row.end}</TableCell>
-                  <TableCell align="center">
-                    <AttendanceStatus status={row.status} />
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody> */}
         </Table>
       </TableContainer>
       <Stack alignItems="center" mt={3}>

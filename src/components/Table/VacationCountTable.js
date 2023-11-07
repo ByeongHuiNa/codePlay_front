@@ -144,7 +144,7 @@ export default function VacationCountTable({ depts }) {
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
   const { allLeave, setAllLeave } = useAllLeaveState();
-
+  
   useEffect(() => {
     async function get() {
       //const endPoints = ['http://localhost:8000/user_leave'];

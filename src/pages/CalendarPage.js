@@ -111,6 +111,7 @@ const CalendarPage = () => {
   React.useEffect(() => {
     getScheduleList();
     getLeaveList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // 비어있는 종속성 배열을 사용하여 초기 로딩 시에만 실행되도록 함
 
   React.useEffect(() => {

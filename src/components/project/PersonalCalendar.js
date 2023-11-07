@@ -17,6 +17,7 @@ import { useCalendarDate, useCalendarDrawer, useCalendarEvent, useCalendarEventC
 import CalendarWorkModal from './CalendarWorkModal';
 import CalendarWorkModalContent from './CalendarWorkModalContent';
 import VacationDonutChart from 'components/chart/VacationDonutChart';
+import { useNavigate } from '../../../node_modules/react-router-dom/dist/index';
 
 // eslint-disable-next-line react/prop-types
 const PersonalCalendar = ({ events }) => {
@@ -26,6 +27,11 @@ const PersonalCalendar = ({ events }) => {
     padding: theme.spacing(2.5),
     textAlign: 'center'
   }));
+  //더보기 이동경로
+  const navigate = useNavigate();
+  const handleMoreClick = () => {
+    navigate('/userleave');
+  };
 
   //이벤트에 표기될 정보
   function renderEventContent(eventInfo) {
@@ -78,7 +84,7 @@ const PersonalCalendar = ({ events }) => {
     setEvent(selectInfo);
   }
   //이벤트 클릭 시 수정하는 함수
-  const { setTitle, setAllDay, setScheduleType, setShareType } = useCalendarEventClick();
+  const { setTitle, setAllDay, setScheduleType, setShareType, setContent } = useCalendarEventClick();
   const { dataList } = useCalendarGetScheduleList();
   function handleEventClick(clickInfo) {
     const ScheduleType =
@@ -129,6 +135,8 @@ const PersonalCalendar = ({ events }) => {
     // schedule_no가 1인 객체가 존재하고 있다면 schedule_share 값을 가져옴
     const scheduleShare = targetObject ? targetObject.schedule_share : null;
     // scheduleShare에는 schedule_no가 1인 객체의 schedule_share 값이 저장
+    const scheduleDescription = targetObject ? targetObject.schedule_description : null;
+    // scheduleDescription에는 schedule_no가 일치하는 객체의 schedule_description 값이 저장
 
     setStartDate(clickInfo.event.startStr);
     setEndDate(newDateStr);
@@ -137,6 +145,7 @@ const PersonalCalendar = ({ events }) => {
     setAllDay(clickInfo.event.allDay);
     setScheduleType(ScheduleType);
     setShareType(scheduleShare);
+    setContent(scheduleDescription);
     setClickView(true);
   }
   //CalendarWorkModal on/off
@@ -195,8 +204,24 @@ const PersonalCalendar = ({ events }) => {
                   <Grid pl>
                     <h3>휴가 현황</h3>
                   </Grid>
-                  <Grid>
-                    <h4>더보기</h4>
+                  <Grid sx={{ mt: 2.2, mr: 1 }}>
+                    <button
+                      onClick={handleMoreClick}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        outline: 'none',
+                        fontFamily: 'inherit',
+                        fontSize: '13px',
+                        cursor: 'pointer',
+                        fontWeight: 'bold',
+                        color: '#888888',
+                        padding: 0,
+                        margin: 0
+                      }}
+                    >
+                      더보기
+                    </button>
                   </Grid>
                 </Grid>
                 <VacationDonutChart />
@@ -204,7 +229,7 @@ const PersonalCalendar = ({ events }) => {
             </Grid>
 
             <Grid item mt={2}>
-              <Item>
+              <Item sx={{ height: '380px' }}>
                 <Grid container direction="row" justifyContent="space-between" alignItems="flex-start">
                   <Grid pl sx={{ mb: -2, mt: -0.5 }}>
                     <h3>중요 일정</h3>
