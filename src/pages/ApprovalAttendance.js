@@ -4,13 +4,11 @@ import { Grid, Stack, Typography } from '@mui/material';
 // project import
 import ComponentSkeleton from './components-overview/ComponentSkeleton';
 import BasicContainer from 'components/container/BasicContainer';
-import MainCard from 'components/MainCard';
 import {
   Box,
   Button,
   Card,
   CardContent,
-  Chip,
   FormControl,
   FormControlLabel,
   Radio,
@@ -28,6 +26,7 @@ import AdminAppAttendTable from 'components/Table/AdminAppAttendTable';
 import BasicChip from 'components/Chip/BasicChip';
 import axios from '../../node_modules/axios/index';
 import { useFormatter } from 'store/module';
+import UserAttendInfoTable from 'components/Table/UserAttendInfoTable';
 
 const ApprovalAttendance = () => {
   // 선택한 사용자
@@ -116,6 +115,7 @@ const ApprovalAttendance = () => {
   const [attendAppDatas, setAttendAppDatas] = useState([]); // 전체 출퇴근 결재 데이터
   const [selectAttendData, setSelectAttendData] = useState({}); // 선택한 출/퇴근 데이터 값
   const [appAttendStatus, setAppAttendStatus] = useState('attendApp'); // 출/퇴근 정정 결재 : 승인, 반려
+
   // 출/퇴근 부분 승인, 반려 라디오 버튼
   const handleAttendRadioChange = (event) => {
     setAppAttendStatus(event.target.value);
@@ -125,6 +125,11 @@ const ApprovalAttendance = () => {
     setAppLeaveStatus('');
     setAppAttendStatus('');
   }, [selectLeaveData, selectAttendData]);
+
+  // 휴가 결재 완료 버튼
+  function submitAttendApproval() {
+    alert('결재완료');
+  }
 
   // 휴가 부분 Tab 커스텀
   const MyTab = styled(Tab)`
@@ -217,13 +222,6 @@ const ApprovalAttendance = () => {
         : value3 === 2
         ? '0px 3px 6px rgba(0, 0, 0, 0.3)'
         : '0px 0px 0px 0px'};
-  `;
-
-  const AppChip = styled(Chip)`
-    background-color: #1890ff;
-    color: white;
-    width: 80px;
-    margin-right: 10px;
   `;
 
   // 휴가 결재 승인 : leaveApp
@@ -506,7 +504,7 @@ const ApprovalAttendance = () => {
                                 />
                               </Box>
                               <Box clone mt={2}>
-                                <BasicChip label="최종 결재 상태" color='#1890ff'/>
+                                <BasicChip label="최종 결재 상태" color="#1890ff" />
                                 <TextField
                                   size="small"
                                   defaultValue={`${
@@ -727,6 +725,16 @@ const ApprovalAttendance = () => {
                             />
                           </Box>
                           <Box clone mt={2}>
+                            <Grid container direction="row">
+                              <Grid item xs={2.2} sm={2.2} md={2.2} lg={2.2}>
+                                <BasicChip label="수정 전 시간" color="#7c7d80" />
+                              </Grid>
+                              <Grid item xs={9.8} sm={9.8} md={9.8} lg={9.8}>
+                                <UserAttendInfoTable data={selectAttendData} />
+                              </Grid>
+                            </Grid>
+                          </Box>
+                          <Box clone mt={2}>
                             <BasicChip label="사용자" color="#7c7d80" />
                             <TextField
                               size="small"
@@ -736,22 +744,56 @@ const ApprovalAttendance = () => {
                               sx={{ width: '20%' }}
                             />
                           </Box>
-                          <Box clone mt={2}>
-                            <BasicChip label="수정 사항" color="#7c7d80" />
-                            <TextField
-                              size="small"
-                              defaultValue={
-                                selectAttendData.attendedit_kind === 0
-                                  ? '출근'
-                                  : selectAttendData.attendedit_kind === 1
-                                  ? '퇴근'
-                                  : '출근, 퇴근'
-                              }
-                              key={selectAttendData.attendedit_kind}
-                              inputProps={{ readOnly: true }}
-                              sx={{ width: '25%' }}
-                            />
-                          </Box>
+                          {selectAttendData.attendedit_kind !== 2 && (
+                            <Box clone mt={2}>
+                              <BasicChip label="수정 사항" color="#7c7d80" />
+                              <TextField
+                                size="small"
+                                defaultValue={selectAttendData.attendedit_kind === 0 ? '출근' : '퇴근'}
+                                key={`status-${selectAttendData.attendedit_kind}`}
+                                inputProps={{ readOnly: true }}
+                                sx={{ width: '25%', mr: 2 }}
+                              />
+                              <BasicChip label="수정 시간" color="#7c7d80" />
+                              <TextField
+                                size="small"
+                                defaultValue={
+                                  selectAttendData.attendedit_kind === 0
+                                    ? selectAttendData.attendedit_start_time
+                                    : selectAttendData.attendedit_end_time
+                                }
+                                key={`time-${selectAttendData.attendedit_kind}`}
+                                inputProps={{ readOnly: true }}
+                                sx={{ width: '25%' }}
+                              />
+                            </Box>
+                          )}
+                          {selectAttendData.attendedit_kind === 2 && (
+                            <>
+                              <Box clone mt={2}>
+                                <BasicChip label="수정 사항" color="#7c7d80" />
+                                <TextField size="small" defaultValue="출근" inputProps={{ readOnly: true }} sx={{ width: '25%', mr: 2 }} />
+                                <BasicChip label="수정 시간" color="#7c7d80" />
+                                <TextField
+                                  size="small"
+                                  defaultValue={selectAttendData.attendedit_start_time}
+                                  inputProps={{ readOnly: true }}
+                                  sx={{ width: '25%' }}
+                                />
+                              </Box>
+                              <Box clone mt={2}>
+                                <BasicChip label="수정 사항" color="#7c7d80" />
+                                <TextField size="small" defaultValue="퇴근" inputProps={{ readOnly: true }} sx={{ width: '25%', mr: 2 }} />
+                                <BasicChip label="수정 시간" color="#7c7d80" />
+                                <TextField
+                                  size="small"
+                                  defaultValue={selectAttendData.attendedit_end_time}
+                                  inputProps={{ readOnly: true }}
+                                  sx={{ width: '25%' }}
+                                />
+                              </Box>
+                            </>
+                          )}
                           <Box clone mt={2}>
                             <BasicChip label="수정 사유" color="#7c7d80" />
                             <TextField
@@ -776,11 +818,8 @@ const ApprovalAttendance = () => {
                             </Box>
                           )}
                           {selectAttendData.attendapp_status == 2 && (
-                            <MainCard
-                              sx={{ mt: 2, p: 1, pt: 1.5, width: '100%', justifyContent: 'center', alignItems: 'center' }}
-                              content={false}
-                            >
-                              <AppChip label="결재" />
+                            <Box clone mt={2}>
+                              <BasicChip label="결재" color="#1890ff" />
                               <FormControl sx={{ ml: 1 }}>
                                 <RadioGroup
                                   row
@@ -792,11 +831,27 @@ const ApprovalAttendance = () => {
                                   <FormControlLabel value="attendUnapp" control={<Radio size="small" />} label="반려" />
                                 </RadioGroup>
                               </FormControl>
-                              {appAttendStatus == 'attendUnapp' && <TextField label="반려 사유" size="small" sx={{ width: '60%' }} />}
-                              <Stack direction="row" justifyContent="flex-end" mt={1}>
-                                <Button variant="contained">결재완료</Button>
+                              {appAttendStatus == 'attendUnapp' && (
+                                <Box clone mt={2}>
+                                  <BasicChip label="반려 사유" color="#1890ff" />
+                                  <TextField
+                                    label="반려 사유"
+                                    size="small"
+                                    sx={{ width: '80%' }}
+                                    multiline
+                                    rows={2}
+                                    onChange={(e) => {
+                                      setReason(e.target.value);
+                                    }}
+                                  />
+                                </Box>
+                              )}
+                              <Stack direction="row" justifyContent="flex-end" mt={2} mr={1}>
+                                <Button variant="contained" onClick={submitAttendApproval}>
+                                  결재완료
+                                </Button>
                               </Stack>
-                            </MainCard>
+                            </Box>
                           )}
                         </Grid>
                       </Grid>
