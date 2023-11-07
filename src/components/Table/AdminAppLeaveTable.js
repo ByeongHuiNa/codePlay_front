@@ -64,7 +64,7 @@ const headCells = [
     id: 'status',
     align: 'center',
     disablePadding: false,
-    label: '결재상태'
+    label: '최종결재상태'
   }
 ];
 
@@ -115,7 +115,15 @@ const OrderStatus = ({ status }) => {
       break;
     case 2:
       color = 'primary';
+      title = '결재진행중';
+      break;
+    case 3:
+      color = 'secondary';
       title = '결재대기';
+      break;
+    case 4:
+      color = 'error';
+      title = '취소휴가';
   }
 
   return (
@@ -236,7 +244,7 @@ export default function AdminAppLeaveTable({ datas, setSelectLeaveData }) {
                   <TableCell align="center">{dateFormat(new Date(data.leaveapp_start))}</TableCell>
                   <TableCell align="center">{dateFormat(new Date(data.leaveapp_end))}</TableCell>
                   <TableCell align="center">
-                    <OrderStatus status={data.leaveappln_status} />
+                    <OrderStatus status={data.leaveapp_status} />
                   </TableCell>
                 </TableRow>
               );
