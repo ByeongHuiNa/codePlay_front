@@ -11,7 +11,7 @@ const TodayAttendancdForm = () => {
 
   const [formattedDate, setFormattedDate] = useState();
 
-  const [ip, setIp] = useState();
+  //const [ip, setIp] = useState();
 
   const formData = {};
 
@@ -36,9 +36,9 @@ const TodayAttendancdForm = () => {
 
   useEffect(() => {
     getAttendanceData();
-    axios.get('https://geolocation-db.com/json/').then((res) => {
-      setIp(res.data.IPv4);
-    });
+    // axios.get('https://geolocation-db.com/json/').then((res) => {
+    //   setIp(res.data.IPv4);
+    // });
   }, []);
 
   //출근기록
@@ -49,7 +49,7 @@ const TodayAttendancdForm = () => {
       alert('이미 출근을 기록하였습니다.');
       return; // 이미 출근한 경우 함수를 종료합니다.
     }
-    console.log('아이피주소는: ' + ip);
+    //console.log('아이피주소는: ' + ip);
 
     axios
       .post('/user-attend-today?user_no=1', formData)

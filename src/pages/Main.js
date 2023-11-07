@@ -32,6 +32,7 @@ const Main = () => {
       setProfile(result[0].data[0]);
 
       const result2 = await axios.get(`/user-attend-total?user_no=${token.user_no}`);
+      console.log('토큰: ' + token.user_no);
       setHours(result2.data);
       console.log('dsadas: ' + hours);
       const currentTime = new Date(); // 현재 시간 가져오기
@@ -44,7 +45,7 @@ const Main = () => {
 
       console.log('attendtotal : ' + attendTotalArray);
 
-      const convertedArray = attendTotalArray.map((item) => {
+      const convertedArray = attendTotalArray.map((item) => { ///시간 double형태로 변환 ex(10.1)
         if (item.attend_total) {
           const totalParts = item.attend_total.split(':');
           const totalHours = parseInt(totalParts[0], 10);
@@ -63,6 +64,7 @@ const Main = () => {
     }
     get();
   }, []);
+  
   function calculateAttendTotal(attendStart, currentTime) {
     const startParts = attendStart.split(':');
     const startHours = parseInt(startParts[0], 10);
