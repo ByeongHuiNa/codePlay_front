@@ -343,35 +343,6 @@ export default function AttendanceTable({ month, user_no }) {
                 );
               })}
           </TableBody>
-          {/* <TableBody>
-            {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
-              const isItemSelected = isSelected(row.date);
-              const labelId = `enhanced-table-checkbox-${index}`;
-
-              return (
-                <TableRow
-                  hover
-                  role="checkbox"
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                  aria-checked={isItemSelected}
-                  tabIndex={-1}
-                  key={row.trackingNo}
-                  selected={isItemSelected}
-                >
-                  <TableCell component="th" id={labelId} scope="row" align="center">
-                    <Link color="secondary" component={RouterLink} to="">
-                      {row.date}
-                    </Link>
-                  </TableCell>
-                  <TableCell align="center">{row.start}</TableCell>
-                  <TableCell align="center">{row.end}</TableCell>
-                  <TableCell align="center">
-                    <AttendanceStatus status={row.status} />
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody> */}
         </Table>
       </TableContainer>
       <Stack alignItems="center" mt={3}>

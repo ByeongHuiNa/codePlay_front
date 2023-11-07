@@ -1,6 +1,6 @@
 import { Typography, Box, Grid, Tab, Tabs } from '@mui/material';
 import ComponentSkeleton from './components-overview/ComponentSkeleton';
-import { FormControl, IconButton, InputLabel, NativeSelect, TextField } from '../../node_modules/@mui/material/index';
+import { IconButton, TextField } from '../../node_modules/@mui/material/index';
 
 import VacationCountTable from 'components/Table/VacationCountTable';
 import AttendanceDayTable from 'components/Table/AttendanceDayTable';
@@ -16,29 +16,31 @@ import MainCard from 'components/MainCard';
 
 import axios from '../../node_modules/axios/index';
 import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
-
+import { useProfileState } from 'store/module';
 
 const SeeAllAttendance = () => {
   const [userInput, setUserInput] = useState(''); //사원검색창 입력값
 
   const [depts, setDepts] = useState([]); //부서목록
 
-   //token 값을 decode해주는 코드
-   const token = jwtDecode(localStorage.getItem('token').slice(7));
-   console.log("token@@@: " + token.user_no);
+  const { profile, setProfile } = useProfileState();
+
+  //token 값을 decode해주는 코드
+  const token = jwtDecode(localStorage.getItem('token').slice(7));
+  console.log('token@@@: ' + token.dept_no);
 
   const getValue = (e) => {
     setUserInput(e.target.value.toLowerCase());
   };
 
-  const [dept, setDept] = useState('');
-  const handleChange2 = (event) => {
-    setDept(event.target.value);
-  };
-  const handleChange4 = (event) => {
-    setSelectedDept(event.target.value);
-  };
-  const [selectedDept, setSelectedDept] = useState(0); //선택한부서번호
+  //const [dept, setDept] = useState('');
+  // const handleChange2 = (event) => {
+  //   setDept(event.target.value);
+  // };
+  // const handleChange4 = (event) => {
+  //   setSelectedDept(event.target.value);
+  // };
+  // const [selectedDept, setSelectedDept] = useState(0); //선택한부서번호
   const [value, setValue] = useState(0);
   const [value2, setValue2] = useState(0);
 
@@ -94,8 +96,12 @@ const SeeAllAttendance = () => {
     const startOfYear = new Date(now.getFullYear(), 0, 1);
     const weekNumber = Math.ceil(((now - startOfYear) / 86400000 + 1) / 7);
     setCurrentWeek(weekNumber);
+    async function get() {
+      const endPoints = [`/user-information?user_no=${token.user_no}`];
+      const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
+      setProfile(result[0].data[0]);
+    }
 
-   
     const fetchData = async () => {
       try {
         const result = await axios.get('/see-all-dept');
@@ -107,6 +113,7 @@ const SeeAllAttendance = () => {
     };
 
     fetchData();
+    get();
   }, []);
 
   return (
@@ -123,8 +130,10 @@ const SeeAllAttendance = () => {
           <Grid item xs={6}>
             <MainCard>
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Typography variant="h5">{selectedDept.dept_name ? `${selectedDept.dept_name} 부서 휴가보유 현황` : '부서 휴가보유 현황 '}</Typography>
-                <FormControl sx={{ marginLeft: 3 }}>
+                <Typography variant="h5">
+                  {profile.dept_name ? `${profile.dept_name} 부서 휴가보유 현황` : '부서 휴가보유 현황 '}
+                </Typography>
+                {/* <FormControl sx={{ marginLeft: 3 }}>
                   <NativeSelect
                     onChange={handleChange4}
                     inputProps={{
@@ -138,7 +147,7 @@ const SeeAllAttendance = () => {
                       </option>
                     ))}
                   </NativeSelect>
-                </FormControl>
+                </FormControl> */}
               </Grid>
 
               <TextField
@@ -155,7 +164,7 @@ const SeeAllAttendance = () => {
               <IconButton type="submit" sx={{ p: '10px' }} aria-label="search">
                 <SearchIcon />
               </IconButton>
-              <VacationCountTable depts={selectedDept} />
+              <VacationCountTable depts={token.dept_no} />
             </MainCard>
           </Grid>
           <Grid item xs={6}>
@@ -188,9 +197,11 @@ const SeeAllAttendance = () => {
               </div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Typography variant="h5" sx={{ textAlign: 'center' }}>
-                  {dept ? `${dept} 부서 출/퇴근 현황` : '개발 부서 출/퇴근 현황 '}
+                  <Typography variant="h5">
+                    {profile.dept_name ? `${profile.dept_name} 부서 휴가보유 현황` : '부서 휴가보유 현황 '}
+                  </Typography>
                 </Typography>
-                <FormControl sx={{ marginLeft: 3 }}>
+                {/* <FormControl sx={{ marginLeft: 3 }}>
                   <InputLabel variant="standard" htmlFor="uncontrolled-native">
                     부서
                   </InputLabel>
@@ -208,10 +219,10 @@ const SeeAllAttendance = () => {
                     ))}
                     
                   </NativeSelect>
-                </FormControl>
+                </FormControl> */}
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              {/* <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <Grid container rowSpacing={4} columnSpacing={2.75}>
                   <Grid item xs={3}>
                     <MainCard>
@@ -254,8 +265,8 @@ const SeeAllAttendance = () => {
                     </MainCard>
                   </Grid>
                 </Grid>
-              </div>
-              <AttendanceDayTable depts={selectedDept} filterDate={date}/>
+              </div> */}
+              <AttendanceDayTable depts={token.dept_no} filterDate={date} />
             </MainCard>
           </Grid>
         </BasicTab>
@@ -275,9 +286,11 @@ const SeeAllAttendance = () => {
               </div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Typography variant="h5" sx={{ textAlign: 'center' }}>
-                  {dept ? `${dept} 부서 출/퇴근 현황` : '개발 부서 출/퇴근 현황 '}
+                  <Typography variant="h5">
+                    {profile.dept_name ? `${profile.dept_name} 부서 휴가보유 현황` : '부서 휴가보유 현황 '}
+                  </Typography>
                 </Typography>
-                <FormControl sx={{ marginLeft: 3 }}>
+                {/* <FormControl sx={{ marginLeft: 3 }}>
                   <InputLabel variant="standard" htmlFor="uncontrolled-native">
                     부서
                   </InputLabel>
@@ -292,7 +305,7 @@ const SeeAllAttendance = () => {
                     <option value={'인사'}>인사</option>
                     <option value={'회계'}>회계</option>
                   </NativeSelect>
-                </FormControl>
+                </FormControl> */}
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

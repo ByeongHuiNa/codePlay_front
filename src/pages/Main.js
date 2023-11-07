@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 import axios from '../../node_modules/axios/index';
 import TodayAttendancdForm from 'components/Form/TodayAttendanceForm';
 import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
+import { useNavigate } from '../../node_modules/react-router-dom/dist/index';
 
 // ==============================|| 로그인 이후 무조건 들어올 메인페이지 ||============================== //
 
@@ -24,6 +25,15 @@ const Main = () => {
   //token 값을 decode해주는 코드
   const token = jwtDecode(localStorage.getItem('token').slice(7));
 
+  let navigate = useNavigate();
+
+  function myinfo() {
+    navigate('/userinformation');
+  }
+
+  function leave() {
+    navigate('/userleave');
+  }
   useEffect(() => {
     async function get() {
       console.log(token);
@@ -105,7 +115,7 @@ const Main = () => {
               <Typography align="left" variant="h5">
                 내 정보
               </Typography>
-              <Link href="/userInformation" variant="h5">
+              <Link variant="h5" onClick={myinfo}>
                 더보기
               </Link>
             </div>
@@ -163,7 +173,7 @@ const Main = () => {
             <Typography align="left" variant="h5">
               휴가신청목록
             </Typography>
-            <Link href="/userleave" variant="h5">
+            <Link variant="h5" onClick={leave}>
               더보기
             </Link>
           </div>
@@ -177,7 +187,7 @@ const Main = () => {
             <Typography align="left" variant="h5">
               휴가현황
             </Typography>
-            <Link href="/userleave" variant="h5">
+            <Link variant="h5" onClick={leave}>
               더보기
             </Link>
           </div>
