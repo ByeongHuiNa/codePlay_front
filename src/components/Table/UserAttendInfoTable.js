@@ -165,7 +165,7 @@ export default function UserAttendInfoTable({ data }) {
         >
           <OrderTableHead order={order} orderBy={orderBy} />
           <TableBody>
-            <TableRow hover role="checkbox" sx={{ '&:last-child td, &:last-child th': { border: 0 } }} tabIndex={-1} key={data.date}>
+            <TableRow role="checkbox" sx={{ '&:last-child td, &:last-child th': { border: 0 } }} tabIndex={-1} key={data.date}>
               {Object.keys(data).length !== 0 && (
                 <>
                   <TableCell component="th" scope="data" align="center">
