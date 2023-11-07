@@ -10,6 +10,7 @@ import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { useCalendarGetScheduleList } from 'store/module';
+import axios from '../../../node_modules/axios/index';
 
 function not(a, b) {
   return a.filter((value) => b.indexOf(value) === -1);
@@ -36,12 +37,22 @@ export default function CalendarWorkModalContent({ handleClose }) {
     // dataList를 한 번만 순회하여 left와 right 배열에 업데이트
     const leftArray = [];
     const rightArray = [];
+    const currentDate = new Date();
 
     dataList.forEach((item) => {
-      if (item.schedule_cardview) {
-        leftArray.push(item);
-      } else {
-        rightArray.push(item);
+      const scheduleEndDay = new Date(item.schedule_endday);
+
+      if (
+        scheduleEndDay > currentDate ||
+        (scheduleEndDay.getFullYear() === currentDate.getFullYear() &&
+          scheduleEndDay.getMonth() === currentDate.getMonth() &&
+          scheduleEndDay.getDate() === currentDate.getDate())
+      ) {
+        if (item.schedule_cardview) {
+          leftArray.push(item);
+        } else {
+          rightArray.push(item);
+        }
       }
     });
 
@@ -90,6 +101,23 @@ export default function CalendarWorkModalContent({ handleClose }) {
   const handleSave = () => {
     console.log(left);
     console.log(right);
+    left.map((item) => {
+      const schedule = {
+        schedule_cardview: true,
+        schedule_no: item.schedule_no
+      };
+      axios.patch(`/user-schedule_cardview`, schedule);
+      updateDataList(schedule);
+    });
+    right.map((item) => {
+      const schedule = {
+        schedule_cardview: false,
+        schedule_no: item.schedule_no
+      };
+      axios.patch(`/user-schedule_cardview`, schedule);
+      updateDataList(schedule);
+    });
+    handleClose();
   };
 
   const customList = (title, items) => {

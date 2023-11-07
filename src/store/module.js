@@ -194,10 +194,12 @@ export const useCalendarEventClick = create(
     allDay: false,
     scheduleType: '',
     shareType: false,
+    content: '',
     setTitle: (newTitle) => set(() => ({ title: newTitle })),
     setAllDay: (newAllDay) => set(() => ({ allDay: newAllDay })),
     setScheduleType: (newScheduleType) => set(() => ({ scheduleType: newScheduleType })),
-    setShareType: (newShareType) => set(() => ({ shareType: newShareType }))
+    setShareType: (newShareType) => set(() => ({ shareType: newShareType })),
+    setContent: (newContent) => set(() => ({ content: newContent }))
   }))
 );
 
