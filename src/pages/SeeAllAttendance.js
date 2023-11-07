@@ -15,12 +15,17 @@ import { useEffect, useState } from 'react';
 import MainCard from 'components/MainCard';
 
 import axios from '../../node_modules/axios/index';
+import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
 
 
 const SeeAllAttendance = () => {
   const [userInput, setUserInput] = useState(''); //사원검색창 입력값
 
   const [depts, setDepts] = useState([]); //부서목록
+
+   //token 값을 decode해주는 코드
+   const token = jwtDecode(localStorage.getItem('token').slice(7));
+   console.log("token@@@: " + token.user_no);
 
   const getValue = (e) => {
     setUserInput(e.target.value.toLowerCase());
@@ -45,8 +50,8 @@ const SeeAllAttendance = () => {
     setValue2(newValue);
   };
 
-  const [date, setDate] = useState(new Date());
-  const [filterDate, setFilterDate] = useState(() => date.toLocaleDateString());
+  const [date, setDate] = useState(() => new Date().toLocaleDateString());
+  //const [filterDate, setFilterDate] = useState(() => date.toLocaleDateString());
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const [currentWeek, setCurrentWeek] = useState(0);
@@ -54,15 +59,15 @@ const SeeAllAttendance = () => {
   const handlePrevDay = () => {
     const newDate = new Date(date);
     newDate.setDate(newDate.getDate() - 1);
-    setDate(newDate);
-    setFilterDate(date);
+    setDate(newDate.toLocaleDateString());
+    //setFilterDate(date);
   };
 
   const handleNextDay = () => {
     const newDate = new Date(date);
     newDate.setDate(newDate.getDate() + 1);
-    setDate(newDate);
-    setFilterDate(date);
+    setDate(newDate.toLocaleDateString());
+    //setFilterDate(date);
   };
 
   const handlePrevWeek = () => {
@@ -174,7 +179,7 @@ const SeeAllAttendance = () => {
                   <ArrowBackIosNewOutlinedIcon />
                 </IconButton>
                 <Typography variant="h5" sx={{ textAlign: 'center' }}>
-                {filterDate}
+                  {date}
                 </Typography>
 
                 <IconButton onClick={handleNextDay} aria-label="다음 날짜">
@@ -250,7 +255,7 @@ const SeeAllAttendance = () => {
                   </Grid>
                 </Grid>
               </div>
-              <AttendanceDayTable depts={selectedDept} filterDate={filterDate}/>
+              <AttendanceDayTable depts={selectedDept} filterDate={date}/>
             </MainCard>
           </Grid>
         </BasicTab>

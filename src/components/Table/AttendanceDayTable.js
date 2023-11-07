@@ -174,8 +174,7 @@ export default function AttendanceDayTable({ depts, filterDate }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
-  console.log("filterDate: " + filterDate);
-  
+  console.log(`filterDate:`, typeof filterDate);
 
   const [attend, setAttend] = useState([]);
 
@@ -188,7 +187,7 @@ export default function AttendanceDayTable({ depts, filterDate }) {
       // result[0].data를 필터링하여 leave_status가 1인 데이터만 추출
       //const filteredData = result[0].data.filter((item) => item.leave_status === 1);
       setAttend(result.data);
-     
+
       // console.log("today: " + filterDate);
       // console.log("attend_date: " + result.data[0].attend_date);
     }
@@ -223,32 +222,49 @@ export default function AttendanceDayTable({ depts, filterDate }) {
               const isItemSelected = isSelected(attend.date);
               const labelId = `enhanced-table-checkbox-${index}`;
               if (attend.attend_date) {
-                return (
-                  <TableRow
-                    hover
-                    role="checkbox"
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={attend.attend_no}
-                    selected={isItemSelected}
-                  >
-                    <TableCell component="th" id={labelId} scope="row" align="center">
-                      <Link color="secondary" component={RouterLink} to="">
-                        {attend.user_name}
-                      </Link>
-                    </TableCell>
-                    <TableCell align="center">{attend.user_position}</TableCell>
-                    <TableCell align="center">{attend.attend_start}</TableCell>
-                    <TableCell align="center">{attend.attend_end}</TableCell>
-                    <TableCell align="center">{attend.attend_total}</TableCell>
-                    <TableCell align="center">{attend.attend_date}</TableCell>
-                    {/* todo날짜데이터 필터링 */}
-                    <TableCell align="center">
-                      <AttendanceDayStatus status={attend.attend_status} />
-                    </TableCell>
-                  </TableRow>
-                );
+                // `filterDate`를 파싱하여 연, 월, 일을 추출
+                const filterDateParts = filterDate.split('.'); // 예: "2023. 11. 7." -> ["2023", "11", "7"]
+
+                const filterYear = parseInt(filterDateParts[0], 10);
+                const filterMonth = parseInt(filterDateParts[1], 10);
+                const filterDay = parseInt(filterDateParts[2], 10);
+                
+
+                // `attend_date`를 파싱하여 연, 월, 일을 추출
+                const attendDateParts = attend.attend_date.split(' ')[0].split('-'); // 예: "2023-11-07 00:00:00" -> ["2023", "11", "07"]
+
+                const attendYear = parseInt(attendDateParts[0], 10);
+                const attendMonth = parseInt(attendDateParts[1], 10);
+                const attendDay = parseInt(attendDateParts[2], 10);
+
+                // `filterDate`와 `attend_date`의 연, 월, 일을 비교하여 동일한 경우에만 출력
+                if (filterYear == attendYear && filterMonth == attendMonth && filterDay == attendDay) {
+                  return (
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                      aria-checked={isItemSelected}
+                      tabIndex={-1}
+                      key={attend.attend_no}
+                      selected={isItemSelected}
+                    >
+                      <TableCell component="th" id={labelId} scope="row" align="center">
+                        <Link color="secondary" component={RouterLink} to="">
+                          {attend.user_name}
+                        </Link>
+                      </TableCell>
+                      <TableCell align="center">{attend.user_position}</TableCell>
+                      <TableCell align="center">{attend.attend_start}</TableCell>
+                      <TableCell align="center">{attend.attend_end}</TableCell>
+                      <TableCell align="center">{attend.attend_total}</TableCell>
+                      <TableCell align="center">{attend.attend_date}</TableCell>
+                      <TableCell align="center">
+                        <AttendanceDayStatus status={attend.attend_status} />
+                      </TableCell>
+                    </TableRow>
+                  );
+                }
               }
             })}
           </TableBody>

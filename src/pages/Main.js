@@ -64,7 +64,7 @@ const Main = () => {
     }
     get();
   }, []);
-  
+
   function calculateAttendTotal(attendStart, currentTime) {
     const startParts = attendStart.split(':');
     const startHours = parseInt(startParts[0], 10);
@@ -181,7 +181,7 @@ const Main = () => {
               더보기
             </Link>
           </div>
-          <VacationDonutChart />
+          <VacationDonutChart user_no={token.user_no}/>
         </MainCard>
       </Grid>
     </Grid>
