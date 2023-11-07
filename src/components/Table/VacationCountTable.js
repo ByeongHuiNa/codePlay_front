@@ -139,7 +139,7 @@ VacationStatus.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function VacationCountTable() {
+export default function VacationCountTable({ depts }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
@@ -148,14 +148,14 @@ export default function VacationCountTable() {
   useEffect(() => {
     async function get() {
       //const endPoints = ['http://localhost:8000/user_leave'];
-      const result = await axios.get(`/see-all-leave?dept_no=1`);
+      const result = await axios.get(`/see-all-leave?dept_no=${depts}`);
       //const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
       // result[0].data를 필터링하여 leave_status가 1인 데이터만 추출
       //const filteredData = result[0].data.filter((item) => item.leave_status === 1);
       setAllLeave(result.data);
     }
     get();
-  }, []);
+  }, [depts]);
 
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
 

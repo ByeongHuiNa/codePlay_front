@@ -1,5 +1,6 @@
 import { Checkbox, FormControlLabel, Stack } from '@mui/material/index';
 import { useAccessPage, useTabState } from 'store/module';
+import { Divider } from '../../../node_modules/@mui/material/index';
 
 const AccessCheckbox = () => {
   const { accessPage, setAccessPage } = useAccessPage();
@@ -51,7 +52,8 @@ const AccessCheckbox = () => {
                   />
                 }
               />
-              <Stack direction="row">
+              <Divider sx={{ border: 1.5, borderColor: 'divider' }}></Divider>
+              <Stack direction="column">
                 {accessPage[page_default_role_level].map((page) => {
                   return (
                     <FormControlLabel

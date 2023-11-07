@@ -6,7 +6,7 @@ import { useTheme } from '@mui/material/styles';
 import { List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 
 // assets
-import { EditOutlined, ProfileOutlined, LogoutOutlined, WalletOutlined } from '@ant-design/icons';
+import { EditOutlined, LogoutOutlined } from '@ant-design/icons';
 import { useNavigate } from '../../../../../../node_modules/react-router-dom/dist/index';
 
 // ==============================|| HEADER PROFILE - PROFILE TAB ||============================== //
@@ -38,19 +38,7 @@ const ProfileTab = ({ handleLogout, handleToggle }) => {
         </ListItemIcon>
         <ListItemText primary="사용자 정보" />
       </ListItemButton>
-      <ListItemButton selected={selectedIndex === 3} onClick={(event) => handleListItemClick(event, 3)}>
-        <ListItemIcon>
-          <ProfileOutlined />
-        </ListItemIcon>
-        <ListItemText primary="Social Profile" />
-      </ListItemButton>
-      <ListItemButton selected={selectedIndex === 4} onClick={(event) => handleListItemClick(event, 4)}>
-        <ListItemIcon>
-          <WalletOutlined />
-        </ListItemIcon>
-        <ListItemText primary="Billing" />
-      </ListItemButton>
-      <ListItemButton selected={selectedIndex === 2} onClick={handleLogout}>
+      <ListItemButton selected={selectedIndex === 1} onClick={handleLogout}>
         <ListItemIcon>
           <LogoutOutlined />
         </ListItemIcon>

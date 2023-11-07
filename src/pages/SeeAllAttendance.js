@@ -13,13 +13,14 @@ import SearchIcon from '@mui/icons-material/Search';
 
 import { useEffect, useState } from 'react';
 import MainCard from 'components/MainCard';
-import { useGetDeptState } from 'store/module';
+
 import axios from '../../node_modules/axios/index';
+
 
 const SeeAllAttendance = () => {
   const [userInput, setUserInput] = useState(''); //사원검색창 입력값
 
-  const { depts, setDepts } = useGetDeptState();
+  const [depts, setDepts] = useState([]); //부서목록
 
   const getValue = (e) => {
     setUserInput(e.target.value.toLowerCase());
@@ -29,6 +30,10 @@ const SeeAllAttendance = () => {
   const handleChange2 = (event) => {
     setDept(event.target.value);
   };
+  const handleChange4 = (event) => {
+    setSelectedDept(event.target.value);
+  };
+  const [selectedDept, setSelectedDept] = useState(0); //선택한부서번호
   const [value, setValue] = useState(0);
   const [value2, setValue2] = useState(0);
 
@@ -41,6 +46,7 @@ const SeeAllAttendance = () => {
   };
 
   const [date, setDate] = useState(new Date());
+  const [filterDate, setFilterDate] = useState(() => date.toLocaleDateString());
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const [currentWeek, setCurrentWeek] = useState(0);
@@ -49,12 +55,14 @@ const SeeAllAttendance = () => {
     const newDate = new Date(date);
     newDate.setDate(newDate.getDate() - 1);
     setDate(newDate);
+    setFilterDate(date);
   };
 
   const handleNextDay = () => {
     const newDate = new Date(date);
     newDate.setDate(newDate.getDate() + 1);
     setDate(newDate);
+    setFilterDate(date);
   };
 
   const handlePrevWeek = () => {
@@ -82,13 +90,14 @@ const SeeAllAttendance = () => {
     const weekNumber = Math.ceil(((now - startOfYear) / 86400000 + 1) / 7);
     setCurrentWeek(weekNumber);
 
+   
     const fetchData = async () => {
       try {
         const result = await axios.get('/see-all-dept');
         setDepts(result.data);
-        console.log("depts: " +  depts);
+        console.log('depts: ' + depts);
       } catch (error) {
-        console.error("Error fetching department data:", error);
+        console.error('Error fetching department data:', error);
       }
     };
 
@@ -109,32 +118,24 @@ const SeeAllAttendance = () => {
           <Grid item xs={6}>
             <MainCard>
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Typography variant="h5">{dept ? `${dept} 부서 휴가보유 현황` : '개발 부서 휴가보유 현황 '}</Typography>
+                <Typography variant="h5">{selectedDept.dept_name ? `${selectedDept.dept_name} 부서 휴가보유 현황` : '부서 휴가보유 현황 '}</Typography>
                 <FormControl sx={{ marginLeft: 3 }}>
                   <NativeSelect
-                    onChange={handleChange2}
+                    onChange={handleChange4}
                     inputProps={{
-                      name: 'month',
+                      name: 'dept_no',
                       id: 'uncontrolled-native'
                     }}
                   >
-            
-                    <option value={'개발'}>개발부서</option>
-                    <option value={'인사'}>인사부서</option>
-                    <option value={'회계'}>회계부서</option>
+                    {depts.map((dept) => (
+                      <option key={dept.dept_no} value={dept.dept_no}>
+                        {dept.dept_name}
+                      </option>
+                    ))}
                   </NativeSelect>
                 </FormControl>
               </Grid>
 
-              {/* <TextField
-              
-              id="outlined-basic"
-              label="직책명"
-              variant="outlined"
-              InputLabelProps={{
-                shrink: true
-              }}
-            /> */}
               <TextField
                 value={userInput}
                 onChange={getValue}
@@ -149,7 +150,7 @@ const SeeAllAttendance = () => {
               <IconButton type="submit" sx={{ p: '10px' }} aria-label="search">
                 <SearchIcon />
               </IconButton>
-              <VacationCountTable />
+              <VacationCountTable depts={selectedDept} />
             </MainCard>
           </Grid>
           <Grid item xs={6}>
@@ -173,7 +174,7 @@ const SeeAllAttendance = () => {
                   <ArrowBackIosNewOutlinedIcon />
                 </IconButton>
                 <Typography variant="h5" sx={{ textAlign: 'center' }}>
-                  {date.toLocaleDateString()}
+                {filterDate}
                 </Typography>
 
                 <IconButton onClick={handleNextDay} aria-label="다음 날짜">
@@ -189,15 +190,18 @@ const SeeAllAttendance = () => {
                     부서
                   </InputLabel>
                   <NativeSelect
-                    onChange={handleChange2}
+                    onChange={handleChange4}
                     inputProps={{
-                      name: 'month',
+                      name: 'dept_no',
                       id: 'uncontrolled-native'
                     }}
                   >
-                    <option value={'개발'}>개발</option>
-                    <option value={'인사'}>인사</option>
-                    <option value={'회계'}>회계</option>
+                     {depts.map((dept) => (
+                      <option key={dept.dept_no} value={dept.dept_no}>
+                        {dept.dept_name}
+                      </option>
+                    ))}
+                    
                   </NativeSelect>
                 </FormControl>
               </div>
@@ -246,7 +250,7 @@ const SeeAllAttendance = () => {
                   </Grid>
                 </Grid>
               </div>
-              <AttendanceDayTable />
+              <AttendanceDayTable depts={selectedDept} filterDate={filterDate}/>
             </MainCard>
           </Grid>
         </BasicTab>

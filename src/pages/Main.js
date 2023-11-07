@@ -11,45 +11,49 @@ import { useProfileState, useWorkingHourState } from 'store/module';
 import { useEffect, useState } from 'react';
 import axios from '../../node_modules/axios/index';
 import TodayAttendancdForm from 'components/Form/TodayAttendanceForm';
+import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
 
 // ==============================|| 로그인 이후 무조건 들어올 메인페이지 ||============================== //
 
 const Main = () => {
   //화면 초기값 셋팅
   const { profile, setProfile } = useProfileState();
-
   const { hours, setHours } = useWorkingHourState();
-
   const [time, setTime] = useState([]);
+
+  //token 값을 decode해주는 코드
+  const token = jwtDecode(localStorage.getItem('token').slice(7));
 
   useEffect(() => {
     async function get() {
-      const endPoints = ['/user-information?user_no=1'];
+      console.log(token);
+      const endPoints = [`/user-information?user_no=${token.user_no}`];
       const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
       setProfile(result[0].data[0]);
 
-      const result2 = await axios.get('/user-attend-total?user_no=1');
+      const result2 = await axios.get(`/user-attend-total?user_no=${token.user_no}`);
+      console.log('토큰: ' + token.user_no);
       setHours(result2.data);
       console.log('dsadas: ' + hours);
       const currentTime = new Date(); // 현재 시간 가져오기
-      const attendTotalArray = result2.data.map(item => {
+      const attendTotalArray = result2.data.map((item) => {
         const attendTotal = item.attend_total ? item.attend_total : calculateAttendTotal(item.attend_start, currentTime);
         return {
-          attend_total: attendTotal,
+          attend_total: attendTotal
         };
       });
-   
-      console.log("attendtotal : " + attendTotalArray);
 
-      const convertedArray = attendTotalArray.map(item => {
+      console.log('attendtotal : ' + attendTotalArray);
+
+      const convertedArray = attendTotalArray.map((item) => { ///시간 double형태로 변환 ex(10.1)
         if (item.attend_total) {
-          const totalParts = item.attend_total.split(":");
+          const totalParts = item.attend_total.split(':');
           const totalHours = parseInt(totalParts[0], 10);
           const totalMinutes = parseInt(totalParts[1], 10);
           return `${totalHours}.${totalMinutes}`;
         } else {
           // attend_total이 null인 경우 대체값 또는 원하는 처리
-          return "대체값 또는 원하는 처리";
+          return '대체값 또는 원하는 처리';
         }
       });
       setTime(convertedArray);
@@ -60,17 +64,18 @@ const Main = () => {
     }
     get();
   }, []);
+  
   function calculateAttendTotal(attendStart, currentTime) {
-    const startParts = attendStart.split(":");
+    const startParts = attendStart.split(':');
     const startHours = parseInt(startParts[0], 10);
     const startMinutes = parseInt(startParts[1], 10);
-  
+
     const hoursDiff = currentTime.getHours() - startHours;
     const minutesDiff = currentTime.getMinutes() - startMinutes;
-  
+
     const totalHours = hoursDiff < 0 ? 0 : hoursDiff;
     const totalMinutes = minutesDiff < 0 ? 0 : minutesDiff;
-  
+
     return `${totalHours}:${totalMinutes}`;
   }
   const now = new Date(); // 현재 날짜와 시간
@@ -82,7 +87,7 @@ const Main = () => {
 
   // 현재 주의 월요일부터 일요일까지의 날짜를 계산하고 포맷팅
   const daysOfWeek = [];
-  const dateOptions = {  month: '2-digit', day: '2-digit'};
+  const dateOptions = { month: '2-digit', day: '2-digit' };
 
   for (let i = 0; i < 7; i++) {
     const date = new Date(startOfWeek);
@@ -90,8 +95,6 @@ const Main = () => {
     const formattedDate = date.toLocaleDateString('ko-KR', dateOptions);
     daysOfWeek.push(formattedDate);
   }
-
-  
 
   return (
     <Grid container spacing={2}>
