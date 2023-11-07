@@ -34,7 +34,7 @@ const managerMenu = {
   type: 'group',
   children: [
     {
-      id: 'queryUserInformation',
+      id: '10',
       title: '사용자조회',
       type: 'item',
       url: '/queryUserInformation',
@@ -42,7 +42,7 @@ const managerMenu = {
       breadcrumbs: false
     },
     {
-      id: 'settingAuthority',
+      id: '11',
       title: '권한관리',
       type: 'item',
       url: '/settingAuthority',
@@ -50,7 +50,7 @@ const managerMenu = {
       breadcrumbs: false
     },
     {
-      id: 'settingAccess',
+      id: '12',
       title: '접근관리',
       type: 'item',
       url: '/settingAccess',
@@ -58,7 +58,7 @@ const managerMenu = {
       breadcrumbs: false
     },
     {
-      id: 'settingAttendancePolicy',
+      id: '13',
       title: '출퇴근정책관리',
       type: 'item',
       url: '/settingAttendancePolicy',
