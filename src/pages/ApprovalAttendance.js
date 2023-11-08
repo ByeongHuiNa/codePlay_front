@@ -31,7 +31,7 @@ import UserAttendOriginInfoTable from 'components/Table/UserAttendOriginInfoTabl
 const ApprovalAttendance = () => {
   // 선택한 사용자
   const user = {
-    user_no: 5,
+    user_no: 4,
     user_position: '과장',
     dept: {
       dept_no: 1,

@@ -34,6 +34,7 @@ const Main = () => {
   function leave() {
     navigate('/userleave');
   }
+  
   useEffect(() => {
     async function get() {
       console.log(token);

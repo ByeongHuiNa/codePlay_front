@@ -171,78 +171,77 @@ AttendanceDayStatus.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function AttendanceDayTable({ depts, filterDate }) {
+export default function AttendanceDayTable({ depts, filterDate }) { //부서, 날짜 전달받음
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
 
-  console.log(`filterDate:`, typeof filterDate);
-  console.log('부서번호: ' + depts);
-
   const [total, setTotal] = useState(0); //출퇴근 전체개수
-  const [normal, setNormal] = useState(0);
-  const [odd, setOdd] = useState(0);
-  const [leave, setLeave] = useState(0);
-  // const [normal, setNormal] = useState(0);
-  // const [odd, setOdd] = useState(0);
-  // const [leave, setLeave] = useState(0);
+  const [normal, setNormal] = useState(0);//출퇴근 정상개수
+  const [odd, setOdd] = useState(0);      //출퇴근 근태이상개수
+  const [leave, setLeave] = useState(0);  //출퇴근 휴가개수
 
-  const [attend, setAttend] = useState([]);
-
-  const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
+  const [attend, setAttend] = useState([]); //근태내역
   const [filterAttend, setFilterAttend] = useState([]); //오늘날짜의 데이터 필터링
 
+  const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
+  
+
   useEffect(() => {
-    async function get() {
-      const result = await axios.get(`/see-all-attendance-day?dept_no=${depts}`);
+    async function fetchData() {
+      try {
+        const result = await axios.get(`/see-all-attendance-day?dept_no=${depts}`);
+        setAttend(result.data);
+        console.log(attend);
 
-      setAttend(result.data);
-      console.log(attend);
+        // `result.data` 배열을 필터링하여 오늘 날짜에 해당하는 데이터만 가져오기
+        const filteredData = result.data.filter((attend) => {
+          // `filterDate`를 파싱하여 연, 월, 일을 추출
+          const filterDateParts = filterDate.split('.'); // 예: "2023. 11. 7." -> ["2023", "11", "7"]
 
-      // `result.data` 배열을 필터링하여 오늘 날짜에 해당하는 데이터만 가져오기
-      const filteredData = result.data.filter((attend) => {
-        // `filterDate`를 파싱하여 연, 월, 일을 추출
-        const filterDateParts = filterDate.split('.'); // 예: "2023. 11. 7." -> ["2023", "11", "7"]
+          const filterYear = parseInt(filterDateParts[0], 10);
+          const filterMonth = parseInt(filterDateParts[1], 10);
+          const filterDay = parseInt(filterDateParts[2], 10);
 
-        const filterYear = parseInt(filterDateParts[0], 10);
-        const filterMonth = parseInt(filterDateParts[1], 10);
-        const filterDay = parseInt(filterDateParts[2], 10);
+          // `attend_date`를 파싱하여 연, 월, 일을 추출
+          const attendDateParts = attend.attend_date.split(' ')[0].split('-'); // 예: "2023-11-07 00:00:00" -> ["2023", "11", "07"]
 
-        // `attend_date`를 파싱하여 연, 월, 일을 추출
-        const attendDateParts = attend.attend_date.split(' ')[0].split('-'); // 예: "2023-11-07 00:00:00" -> ["2023", "11", "07"]
+          const attendYear = parseInt(attendDateParts[0], 10);
+          const attendMonth = parseInt(attendDateParts[1], 10);
+          const attendDay = parseInt(attendDateParts[2], 10);
+          // `attend_date`와 오늘 날짜를 비교
+          return filterYear === attendYear && filterMonth === attendMonth && filterDay === attendDay;
+        });
 
-        const attendYear = parseInt(attendDateParts[0], 10);
-        const attendMonth = parseInt(attendDateParts[1], 10);
-        const attendDay = parseInt(attendDateParts[2], 10);
-        // `attend_date`와 오늘 날짜를 비교
-        return filterYear === attendYear && filterMonth === attendMonth && filterDay === attendDay;
-      });
+        setFilterAttend(filteredData);
 
-      // `filteredData`를 `filterAttend` 상태 변수에 설정
-      setFilterAttend(filteredData);
+        // 변수 초기화
+        let normalCount = 0;
+        let oddCount = 0;
+        let leaveCount = 0;
 
-      // 변수 초기화
-      let normalCount = 0;
-      let oddCount = 0;
-      let leaveCount = 0;
+        // "attendance" 배열을 반복하여 상태별로 개수 계산
+        filteredData.forEach((item) => {
+          if (item.attend_status === '정상') {
+            normalCount++;
+          } else if (item.attend_status === '지각' || item.attend_status === '조퇴' || item.attend_status === '결근') {
+            oddCount++;
+          } else if (item.attend_status.includes('휴가')) {
+            leaveCount++;
+          }
+        });
 
-      // "attendance" 배열을 반복하여 상태별로 개수 계산
-      filterAttend.forEach((item) => {
-        if (item.attend_status === '정상') {
-          normalCount++;
-        } else if (item.attend_status === '지각' || item.attend_status === '조퇴' || item.attend_status === '결근') {
-          oddCount++
-        } else if (item.attend_status.includes('휴가')) {
-          leaveCount++;
-        }
-      });
-      setTotal(filterAttend.length);
-      setNormal(normalCount);
-      setOdd(oddCount);
-      setLeave(leaveCount);
+        setTotal(filteredData.length);
+        setNormal(normalCount);
+        setOdd(oddCount);
+        setLeave(leaveCount);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     }
-    get();
-  }, [filterAttend]);
+
+    fetchData();
+  }, [filterDate]);
   return (
     <Box>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
