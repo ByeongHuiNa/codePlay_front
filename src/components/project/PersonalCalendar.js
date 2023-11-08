@@ -18,6 +18,7 @@ import CalendarWorkModal from './CalendarWorkModal';
 import CalendarWorkModalContent from './CalendarWorkModalContent';
 import VacationDonutChart from 'components/chart/VacationDonutChart';
 import { useNavigate } from '../../../node_modules/react-router-dom/dist/index';
+import { jwtDecode } from '../../../node_modules/jwt-decode/build/cjs/index';
 
 // eslint-disable-next-line react/prop-types
 const PersonalCalendar = ({ events }) => {

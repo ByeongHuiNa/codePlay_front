@@ -26,7 +26,7 @@ import AdminAppAttendTable from 'components/Table/AdminAppAttendTable';
 import BasicChip from 'components/Chip/BasicChip';
 import axios from '../../node_modules/axios/index';
 import { useFormatter } from 'store/module';
-import UserAttendInfoTable from 'components/Table/UserAttendInfoTable';
+import UserAttendOriginInfoTable from 'components/Table/UserAttendOriginInfoTable';
 
 const ApprovalAttendance = () => {
   // 선택한 사용자
@@ -77,7 +77,7 @@ const ApprovalAttendance = () => {
     axios.get(`/manager-attend-approval?user_no=${user.user_no}`).then((res) => {
       setAttendAppDatas(res.data);
     });
-  }, []);
+  }, [value2, value3]);
 
   // Tab 0. 휴가 부분 =================================================
   const [leaveAppDatas, setLeaveAppDatas] = useState([]); // 전체 휴가 결재 데이터
@@ -136,6 +136,7 @@ const ApprovalAttendance = () => {
         attend_start: selectAttendData.attend_start,
         attend_end: selectAttendData.attend_end,
         attend_date: selectAttendData.attend_date,
+        attend_status: selectAttendData.attend_status,
         attendapp_no: selectAttendData.attendapp_no,
         attendapp_status: appAttendStatus == 'attendApp' ? 0 : 1,
         attendapp_reason: reason,
@@ -750,7 +751,7 @@ const ApprovalAttendance = () => {
                                 <BasicChip label="수정 전 시간" color="#7c7d80" />
                               </Grid>
                               <Grid item xs={9.8} sm={9.8} md={9.8} lg={9.8}>
-                                <UserAttendInfoTable data={selectAttendData} />
+                                <UserAttendOriginInfoTable data={selectAttendData} />
                               </Grid>
                             </Grid>
                           </Box>
