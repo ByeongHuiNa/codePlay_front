@@ -10,7 +10,7 @@ import { Box, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHea
 
 // project import
 import Dot from 'components/@extended/Dot';
-import { Pagination } from '../../../node_modules/@mui/material/index';
+import { Pagination, TextField } from '../../../node_modules/@mui/material/index';
 import { useAllLeaveState } from 'store/module';
 import axios from '../../../node_modules/axios/index';
 
@@ -144,6 +144,8 @@ export default function VacationCountTable({ depts }) {
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
   const { allLeave, setAllLeave } = useAllLeaveState();
+  const [search, setSearch] = useState(''); // 검색어 상태 변수
+  const [filteredAllLeave, setFilteredAllLeave] = useState([]);
   
   useEffect(() => {
     async function get() {
@@ -153,14 +155,33 @@ export default function VacationCountTable({ depts }) {
       // result[0].data를 필터링하여 leave_status가 1인 데이터만 추출
       //const filteredData = result[0].data.filter((item) => item.leave_status === 1);
       setAllLeave(result.data);
+      setFilteredAllLeave(result.data); // 초기 데이터 설정
     }
     get();
   }, [depts]);
+
+  // 검색어를 기반으로 목록 필터링
+  useEffect(() => {
+    const filteredData = allLeave.filter((item) =>
+      item.user_name.toLowerCase().includes(search.toLowerCase())
+    );
+    setFilteredAllLeave(filteredData);
+  }, [search, allLeave]);
 
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
 
   return (
     <Box>
+      <TextField
+        variant="outlined"
+        id="outlined-basic"
+        label="사원명"
+        onChange={(e) => setSearch(e.target.value)} // 검색어 업데이트
+        value={search}
+        InputLabelProps={{
+          shrink: true
+        }}
+      />
       <TableContainer
         sx={{
           width: '100%',
@@ -184,7 +205,7 @@ export default function VacationCountTable({ depts }) {
         >
           <VacationCountTableHead order={order} orderBy={orderBy} />
           <TableBody>
-            {stableSort(allLeave, getComparator(order, orderBy)).map((allLeave, index) => {
+            {stableSort(filteredAllLeave, getComparator(order, orderBy)).map((allLeave, index) => {
               const isItemSelected = isSelected(allLeave.date);
               const labelId = `enhanced-table-checkbox-${index}`;
 

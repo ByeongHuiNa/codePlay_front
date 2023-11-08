@@ -1,6 +1,6 @@
 import { Typography, Box, Grid, Tab, Tabs } from '@mui/material';
 import ComponentSkeleton from './components-overview/ComponentSkeleton';
-import { IconButton, TextField } from '../../node_modules/@mui/material/index';
+import { IconButton } from '../../node_modules/@mui/material/index';
 
 import VacationCountTable from 'components/Table/VacationCountTable';
 import AttendanceDayTable from 'components/Table/AttendanceDayTable';
@@ -9,7 +9,6 @@ import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutl
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 
 import BasicTab from 'components/tab/BasicTab';
-import SearchIcon from '@mui/icons-material/Search';
 
 import { useEffect, useState } from 'react';
 import MainCard from 'components/MainCard';
@@ -19,7 +18,7 @@ import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
 import { useProfileState } from 'store/module';
 
 const SeeAllAttendance = () => {
-  const [userInput, setUserInput] = useState(''); //사원검색창 입력값
+  //const [userInput, setUserInput] = useState(''); //사원검색창 입력값
 
   const [depts, setDepts] = useState([]); //부서목록
 
@@ -29,9 +28,9 @@ const SeeAllAttendance = () => {
   const token = jwtDecode(localStorage.getItem('token').slice(7));
   console.log('token@@@: ' + token.dept_no);
 
-  const getValue = (e) => {
-    setUserInput(e.target.value.toLowerCase());
-  };
+  // const getValue = (e) => {
+  //   setUserInput(e.target.value.toLowerCase());
+  // };
 
   //const [dept, setDept] = useState('');
   // const handleChange2 = (event) => {
@@ -150,7 +149,7 @@ const SeeAllAttendance = () => {
                 </FormControl> */}
               </Grid>
 
-              <TextField
+              {/* <TextField
                 value={userInput}
                 onChange={getValue}
                 id="outlined-basic"
@@ -159,11 +158,11 @@ const SeeAllAttendance = () => {
                 InputLabelProps={{
                   shrink: true
                 }}
-              />
+              /> */}
 
-              <IconButton type="submit" sx={{ p: '10px' }} aria-label="search">
+              {/* <IconButton type="submit" sx={{ p: '10px' }} aria-label="search">
                 <SearchIcon />
-              </IconButton>
+              </IconButton> */}
               <VacationCountTable depts={token.dept_no} />
             </MainCard>
           </Grid>
@@ -198,7 +197,7 @@ const SeeAllAttendance = () => {
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Typography variant="h5" sx={{ textAlign: 'center' }}>
                   <Typography variant="h5">
-                    {profile.dept_name ? `${profile.dept_name} 부서 휴가보유 현황` : '부서 휴가보유 현황 '}
+                    {profile.dept_name ? `${profile.dept_name} 휴가보유 현황` : ' 휴가보유 현황 '}
                   </Typography>
                 </Typography>
                 {/* <FormControl sx={{ marginLeft: 3 }}>
@@ -222,50 +221,6 @@ const SeeAllAttendance = () => {
                 </FormControl> */}
               </div>
 
-              {/* <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Grid container rowSpacing={4} columnSpacing={2.75}>
-                  <Grid item xs={3}>
-                    <MainCard>
-                      <Typography variant="h4" align="center">
-                        전체
-                      </Typography>
-                      <Typography variant="h4" align="center">
-                        5건
-                      </Typography>
-                    </MainCard>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <MainCard>
-                      <Typography variant="h4" align="center">
-                        정상
-                      </Typography>
-                      <Typography variant="h4" align="center">
-                        1건
-                      </Typography>
-                    </MainCard>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <MainCard>
-                      <Typography variant="h4" align="center">
-                        근태이상
-                      </Typography>
-                      <Typography variant="h4" align="center">
-                        3건
-                      </Typography>
-                    </MainCard>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <MainCard>
-                      <Typography variant="h4" align="center">
-                        휴가
-                      </Typography>
-                      <Typography variant="h4" align="center">
-                        1건
-                      </Typography>
-                    </MainCard>
-                  </Grid>
-                </Grid>
-              </div> */}
               <AttendanceDayTable depts={token.dept_no} filterDate={date} />
             </MainCard>
           </Grid>
