@@ -36,7 +36,7 @@ const userMenu = {
   type: 'group',
   children: [
     {
-      id: 'main',
+      id: '1',
       title: '메인페이지',
       type: 'item',
       url: '/main',
@@ -44,7 +44,7 @@ const userMenu = {
       breadcrumbs: false
     },
     {
-      id: 'Calendar',
+      id: '2',
       title: '캘린더',
       type: 'item',
       url: '/calendar',
@@ -52,7 +52,7 @@ const userMenu = {
       breadcrumbs: false
     },
     {
-      id: 'userAttendanceTotal',
+      id: '3',
       title: '근태현황조회',
       type: 'item',
       url: '/userAttendanceTotal',
@@ -60,7 +60,7 @@ const userMenu = {
       breadcrumbs: false
     },
     {
-      id: 'UserAttendance',
+      id: '4',
       title: '사용자 출/퇴근',
       type: 'item',
       url: '/userattendance',
@@ -68,7 +68,7 @@ const userMenu = {
       breadcrumbs: false
     },
     {
-      id: 'UserLeave',
+      id: '5',
       title: '사용자 휴가',
       type: 'item',
       url: '/userleave',
