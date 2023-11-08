@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 
 // material-ui
 import { Box, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
@@ -10,9 +9,10 @@ import { Box, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHea
 
 // project import
 import Dot from 'components/@extended/Dot';
-import { Pagination, TextField } from '../../../node_modules/@mui/material/index';
+import { TextField } from '../../../node_modules/@mui/material/index';
 import { useAllLeaveState } from 'store/module';
 import axios from '../../../node_modules/axios/index';
+import { useNavigate } from '../../../node_modules/react-router-dom/dist/index';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -146,7 +146,8 @@ export default function VacationCountTable({ depts }) {
   const { allLeave, setAllLeave } = useAllLeaveState();
   const [search, setSearch] = useState(''); // 검색어 상태 변수
   const [filteredAllLeave, setFilteredAllLeave] = useState([]);
-  
+  let navigate = useNavigate();
+
   useEffect(() => {
     async function get() {
       //const endPoints = ['http://localhost:8000/user_leave'];
@@ -162,12 +163,13 @@ export default function VacationCountTable({ depts }) {
 
   // 검색어를 기반으로 목록 필터링
   useEffect(() => {
-    const filteredData = allLeave.filter((item) =>
-      item.user_name.toLowerCase().includes(search.toLowerCase())
-    );
+    const filteredData = allLeave.filter((item) => item.user_name.toLowerCase().includes(search.toLowerCase()));
     setFilteredAllLeave(filteredData);
   }, [search, allLeave]);
 
+  function nameClick(user_no) {
+    navigate('/seeUserAttendance', { state: { user_no } });
+  }
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
 
   return (
@@ -216,11 +218,11 @@ export default function VacationCountTable({ depts }) {
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   aria-checked={isItemSelected}
                   tabIndex={-1}
-                  key={allLeave.leave_no}
+                  key={allLeave.data}
                   selected={isItemSelected}
                 >
                   <TableCell component="th" id={labelId} scope="row" align="center">
-                    <Link color="secondary" component={RouterLink} to="">
+                    <Link color="secondary" onClick={() => nameClick(allLeave.user_no)}>
                       {allLeave.user_name}
                     </Link>
                   </TableCell>
@@ -264,9 +266,9 @@ export default function VacationCountTable({ depts }) {
           </TableBody> */}
         </Table>
       </TableContainer>
-      <Stack alignItems="center" mt={2}>
+      {/* <Stack alignItems="center" mt={2}>
         <Pagination count={5} variant="outlined" shape="rounded" />
-      </Stack>
+      </Stack> */}
     </Box>
   );
 }

@@ -74,8 +74,6 @@ export default function VacationDonutChart({ user_no }) {
     async function get() {
       const result = await axios.get(`/user-leave?user_no=${user_no}`);
 
-      // const endPoints = ['http://localhost:8000/user_leave'];
-      // const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
 
       setLeave(result.data);
       setSeries([result.data.leave_use, result.data.leave_remain]);
