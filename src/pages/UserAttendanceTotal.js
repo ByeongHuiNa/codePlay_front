@@ -19,8 +19,11 @@ import AttendChart from 'components/chart/AttendChart';
 import axios from '../../node_modules/axios/index';
 import { useWorkingHourState } from 'store/module';
 import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
+import { useLocation } from '../../node_modules/react-router-dom/dist/index';
 
 const UserAttendanceTotalPage = () => {
+  const location = useLocation();
+
   //결재대기 내역 이번달로 설정
   const [month1, setMonth1] = useState(new Date().getMonth() + 1);
   //결재완료 내역 이번달로 설정
@@ -30,61 +33,67 @@ const UserAttendanceTotalPage = () => {
 
   //token 값을 decode해주는 코드
   const token = jwtDecode(localStorage.getItem('token').slice(7));
-  console.log("token@@@: " + token.user_no);
-
 
   const [time, setTime] = useState([]);
-  
 
   useEffect(() => {
-    
+    const endPoints = [];
+    console.log('token@@@: ' + token.user_no);
+    //console.log('사원유저번호: ' + location.state.user_no);
+    if (location.state == null) {
+      endPoints.push(`/user-attend-total?user_no=${token.user_no}`);
+    } else {
+      endPoints.push(`/user-attend-total?user_no=${location.state.user_no}`);
+    }
+
+    async function get() {
+      const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
+      //const result = await axios.get(`/user-attend-total?user_no=${token.user_no}`);
+      setHours(result[0].data);
+      console.log('dsadas: ' + hours);
+      const currentTime = new Date(); // 현재 시간 가져오기
+      const attendTotalArray = result[0].data.map((item) => {
+        const attendTotal = item.attend_total ? item.attend_total : calculateAttendTotal(item.attend_start, currentTime);
+        return {
+          attend_total: attendTotal
+        };
+      });
+      console.log('attendtotal : ' + attendTotalArray);
+
+      const convertedArray = attendTotalArray.map((item) => {
+        if (item.attend_total) {
+          const totalParts = item.attend_total.split(':');
+          const totalHours = parseInt(totalParts[0], 10);
+          const totalMinutes = parseInt(totalParts[1], 10);
+          return `${totalHours}.${totalMinutes}`;
+        } else {
+          // attend_total이 null인 경우 대체값 또는 원하는 처리
+          return '대체값 또는 원하는 처리';
+        }
+      });
+      setTime(convertedArray);
+
+      console.log('convert: ' + convertedArray);
+    }
+
     get();
   }, []);
 
-  async function get() {
-    const result = await axios.get(`/user-attend-total?user_no=${token.user_no}`);
-    setHours(result.data);
-    console.log('dsadas: ' + hours);
-    const currentTime = new Date(); // 현재 시간 가져오기
-    const attendTotalArray = result.data.map(item => {
-      const attendTotal = item.attend_total ? item.attend_total : calculateAttendTotal(item.attend_start, currentTime);
-      return {
-        attend_total: attendTotal,
-      };
-    });
-    console.log("attendtotal : " + attendTotalArray);
-
-    const convertedArray = attendTotalArray.map(item => {
-      if (item.attend_total) {
-        const totalParts = item.attend_total.split(":");
-        const totalHours = parseInt(totalParts[0], 10);
-        const totalMinutes = parseInt(totalParts[1], 10);
-        return `${totalHours}.${totalMinutes}`;
-      } else {
-        // attend_total이 null인 경우 대체값 또는 원하는 처리
-        return "대체값 또는 원하는 처리";
-      }
-    });
-    setTime(convertedArray);
-
-    console.log("convert: " + convertedArray);
-  }
-
   function calculateAttendTotal(attendStart, currentTime) {
-    const startParts = attendStart.split(":");
+    const startParts = attendStart.split(':');
     const startHours = parseInt(startParts[0], 10);
     const startMinutes = parseInt(startParts[1], 10);
-  
+
     const hoursDiff = currentTime.getHours() - startHours;
     const minutesDiff = currentTime.getMinutes() - startMinutes;
-  
+
     const totalHours = hoursDiff < 0 ? 0 : hoursDiff;
     const totalMinutes = minutesDiff < 0 ? 0 : minutesDiff;
-  
+
     return `${totalHours}:${totalMinutes}`;
   }
   const now = new Date(); // 현재 날짜와 시간
-  const currentDay = now.getDay()-1; // 현재 요일 (0: 일요일, 1: 월요일, ..., 6: 토요일)
+  const currentDay = now.getDay() - 1; // 현재 요일 (0: 일요일, 1: 월요일, ..., 6: 토요일)
 
   // 현재 주의 월요일 날짜를 계산
   const startOfWeek = new Date(now);
@@ -137,7 +146,6 @@ const UserAttendanceTotalPage = () => {
   const leaveCancel = (leaveapp_no) => {
     axios.delete(`/user-leave-request-await?leaveapp_no=${leaveapp_no}`).then((res) => {
       alert(res.data + ' 선택한 휴가 취소 완료');
-      
     });
   };
 
@@ -158,7 +166,7 @@ const UserAttendanceTotalPage = () => {
           <Grid item xs={4} sm={4} md={4} lg={4}>
             <MainCard>
               <Typography variant="h5">휴가현황</Typography>
-              <VacationDonutChart user_no={token.user_no}/>
+              {location.state ? <VacationDonutChart user_no={location.state.user_no} /> : <VacationDonutChart user_no={token.user_no} />}
             </MainCard>
           </Grid>
           {/* row 2 */}
@@ -195,7 +203,11 @@ const UserAttendanceTotalPage = () => {
                 </FormControl>
               </div>
 
-              <UnappLeaveTotalTable handleOpen={handleOpen} month={month1} leaveCancel={leaveCancel} user_no={token.user_no}/>
+              {location.state ? (
+                <UnappLeaveTotalTable handleOpen={handleOpen} month={month1} leaveCancel={leaveCancel} user_no={location.state.user_no} />
+              ) : (
+                <UnappLeaveTotalTable handleOpen={handleOpen} month={month1} leaveCancel={leaveCancel} user_no={token.user_no} />
+              )}
             </MainCard>
           </Grid>
 
@@ -229,7 +241,11 @@ const UserAttendanceTotalPage = () => {
                   </NativeSelect>
                 </FormControl>
               </div>
-              <AppLeaveTotalTable handleOpen={handleOpen} month={month2} user_no={token.user_no}/>
+              {location.state ? (
+                <AppLeaveTotalTable handleOpen={handleOpen} month={month2} user_no={location.state.user_no} />
+              ) : (
+                <AppLeaveTotalTable handleOpen={handleOpen} month={month2} user_no={token.user_no} />
+              )}
 
               <LeaveModal open={modalOpen} handleClose={handleClose} data={modalData} />
             </MainCard>
@@ -256,7 +272,7 @@ const UserAttendanceTotalPage = () => {
                       fill: 'solid',
                       data: time
                     },
-                    
+
                     {
                       name: '초과근무',
                       type: 'column',
@@ -303,7 +319,12 @@ const UserAttendanceTotalPage = () => {
                   </NativeSelect>
                 </FormControl>
               </div>
-              <AttendanceTable month={month3} user_no={token.user_no}/>
+
+              {location.state ? (
+                <AttendanceTable month={month3} user_no={location.state.user_no} />
+              ) : (
+                <AttendanceTable month={month3} user_no={token.user_no} />
+              )}
             </MainCard>
           </Grid>
 

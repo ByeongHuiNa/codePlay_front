@@ -26,12 +26,12 @@ import AdminAppAttendTable from 'components/Table/AdminAppAttendTable';
 import BasicChip from 'components/Chip/BasicChip';
 import axios from '../../node_modules/axios/index';
 import { useFormatter } from 'store/module';
-import UserAttendInfoTable from 'components/Table/UserAttendInfoTable';
+import UserAttendOriginInfoTable from 'components/Table/UserAttendOriginInfoTable';
 
 const ApprovalAttendance = () => {
   // 선택한 사용자
   const user = {
-    user_no: 5,
+    user_no: 4,
     user_position: '과장',
     dept: {
       dept_no: 1,
@@ -65,6 +65,7 @@ const ApprovalAttendance = () => {
   const handleChange3 = (event, newValue) => {
     setValue3(newValue);
     setSelectAttendData({});
+    setReason('');
   };
 
   useEffect(() => {
@@ -76,7 +77,7 @@ const ApprovalAttendance = () => {
     axios.get(`/manager-attend-approval?user_no=${user.user_no}`).then((res) => {
       setAttendAppDatas(res.data);
     });
-  }, []);
+  }, [value2, value3]);
 
   // Tab 0. 휴가 부분 =================================================
   const [leaveAppDatas, setLeaveAppDatas] = useState([]); // 전체 휴가 결재 데이터
@@ -126,9 +127,29 @@ const ApprovalAttendance = () => {
     setAppAttendStatus('');
   }, [selectLeaveData, selectAttendData]);
 
-  // 휴가 결재 완료 버튼
+  // 출퇴근 수정 결재 완료 버튼
   function submitAttendApproval() {
-    alert('결재완료');
+    axios
+      .patch('/manager-attend-approval', {
+        user_no: selectAttendData.user_no,
+        attend_no: selectAttendData.attend_no,
+        attend_start: selectAttendData.attend_start,
+        attend_end: selectAttendData.attend_end,
+        attend_date: selectAttendData.attend_date,
+        attend_status: selectAttendData.attend_status,
+        attendapp_no: selectAttendData.attendapp_no,
+        attendapp_status: appAttendStatus == 'attendApp' ? 0 : 1,
+        attendapp_reason: reason,
+        attendedit_kind: selectAttendData.attendedit_kind,
+        attendedit_start_time: selectAttendData.attendedit_start_time,
+        attendedit_end_time: selectAttendData.attendedit_end_time
+      })
+      .then((res) => {
+        console.log('결재완료 : ' + res.data);
+        alert('결재완료');
+        setSelectAttendData({});
+        setValue3(2);
+      });
   }
 
   // 휴가 부분 Tab 커스텀
@@ -719,7 +740,7 @@ const ApprovalAttendance = () => {
                             <TextField
                               size="small"
                               defaultValue={dateFormat(new Date(selectAttendData.attend_date))}
-                              key={selectAttendData.attendDate}
+                              key={selectAttendData.attend_date}
                               inputProps={{ readOnly: true }}
                               sx={{ width: '40%' }}
                             />
@@ -730,7 +751,7 @@ const ApprovalAttendance = () => {
                                 <BasicChip label="수정 전 시간" color="#7c7d80" />
                               </Grid>
                               <Grid item xs={9.8} sm={9.8} md={9.8} lg={9.8}>
-                                <UserAttendInfoTable data={selectAttendData} />
+                                <UserAttendOriginInfoTable data={selectAttendData} />
                               </Grid>
                             </Grid>
                           </Box>

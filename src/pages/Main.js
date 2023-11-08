@@ -34,6 +34,7 @@ const Main = () => {
   function leave() {
     navigate('/userleave');
   }
+  
   useEffect(() => {
     async function get() {
       const endPoints = [`/user-information?user_no=${token.user_no}`];
