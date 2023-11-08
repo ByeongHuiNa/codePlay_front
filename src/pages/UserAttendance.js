@@ -146,7 +146,10 @@ const UserAttendance = () => {
           attendedit_kind: startChecked === true && endChecked === true ? 2 : startChecked === true ? 0 : 1,
           attendedit_start_time: startChecked !== true ? null : updateStartTime ? updateStartTime : '09:00:00',
           attendedit_end_time: endChecked !== true ? null : updateEndTime ? updateEndTime : '18:00:00',
-          attendapp_user_no: approver.user_no
+          attendapp_user_no: approver.user_no,
+          attendoriginal_start_time: selectAttendData.attend_start,
+          attendoriginal_end_time: selectAttendData.attend_end,
+          attendoriginal_status: selectAttendData.attend_status
         })
         .then((res) => {
           alert(res);
