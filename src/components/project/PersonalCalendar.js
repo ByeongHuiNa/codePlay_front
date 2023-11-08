@@ -21,6 +21,9 @@ import { useNavigate } from '../../../node_modules/react-router-dom/dist/index';
 
 // eslint-disable-next-line react/prop-types
 const PersonalCalendar = ({ events }) => {
+  //token 값을 decode해주는 코드
+  const token = jwtDecode(localStorage.getItem('token').slice(7));
+
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: '#fff',
     ...theme.typography.body2,
@@ -224,7 +227,7 @@ const PersonalCalendar = ({ events }) => {
                     </button>
                   </Grid>
                 </Grid>
-                <VacationDonutChart />
+                <VacationDonutChart user_no={token.user_no} />
               </Item>
             </Grid>
 
