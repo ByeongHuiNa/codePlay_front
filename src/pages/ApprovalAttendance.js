@@ -65,6 +65,7 @@ const ApprovalAttendance = () => {
   const handleChange3 = (event, newValue) => {
     setValue3(newValue);
     setSelectAttendData({});
+    setReason('');
   };
 
   useEffect(() => {
@@ -126,9 +127,28 @@ const ApprovalAttendance = () => {
     setAppAttendStatus('');
   }, [selectLeaveData, selectAttendData]);
 
-  // 휴가 결재 완료 버튼
+  // 출퇴근 수정 결재 완료 버튼
   function submitAttendApproval() {
-    alert('결재완료');
+    axios
+      .patch('/manager-attend-approval', {
+        user_no: selectAttendData.user_no,
+        attend_no: selectAttendData.attend_no,
+        attend_start: selectAttendData.attend_start,
+        attend_end: selectAttendData.attend_end,
+        attend_date: selectAttendData.attend_date,
+        attendapp_no: selectAttendData.attendapp_no,
+        attendapp_status: appAttendStatus == 'attendApp' ? 0 : 1,
+        attendapp_reason: reason,
+        attendedit_kind: selectAttendData.attendedit_kind,
+        attendedit_start_time: selectAttendData.attendedit_start_time,
+        attendedit_end_time: selectAttendData.attendedit_end_time
+      })
+      .then((res) => {
+        console.log('결재완료 : ' + res.data);
+        alert('결재완료');
+        setSelectAttendData({});
+        setValue3(2);
+      });
   }
 
   // 휴가 부분 Tab 커스텀
@@ -719,7 +739,7 @@ const ApprovalAttendance = () => {
                             <TextField
                               size="small"
                               defaultValue={dateFormat(new Date(selectAttendData.attend_date))}
-                              key={selectAttendData.attendDate}
+                              key={selectAttendData.attend_date}
                               inputProps={{ readOnly: true }}
                               sx={{ width: '40%' }}
                             />
