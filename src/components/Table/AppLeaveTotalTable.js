@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { Box, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 // project import
-import { Button, Chip, Pagination } from '../../../node_modules/@mui/material/index';
+import { Button, Chip } from '../../../node_modules/@mui/material/index';
 import { useApprovalState2 } from 'store/module';
 import axios from '../../../node_modules/axios/index';
 import { useNavigate } from '../../../node_modules/react-router-dom/dist/index';
@@ -305,9 +305,9 @@ export default function AppLeaveTotalTable({ month, handleOpen, user_no }) {
           </TableBody>
         </Table>
       </TableContainer>
-      <Stack alignItems="center" mt={3}>
+      {/* <Stack alignItems="center" mt={3}>
         <Pagination count={5} variant="outlined" shape="rounded" />
-      </Stack>
+      </Stack> */}
     </Box>
   );
 }

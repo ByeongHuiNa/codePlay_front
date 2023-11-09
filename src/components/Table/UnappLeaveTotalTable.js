@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 // project import
-import { Button, Pagination, Stack } from '../../../node_modules/@mui/material/index';
+import { Button, Stack } from '../../../node_modules/@mui/material/index';
 import { useUnApprovalState } from 'store/module';
 import axios from '../../../node_modules/axios/index';
 
@@ -137,7 +137,7 @@ Type.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 //결재대기 테이블
-export default function UnappLeaveTotalTable({ leaveCancel, month, handleOpen, user_no }) {
+export default function UnappLeaveTotalTable({ leaveCancel, handleOpen, user_no }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
@@ -147,7 +147,7 @@ export default function UnappLeaveTotalTable({ leaveCancel, month, handleOpen, u
     async function get() {
       //const endPoints = ['http://localhost:8000/leave_approval'];
       //const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
-      const result = await axios.get(`/user-leave-wait?user_no=${user_no}&month=${month}`);
+      const result = await axios.get(`/user-leave-wait?user_no=${user_no}`);
       console.log('대기: ' + result.data);
 
       // result[0].data를 필터링하여 leave_status가 3(결재대기)인 데이터만 추출
@@ -156,7 +156,7 @@ export default function UnappLeaveTotalTable({ leaveCancel, month, handleOpen, u
       setApps(result.data);
     }
     get();
-  }, [month]);
+  }, []);
 
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
 
@@ -259,9 +259,9 @@ export default function UnappLeaveTotalTable({ leaveCancel, month, handleOpen, u
           </TableBody>
         </Table>
       </TableContainer>
-      <Stack alignItems="center" mt={-2.5}>
+      {/* <Stack alignItems="center" mt={-2.5}>
         <Pagination count={5} variant="outlined" shape="rounded" />
-      </Stack>
+      </Stack> */}
     </Box>
   );
 }

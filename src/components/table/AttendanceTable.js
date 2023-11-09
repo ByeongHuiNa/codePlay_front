@@ -9,7 +9,7 @@ import { Box, Stack, Table, TableBody, TableCell, TableContainer, TableHead, Tab
 
 // project import
 import Dot from 'components/@extended/Dot';
-import { Grid, Pagination } from '../../../node_modules/@mui/material/index';
+import { Grid } from '../../../node_modules/@mui/material/index';
 import MainCard from 'components/MainCard';
 import { useAttendanceState } from 'store/module';
 import axios from '../../../node_modules/axios/index';
@@ -345,9 +345,9 @@ export default function AttendanceTable({ month, user_no }) {
           </TableBody>
         </Table>
       </TableContainer>
-      <Stack alignItems="center" mt={3}>
+      {/* <Stack alignItems="center" mt={3}>
         <Pagination count={5} variant="outlined" shape="rounded" />
-      </Stack>
+      </Stack> */}
     </Box>
   );
 }
