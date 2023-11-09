@@ -8,6 +8,7 @@ import { Avatar } from '../../node_modules/@mui/material/index';
 import { useProfileState } from 'store/module';
 import { useEffect } from 'react';
 import axios from '../../node_modules/axios/index';
+import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
 
 // ==============================|| 유저 정보 PAGE ||============================== //
 
@@ -20,15 +21,12 @@ const UserInformation = () => {
 
   //화면 초기값 셋팅
   const { profile, setProfile } = useProfileState();
-  //TODO: 로그인한 사용자의 user_no 가져올것.
-  const endPoints = ['/user-information?user_no=1'];
-
+  
   useEffect(() => {
-    async function get() {
-      const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
-      setProfile(result[0].data[0]);
-    }
-    get();
+    //token 값을 decode해주는 코드
+    const token = jwtDecode(localStorage.getItem('token').slice(7));
+    const endPoints = [`/user-information?user_no=${token.user_no}`];
+    axios.all(endPoints.map((endPoint) => axios.get(endPoint))).then((res) => setProfile(res[0].data[0]));
   }, []);
 
   return (
