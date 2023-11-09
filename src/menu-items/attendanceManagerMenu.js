@@ -42,14 +42,6 @@ const attendanceManagerMenu = {
       breadcrumbs: false
     },
     {
-      id: '7',
-      title: '사용자별근태현황조회(담당자)',
-      type: 'item',
-      url: '/seeUserAttendance',
-      icon: icons.PieChartOutlined,
-      breadcrumbs: false
-    },
-    {
       id: '8',
       title: '전자결재',
       type: 'item',
