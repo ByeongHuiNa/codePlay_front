@@ -18,7 +18,7 @@ import { useNavigate } from '../../node_modules/react-router-dom/dist/index';
 
 const Main = () => {
   //화면 초기값 셋팅
-  const { profile, setProfile } = useProfileState();
+  const { profile } = useProfileState();
   const { hours, setHours } = useWorkingHourState();
   const [time, setTime] = useState([]);
 
@@ -37,10 +37,7 @@ const Main = () => {
   
   useEffect(() => {
     async function get() {
-      const endPoints = [`/user-information?user_no=${token.user_no}`];
-      const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
-      setProfile(result[0].data[0]);
-
+     
       const result2 = await axios.get(`/user-attend-total?user_no=${token.user_no}`);
       setHours(result2.data);
       console.log('dsadas: ' + hours);
