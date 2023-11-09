@@ -170,7 +170,7 @@ Type.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 //메인페이지 휴가신청목록
-export default function UserLeaveTable() {
+export default function UserLeaveTable({ user_no }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   //const [selected] = useState([]);
@@ -180,27 +180,11 @@ export default function UserLeaveTable() {
 
   useEffect(() => {
     async function get() {
-      // const endPoints = ['http://localhost:8000/leave_approval'];
-      // const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
-      const result = await axios.get('/user-leave-request-main?user_no=1');
-      // result[0].data를 필터링하여 leave_status가 1인 데이터만 추출
-      //const filteredData = result[0].data.filter((item) => item.leave_status === 1);
-
+      const result = await axios.get(`/user-leave-request-main?user_no=${user_no}`);
       setApp(result.data);
     }
     get();
   }, []);
-  // function createData(leaveType, leaveStart, leaveEnd, leaveCnt, leaveStatus) {
-  //   return { leaveType, leaveStart, leaveEnd, leaveCnt, leaveStatus };
-  // }
-
-  // const datas = [
-  //   createData('연차', '2023/10/17', '2023/10/18', '2', 2),
-  //   createData('연차', '2023/10/11', '2023/10/11', '1', 0),
-  //   createData('연차', '2023/10/08', '2023/10/10', '1', 1),
-  //   createData('오전반차', '2023/09/12', '2023/09/12', '0.5', 0),
-  //   createData('오후반차', '2023/09/02', '2023/09/02', '0.5', 0)
-  // ];
 
   return (
     <Box sx={{ width: '105%' }}>
