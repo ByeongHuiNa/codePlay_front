@@ -35,11 +35,15 @@ import CancelLeaveTable from 'components/Table/CancelLeaveTable';
 import UserLeaveInfoTable from 'components/Table/UserLeaveInfoTable';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
+import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
 
 const UserLeave = () => {
   const { index, setIndex } = useLeaveTab();
   const [selectedValue, setSelectedValue] = useState('annual');
   const [selectedHalfValue, setHalfValue] = useState('am');
+
+  //token 값을 decode해주는 코드
+  const token = jwtDecode(localStorage.getItem('token').slice(7));
 
   const handleChange = (event, newValue) => {
     setIndex(newValue);
@@ -91,17 +95,6 @@ const UserLeave = () => {
     setSearchName(newValue);
   };
 
-  // 로그인 한 사용자
-  const user = {
-    user_no: 1,
-    user_name: '김철수',
-    user_position: '팀장',
-    dept: {
-      dept_no: 1,
-      dept_name: '개발1팀'
-    }
-  };
-
   // 같은 부서의 근태담당자 (우선 지금은 팀장) 사용자 데이터
   const [allUsers, setAllUsers] = useState([]);
   // 로그인 한 사용자의 휴가 보유 현황 [사용연차, 잔여연차]
@@ -113,15 +106,15 @@ const UserLeave = () => {
 
   useEffect(() => {
     // 로그인 한 사용자 부서의 근태 담당자 내역 -> 결재자 검색창 autocomplete
-    axios.get(`/dept-manager?dept_no=${user.dept.dept_no}`).then((res) => {
+    axios.get(`/dept-manager?dept_no=${token.dept_no}`).then((res) => {
       setAllUsers(res.data);
     });
     // 로그인 한 사용자의 휴가 보유 현황 가져오기
-    axios.get(`/user-leave?user_no=${user.user_no}`).then((res) => {
+    axios.get(`/user-leave?user_no=${token.user_no}`).then((res) => {
       setLeaveCnt([res.data.leave_use, res.data.leave_remain]);
     });
     // 로그인 한 사용자의 승인,반려,결재진행중 상태인 모든 휴가신청내역 가져오기
-    axios.get(`/user-leave-request-recent?user_no=${user.user_no}`).then((res) => {
+    axios.get(`/user-leave-request-recent?user_no=${token.user_no}`).then((res) => {
       setLeaveRequestRecent(res.data);
     });
     // 폼 초기화
@@ -140,7 +133,7 @@ const UserLeave = () => {
 
   useEffect(() => {
     // 로그인 한 사용자의 결재대기 상태인 모든 휴가신청내역 가져오기
-    axios.get(`/user-leave-request-await?user_no=${user.user_no}`).then((res) => {
+    axios.get(`/user-leave-request-await?user_no=${token.user_no}`).then((res) => {
       setLeaveRequestAwait(res.data);
     });
   }, [leaveRequestAwait]);
@@ -156,10 +149,10 @@ const UserLeave = () => {
       alert('날짜 선택하시고 결재자 선택하세요.');
     } else {
       axios
-        .post(`/user-leave-request?user_no=${user.user_no}`, {
+        .post(`/user-leave-request?user_no=${token.user_no}`, {
           leaveapp_title:
             title === ''
-              ? `${user.user_name}(${
+              ? `${token.user_name}(${
                   selectedValue === 'annual'
                     ? '연차'
                     : selectedValue === 'public'
@@ -214,8 +207,8 @@ const UserLeave = () => {
       alert('날짜 선택하시고 결재자 선택하세요.');
     } else {
       axios
-        .post(`/user-leave-cancel-request?user_no=${user.user_no}`, {
-          leaveapp_title: title === '' ? `${user.user_name}(휴가취소)${selectLeaveCancel.leaveapp_total}일` : title,
+        .post(`/user-leave-cancel-request?user_no=${token.user_no}`, {
+          leaveapp_title: title === '' ? `${token.user_name}(휴가취소)${selectLeaveCancel.leaveapp_total}일` : title,
           leaveapp_content: reason,
           leaveapp_start: new Date(selectLeaveCancel.leaveapp_start),
           leaveapp_end: new Date(selectLeaveCancel.leaveapp_end),

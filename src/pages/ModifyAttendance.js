@@ -29,22 +29,15 @@ import axios from '../../node_modules/axios/index';
 import SelectUserTable from 'components/Table/SelectUserTable';
 import ModalM from 'components/Modal/ModalM';
 import UserLeaveStateTable from 'components/Table/UserLeaveStateTable';
+import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
 
 const ModifyAttendance = () => {
-  // 선택한 사용자
-  const user = {
-    user_no: 1,
-    user_name: '이유나',
-    user_position: '팀장',
-    dept: {
-      dept_no: 1,
-      dept_name: '개발1팀'
-    }
-  };
+  //token 값을 decode해주는 코드
+  const token = jwtDecode(localStorage.getItem('token').slice(7));
 
   // 근태담당자와 같은 부서인 모든 직원 목록
   useEffect(() => {
-    axios.get(`manager-dept-users?user_no=${user.user_no}`).then((res) => {
+    axios.get(`manager-dept-users?user_no=${token.user_no}`).then((res) => {
       setAllUsers(res.data);
     });
   }, []);

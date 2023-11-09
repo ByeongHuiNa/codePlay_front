@@ -142,7 +142,8 @@ const OrderStatus = ({ status }) => {
 };
 
 OrderStatus.propTypes = {
-  status: PropTypes.number
+  color: PropTypes.string,
+  title: PropTypes.string
 };
 
 // ==============================|| ORDER TABLE ||============================== //
@@ -203,7 +204,7 @@ export default function UserAllAttendTable({ datas, handleMyCard, height, select
                   role="checkbox"
                   aria-checked={isItemSelected}
                   tabIndex={-1}
-                  key={data.date}
+                  key={data.attend_date}
                   selected={isItemSelected}
                   onClick={() => handleMyCard(data)}
                   sx={{
