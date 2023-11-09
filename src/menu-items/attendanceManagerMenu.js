@@ -34,7 +34,7 @@ const attendanceManagerMenu = {
   type: 'group',
   children: [
     {
-      id: 'seeAllAttendance',
+      id: '6',
       title: '근태현황조회(담당자)',
       type: 'item',
       url: '/seeAllAttendance',
@@ -42,7 +42,7 @@ const attendanceManagerMenu = {
       breadcrumbs: false
     },
     {
-      id: 'seeUserAttendance',
+      id: '7',
       title: '사용자별근태현황조회(담당자)',
       type: 'item',
       url: '/seeUserAttendance',
@@ -50,7 +50,7 @@ const attendanceManagerMenu = {
       breadcrumbs: false
     },
     {
-      id: 'approvalAttendance',
+      id: '8',
       title: '전자결재',
       type: 'item',
       url: '/approvalattendance',
@@ -58,7 +58,7 @@ const attendanceManagerMenu = {
       breadcrumbs: false
     },
     {
-      id: 'modifyAttendance',
+      id: '9',
       title: '근태현황수정',
       type: 'item',
       url: '/modifyattendance',

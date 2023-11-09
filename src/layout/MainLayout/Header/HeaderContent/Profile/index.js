@@ -12,7 +12,7 @@ import ProfileTab from './ProfileTab';
 
 // assets
 import { LogoutOutlined } from '@ant-design/icons';
-import { useProfileState } from 'store/module';
+import { useAuth, useProfileState } from 'store/module';
 import { useNavigate } from '../../../../../../node_modules/react-router-dom/dist/index';
 
 // tab panel wrapper
@@ -35,10 +35,13 @@ TabPanel.propTypes = {
 const Profile = () => {
   const theme = useTheme();
   let navigate = useNavigate();
+  const {setIsLoggedIn} = useAuth();
+
 
   const handleLogout = async () => {
     localStorage.removeItem('token');
-    navigate('/login-form');
+    setIsLoggedIn(false);
+    navigate('/auth/login-form');
   };
 
   const anchorRef = useRef(null);

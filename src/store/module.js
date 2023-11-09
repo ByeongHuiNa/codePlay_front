@@ -329,10 +329,10 @@ export const useWorkingHourState = create(
     setHours: (newHours) => set(() => ({ hours: newHours }))
   }))
 );
-//모든 부서목록
-export const useGetDeptState = create(
-  devtools((set) => ({
-    depts: [],
-    setDepts: (newDepts) => set(() => ({ depts, newDepts }))
+
+export const useAuth = create(
+  devtools((set)=> ({
+    isLoggedIn: false,
+    setIsLoggedIn: (newLogin) => set(() => ({ isLoggedIn: newLogin }))
   }))
-);
+)
