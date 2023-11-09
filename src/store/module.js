@@ -217,9 +217,15 @@ export const useCalendarGetScheduleList = create(
     dataList: [],
     scheduleList: [],
     leaveList: [],
+    shereDataList: [],
+    shereScheduleList: [],
+    shereLeaveList: [],
     setDataList: (newDataList) => set(() => ({ dataList: newDataList })),
     setScheduleList: (newScheduleList) => set(() => ({ scheduleList: newScheduleList })),
     setLeaveList: (newLeaveList) => set(() => ({ leaveList: newLeaveList })),
+    setShereDataList: (newShereDataList) => set(() => ({ shereDataList: newShereDataList })),
+    setShereScheduleList: (newShereScheduleList) => set(() => ({ shereScheduleList: newShereScheduleList })),
+    setShereLeaveList: (newShereLeaveList) => set(() => ({ shereLeaveList: newShereLeaveList })),
     addDataList: (newDataList) =>
       set((state) => ({
         dataList: [...state.dataList, newDataList]
@@ -253,6 +259,40 @@ export const useCalendarGetScheduleList = create(
     deleteScheduleList: (deleteScheduleList) =>
       set((state) => ({
         scheduleList: state.scheduleList.filter((item) => item.id != deleteScheduleList)
+      })),
+    addShereDataList: (newShereDataList) =>
+      set((state) => ({
+        shereDataList: [...state.shereDataList, newShereDataList]
+      })),
+    addShereScheduleList: (newShereScheduleList) =>
+      set((state) => ({
+        shereScheduleList: [...state.shereScheduleList, newShereScheduleList]
+      })),
+    updateShereDataList: (updatedShereData) =>
+      set((state) => ({
+        shereDataList: state.shereDataList.map((item) => {
+          if (item.schedule_no == updatedShereData.schedule_no) {
+            return { ...item, ...updatedShereData };
+          }
+          return item;
+        })
+      })),
+    updateShereScheduleList: (updateShereSchedule) =>
+      set((state) => ({
+        shereScheduleList: state.shereScheduleList.map((item) => {
+          if (item.id == updateShereSchedule.id) {
+            return { ...item, ...updateShereSchedule };
+          }
+          return item;
+        })
+      })),
+    deleteShereDataList: (deleteShereData) =>
+      set((state) => ({
+        shereDataList: state.shereDataList.filter((item) => item.schedule_no != deleteShereData)
+      })),
+    deleteShereScheduleList: (deleteShereScheduleList) =>
+      set((state) => ({
+        shereScheduleList: state.shereScheduleList.filter((item) => item.id != deleteShereScheduleList)
       }))
   }))
 );

@@ -106,7 +106,7 @@ export default function CalendarWorkModalContent({ handleClose }) {
         schedule_cardview: true,
         schedule_no: item.schedule_no
       };
-      axios.patch(`/user-schedule_cardview`, schedule);
+      axios.patch(`/user-schedule-cardview`, schedule);
       updateDataList(schedule);
     });
     right.map((item) => {
@@ -114,7 +114,7 @@ export default function CalendarWorkModalContent({ handleClose }) {
         schedule_cardview: false,
         schedule_no: item.schedule_no
       };
-      axios.patch(`/user-schedule_cardview`, schedule);
+      axios.patch(`/user-schedule-cardview`, schedule);
       updateDataList(schedule);
     });
     handleClose();

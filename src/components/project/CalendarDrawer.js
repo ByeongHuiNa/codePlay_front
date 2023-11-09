@@ -22,8 +22,11 @@ import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import axios from '../../../node_modules/axios/index';
+import { jwtDecode } from '../../../node_modules/jwt-decode/build/cjs/index';
 
 export default function CalendarDrawer() {
+  const token = jwtDecode(localStorage.getItem('token').slice(7));
+
   const { view, setView } = useCalendarDrawer();
 
   //일정종류
@@ -120,11 +123,11 @@ export default function CalendarDrawer() {
   };
 
   //AddEventOnClick
-  const { addScheduleList, addDataList } = useCalendarGetScheduleList();
+  const { addScheduleList, addDataList, addShereDataList, addShereScheduleList } = useCalendarGetScheduleList();
 
   const handleAddEventOnClick = () => {
     const schedule = {
-      user_no: 1,
+      user_no: token.user_no,
       schedule_startday: startDate,
       schedule_endday: endDate,
       schedule_type: scheduleType,
@@ -154,8 +157,8 @@ export default function CalendarDrawer() {
       schedule.schedule_no = response.data;
       addDataList(schedule);
       addScheduleList(scheduleListAdd);
-      console.log(schedule);
-      console.log(scheduleListAdd);
+      addShereDataList(schedule);
+      addShereScheduleList(scheduleListAdd);
     });
 
     setView(false);
