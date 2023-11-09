@@ -25,7 +25,7 @@ const UserAttendanceTotalPage = () => {
   const location = useLocation();
 
   //결재대기 내역 이번달로 설정
-  const [month1, setMonth1] = useState(new Date().getMonth() + 1);
+  //const [month1, setMonth1] = useState(new Date().getMonth() + 1);
   //결재완료 내역 이번달로 설정
   const [month2, setMonth2] = useState(new Date().getMonth() + 1);
 
@@ -128,9 +128,9 @@ const UserAttendanceTotalPage = () => {
     setValue(newValue);
   };
 
-  const month1Change = (event) => {
-    setMonth1(event.target.value);
-  };
+  // const month1Change = (event) => {
+  //   setMonth1(event.target.value);
+  // };
 
   const month2Change = (event) => {
     setMonth2(event.target.value);
@@ -171,42 +171,15 @@ const UserAttendanceTotalPage = () => {
           </Grid>
           {/* row 2 */}
           <Grid item xs={8} sm={8} md={8} lg={8}>
-            <MainCard>
+            <MainCard style={{ height: '380px' }}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <Typography variant="h5">{month1}월 결재대기내역</Typography>
-
-                <FormControl sx={{ marginLeft: 3 }}>
-                  {/* <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                    월
-                  </InputLabel> */}
-                  <NativeSelect
-                    defaultValue={month1}
-                    onChange={month1Change}
-                    inputProps={{
-                      name: 'month',
-                      id: 'uncontrolled-native'
-                    }}
-                  >
-                    <option value={12}>12월</option>
-                    <option value={11}>11월</option>
-                    <option value={10}>10월</option>
-                    <option value={9}>9월</option>
-                    <option value={8}>8월</option>
-                    <option value={7}>7월</option>
-                    <option value={6}>6월</option>
-                    <option value={5}>5월</option>
-                    <option value={4}>4월</option>
-                    <option value={3}>3월</option>
-                    <option value={2}>2월</option>
-                    <option value={1}>1월</option>
-                  </NativeSelect>
-                </FormControl>
+                <Typography variant="h5">결재대기내역</Typography>
               </div>
 
               {location.state ? (
-                <UnappLeaveTotalTable handleOpen={handleOpen} month={month1} leaveCancel={leaveCancel} user_no={location.state.user_no} />
+                <UnappLeaveTotalTable handleOpen={handleOpen} leaveCancel={leaveCancel} user_no={location.state.user_no} />
               ) : (
-                <UnappLeaveTotalTable handleOpen={handleOpen} month={month1} leaveCancel={leaveCancel} user_no={token.user_no} />
+                <UnappLeaveTotalTable handleOpen={handleOpen} leaveCancel={leaveCancel} user_no={token.user_no} />
               )}
             </MainCard>
           </Grid>
