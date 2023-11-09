@@ -21,12 +21,18 @@ const UserInformation = () => {
 
   //화면 초기값 셋팅
   const { profile, setProfile } = useProfileState();
-  
+
   useEffect(() => {
     //token 값을 decode해주는 코드
     const token = jwtDecode(localStorage.getItem('token').slice(7));
     const endPoints = [`/user-information?user_no=${token.user_no}`];
     axios.all(endPoints.map((endPoint) => axios.get(endPoint))).then((res) => setProfile(res[0].data[0]));
+    //TODO 알림 기능 추가 테스트
+    var source = new EventSource(`/api/alarm?user_no=${token.user_no}`);
+    console.log("연결");
+    source.onmessage = (event) => {
+      console.log(event.data);
+    };
   }, []);
 
   return (
