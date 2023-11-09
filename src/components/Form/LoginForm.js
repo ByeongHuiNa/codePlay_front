@@ -28,7 +28,6 @@ import AnimateButton from 'components/@extended/AnimateButton';
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import axios from '../../../node_modules/axios/index';
 import { useNavigate } from '../../../node_modules/react-router-dom/dist/index';
-import { useAuth } from 'store/module';
 
 // ============================|| LOGIN FORM ||============================ //
 
@@ -36,7 +35,6 @@ const LoginForm = () => {
   let navigate = useNavigate();
 
   const [checked, setChecked] = React.useState(false);
-  const {setIsLoggedIn} = useAuth();
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -61,7 +59,6 @@ const LoginForm = () => {
           axios.post('/login', values).then((res) => {
             console.log(res.headers['authorization']);
             localStorage.setItem('token', res.headers['authorization']);
-            setIsLoggedIn(true);
             navigate('/main');
           });
           try {
