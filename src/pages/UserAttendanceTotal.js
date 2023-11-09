@@ -33,6 +33,7 @@ const UserAttendanceTotalPage = () => {
 
   //token 값을 decode해주는 코드
   const token = jwtDecode(localStorage.getItem('token').slice(7));
+  console.log('token@@@: ' + token.user_no);
 
   const [time, setTime] = useState([]);
 

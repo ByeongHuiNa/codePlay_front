@@ -24,7 +24,8 @@ import { DateField } from '@mui/x-date-pickers/DateField';
 import axios from '../../../node_modules/axios/index';
 
 export default function CalendarClickDrawer() {
-  const { dataList, scheduleList, updateScheduleList, updateDataList, deleteDataList, deleteScheduleList } = useCalendarGetScheduleList();
+  const { updateScheduleList, updateDataList, deleteDataList, deleteScheduleList, updateShereDataList, updateShereScheduleList } =
+    useCalendarGetScheduleList();
   const { event } = useCalendarEvent();
   //AddEventOnClick
   const { title, setTitle, allDay, setAllDay, shareType, setShareType, content, setContent } = useCalendarEventClick();
@@ -141,7 +142,7 @@ export default function CalendarClickDrawer() {
         end.setDate(end.getDate() + 1);
       }
       const scheduleListAdd = {
-        id: event.id,
+        id: parseInt(event.id),
         title: title,
         start: start,
         end: end,
@@ -151,17 +152,15 @@ export default function CalendarClickDrawer() {
       };
       updateDataList(schedule);
       updateScheduleList(scheduleListAdd);
-      console.log(schedule);
-      console.log(scheduleListAdd);
-      console.log(dataList);
-      console.log(scheduleList);
+      updateShereDataList(schedule);
+      updateShereScheduleList(scheduleListAdd);
     });
 
     setClickView(false);
   };
 
   const handleDeleteEventOnClick = () => {
-    axios.delete(`/user-schedule?schedule_no=${parseInt(event.id)}`).then(() => {
+    axios.post(`/user-schedule-delete?schedule_no=${parseInt(event.id)}`).then(() => {
       deleteDataList(event.id);
       deleteScheduleList(event.id);
     });

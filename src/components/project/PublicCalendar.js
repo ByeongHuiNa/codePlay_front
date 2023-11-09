@@ -8,14 +8,23 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
-import { INITIAL_EVENTS } from './event-utils';
 import CalendarDepWorkListTab from './CalendarDepWorkListTab';
 import CalendarDepWorkMemo from './CalendarDepWorkMemo';
-import { useCalendarDate, useCalendarDrawer, useCalendarEvent, useCalendarEventClick, useCalendarMemoModal } from 'store/module';
+import {
+  useCalendarDate,
+  useCalendarDrawer,
+  useCalendarEvent,
+  useCalendarEventClick,
+  useCalendarGetScheduleList,
+  useCalendarMemoModal
+} from 'store/module';
 import CalendarMemoModal from './CalendarMemoModal';
 import CalendarMemoModalContent from './CalendarMemoModalContent';
+import { Typography } from '../../../node_modules/@mui/material/index';
+// import { jwtDecode } from '../../../node_modules/jwt-decode/build/cjs/index';
 
-const PublicCalendar = () => {
+// eslint-disable-next-line react/prop-types
+const PublicCalendar = ({ events }) => {
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: '#fff',
     ...theme.typography.body2,
@@ -23,13 +32,14 @@ const PublicCalendar = () => {
     textAlign: 'center'
   }));
 
+  // const token = jwtDecode(localStorage.getItem('token').slice(7));
+
   //이벤트에 표기될 정보
   function renderEventContent(eventInfo) {
     return (
-      <>
-        <b>{eventInfo.timeText}</b>
-        <i>{eventInfo.event.title}</i>
-      </>
+      <Typography variant="body2" component="div">
+        {eventInfo.event.title}
+      </Typography>
     );
   }
   //zustand
@@ -38,11 +48,20 @@ const PublicCalendar = () => {
   const { setEvent } = useCalendarEvent();
 
   //이벤트 클릭 시 수정하는 함수
-  const { setTitle, setAllDay } = useCalendarEventClick();
+  const { setTitle, setAllDay, setScheduleType, setShareType, setContent } = useCalendarEventClick();
+  const { dataList } = useCalendarGetScheduleList();
   function handleEventClick(clickInfo) {
-    //종료일자 -1
+    const ScheduleType =
+      clickInfo.event.backgroundColor === '#ef9a9a'
+        ? '개인 일정'
+        : clickInfo.event.backgroundColor === '#90caf9'
+        ? '회사 일정'
+        : '휴가 일정';
     console.log(clickInfo.event);
-    if (clickInfo.event.endStr == !'') {
+    if (
+      (clickInfo.event.endStr !== '' && clickInfo.event.allDay == true) ||
+      (clickInfo.event.endStr !== '' && ScheduleType == '휴가 일정' && clickInfo.event.allDay == true)
+    ) {
       var dateStr = clickInfo.event.endStr;
       var parts = dateStr.split('-');
       var year = parseInt(parts[0], 10);
@@ -68,15 +87,30 @@ const PublicCalendar = () => {
       }
 
       var newDateStr = newYear + '-' + String(newMonth).padStart(2, '0') + '-' + String(newDay).padStart(2, '0');
-    } else {
+    } else if (clickInfo.event.endStr == '') {
       newDateStr = clickInfo.event.startStr;
+    } else {
+      newDateStr = clickInfo.event.endStr;
     }
+
+    const desiredScheduleNo = clickInfo.event.id;
+    // dataList 배열에서 schedule_no 객체를 찾기
+    const targetObject = dataList.find((item) => item.schedule_no == desiredScheduleNo);
+    // schedule_no가 1인 객체가 존재하고 있다면 schedule_share 값을 가져옴
+    const scheduleShare = targetObject ? targetObject.schedule_share : null;
+    // scheduleShare에는 schedule_no가 1인 객체의 schedule_share 값이 저장
+    const scheduleDescription = targetObject ? targetObject.schedule_description : null;
+    // scheduleDescription에는 schedule_no가 일치하는 객체의 schedule_description 값이 저장
+
     setStartDate(clickInfo.event.startStr);
     setEndDate(newDateStr);
-    setClickView(true);
     setEvent(clickInfo.event);
     setTitle(clickInfo.event.title);
     setAllDay(clickInfo.event.allDay);
+    setScheduleType(ScheduleType);
+    setShareType(scheduleShare);
+    setContent(scheduleDescription);
+    setClickView(true);
   }
 
   //CalendarMemoModal on/off
@@ -112,7 +146,7 @@ const PublicCalendar = () => {
                 initialView="dayGridMonth"
                 weekends="true"
                 editable={true}
-                initialEvents={INITIAL_EVENTS}
+                initialEvents={events}
                 eventContent={renderEventContent}
                 selectable={true}
                 eventClick={handleEventClick}
