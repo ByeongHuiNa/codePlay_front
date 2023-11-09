@@ -6,14 +6,22 @@ import axios from '../../../node_modules/axios/index';
 
 // ============================|| LOGIN FORM ||============================ //
 
-const TodayAttendancdForm = ({user_no}) => {
+const TodayAttendancdForm = ({ user_no }) => {
   const { attend, setAttend } = useTodayState();
 
   const [formattedDate, setFormattedDate] = useState();
 
+  const [policy, setPolicy] = useState({});
+
   //const [ip, setIp] = useState();
 
   const formData = {};
+
+  // 시간을 09:00 형식으로 변환하는 함수
+  // const formatTime = (time) => {
+  //   const date = new Date(`0000-01-01T${time}`);
+  //   return date.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
+  // };
 
   // 함수를 밖으로 빼서 재사용 가능하도록 설정
   const getAttendanceData = async () => {
@@ -33,9 +41,27 @@ const TodayAttendancdForm = ({user_no}) => {
       );
     }
   };
+  //사용자정책 가져오는 함수
+
+  // 시간을 09:00 형식의 문자열로 변환하는 함수
+  const formatTime = (time) => {
+    // const date = new Date(`0000-01-01T${time}`);
+    // const formattedTime = date.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
+    console.log('타임:  ' + time);
+    return time.substring(5, 10); // 앞의 5자리만 반환 (hh:mm 형식으로)
+  };
 
   useEffect(() => {
+    console.log('토큰사원번호(출근폼): ' + user_no);
     getAttendanceData();
+
+    async function get() {
+      const result = await axios.get(`/user-policy-detail?user_no=${user_no}`);
+      setPolicy(result.data[0]);
+      console.log('사용자정책: ' + policy.policy_no);
+    }
+    get();
+
     // axios.get('https://geolocation-db.com/json/').then((res) => {
     //   setIp(res.data.IPv4);
     // });
@@ -52,7 +78,7 @@ const TodayAttendancdForm = ({user_no}) => {
     //console.log('아이피주소는: ' + ip);
 
     axios
-      .post('/user-attend-today?user_no=1', formData)
+      .post(`/user-attend-today?user_no=${user_no}`, formData)
       .then(() => {
         alert('출근을 기록하였습니다.');
         getAttendanceData();
@@ -88,7 +114,7 @@ const TodayAttendancdForm = ({user_no}) => {
     }
 
     axios
-      .patch('/user-attend-today?user_no=1', formData)
+      .patch(`/user-attend-today?user_no=${user_no}`, formData)
       .then(() => {
         // 퇴근을 기록한 후 성공적으로 완료됐을 때 실행할 코드
         alert('퇴근을 기록하였습니다.');
@@ -106,6 +132,19 @@ const TodayAttendancdForm = ({user_no}) => {
       <Typography align="left" variant="h5">
         출/퇴근
       </Typography>
+      <Box mt={4} mb={4} ml={3}>
+        <Grid container justifyContent="center" spacing={1}>
+          <Grid item xs={3} sm={3} md={3} lg={3}>
+            <Typography align="center" color="text.secondary">
+              출퇴근 정책
+            </Typography>
+          </Grid>
+          <Grid item xs={8} sm={8} md={8} lg={8} sx={{ paddingRight: 5 }} align="right">
+            {policy.standard_start_time ? formatTime(policy.standard_start_time) : ''} ~{' '}
+            {policy.standard_end_time ? formatTime(policy.standard_end_time) : ''}
+          </Grid>
+        </Grid>
+      </Box>
       <Box mt={4} mb={4} ml={3}>
         <Grid container justifyContent="center" spacing={1}>
           <Grid item xs={3} sm={3} md={3} lg={3}>
@@ -153,7 +192,7 @@ const TodayAttendancdForm = ({user_no}) => {
         </Grid>
       </Box>
       <Box>
-        <Grid container justifyContent="center" spacing={1} sx={{ mt: 8 }}>
+        <Grid container justifyContent="center" spacing={1} sx={{ mt: 3 }}>
           <Grid item>
             <form onSubmit={startSubmit}>
               <Button variant="outlined" size="large" type="submit">

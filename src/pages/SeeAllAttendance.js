@@ -198,7 +198,7 @@ const SeeAllAttendance = () => {
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Typography variant="h5" sx={{ textAlign: 'center' }}>
                   <Typography variant="h5">
-                    {profile.dept_name ? `${profile.dept_name} 휴가보유 현황` : ' 휴가보유 현황 '}
+                    {profile.dept_name ? `${profile.dept_name} 일별 근태 현황` : ' 일별 근태 현황 '}
                   </Typography>
                 </Typography>
                 {/* <FormControl sx={{ marginLeft: 3 }}>
@@ -243,7 +243,7 @@ const SeeAllAttendance = () => {
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Typography variant="h5" sx={{ textAlign: 'center' }}>
                   <Typography variant="h5">
-                    {profile.dept_name ? `${profile.dept_name} 부서 휴가보유 현황` : '부서 휴가보유 현황 '}
+                    {profile.dept_name ? `${profile.dept_name} 주간 근태 현황` : '주간 근태 현황 '}
                   </Typography>
                 </Typography>
                 {/* <FormControl sx={{ marginLeft: 3 }}>
@@ -265,7 +265,7 @@ const SeeAllAttendance = () => {
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Grid container rowSpacing={4} columnSpacing={2.75}>
+                {/* <Grid container rowSpacing={4} columnSpacing={2.75}>
                   <Grid item xs={3}>
                     <MainCard>
                       <Typography variant="h4" align="center">
@@ -306,9 +306,9 @@ const SeeAllAttendance = () => {
                       </Typography>
                     </MainCard>
                   </Grid>
-                </Grid>
+                </Grid> */}
               </div>
-              <AttendanceWeekTable />
+              <AttendanceWeekTable depts={token.dept_no}/>
             </MainCard>
           </Grid>
         </BasicTab>

@@ -10,7 +10,7 @@ import { Box, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHea
 
 // project import
 import Dot from 'components/@extended/Dot';
-import { Grid, Pagination } from '../../../node_modules/@mui/material/index';
+import { Grid } from '../../../node_modules/@mui/material/index';
 import axios from '../../../node_modules/axios/index';
 import MainCard from 'components/MainCard';
 
@@ -113,11 +113,7 @@ const AttendanceDayStatus = ({ status }) => {
   let color;
   let title;
 
-  // 0 : 정상출근
-  // 1 : 휴가(연차,반차,공가)
-  // 2 : 지각
-  // 3 : 조퇴(조기퇴근)
-  // 4 : 결근(출근 혹은 퇴근누락))
+
 
   switch (status) {
     case '정상':
@@ -343,9 +339,9 @@ export default function AttendanceDayTable({ depts, filterDate }) { //부서, �
           </TableBody>
         </Table>
       </TableContainer>
-      <Stack alignItems="center" mt={2}>
+      {/* <Stack alignItems="center" mt={2}>
         <Pagination count={5} variant="outlined" shape="rounded" />
-      </Stack>
+      </Stack> */}
     </Box>
   );
 }

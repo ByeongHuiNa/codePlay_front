@@ -34,16 +34,18 @@ const Main = () => {
   function leave() {
     navigate('/userleave');
   }
-  
+
   useEffect(() => {
     async function get() {
       const endPoints = [`/user-information?user_no=${token.user_no}`];
       const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
       setProfile(result[0].data[0]);
+      console.log('토큰사원번호 : ' + token.user_no);
 
       const result2 = await axios.get(`/user-attend-total?user_no=${token.user_no}`);
       setHours(result2.data);
       console.log('dsadas: ' + hours);
+
       const currentTime = new Date(); // 현재 시간 가져오기
       const attendTotalArray = result2.data.map((item) => {
         const attendTotal = item.attend_total ? item.attend_total : calculateAttendTotal(item.attend_start, currentTime);
@@ -66,10 +68,6 @@ const Main = () => {
         }
       });
       setTime(convertedArray);
-      // const resultAttend = await axios.get('/user-attend-today?user_no=1');
-
-      // const dateObject = new Date(attend.attend_date);
-      // setFormattedDate(dateObject.toLocaleDateString());
     }
     get();
   }, []);
@@ -131,7 +129,7 @@ const Main = () => {
         )}
       </Grid>
       <Grid item xs={4} sm={4} md={4} lg={4}>
-        <TodayAttendancdForm user_no={token.user_no}/>
+        <TodayAttendancdForm user_no={token.user_no} />
       </Grid>
       <Grid item xs={4} sm={4} md={4} lg={4}>
         <MainCard>
@@ -176,7 +174,7 @@ const Main = () => {
               더보기
             </Link>
           </div>
-          <UserLeaveTable user_no={token.user_no}/>
+          <UserLeaveTable user_no={token.user_no} />
         </MainCard>
       </Grid>
 
@@ -190,7 +188,7 @@ const Main = () => {
               더보기
             </Link>
           </div>
-          <VacationDonutChart user_no={token.user_no}/>
+          <VacationDonutChart user_no={token.user_no} />
         </MainCard>
       </Grid>
     </Grid>

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 // material-ui
@@ -10,7 +10,9 @@ import { Box, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHea
 
 // project import
 import Dot from 'components/@extended/Dot';
-import { Pagination } from '../../../node_modules/@mui/material/index';
+import { Grid } from '../../../node_modules/@mui/material/index';
+import MainCard from 'components/MainCard';
+import axios from '../../../node_modules/axios/index';
 
 function createData(name, position, mon, tues, wednes, thurs, fri, weekhours) {
   return { name, position, mon, tues, wednes, thurs, fri, weekhours };
@@ -21,8 +23,7 @@ const rows = [
   createData('홍길동', '선임', 0, 1, 1, 0, 0, 40),
   createData('이순신', '주임', 0, 1, 1, 0, 0, 40),
   createData('아무개', '팀장', 0, 1, 1, 0, 0, 40),
-  createData('팀쿡', '사장', 0, 1, 1, 1, 2, 40),
-  
+  createData('팀쿡', '사장', 0, 1, 1, 1, 2, 40)
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -67,34 +68,46 @@ const headCells = [
     label: '직책'
   },
   {
-    id:  'mon',
+    id: 'mon',
     align: 'center',
     disablePadding: false,
     label: '월'
   },
   {
-    id:  'tues',
+    id: 'tues',
     align: 'center',
     disablePadding: false,
     label: '화'
   },
   {
-    id:  'wednes',
+    id: 'wednes',
     align: 'center',
     disablePadding: false,
     label: '수'
   },
   {
-    id:  'thurs',
+    id: 'thurs',
     align: 'center',
     disablePadding: false,
     label: '목'
   },
   {
-    id:  'fri',
+    id: 'fri',
     align: 'center',
     disablePadding: false,
     label: '금'
+  },
+  {
+    id: 'sat',
+    align: 'center',
+    disablePadding: false,
+    label: '토'
+  },
+  {
+    id: 'sun',
+    align: 'center',
+    disablePadding: false,
+    label: '일'
   },
   {
     id: 'weekhours',
@@ -143,23 +156,39 @@ const AttendanceWeekStatus = ({ status }) => {
   // 4 : 결근(출근 혹은 퇴근누락))
 
   switch (status) {
-    case 0:
+    case '정상':
       color = 'success';
       title = '정상';
       break;
-    case 1:
+    case '휴가(연차)':
       color = 'primary';
-      title = '휴가';
+      title = '휴가(연차)';
       break;
-    case 2:
+    case '휴가(오전반차)':
+      color = 'primary';
+      title = '휴가(오전반차)';
+      break;
+    case '휴가(오후반차)':
+      color = 'primary';
+      title = '휴가(오후반차)';
+      break;
+    case '휴가(공가)':
+      color = 'primary';
+      title = '휴가(공가)';
+      break;
+    case '지각':
       color = 'secondary';
       title = '지각';
       break;
-    case 3:
+    case '조퇴':
       color = 'warning';
       title = '조퇴';
       break;
-    case 4:
+    case '결근':
+      color = 'error';
+      title = '결근';
+      break;
+    default:
       color = 'error';
       title = '결근';
   }
@@ -178,15 +207,66 @@ AttendanceWeekStatus.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function AttendanceWeekTable() {
+export default function AttendanceWeekTable({ depts }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
+  const [attend, setAttend] = useState([]); //근태내역
+  useEffect(() => {
+    const result = axios.get(`/see-all-attendance-week?dept_no=${depts}`);
+    setAttend(result.data);
+    console.log(attend);
+  
+  }, [])
 
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
 
   return (
     <Box>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <Grid container xs={9} rowSpacing={4} columnSpacing={2.75}>
+          <Grid item xs={3}>
+            <MainCard>
+              <Typography variant="h4" style={{ textAlign: 'center' }}>
+                전체
+              </Typography>
+              <Typography variant="h5" style={{ textAlign: 'center' }}>
+                {/* {total}건 */}
+              </Typography>
+            </MainCard>
+          </Grid>
+          <Grid item xs={3}>
+            <MainCard>
+              <Typography variant="h4" style={{ textAlign: 'center' }}>
+                정상
+              </Typography>
+              <Typography variant="h5" style={{ textAlign: 'center' }}>
+                {/* {normal}건 */}
+              </Typography>
+            </MainCard>
+          </Grid>
+          <Grid item xs={3}>
+            <MainCard>
+              <Typography variant="h4" style={{ textAlign: 'center' }}>
+                근태이상
+              </Typography>
+              <Typography variant="h5" style={{ textAlign: 'center' }}>
+                {/* {odd}건 */}
+              </Typography>
+            </MainCard>
+          </Grid>
+          <Grid item xs={3}>
+            <MainCard>
+              <Typography variant="h4" style={{ textAlign: 'center' }}>
+                휴가
+              </Typography>
+              <Typography variant="h5" style={{ textAlign: 'center' }}>
+                {/* {leave}건 */}
+              </Typography>
+            </MainCard>
+          </Grid>
+        </Grid>
+      </div>
       <TableContainer
         sx={{
           width: '100%',
@@ -246,18 +326,21 @@ export default function AttendanceWeekTable() {
                     <AttendanceWeekStatus status={row.fri} />
                   </TableCell>
                   <TableCell align="center">
-                    40시간
+                    <AttendanceWeekStatus status={row.fri} />
                   </TableCell>
-                  
+                  <TableCell align="center">
+                    <AttendanceWeekStatus status={row.fri} />
+                  </TableCell>
+                  <TableCell align="center">40시간</TableCell>
                 </TableRow>
               );
             })}
           </TableBody>
         </Table>
       </TableContainer>
-      <Stack alignItems="center" mt={2}>
+      {/* <Stack alignItems="center" mt={2}>
         <Pagination count={5} variant="outlined" shape="rounded" />
-      </Stack>
+      </Stack> */}
     </Box>
   );
 }
