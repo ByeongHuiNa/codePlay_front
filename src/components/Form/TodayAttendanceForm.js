@@ -6,7 +6,7 @@ import axios from '../../../node_modules/axios/index';
 
 // ============================|| LOGIN FORM ||============================ //
 
-const TodayAttendancdForm = () => {
+const TodayAttendancdForm = ({user_no}) => {
   const { attend, setAttend } = useTodayState();
 
   const [formattedDate, setFormattedDate] = useState();
@@ -17,7 +17,7 @@ const TodayAttendancdForm = () => {
 
   // 함수를 밖으로 빼서 재사용 가능하도록 설정
   const getAttendanceData = async () => {
-    const result = await axios.get('/user-attend-today?user_no=1');
+    const result = await axios.get(`/user-attend-today?user_no=${user_no}`);
     setAttend(result.data[0]);
 
     // null 값 검사

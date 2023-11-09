@@ -131,7 +131,7 @@ const Main = () => {
         )}
       </Grid>
       <Grid item xs={4} sm={4} md={4} lg={4}>
-        <TodayAttendancdForm />
+        <TodayAttendancdForm user_no={token.user_no}/>
       </Grid>
       <Grid item xs={4} sm={4} md={4} lg={4}>
         <MainCard>
@@ -176,7 +176,7 @@ const Main = () => {
               더보기
             </Link>
           </div>
-          <UserLeaveTable />
+          <UserLeaveTable user_no={token.user_no}/>
         </MainCard>
       </Grid>
 
