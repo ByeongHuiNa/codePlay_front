@@ -12,7 +12,7 @@ export default function BasicDatePicker({ label, setDate, val }) {
   };
 
   const startDateChange = (date) => {
-    setDate(date.toDate().toISOString());
+    setDate(date.toDate().setHours(0, 0, 0, 0));
   };
 
   return (

@@ -6,7 +6,6 @@ import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow }
 
 // project import
 import { Avatar, Checkbox } from '../../../node_modules/@mui/material/index';
-import axios from '../../../node_modules/axios/index';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -65,19 +64,17 @@ const headCells = [
 
 // ==============================|| ORDER TABLE - HEADER ||============================== //
 
-function OrderTableHead({ value, order, orderBy, checkItems, handleAllCheck, datas }) {
+function OrderTableHead({ order, orderBy, checkItems, handleAllCheck, datas }) {
   return (
     <TableHead>
       <TableRow>
-        {value === 0 && (
-          <TableCell>
-            <Checkbox
-              checked={checkItems.length === datas.length ? true : false}
-              onChange={(e) => handleAllCheck(e.target.checked)}
-              inputProps={{ 'aria-label': 'controlled' }}
-            />
-          </TableCell>
-        )}
+        <TableCell>
+          <Checkbox
+            checked={checkItems.length === datas.length ? true : false}
+            onChange={(e) => handleAllCheck(e.target.checked)}
+            inputProps={{ 'aria-label': 'controlled' }}
+          />
+        </TableCell>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -100,17 +97,7 @@ OrderTableHead.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function SelectUserTable({
-  value,
-  datas,
-  handleSingleCheck,
-  handleAllCheck,
-  checkItems,
-  searchName,
-  setSelectUser,
-  setLeaveData,
-  selectUser
-}) {
+export default function SelectUserTable({ datas, handleSingleCheck, handleAllCheck, checkItems, searchName }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
@@ -154,14 +141,7 @@ export default function SelectUserTable({
             }
           }}
         >
-          <OrderTableHead
-            value={value}
-            order={order}
-            orderBy={orderBy}
-            handleAllCheck={handleAllCheck}
-            checkItems={checkItems}
-            datas={datas}
-          />
+          <OrderTableHead order={order} orderBy={orderBy} handleAllCheck={handleAllCheck} checkItems={checkItems} datas={datas} />
           <TableBody>
             {stableSort(datas, getComparator(order, orderBy))
               .filter((data) => data.user_name.includes(searchName))
@@ -175,31 +155,20 @@ export default function SelectUserTable({
                     role="checkbox"
                     sx={{
                       '&:last-child td, &:last-child th': { border: 0 },
-                      backgroundColor: value === 1 && data === selectUser ? '#e4e3e3' : 'inherit'
+                      backgroundColor: checkItems.includes(data.user_no) ? '#e4e3e3' : 'inherit'
                     }}
                     aria-checked={isItemSelected}
                     tabIndex={-1}
                     key={data.user_no}
                     selected={isItemSelected}
-                    onClick={async () => {
-                      try {
-                        const response = await axios.get(`/user-leave?user_no=${data.user_no}`);
-                        setLeaveData(response.data);
-                        setSelectUser(data);
-                      } catch (error) {
-                        console.error('Error fetching user leave data:', error);
-                      }
-                    }}
                   >
-                    {value === 0 && (
-                      <TableCell align="center">
-                        <Checkbox
-                          checked={checkItems.includes(data.user_no) ? true : false}
-                          onChange={(e) => handleSingleCheck(e.target.checked, data.user_no)}
-                          inputProps={{ 'aria-label': 'controlled' }}
-                        />
-                      </TableCell>
-                    )}
+                    <TableCell align="center">
+                      <Checkbox
+                        checked={checkItems.includes(data.user_no) ? true : false}
+                        onChange={(e) => handleSingleCheck(e.target.checked, data.user_no)}
+                        inputProps={{ 'aria-label': 'controlled' }}
+                      />
+                    </TableCell>
                     <TableCell component="th" id={labelId} scope="data" align="center">
                       <Avatar src={data.user_profile} sx={{ width: 40, height: 40, margin: 'auto' }}></Avatar>
                     </TableCell>

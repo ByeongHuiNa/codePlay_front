@@ -2,7 +2,6 @@
 import { Grid, Typography } from '@mui/material';
 
 // project import
-import ComponentSkeleton from './components-overview/ComponentSkeleton';
 import BasicContainer from 'components/container/BasicContainer';
 import MainCard from 'components/MainCard';
 import {
@@ -35,6 +34,7 @@ import axios from '../../node_modules/axios/index';
 import AppAuto from 'components/AutoComplete/AppAuto';
 import ModalS from 'components/Modal/ModalS';
 import { useFormatter } from 'store/module';
+import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
 
 // 파일 업로드
 const VisuallyHiddenInput = styled.input`
@@ -52,6 +52,9 @@ const VisuallyHiddenInput = styled.input`
 const UserAttendance = () => {
   // 날짜 형식
   const { dateFormat } = useFormatter();
+
+  //token 값을 decode해주는 코드
+  const token = jwtDecode(localStorage.getItem('token').slice(7));
 
   // 탭(0.출/퇴근수정, 1.수정요청목록) ================================
   const [value, setValue] = useState(0);
@@ -136,10 +139,10 @@ const UserAttendance = () => {
       alert('날짜 선택하시고 결재자 선택하시고 수정사항 선택하세요.');
     } else {
       axios
-        .post(`/attend-edit?user_no=${user.user_no}&attend_no=${selectAttendData.attend_no}`, {
+        .post(`/attend-edit?user_no=${token.user_no}&attend_no=${selectAttendData.attend_no}`, {
           attendedit_title: title
             ? title
-            : `${user.user_name}-${dateFormat(new Date(selectAttendData.attend_date))}-${
+            : `${token.user_name}-${dateFormat(new Date(selectAttendData.attend_date))}-${
                 startChecked === true && endChecked === true ? '출퇴근' : startChecked === true ? '출근' : '퇴근'
               }`,
           attendedit_reason: reason,
@@ -233,6 +236,7 @@ const UserAttendance = () => {
       return newFiltered;
     });
   };
+
   // 모달창 확인 버튼 (데이터 저장 X)
   const handleCloseAll = () => {
     setOpenAll(false);
@@ -259,15 +263,6 @@ const UserAttendance = () => {
     setOpenRead(false);
   };
 
-  // 로그인 한 사용자
-  const user = {
-    user_no: 1,
-    user_name: '이유나',
-    dept: {
-      dept_no: 1
-    }
-  };
-
   // 같은 부서의 근태담당자 (우선 지금은 팀장) 사용자 데이터
   const [allUsers, setAllUsers] = useState([]);
   // 로그인 한 사용자의 출/퇴근 기록 가져오기
@@ -277,15 +272,15 @@ const UserAttendance = () => {
 
   useEffect(() => {
     // 로그인 한 사용자 부서의 근태 담당자 내역 -> 결재자 검색창 autocomplete
-    axios.get(`/dept-manager?dept_no=${user.dept.dept_no}`).then((res) => {
+    axios.get(`/dept-manager?dept_no=${token.dept_no}`).then((res) => {
       setAllUsers(res.data);
     });
     // 로그인 한 사용자의 전체 출퇴근 내역 조회 (이상 근태 내역은 전체 내역에서 필터링 처리)
-    axios.get(`/user-attend?user_no=${user.user_no}`).then((res) => {
+    axios.get(`/user-attend?user_no=${token.user_no}`).then((res) => {
       setAttendDatas(res.data);
     });
     // 로그인 한 사용자의 전체 출퇴근 수정 내역 조회
-    axios.get(`/attend-edit?user_no=${user.user_no}`).then((res) => {
+    axios.get(`/attend-edit?user_no=${token.user_no}`).then((res) => {
       setAttendEditDatas(res.data);
     });
   }, [value]);
@@ -302,7 +297,7 @@ const UserAttendance = () => {
   };
 
   return (
-    <ComponentSkeleton>
+    <>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
           <Tab label="출/퇴근 수정" />
@@ -340,7 +335,7 @@ const UserAttendance = () => {
                           <Typography variant="h5">선택된 날짜</Typography>
                         </Grid>
                       </Grid>
-                      <Box clone mt={1}>
+                      <Box mt={1}>
                         <UserAttendInfoTable data={selectAttendData} />
                         {Object.keys(selectAttendData).length === 0 && (
                           <Box
@@ -365,7 +360,7 @@ const UserAttendance = () => {
                       <Grid container spacing={1} justifyContent="center">
                         <Grid item xs={12} sm={12} md={12} lg={12}>
                           <Typography variant="h5">출/퇴근 수정</Typography>
-                          <Box clone mt={3}>
+                          <Box mt={3}>
                             <BasicChip label="제목" color="gray" />
                             <TextField
                               size="small"
@@ -374,13 +369,13 @@ const UserAttendance = () => {
                               }}
                             />
                           </Box>
-                          <Box clone mt={1} sx={{ display: 'flex', alignItems: 'center' }}>
+                          <Box mt={1} sx={{ display: 'flex', alignItems: 'center' }}>
                             <EditNoteRoundedIcon fontSize="medium" color="secondary" sx={{ mx: 1 }} />
                             <Typography size="small" color="secondary">
                               제목을 입력하지 않을 시 자동 지정됩니다.
                             </Typography>
                           </Box>
-                          <Box clone mt={2.5} sx={{ display: 'flex' }}>
+                          <Box mt={2.5} sx={{ display: 'flex' }}>
                             <BasicChip label="결재자" color="gray" />
                             <AppAuto
                               label="결재자"
@@ -391,13 +386,13 @@ const UserAttendance = () => {
                               setApprover={setApprover}
                             />
                           </Box>
-                          <Box clone mt={2.5}>
+                          <Box mt={2.5}>
                             <BasicChip label="수정사항" color="gray" />
                             <Checkbox size="small" checked={startChecked} onChange={handleStartChange} /> 출근
                             <Checkbox size="small" checked={endChecked} onChange={handleEndChange} /> 퇴근
                           </Box>
                           {startChecked === true && (
-                            <Box clone mt={2.5}>
+                            <Box mt={2.5}>
                               <BasicChip label="출근수정시간" color="gray" />
                               <FormControl sx={{ ml: 1 }}>
                                 <RadioGroup
@@ -423,7 +418,7 @@ const UserAttendance = () => {
                             </Box>
                           )}
                           {endChecked === true && (
-                            <Box clone mt={2.5}>
+                            <Box mt={2.5}>
                               <BasicChip label="퇴근수정시간" color="gray" />
                               <FormControl sx={{ ml: 1 }}>
                                 <RadioGroup
@@ -448,14 +443,14 @@ const UserAttendance = () => {
                               )}
                             </Box>
                           )}
-                          <Box clone mt={2.5}>
+                          <Box mt={2.5}>
                             <BasicChip label="증빙 업로드" color="gray" />
                             <Button component="label" variant="contained" size="medium" endIcon={<UploadOutlined />}>
                               파일 선택
                               <VisuallyHiddenInput type="file" />
                             </Button>
                           </Box>
-                          <Box clone mt={2.5} mr={1}>
+                          <Box mt={2.5} mr={1}>
                             <BasicChip label="수정사유" color="gray" />
                             <TextField
                               multiline
@@ -523,38 +518,39 @@ const UserAttendance = () => {
         </AttendUpdateModal>
       </BasicTab>
       <BasicTab value={value} index={1}>
-        <Box clone mx={1} my={1} pb={2}>
+        <Box mx={1} my={1} pb={2}>
           <BasicContainer sx={{ height: '760px' }}>
             <Grid container>
-              <Grid item xs={6} md={6} lg={6}>
+              <Grid item xs={6} md={6} lg={4.5}>
                 <Typography variant="h4">출/퇴근 수정 요청 목록</Typography>
               </Grid>
-              <Grid item xs={6} md={6} lg={6}>
+              <Grid item xs={6} md={6} lg={7.5}>
                 <Grid container direction="row" spacing={1} sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Grid container direction="column">
-                    <Grid item>
-                      <Typography variant="h5" sx={{ color: 'gray', fontWeight: 550 }}>
-                        검색할 수정 날짜 기간
+                  <Grid item sx={{ display: 'flex', mt: 1 }}>
+                    <Box mr={1.5} sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Typography variant="h5" sx={{ color: 'gray' }}>
+                        수정 날짜 선택
                       </Typography>
-                    </Grid>
-                    <Grid item sx={{ display: 'flex', mt: 1 }}>
-                      <Box mr={1}>
-                        <BasicDatePicker setDate={setSearchStartDate} val={searchStartDate} />
-                      </Box>
-                      <Box mr={1}>
-                        <BasicDatePicker setDate={setSearchEndDate} val={searchEndDate} />
-                      </Box>
-                      <Box mr={0.5} mt={0.3}>
-                        <Button variant="contained" color="secondary" onClick={searchAttendEditButton}>
-                          조회
-                        </Button>
-                      </Box>
-                      <Box mt={0.3}>
-                        <Button variant="contained" color="secondary" onClick={searchInitial}>
-                          초기화
-                        </Button>
-                      </Box>
-                    </Grid>
+                    </Box>
+                    <Box mr={1}>
+                      <BasicDatePicker setDate={setSearchStartDate} val={searchStartDate} />
+                    </Box>
+                    <Box mr={1} sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Typography variant="h4">~</Typography>
+                    </Box>
+                    <Box mr={1}>
+                      <BasicDatePicker setDate={setSearchEndDate} val={searchEndDate} />
+                    </Box>
+                    <Box mr={0.5} mt={0.3}>
+                      <Button variant="contained" color="secondary" onClick={searchAttendEditButton}>
+                        조회
+                      </Button>
+                    </Box>
+                    <Box mt={0.3}>
+                      <Button variant="contained" color="secondary" onClick={searchInitial}>
+                        초기화
+                      </Button>
+                    </Box>
                   </Grid>
                 </Grid>
               </Grid>
@@ -567,7 +563,6 @@ const UserAttendance = () => {
             </MainCard>
           </BasicContainer>
         </Box>
-
         <ModalS open={openRead} handleClose={handleCloseRead}>
           <Box py={2}>
             <Typography variant="h4">{selectAttendEditData.attendedit_title}</Typography>
@@ -681,7 +676,7 @@ const UserAttendance = () => {
           </Stack>
         </ModalS>
       </BasicTab>
-    </ComponentSkeleton>
+    </>
   );
 };
 
