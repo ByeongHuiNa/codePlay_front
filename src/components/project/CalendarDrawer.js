@@ -25,7 +25,10 @@ import axios from '../../../node_modules/axios/index';
 import { jwtDecode } from '../../../node_modules/jwt-decode/build/cjs/index';
 
 export default function CalendarDrawer() {
-  const token = jwtDecode(localStorage.getItem('token').slice(7));
+  var token;
+  if (localStorage.getItem('token')) {
+    token = jwtDecode(localStorage.getItem('token').slice(7));
+  }
 
   const { view, setView } = useCalendarDrawer();
 
