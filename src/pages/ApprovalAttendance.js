@@ -90,6 +90,8 @@ const ApprovalAttendance = () => {
       .patch('/manager-leave-approval', {
         user_no: selectLeaveData.user_no,
         leaveapp_no: selectLeaveData.leaveapp_no,
+        leaveapp_start: selectLeaveData.leaveapp_start,
+        leaveapp_end: selectLeaveData.leaveapp_end,
         leaveapp_total: selectLeaveData.leaveapp_total,
         leaveapp_type: selectLeaveData.leaveapp_type,
         leaveappln_no: selectLeaveData.leaveappln_no,
@@ -374,7 +376,7 @@ const ApprovalAttendance = () => {
                   </Box>
                   <ApprovalTab value={value2} index={0}>
                     <Box pb={3}>
-                      <AdminAppLeaveTable datas={leaveAppDatas} setSelectLeaveData={setSelectLeaveData} />
+                      <AdminAppLeaveTable datas={leaveAppDatas} setSelectLeaveData={setSelectLeaveData} selectLeaveData={selectLeaveData}/>
                     </Box>
                   </ApprovalTab>
                   <ApprovalTab value={value2} index={1}>
@@ -382,6 +384,7 @@ const ApprovalAttendance = () => {
                       <AdminAppLeaveTable
                         datas={leaveAppDatas.filter((data) => data.leaveappln_status === 2)}
                         setSelectLeaveData={setSelectLeaveData}
+                        selectLeaveData={selectLeaveData}
                       />
                     </Box>
                   </ApprovalTab>
@@ -390,6 +393,7 @@ const ApprovalAttendance = () => {
                       <AdminAppLeaveTable
                         datas={leaveAppDatas.filter((data) => data.leaveappln_status === 0 || data.leaveappln_status === 1)}
                         setSelectLeaveData={setSelectLeaveData}
+                        selectLeaveData={selectLeaveData}
                       />
                     </Box>
                   </ApprovalTab>

@@ -110,11 +110,11 @@ const OrderStatus = ({ status }) => {
       break;
     case '휴가(오전반차)':
       color = 'primary';
-      title = '오전 반차';
+      title = '오전반차';
       break;
     case '휴가(오후반차)':
       color = 'primary';
-      title = '오후 반차';
+      title = '오후반차';
       break;
     case '휴가(공가)':
       color = 'primary';

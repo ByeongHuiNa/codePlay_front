@@ -85,8 +85,8 @@ const UserLeave = () => {
   // 휴가 신청 객체
   const [title, setTitle] = useState('');
   const [reason, setReason] = useState('');
-  const [start, setStart] = useState(new Date().toISOString().slice(0, 10));
-  const [end, setEnd] = useState(new Date().toISOString().slice(0, 10));
+  const [start, setStart] = useState(new Date());
+  const [end, setEnd] = useState(new Date());
   const [firstApprover, setFirstApprover] = useState({});
   const [secondApprover, setSecondApprover] = useState({});
 
@@ -120,8 +120,8 @@ const UserLeave = () => {
     // 폼 초기화
     setTitle('');
     setReason('');
-    setStart(new Date().toISOString().slice(0, 10));
-    setEnd(new Date().toISOString().slice(0, 10));
+    setStart(new Date());
+    setEnd(new Date());
     setFirstApprover({});
     setSecondApprover({});
     setSelectedValue('annual');
@@ -140,12 +140,7 @@ const UserLeave = () => {
 
   // 휴가 신청 버튼
   function submitLeaveRequest() {
-    if (
-      Object.keys(firstApprover).length === 0 ||
-      Object.keys(secondApprover).length === 0 ||
-      Object.keys(start).length === 0 ||
-      Object.keys(end).length === 0
-    ) {
+    if (Object.keys(firstApprover).length === 0 || Object.keys(secondApprover).length === 0 || start === null || end === null) {
       alert('날짜 선택하시고 결재자 선택하세요.');
     } else {
       axios
@@ -169,8 +164,8 @@ const UserLeave = () => {
                 }일`
               : title,
           leaveapp_content: reason,
-          leaveapp_start: new Date(start),
-          leaveapp_end: selectedValue === 'half' ? new Date(start) : new Date(end),
+          leaveapp_start: start,
+          leaveapp_end: selectedValue === 'half' ? start : end,
           leaveapp_total:
             selectedValue === 'half'
               ? 0.5
@@ -330,10 +325,10 @@ const UserLeave = () => {
             </BasicContainer>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            <BasicContainer>
+            <BasicContainer sx={{ height: '520px' }}>
               <Grid container alignItems="center" justifyContent="space-between">
                 <Grid item>
-                  <Typography variant="h5">결재 진행중인 최근 내역</Typography>
+                  <Typography variant="h4">결재 진행중인 최근 내역</Typography>
                 </Grid>
               </Grid>
               <AppLeaveTable requestLeaveCancel={requestLeaveCancel} datas={leaveRequestRecent.slice(0, 7)} handleOpen={handleOpen} />
