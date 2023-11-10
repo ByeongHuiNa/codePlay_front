@@ -7,8 +7,8 @@ import { Avatar, Box, Grid, Link, Typography } from '../../node_modules/@mui/mat
 import VacationDonutChart from 'components/chart/VacationDonutChart';
 import AttendChart from 'components/chart/AttendChart';
 import UserLeaveTable from 'components/Table/UserLeaveTable';
-import { useProfileState, useWorkingHourState } from 'store/module';
-import { useEffect, useState } from 'react';
+import { useLeaveState, useProfileState, useWorkingHourState } from 'store/module';
+import React, { useEffect, useState } from 'react';
 import axios from '../../node_modules/axios/index';
 import TodayAttendancdForm from 'components/Form/TodayAttendanceForm';
 import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
@@ -24,6 +24,21 @@ const Main = () => {
 
   //token 값을 decode해주는 코드
   const token = jwtDecode(localStorage.getItem('token').slice(7));
+
+  const { setLeave } = useLeaveState(); //휴가불러오기
+
+  React.useEffect(() => {
+    async function get() {
+      try {
+        const result = await axios.get(`/user-leave?user_no=${token.user_no}`);
+        setLeave(result.data);
+      } catch (error) {
+        console.error('데이터를 불러오는 중 오류 발생:', error);
+      }
+    }
+
+    get();
+  }, []);
 
   let navigate = useNavigate();
 
@@ -188,7 +203,7 @@ const Main = () => {
               더보기
             </Link>
           </div>
-          <VacationDonutChart user_no={token.user_no} />
+          <VacationDonutChart />
         </MainCard>
       </Grid>
     </Grid>

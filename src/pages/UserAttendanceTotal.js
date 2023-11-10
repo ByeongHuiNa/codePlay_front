@@ -4,7 +4,7 @@ import { Typography, Grid, Tabs, Tab, Box } from '@mui/material';
 
 // project import
 import MainCard from 'components/MainCard';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import LeaveModal from 'components/Modal/LeaveModal';
 
 // material-ui
@@ -17,7 +17,7 @@ import UnappLeaveTotalTable from 'components/Table/UnappLeaveTotalTable';
 import { FormControl, NativeSelect } from '../../node_modules/@mui/material/index';
 import AttendChart from 'components/chart/AttendChart';
 import axios from '../../node_modules/axios/index';
-import { useWorkingHourState } from 'store/module';
+import { useLeaveState, useWorkingHourState } from 'store/module';
 import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
 import { useLocation } from '../../node_modules/react-router-dom/dist/index';
 
@@ -150,6 +150,21 @@ const UserAttendanceTotalPage = () => {
     });
   };
 
+  const { setLeave } = useLeaveState(); //휴가불러오기
+
+  React.useEffect(() => {
+    async function get() {
+      try {
+        const result = await axios.get(`/user-leave?user_no=${token.user_no}`);
+        setLeave(result.data);
+      } catch (error) {
+        console.error('데이터를 불러오는 중 오류 발생:', error);
+      }
+    }
+
+    get();
+  }, []);
+
   return (
     <>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -167,7 +182,7 @@ const UserAttendanceTotalPage = () => {
           <Grid item xs={4} sm={4} md={4} lg={4}>
             <MainCard>
               <Typography variant="h5">휴가현황</Typography>
-              {location.state ? <VacationDonutChart user_no={location.state.user_no} /> : <VacationDonutChart user_no={token.user_no} />}
+              <VacationDonutChart /> 
             </MainCard>
           </Grid>
           {/* row 2 */}
