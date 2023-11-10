@@ -220,12 +220,14 @@ export const useCalendarGetScheduleList = create(
     shereDataList: [],
     shereScheduleList: [],
     shereLeaveList: [],
+    shereLeaveDataList: [],
     setDataList: (newDataList) => set(() => ({ dataList: newDataList })),
     setScheduleList: (newScheduleList) => set(() => ({ scheduleList: newScheduleList })),
     setLeaveList: (newLeaveList) => set(() => ({ leaveList: newLeaveList })),
     setShereDataList: (newShereDataList) => set(() => ({ shereDataList: newShereDataList })),
     setShereScheduleList: (newShereScheduleList) => set(() => ({ shereScheduleList: newShereScheduleList })),
     setShereLeaveList: (newShereLeaveList) => set(() => ({ shereLeaveList: newShereLeaveList })),
+    setShereLeaveDataList: (newShereLeaveDataList) => set(() => ({ shereLeaveDataList: newShereLeaveDataList })),
     addDataList: (newDataList) =>
       set((state) => ({
         dataList: [...state.dataList, newDataList]
@@ -331,8 +333,8 @@ export const useWorkingHourState = create(
 );
 
 export const useAuth = create(
-  devtools((set)=> ({
+  devtools((set) => ({
     isLoggedIn: false,
     setIsLoggedIn: (newLogin) => set(() => ({ isLoggedIn: newLogin }))
   }))
-)
+);
