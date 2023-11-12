@@ -86,11 +86,11 @@ const Main = () => {
     return `${totalHours}:${totalMinutes}`;
   }
   const now = new Date(); // 현재 날짜와 시간
-  const currentDay = now.getDay() - 1; // 현재 요일 (0: 일요일, 1: 월요일, ..., 6: 토요일)
+  const currentDay = now.getDay(); // 현재 요일 (0: 일요일, 1: 월요일, ..., 6: 토요일)
 
   // 현재 주의 월요일 날짜를 계산
   const startOfWeek = new Date(now);
-  startOfWeek.setDate(now.getDate() - currentDay);
+  startOfWeek.setDate(now.getDate() - currentDay + (currentDay === 0 ? -6 : 1));
 
   // 현재 주의 월요일부터 일요일까지의 날짜를 계산하고 포맷팅
   const daysOfWeek = [];
@@ -102,6 +102,7 @@ const Main = () => {
     const formattedDate = date.toLocaleDateString('ko-KR', dateOptions);
     daysOfWeek.push(formattedDate);
   }
+  console.log("일주일: " + daysOfWeek);
 
   return (
     <Grid container spacing={2}>

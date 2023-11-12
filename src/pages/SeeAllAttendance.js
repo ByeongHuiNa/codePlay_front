@@ -10,7 +10,6 @@ import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutl
 
 import BasicTab from 'components/tab/BasicTab';
 
-
 import { useEffect, useState } from 'react';
 import MainCard from 'components/MainCard';
 
@@ -197,9 +196,7 @@ const SeeAllAttendance = () => {
               </div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Typography variant="h5" sx={{ textAlign: 'center' }}>
-                  <Typography variant="h5">
-                    {profile.dept_name ? `${profile.dept_name} 일별 근태 현황` : ' 일별 근태 현황 '}
-                  </Typography>
+                  <Typography variant="h5">{profile.dept_name ? `${profile.dept_name} 일별 근태 현황` : ' 일별 근태 현황 '}</Typography>
                 </Typography>
                 {/* <FormControl sx={{ marginLeft: 3 }}>
                   <InputLabel variant="standard" htmlFor="uncontrolled-native">
@@ -242,9 +239,7 @@ const SeeAllAttendance = () => {
               </div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Typography variant="h5" sx={{ textAlign: 'center' }}>
-                  <Typography variant="h5">
-                    {profile.dept_name ? `${profile.dept_name} 주간 근태 현황` : '주간 근태 현황 '}
-                  </Typography>
+                  <Typography variant="h5">{profile.dept_name ? `${profile.dept_name} 주간 근태 현황` : '주간 근태 현황 '}</Typography>
                 </Typography>
                 {/* <FormControl sx={{ marginLeft: 3 }}>
                   <InputLabel variant="standard" htmlFor="uncontrolled-native">
@@ -308,7 +303,7 @@ const SeeAllAttendance = () => {
                   </Grid>
                 </Grid> */}
               </div>
-              <AttendanceWeekTable depts={token.dept_no}/>
+              <AttendanceWeekTable depts={token.dept_no} filterDate={date}/>
             </MainCard>
           </Grid>
         </BasicTab>
