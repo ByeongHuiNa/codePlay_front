@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+
 
 // material-ui
 import { Box, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
@@ -13,6 +13,7 @@ import Dot from 'components/@extended/Dot';
 import { Grid } from '../../../node_modules/@mui/material/index';
 import MainCard from 'components/MainCard';
 import axios from '../../../node_modules/axios/index';
+import { useNavigate } from '../../../node_modules/react-router-dom/dist/index';
 
 // function createData(name, position, mon, tues, wednes, thurs, fri, weekhours) {
 //   return { name, position, mon, tues, wednes, thurs, fri, weekhours };
@@ -212,16 +213,22 @@ export default function AttendanceWeekTable({ depts, filterDate }) {
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
   const [attend, setAttend] = useState([]); //근태내역
+  let navigate = useNavigate();
+
+  function nameClick(user_no) {
+    navigate('/seeUserAttendance', { state: { user_no } });
+  }
 
   useEffect(() => {
+    console.log(depts);
     console.log("날짜: " + filterDate);
     async function get() {
-      const result = await axios.get(`/see-all-attendance-week?dept_no=${depts}`);
+      const result = await axios.get(`/see-all-attendance-week?dept_no=${depts}&week_monday=${filterDate}`);
       setAttend(result.data);
       console.log('주별 근태: ' + attend);
     }
     get();
-  }, []);
+  }, [filterDate]);
 
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
 
@@ -309,7 +316,7 @@ export default function AttendanceWeekTable({ depts, filterDate }) {
                   selected={isItemSelected}
                 >
                   <TableCell component="th" id={labelId} scope="row" align="center">
-                    <Link color="secondary" component={RouterLink} to="">
+                    <Link color="secondary" onClick={() => nameClick(attend.user_no)}>
                       {attend.user_name}
                     </Link>
                   </TableCell>
