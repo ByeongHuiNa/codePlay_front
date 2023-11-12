@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useRef, useState } from 'react';
 
 // material-ui
@@ -27,6 +28,9 @@ import Transitions from 'components/@extended/Transitions';
 // assets
 import { BellOutlined, CloseOutlined, GiftOutlined, MessageOutlined, SettingOutlined } from '@ant-design/icons';
 import { jwtDecode } from '../../../../../node_modules/jwt-decode/build/cjs/index';
+import { useAlarm } from 'store/module';
+import axios from '../../../../../node_modules/axios/index';
+import { useNavigate } from '../../../../../node_modules/react-router-dom/dist/index';
 
 // sx styles
 const avatarSX = {
@@ -48,7 +52,9 @@ const actionSX = {
 // ==============================|| HEADER CONTENT - NOTIFICATION ||============================== //
 
 const Notification = () => {
+  const { alarm, setAlarm } = useAlarm();
   const token = jwtDecode(localStorage.getItem('token').slice(7));
+  let navigate = useNavigate();
 
   useEffect(() => {
     let eventSource = undefined;
@@ -57,9 +63,13 @@ const Notification = () => {
     eventSource.onopen = () => {
       console.log('connection opened');
     };
-
     eventSource.onmessage = (event) => {
       console.log('result', event);
+      //0번은 커넥션 이벤트
+      if (event.lastEventId != '0') {
+        console.log(JSON.parse(event.data));
+        setAlarm([...alarm, JSON.parse(event.data)]);
+      }
     };
 
     eventSource.onerror = (event) => {
@@ -74,7 +84,7 @@ const Notification = () => {
       eventSource.close();
     };
   }, []);
-  
+
   const theme = useTheme();
   const matchesXs = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -106,7 +116,7 @@ const Notification = () => {
         aria-haspopup="true"
         onClick={handleToggle}
       >
-        <Badge badgeContent={4} color="primary">
+        <Badge badgeContent={alarm.filter((item) => item.status == 0).length} color="primary">
           <BellOutlined />
         </Badge>
       </IconButton>
@@ -143,7 +153,7 @@ const Notification = () => {
             >
               <ClickAwayListener onClickAway={handleClose}>
                 <MainCard
-                  title="Notification"
+                  title="알림"
                   elevation={0}
                   border={false}
                   content={false}
@@ -164,7 +174,71 @@ const Notification = () => {
                       }
                     }}
                   >
-                    <ListItemButton>
+                    {Object.keys(alarm).length > 0 &&
+                      alarm.map((item) => {
+                        return (
+                          <ListItemButton
+                            key={item.alarm_no}
+                            onClick={() => {
+                              axios.put(`/alarm?alarm_no=${item.alarm_no}`);
+                              navigate(item.go_to_url);
+                            }}
+                          >
+                            {item.kind == 0 && (
+                              // 알림 종류별로 아이콘 바꿀수 있게.
+                              <ListItemAvatar>
+                                <Avatar
+                                  sx={{
+                                    color: 'success.main',
+                                    bgcolor: 'success.lighter'
+                                  }}
+                                >
+                                  <GiftOutlined />
+                                </Avatar>
+                              </ListItemAvatar>
+                            )}
+                            <ListItemText
+                              primary={<Typography variant={item.status == 0 ? 'subtitle1' : 'h6'}>{item.content}</Typography>}
+                              secondary={item.date}
+                            />
+                            <ListItemSecondaryAction>
+                              <IconButton
+                                size="small"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  axios.put(`/alarm-delete?alarm_no=${item.alarm_no}`);
+                                }}
+                              >
+                                <CloseOutlined />
+                              </IconButton>
+                            </ListItemSecondaryAction>
+                          </ListItemButton>
+                        );
+                      })}
+                    <ListItemButton key={'view-all'} sx={{ textAlign: 'center', py: `${12}px !important` }}>
+                      <ListItemText
+                        primary={
+                          <Typography variant="h6" color="primary">
+                            View All
+                          </Typography>
+                        }
+                      />
+                    </ListItemButton>
+                  </List>
+                </MainCard>
+              </ClickAwayListener>
+            </Paper>
+          </Transitions>
+        )}
+      </Popper>
+    </Box>
+  );
+};
+
+export default Notification;
+
+{
+  /*  <ListItemButton onClick={() => console.log('리스트 누름')}>
                       <ListItemAvatar>
                         <Avatar
                           sx={{
@@ -188,9 +262,15 @@ const Notification = () => {
                         secondary="2 min ago"
                       />
                       <ListItemSecondaryAction>
-                        <Typography variant="caption" noWrap>
-                          3:00 AM
-                        </Typography>
+                        <IconButton
+                          size="small"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            console.log('X표시누름');
+                          }}
+                        >
+                          <CloseOutlined />
+                        </IconButton>
                       </ListItemSecondaryAction>
                     </ListItemButton>
                     <Divider />
@@ -251,57 +331,5 @@ const Notification = () => {
                         </Typography>
                       </ListItemSecondaryAction>
                     </ListItemButton>
-                    <Divider />
-                    <ListItemButton>
-                      <ListItemAvatar>
-                        <Avatar
-                          sx={{
-                            color: 'primary.main',
-                            bgcolor: 'primary.lighter'
-                          }}
-                        >
-                          C
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={
-                          <Typography variant="h6">
-                            <Typography component="span" variant="subtitle1">
-                              Cristina Danny
-                            </Typography>{' '}
-                            invited to join{' '}
-                            <Typography component="span" variant="subtitle1">
-                              Meeting.
-                            </Typography>
-                          </Typography>
-                        }
-                        secondary="Daily scrum meeting time"
-                      />
-                      <ListItemSecondaryAction>
-                        <Typography variant="caption" noWrap>
-                          9:10 PM
-                        </Typography>
-                      </ListItemSecondaryAction>
-                    </ListItemButton>
-                    <Divider />
-                    <ListItemButton sx={{ textAlign: 'center', py: `${12}px !important` }}>
-                      <ListItemText
-                        primary={
-                          <Typography variant="h6" color="primary">
-                            View All
-                          </Typography>
-                        }
-                      />
-                    </ListItemButton>
-                  </List>
-                </MainCard>
-              </ClickAwayListener>
-            </Paper>
-          </Transitions>
-        )}
-      </Popper>
-    </Box>
-  );
-};
-
-export default Notification;
+                    <Divider /> */
+}
