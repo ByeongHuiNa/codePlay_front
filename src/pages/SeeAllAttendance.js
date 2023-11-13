@@ -10,7 +10,6 @@ import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutl
 
 import BasicTab from 'components/tab/BasicTab';
 
-
 import { useEffect, useState } from 'react';
 import MainCard from 'components/MainCard';
 
@@ -24,6 +23,8 @@ const SeeAllAttendance = () => {
   const [depts, setDepts] = useState([]); //부서목록
 
   const { profile, setProfile } = useProfileState();
+
+  const [mon, setMon] = useState('');
 
   //token 값을 decode해주는 코드
   const token = jwtDecode(localStorage.getItem('token').slice(7));
@@ -75,7 +76,9 @@ const SeeAllAttendance = () => {
   const handlePrevWeek = () => {
     const newDate = new Date(currentDate);
     newDate.setDate(newDate.getDate() - 7); // 7일을 빼면 1주를 뺀다
+    //setCurrentDate(newDate.getFormattedMonday());
     setCurrentDate(newDate);
+    
 
     // 주차를 갱신
     setCurrentWeek(currentWeek - 1);
@@ -84,10 +87,18 @@ const SeeAllAttendance = () => {
   const handleNextWeek = () => {
     const newDate = new Date(currentDate);
     newDate.setDate(newDate.getDate() + 7); // 7일을 더하면 1주를 더한다
+    //setCurrentDate(newDate.getFormattedMonday());
     setCurrentDate(newDate);
-
+    
     // 주차를 갱신
     setCurrentWeek(currentWeek + 1);
+  };
+
+  const getFormattedMonday = () => {
+    const year = currentDate.getFullYear();
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = currentDate.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
   };
 
   useEffect(() => {
@@ -95,7 +106,17 @@ const SeeAllAttendance = () => {
     const now = new Date();
     const startOfYear = new Date(now.getFullYear(), 0, 1);
     const weekNumber = Math.ceil(((now - startOfYear) / 86400000 + 1) / 7);
+
+    const monday = new Date();
+    monday.setDate(currentDate.getDate() - currentDate.getDay() + (currentDate.getDay() === 0 ? -6 : 1));
+
+    // setCurrentDate를 사용하여 상태를 업데이트
+    setCurrentDate(monday);
+    // console.log('이번주의 월요일 : ' + currentDate.toLocaleDateString());
+
+    // console.log('이번주의 월요일2 : ' + getFormattedMonday());
     setCurrentWeek(weekNumber);
+    setMon(getFormattedMonday());
     async function get() {
       const endPoints = [`/user-information?user_no=${token.user_no}`];
       const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
@@ -197,9 +218,7 @@ const SeeAllAttendance = () => {
               </div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Typography variant="h5" sx={{ textAlign: 'center' }}>
-                  <Typography variant="h5">
-                    {profile.dept_name ? `${profile.dept_name} 일별 근태 현황` : ' 일별 근태 현황 '}
-                  </Typography>
+                  <Typography variant="h5">{profile.dept_name ? `${profile.dept_name} 일별 근태 현황` : ' 일별 근태 현황 '}</Typography>
                 </Typography>
                 {/* <FormControl sx={{ marginLeft: 3 }}>
                   <InputLabel variant="standard" htmlFor="uncontrolled-native">
@@ -234,7 +253,7 @@ const SeeAllAttendance = () => {
                   <ArrowBackIosNewOutlinedIcon />
                 </IconButton>
                 <Typography variant="h5" sx={{ textAlign: 'center' }}>
-                  {currentDate.toLocaleDateString()} {currentWeek}주
+                  {mon} {currentWeek}주
                 </Typography>
                 <IconButton onClick={handleNextWeek} aria-label="다음 날짜">
                   <ArrowForwardIosOutlinedIcon />
@@ -242,9 +261,7 @@ const SeeAllAttendance = () => {
               </div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Typography variant="h5" sx={{ textAlign: 'center' }}>
-                  <Typography variant="h5">
-                    {profile.dept_name ? `${profile.dept_name} 주간 근태 현황` : '주간 근태 현황 '}
-                  </Typography>
+                  <Typography variant="h5">{profile.dept_name ? `${profile.dept_name} 주간 근태 현황` : '주간 근태 현황 '}</Typography>
                 </Typography>
                 {/* <FormControl sx={{ marginLeft: 3 }}>
                   <InputLabel variant="standard" htmlFor="uncontrolled-native">
@@ -264,51 +281,7 @@ const SeeAllAttendance = () => {
                 </FormControl> */}
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                {/* <Grid container rowSpacing={4} columnSpacing={2.75}>
-                  <Grid item xs={3}>
-                    <MainCard>
-                      <Typography variant="h4" align="center">
-                        전체
-                      </Typography>
-                      <Typography variant="h4" align="center">
-                        5건
-                      </Typography>
-                    </MainCard>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <MainCard>
-                      <Typography variant="h4" align="center">
-                        정상
-                      </Typography>
-                      <Typography variant="h4" align="center">
-                        1건
-                      </Typography>
-                    </MainCard>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <MainCard>
-                      <Typography variant="h4" align="center">
-                        근태이상
-                      </Typography>
-                      <Typography variant="h4" align="center">
-                        3건
-                      </Typography>
-                    </MainCard>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <MainCard>
-                      <Typography variant="h4" align="center">
-                        휴가
-                      </Typography>
-                      <Typography variant="h4" align="center">
-                        1건
-                      </Typography>
-                    </MainCard>
-                  </Grid>
-                </Grid> */}
-              </div>
-              <AttendanceWeekTable depts={token.dept_no}/>
+              <AttendanceWeekTable depts={token.dept_no} filterDate={mon} />
             </MainCard>
           </Grid>
         </BasicTab>

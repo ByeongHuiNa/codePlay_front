@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+
 
 // material-ui
 import { Box, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
@@ -13,18 +13,19 @@ import Dot from 'components/@extended/Dot';
 import { Grid } from '../../../node_modules/@mui/material/index';
 import MainCard from 'components/MainCard';
 import axios from '../../../node_modules/axios/index';
+import { useNavigate } from '../../../node_modules/react-router-dom/dist/index';
 
-function createData(name, position, mon, tues, wednes, thurs, fri, weekhours) {
-  return { name, position, mon, tues, wednes, thurs, fri, weekhours };
-}
+// function createData(name, position, mon, tues, wednes, thurs, fri, weekhours) {
+//   return { name, position, mon, tues, wednes, thurs, fri, weekhours };
+// }
 
-const rows = [
-  createData('나병희', '연구원', 0, 0, 0, 0, 0, 40),
-  createData('홍길동', '선임', 0, 1, 1, 0, 0, 40),
-  createData('이순신', '주임', 0, 1, 1, 0, 0, 40),
-  createData('아무개', '팀장', 0, 1, 1, 0, 0, 40),
-  createData('팀쿡', '사장', 0, 1, 1, 1, 2, 40)
-];
+// const rows = [
+//   createData('나병희', '연구원', 0, 0, 0, 0, 0, 40),
+//   createData('홍길동', '선임', 0, 1, 1, 0, 0, 40),
+//   createData('이순신', '주임', 0, 1, 1, 0, 0, 40),
+//   createData('아무개', '팀장', 0, 1, 1, 0, 0, 40),
+//   createData('팀쿡', '사장', 0, 1, 1, 1, 2, 40)
+// ];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -207,17 +208,27 @@ AttendanceWeekStatus.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function AttendanceWeekTable({ depts }) {
+export default function AttendanceWeekTable({ depts, filterDate }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
   const [attend, setAttend] = useState([]); //근태내역
+  let navigate = useNavigate();
+
+  function nameClick(user_no) {
+    navigate('/seeUserAttendance', { state: { user_no } });
+  }
+
   useEffect(() => {
-    const result = axios.get(`/see-all-attendance-week?dept_no=${depts}`);
-    setAttend(result.data);
-    console.log(attend);
-  
-  }, [])
+    console.log(depts);
+    console.log("날짜: " + filterDate);
+    async function get() {
+      const result = await axios.get(`/see-all-attendance-week?dept_no=${depts}&week_monday=${filterDate}`);
+      setAttend(result.data);
+      console.log('주별 근태: ' + attend);
+    }
+    get();
+  }, [filterDate]);
 
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
 
@@ -290,8 +301,8 @@ export default function AttendanceWeekTable({ depts }) {
         >
           <AttendanceWeekTableHead order={order} orderBy={orderBy} />
           <TableBody>
-            {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
-              const isItemSelected = isSelected(row.date);
+            {stableSort(attend, getComparator(order, orderBy)).map((attend, index) => {
+              const isItemSelected = isSelected(attend.date);
               const labelId = `enhanced-table-checkbox-${index}`;
 
               return (
@@ -301,35 +312,35 @@ export default function AttendanceWeekTable({ depts }) {
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   aria-checked={isItemSelected}
                   tabIndex={-1}
-                  key={row.trackingNo}
+                  key={attend.dept_no}
                   selected={isItemSelected}
                 >
                   <TableCell component="th" id={labelId} scope="row" align="center">
-                    <Link color="secondary" component={RouterLink} to="">
-                      {row.name}
+                    <Link color="secondary" onClick={() => nameClick(attend.user_no)}>
+                      {attend.user_name}
                     </Link>
                   </TableCell>
-                  <TableCell align="center">{row.position}</TableCell>
+                  <TableCell align="center">{attend.user_position}</TableCell>
                   <TableCell align="center">
-                    <AttendanceWeekStatus status={row.mon} />
+                    <AttendanceWeekStatus status={attend.monday_status} />
                   </TableCell>
                   <TableCell align="center">
-                    <AttendanceWeekStatus status={row.tues} />
+                    <AttendanceWeekStatus status={attend.tuesday_status} />
                   </TableCell>
                   <TableCell align="center">
-                    <AttendanceWeekStatus status={row.wednes} />
+                    <AttendanceWeekStatus status={attend.wednesday_status} />
                   </TableCell>
                   <TableCell align="center">
-                    <AttendanceWeekStatus status={row.thurs} />
+                    <AttendanceWeekStatus status={attend.thursday_status} />
                   </TableCell>
                   <TableCell align="center">
-                    <AttendanceWeekStatus status={row.fri} />
+                    <AttendanceWeekStatus status={attend.friday_status} />
                   </TableCell>
                   <TableCell align="center">
-                    <AttendanceWeekStatus status={row.fri} />
+                    <AttendanceWeekStatus status={attend.saturday_status} />
                   </TableCell>
                   <TableCell align="center">
-                    <AttendanceWeekStatus status={row.fri} />
+                    <AttendanceWeekStatus status={attend.sunday_status} />
                   </TableCell>
                   <TableCell align="center">40시간</TableCell>
                 </TableRow>
