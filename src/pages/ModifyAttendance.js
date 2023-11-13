@@ -23,6 +23,7 @@ import BasicChip from 'components/Chip/BasicChip';
 import MainCard from 'components/MainCard';
 import TimePicker2 from 'components/DatePicker/TimePicker';
 import BasicDatePicker from 'components/DatePicker/BasicDatePicker';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import UserAttendInfoTable from 'components/Table/UserAttendInfoTable';
 import BasicAuto from 'components/AutoComplete/BasicAuto';
 import axios from '../../node_modules/axios/index';
@@ -426,7 +427,10 @@ const ModifyAttendance = () => {
                                 alignItems: 'center' // 수직 중앙 정렬
                               }}
                             >
-                              <Typography variant="h5">선택된 날짜 없음</Typography>
+                              <ErrorOutlineIcon fontSize="medium" color="secondary" sx={{ mx: 1 }} />
+                              <Typography size="small" color="secondary">
+                                선택된 날짜 없음
+                              </Typography>
                             </Box>
                           )}
                         </Box>
