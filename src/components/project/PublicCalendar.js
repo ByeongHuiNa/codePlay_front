@@ -159,7 +159,7 @@ const PublicCalendar = ({ events }) => {
             <Grid item>
               <Item>
                 <Grid sx={{ mt: -1 }}>
-                  <CalendarDepWorkListTab></CalendarDepWorkListTab>
+                  <CalendarDepWorkListTab />
                 </Grid>
               </Item>
             </Grid>

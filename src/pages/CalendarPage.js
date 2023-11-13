@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import PersonalCalendar from 'components/project/PersonalCalendar';
 import PublicCalendar from 'components/project/PublicCalendar';
-import { useCalendarGetScheduleList } from 'store/module';
+import { useCalendarGetScheduleList, useLeaveState } from 'store/module';
 import axios from '../../node_modules/axios/index';
 import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
 
@@ -98,7 +98,7 @@ const CalendarPage = () => {
               end: endDate,
               color: '#a5d6a7',
               textColor: '#e8f5e9',
-              allDay: list.leaveapp_type === 0 || list.leaveapp_type === 3 ? true : false
+              allDay: list.leaveapp_type == 0 || list.leaveapp_type == 3 ? true : false
             };
           });
         setLeaveList(leaveListAdd);
@@ -108,13 +108,21 @@ const CalendarPage = () => {
       });
   };
 
-  const { shereDataList, shereScheduleList, shereLeaveList, setShereScheduleList, setShereLeaveList, setShereDataList } =
-    useCalendarGetScheduleList();
+  const {
+    shereDataList,
+    shereScheduleList,
+    shereLeaveList,
+    setShereScheduleList,
+    setShereLeaveList,
+    setShereDataList,
+    setShereLeaveDataList
+  } = useCalendarGetScheduleList();
   //공유 캘린더 리스트
   const getShereScheduleList = () => {
     axios
       .get(`/user-dep-schedulelist?user_no=${token.user_no}`)
       .then((response) => {
+        console.log(response.data);
         const scheduleListAdd = response.data.map((list) => {
           const startDate = new Date(list.schedule_startday);
           const endDate = new Date(list.schedule_endday);
@@ -164,10 +172,11 @@ const CalendarPage = () => {
               end: endDate,
               color: '#a5d6a7',
               textColor: '#e8f5e9',
-              allDay: list.leaveapp_type === 0 || list.leaveapp_type === 3 ? true : false
+              allDay: list.leaveapp_type == 0 || list.leaveapp_type == 3 ? true : false
             };
           });
         setShereLeaveList(leaveListAdd);
+        setShereLeaveDataList(response.data.filter((list) => list.leaveapp_status === 0));
       })
       .catch((error) => {
         console.error('휴가 리스트를 불러오는 중 오류 발생: ', error);
@@ -186,6 +195,21 @@ const CalendarPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // 비어있는 종속성 배열을 사용하여 초기 로딩 시에만 실행되도록 함
 
+  const { setLeave } = useLeaveState(); //휴가불러오기
+
+  React.useEffect(() => {
+    async function get() {
+      try {
+        const result = await axios.get(`/user-leave?user_no=${token.user_no}`);
+        setLeave(result.data);
+      } catch (error) {
+        console.error('데이터를 불러오는 중 오류 발생:', error);
+      }
+    }
+
+    get();
+  }, []);
+
   React.useEffect(() => {
     // shereDataList에서 schedule_share가 true인 schedule_no 값을 추출
     const selectedScheduleNos = shereDataList.filter((list) => list.schedule_share == true).map((list) => list.schedule_no);
@@ -193,7 +217,7 @@ const CalendarPage = () => {
     const filteredShereScheduleList = shereScheduleList.filter((item) => selectedScheduleNos.includes(item.id));
     setPersonalEvents([...scheduleList, ...leaveList]);
     setPublicEvents([...filteredShereScheduleList, ...shereLeaveList]);
-    console.log(token);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scheduleList, leaveList, shereScheduleList, shereLeaveList, shereDataList, value]);
 
   return (

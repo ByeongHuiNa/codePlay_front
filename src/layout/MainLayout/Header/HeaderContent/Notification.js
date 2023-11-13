@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -26,6 +26,7 @@ import Transitions from 'components/@extended/Transitions';
 
 // assets
 import { BellOutlined, CloseOutlined, GiftOutlined, MessageOutlined, SettingOutlined } from '@ant-design/icons';
+import { jwtDecode } from '../../../../../node_modules/jwt-decode/build/cjs/index';
 
 // sx styles
 const avatarSX = {
@@ -47,6 +48,33 @@ const actionSX = {
 // ==============================|| HEADER CONTENT - NOTIFICATION ||============================== //
 
 const Notification = () => {
+  const token = jwtDecode(localStorage.getItem('token').slice(7));
+
+  useEffect(() => {
+    let eventSource = undefined;
+    console.log('알림창 useEffect');
+    eventSource = new EventSource(`/api/alarm?user_no=${token.user_no}`);
+    eventSource.onopen = () => {
+      console.log('connection opened');
+    };
+
+    eventSource.onmessage = (event) => {
+      console.log('result', event);
+    };
+
+    eventSource.onerror = (event) => {
+      console.log(event.target.readyState);
+      if (event.target.readyState === EventSource.CLOSED) {
+        console.log('eventsource closed (' + event.target.readyState + ')');
+      }
+      eventSource.close();
+    };
+    return () => {
+      console.log('eventsource closed');
+      eventSource.close();
+    };
+  }, []);
+  
   const theme = useTheme();
   const matchesXs = useMediaQuery(theme.breakpoints.down('md'));
 

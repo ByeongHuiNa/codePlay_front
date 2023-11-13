@@ -110,11 +110,11 @@ const OrderStatus = ({ status }) => {
       break;
     case '휴가(오전반차)':
       color = 'primary';
-      title = '오전 반차';
+      title = '오전반차';
       break;
     case '휴가(오후반차)':
       color = 'primary';
-      title = '오후 반차';
+      title = '오후반차';
       break;
     case '휴가(공가)':
       color = 'primary';
@@ -142,7 +142,8 @@ const OrderStatus = ({ status }) => {
 };
 
 OrderStatus.propTypes = {
-  status: PropTypes.number
+  color: PropTypes.string,
+  title: PropTypes.string
 };
 
 // ==============================|| ORDER TABLE ||============================== //
@@ -203,7 +204,7 @@ export default function UserAllAttendTable({ datas, handleMyCard, height, select
                   role="checkbox"
                   aria-checked={isItemSelected}
                   tabIndex={-1}
-                  key={data.date}
+                  key={data.attend_date}
                   selected={isItemSelected}
                   onClick={() => handleMyCard(data)}
                   sx={{

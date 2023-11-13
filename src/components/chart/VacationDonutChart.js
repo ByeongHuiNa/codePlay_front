@@ -6,9 +6,8 @@ import { useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import MainCard from 'components/MainCard';
 import { useLeaveState } from 'store/module';
-import axios from '../../../node_modules/axios/index';
 
-export default function VacationDonutChart({ user_no }) {
+export default function VacationDonutChart() {
   // chart options
   const barChartOptions = {
     chart: {
@@ -67,19 +66,7 @@ export default function VacationDonutChart({ user_no }) {
   const { primary, secondary } = theme.palette.text;
   const info = theme.palette.info.primary;
 
-  const { leave, setLeave } = useLeaveState(); //휴가불러오기
-  const [series, setSeries] = useState([0, 0]); //휴가데이터
-
-  useEffect(() => {
-    async function get() {
-      const result = await axios.get(`/user-leave?user_no=${user_no}`);
-
-
-      setLeave(result.data);
-      setSeries([result.data.leave_use, result.data.leave_remain]);
-    }
-    get();
-  }, []);
+  const { leave } = useLeaveState(); //휴가불러오기
 
   useEffect(() => {
     setOptions((prevState) => ({
@@ -101,41 +88,43 @@ export default function VacationDonutChart({ user_no }) {
 
   return (
     <>
-      <Grid>
-        <ReactApexChart options={options} series={series} type="donut" height={190} />
-        <Grid container rowSpacing={4} columnSpacing={1} sx={{ mt: -2 }}>
-          <Grid item xs={4}>
-            <MainCard>
-              <Typography style={{ textAlign: 'center', fontSize: '1rem' }} sx={{ mb: 2 }}>
-                전체 휴가
-              </Typography>
-              <Typography variant="h5" style={{ textAlign: 'center' }}>
-                {leave.leave_total}일
-              </Typography>
-            </MainCard>
-          </Grid>
-          <Grid item xs={4}>
-            <MainCard>
-              <Typography style={{ textAlign: 'center', fontSize: '1rem' }} sx={{ mb: 2 }}>
-                사용 휴가
-              </Typography>
-              <Typography variant="h5" style={{ textAlign: 'center' }}>
-                {leave.leave_use}일
-              </Typography>
-            </MainCard>
-          </Grid>
-          <Grid item xs={4}>
-            <MainCard>
-              <Typography style={{ textAlign: 'center', fontSize: '1rem' }} sx={{ mb: 2 }}>
-                잔여 휴가
-              </Typography>
-              <Typography variant="h5" style={{ textAlign: 'center' }}>
-                {leave.leave_remain}일
-              </Typography>
-            </MainCard>
+      {Object.keys(leave).length > 0 && (
+        <Grid>
+          <ReactApexChart options={options} series={[leave.leave_use, leave.leave_remain]} type="donut" height={190} />
+          <Grid container rowSpacing={4} columnSpacing={1} sx={{ mt: -2 }}>
+            <Grid item xs={4}>
+              <MainCard>
+                <Typography style={{ textAlign: 'center', fontSize: '1rem' }} sx={{ mb: 2 }}>
+                  전체 휴가
+                </Typography>
+                <Typography variant="h5" style={{ textAlign: 'center' }}>
+                  {leave.leave_total}일
+                </Typography>
+              </MainCard>
+            </Grid>
+            <Grid item xs={4}>
+              <MainCard>
+                <Typography style={{ textAlign: 'center', fontSize: '1rem' }} sx={{ mb: 2 }}>
+                  사용 휴가
+                </Typography>
+                <Typography variant="h5" style={{ textAlign: 'center' }}>
+                  {leave.leave_use}일
+                </Typography>
+              </MainCard>
+            </Grid>
+            <Grid item xs={4}>
+              <MainCard>
+                <Typography style={{ textAlign: 'center', fontSize: '1rem' }} sx={{ mb: 2 }}>
+                  잔여 휴가
+                </Typography>
+                <Typography variant="h5" style={{ textAlign: 'center' }}>
+                  {leave.leave_remain}일
+                </Typography>
+              </MainCard>
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
+      )}
     </>
   );
 }

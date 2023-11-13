@@ -175,7 +175,7 @@ Type.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function AdminAppLeaveTable({ datas, setSelectLeaveData }) {
+export default function AdminAppLeaveTable({ datas, setSelectLeaveData, selectLeaveData }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
@@ -228,7 +228,10 @@ export default function AdminAppLeaveTable({ datas, setSelectLeaveData }) {
                 <TableRow
                   hover
                   role="checkbox"
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  sx={{
+                    '&:last-child td, &:last-child th': { border: 0 },
+                    backgroundColor: data === selectLeaveData ? '#e4e3e3' : 'inherit'
+                  }}
                   aria-checked={isItemSelected}
                   tabIndex={-1}
                   key={data.leaveapp_no}

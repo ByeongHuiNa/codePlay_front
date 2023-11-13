@@ -35,11 +35,15 @@ import CancelLeaveTable from 'components/Table/CancelLeaveTable';
 import UserLeaveInfoTable from 'components/Table/UserLeaveInfoTable';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
+import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
 
 const UserLeave = () => {
   const { index, setIndex } = useLeaveTab();
   const [selectedValue, setSelectedValue] = useState('annual');
   const [selectedHalfValue, setHalfValue] = useState('am');
+
+  //token 값을 decode해주는 코드
+  const token = jwtDecode(localStorage.getItem('token').slice(7));
 
   const handleChange = (event, newValue) => {
     setIndex(newValue);
@@ -81,25 +85,14 @@ const UserLeave = () => {
   // 휴가 신청 객체
   const [title, setTitle] = useState('');
   const [reason, setReason] = useState('');
-  const [start, setStart] = useState(new Date().toISOString().slice(0, 10));
-  const [end, setEnd] = useState(new Date().toISOString().slice(0, 10));
+  const [start, setStart] = useState(new Date());
+  const [end, setEnd] = useState(new Date());
   const [firstApprover, setFirstApprover] = useState({});
   const [secondApprover, setSecondApprover] = useState({});
 
   // 사원선택의 자동완성 창에서 검색어 변경(검색) 될 때마다 searchName 설정
   const handleSelectUser = (event, newValue) => {
     setSearchName(newValue);
-  };
-
-  // 로그인 한 사용자
-  const user = {
-    user_no: 1,
-    user_name: '김철수',
-    user_position: '팀장',
-    dept: {
-      dept_no: 1,
-      dept_name: '개발1팀'
-    }
   };
 
   // 같은 부서의 근태담당자 (우선 지금은 팀장) 사용자 데이터
@@ -113,22 +106,22 @@ const UserLeave = () => {
 
   useEffect(() => {
     // 로그인 한 사용자 부서의 근태 담당자 내역 -> 결재자 검색창 autocomplete
-    axios.get(`/dept-manager?dept_no=${user.dept.dept_no}`).then((res) => {
+    axios.get(`/dept-manager?dept_no=${token.dept_no}`).then((res) => {
       setAllUsers(res.data);
     });
     // 로그인 한 사용자의 휴가 보유 현황 가져오기
-    axios.get(`/user-leave?user_no=${user.user_no}`).then((res) => {
+    axios.get(`/user-leave?user_no=${token.user_no}`).then((res) => {
       setLeaveCnt([res.data.leave_use, res.data.leave_remain]);
     });
     // 로그인 한 사용자의 승인,반려,결재진행중 상태인 모든 휴가신청내역 가져오기
-    axios.get(`/user-leave-request-recent?user_no=${user.user_no}`).then((res) => {
+    axios.get(`/user-leave-request-recent?user_no=${token.user_no}`).then((res) => {
       setLeaveRequestRecent(res.data);
     });
     // 폼 초기화
     setTitle('');
     setReason('');
-    setStart(new Date().toISOString().slice(0, 10));
-    setEnd(new Date().toISOString().slice(0, 10));
+    setStart(new Date());
+    setEnd(new Date());
     setFirstApprover({});
     setSecondApprover({});
     setSelectedValue('annual');
@@ -140,26 +133,21 @@ const UserLeave = () => {
 
   useEffect(() => {
     // 로그인 한 사용자의 결재대기 상태인 모든 휴가신청내역 가져오기
-    axios.get(`/user-leave-request-await?user_no=${user.user_no}`).then((res) => {
+    axios.get(`/user-leave-request-await?user_no=${token.user_no}`).then((res) => {
       setLeaveRequestAwait(res.data);
     });
   }, [leaveRequestAwait]);
 
   // 휴가 신청 버튼
   function submitLeaveRequest() {
-    if (
-      Object.keys(firstApprover).length === 0 ||
-      Object.keys(secondApprover).length === 0 ||
-      Object.keys(start).length === 0 ||
-      Object.keys(end).length === 0
-    ) {
+    if (Object.keys(firstApprover).length === 0 || Object.keys(secondApprover).length === 0 || start === null || end === null) {
       alert('날짜 선택하시고 결재자 선택하세요.');
     } else {
       axios
-        .post(`/user-leave-request?user_no=${user.user_no}`, {
+        .post(`/user-leave-request?user_no=${token.user_no}`, {
           leaveapp_title:
             title === ''
-              ? `${user.user_name}(${
+              ? `${token.user_name}(${
                   selectedValue === 'annual'
                     ? '연차'
                     : selectedValue === 'public'
@@ -176,8 +164,8 @@ const UserLeave = () => {
                 }일`
               : title,
           leaveapp_content: reason,
-          leaveapp_start: new Date(start),
-          leaveapp_end: selectedValue === 'half' ? new Date(start) : new Date(end),
+          leaveapp_start: start,
+          leaveapp_end: selectedValue === 'half' ? start : end,
           leaveapp_total:
             selectedValue === 'half'
               ? 0.5
@@ -214,8 +202,8 @@ const UserLeave = () => {
       alert('날짜 선택하시고 결재자 선택하세요.');
     } else {
       axios
-        .post(`/user-leave-cancel-request?user_no=${user.user_no}`, {
-          leaveapp_title: title === '' ? `${user.user_name}(휴가취소)${selectLeaveCancel.leaveapp_total}일` : title,
+        .post(`/user-leave-cancel-request?user_no=${token.user_no}`, {
+          leaveapp_title: title === '' ? `${token.user_name}(휴가취소)${selectLeaveCancel.leaveapp_total}일` : title,
           leaveapp_content: reason,
           leaveapp_start: new Date(selectLeaveCancel.leaveapp_start),
           leaveapp_end: new Date(selectLeaveCancel.leaveapp_end),
@@ -337,10 +325,10 @@ const UserLeave = () => {
             </BasicContainer>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            <BasicContainer>
+            <BasicContainer sx={{ height: '520px' }}>
               <Grid container alignItems="center" justifyContent="space-between">
                 <Grid item>
-                  <Typography variant="h5">결재 진행중인 최근 내역</Typography>
+                  <Typography variant="h4">결재 진행중인 최근 내역</Typography>
                 </Grid>
               </Grid>
               <AppLeaveTable requestLeaveCancel={requestLeaveCancel} datas={leaveRequestRecent.slice(0, 7)} handleOpen={handleOpen} />

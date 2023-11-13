@@ -1,6 +1,7 @@
 import { Box, Tab, Tabs } from '../../../node_modules/@mui/material/index';
 import { useState } from 'react';
 import CalendarDepWorkList from './CalendarDepWorkList';
+import CalendarDepLeaveList from './CalendarDepLeaveList';
 
 function CustomTabPanel(props) {
   // eslint-disable-next-line react/prop-types
@@ -36,10 +37,10 @@ const CalendarDepWorkListTab = () => {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        <CalendarDepWorkList></CalendarDepWorkList>
+        <CalendarDepWorkList />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <CalendarDepWorkList></CalendarDepWorkList>
+        <CalendarDepLeaveList />
       </CustomTabPanel>
     </Box>
   );
