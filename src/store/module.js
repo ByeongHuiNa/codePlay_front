@@ -338,3 +338,15 @@ export const useAuth = create(
     setIsLoggedIn: (newLogin) => set(() => ({ isLoggedIn: newLogin }))
   }))
 );
+
+//캘린더 메모 리스트
+export const useMemoList = create(
+  devtools((set) => ({
+    memoList: [],
+    scheduleNo: 0,
+    leaveNo: 0,
+    setMemoList: (newMemoList) => set(() => ({ memoList: newMemoList })),
+    setScheduleNo: (newScheduleNo) => set(() => ({ scheduleNo: newScheduleNo })),
+    setLeaveNo: (newLeaveNo) => set(() => ({ leaveNo: newLeaveNo })),
+  }))
+);
