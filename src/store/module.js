@@ -161,6 +161,7 @@ export const useLeaveState = create(
     setLeave: (newLeave) => set(() => ({ leave: newLeave }))
   }))
 );
+
 //모든 사용자의 휴가보유 현황
 export const useAllLeaveState = create(
   devtools((set) => ({
@@ -321,6 +322,14 @@ export const useFormatter = create(
       let seconds = date.getSeconds() >= 10 ? date.getSeconds() : '0' + date.getSeconds();
       return `${hours}:${minutes}:${seconds}`;
     }
+  }))
+);
+
+// 휴가 신청자의 휴가 보유 현황
+export const useLeaveCnt = create(
+  devtools((set) => ({
+    leaveCnt: {},
+    setLeaveCnt: (newLeave) => set(() => ({ leaveCnt: newLeave }))
   }))
 );
 
