@@ -36,6 +36,8 @@ const SettingAttendancePolicy = Loadable(lazy(() => import('pages/SettingAttenda
 
 // render - user attendance
 const UserAttendance = Loadable(lazy(() => import('pages/UserAttendance')));
+const UserOverTimeReq = Loadable(lazy(() => import('pages/UserOverTimeReq')));
+
 // render - user leave
 const UserLeave = Loadable(lazy(() => import('pages/UserLeave')));
 // render - approval attendance
@@ -111,6 +113,10 @@ const routes = (isLoggedIn) => [
       {
         path: 'modifyattendance',
         element: <ModifyAttendance />
+      },
+      {
+        path: 'userOverTimeReq',
+        element: <UserOverTimeReq />
       }
     ]
   },
