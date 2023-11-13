@@ -68,10 +68,16 @@ const headCells = [
     label: '퇴근시간'
   },
   {
-    id: 'hours',
+    id: 'total',
     align: 'center',
     disablePadding: false,
     label: '근무시간'
+  },
+  {
+    id: 'overtime',
+    align: 'center',
+    disablePadding: false,
+    label: '연장근무시간'
   },
   {
     id: 'status',
@@ -112,8 +118,6 @@ AttendanceDayTableHead.propTypes = {
 const AttendanceDayStatus = ({ status }) => {
   let color;
   let title;
-
-
 
   switch (status) {
     case '정상':
@@ -167,21 +171,21 @@ AttendanceDayStatus.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function AttendanceDayTable({ depts, filterDate }) { //부서, 날짜 전달받음
+export default function AttendanceDayTable({ depts, filterDate }) {
+  //부서, 날짜 전달받음
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
 
   const [total, setTotal] = useState(0); //출퇴근 전체개수
-  const [normal, setNormal] = useState(0);//출퇴근 정상개수
-  const [odd, setOdd] = useState(0);      //출퇴근 근태이상개수
-  const [leave, setLeave] = useState(0);  //출퇴근 휴가개수
+  const [normal, setNormal] = useState(0); //출퇴근 정상개수
+  const [odd, setOdd] = useState(0); //출퇴근 근태이상개수
+  const [leave, setLeave] = useState(0); //출퇴근 휴가개수
 
   const [attend, setAttend] = useState([]); //근태내역
   const [filterAttend, setFilterAttend] = useState([]); //오늘날짜의 데이터 필터링
 
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
-  
 
   useEffect(() => {
     async function fetchData() {
@@ -232,7 +236,7 @@ export default function AttendanceDayTable({ depts, filterDate }) { //부서, �
         setOdd(oddCount);
         setLeave(leaveCount);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error);
       }
     }
 
@@ -330,6 +334,7 @@ export default function AttendanceDayTable({ depts, filterDate }) { //부서, �
                   <TableCell align="center">{attend.attend_start}</TableCell>
                   <TableCell align="center">{attend.attend_end}</TableCell>
                   <TableCell align="center">{attend.attend_total}</TableCell>
+                  <TableCell align="center"></TableCell>
                   <TableCell align="center">
                     <AttendanceDayStatus status={attend.attend_status} />
                   </TableCell>

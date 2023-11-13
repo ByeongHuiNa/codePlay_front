@@ -86,6 +86,18 @@ const headCells = [
     label: '퇴근시각'
   },
   {
+    id: 'total',
+    align: 'center',
+    disablePadding: false,
+    label: '근무시간'
+  },
+  {
+    id: 'total',
+    align: 'center',
+    disablePadding: false,
+    label: '연장근무시간'
+  },
+  {
     id: 'status',
     align: 'center',
     disablePadding: false,
@@ -336,6 +348,8 @@ export default function AttendanceTable({ month, user_no }) {
                     <TableCell align="center">{dayName}</TableCell>
                     <TableCell align="center">{attendance.attend_start}</TableCell>
                     <TableCell align="center">{attendance.attend_end}</TableCell>
+                    <TableCell align="center">{attendance.attend_total}</TableCell>
+                    <TableCell align="center"></TableCell>
                     <TableCell align="center">
                       <AttendanceStatus status={attendance.attend_status} />
                     </TableCell>

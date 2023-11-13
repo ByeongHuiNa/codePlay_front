@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 
-
 // material-ui
 import { Box, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 
@@ -115,6 +114,12 @@ const headCells = [
     align: 'center',
     disablePadding: false,
     label: '주간근무시간'
+  },
+  {
+    id: 'overtimehours',
+    align: 'center',
+    disablePadding: false,
+    label: '연장근무시간'
   }
 ];
 
@@ -221,7 +226,7 @@ export default function AttendanceWeekTable({ depts, filterDate }) {
 
   useEffect(() => {
     console.log(depts);
-    console.log("날짜: " + filterDate);
+    console.log('날짜: ' + filterDate);
     async function get() {
       const result = await axios.get(`/see-all-attendance-week?dept_no=${depts}&week_monday=${filterDate}`);
       setAttend(result.data);
@@ -342,16 +347,14 @@ export default function AttendanceWeekTable({ depts, filterDate }) {
                   <TableCell align="center">
                     <AttendanceWeekStatus status={attend.sunday_status} />
                   </TableCell>
-                  <TableCell align="center">40시간</TableCell>
+                  <TableCell align="center">{attend.total_time}</TableCell>
+                  <TableCell align="center"></TableCell>
                 </TableRow>
               );
             })}
           </TableBody>
         </Table>
       </TableContainer>
-      {/* <Stack alignItems="center" mt={2}>
-        <Pagination count={5} variant="outlined" shape="rounded" />
-      </Stack> */}
     </Box>
   );
 }
