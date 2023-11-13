@@ -27,17 +27,11 @@ import BasicChip from 'components/Chip/BasicChip';
 import axios from '../../node_modules/axios/index';
 import { useFormatter } from 'store/module';
 import UserAttendOriginInfoTable from 'components/Table/UserAttendOriginInfoTable';
+import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
 
 const ApprovalAttendance = () => {
-  // 선택한 사용자
-  const user = {
-    user_no: 4,
-    user_position: '과장',
-    dept: {
-      dept_no: 1,
-      dept_name: '개발1팀'
-    }
-  };
+  //token 값을 decode해주는 코드
+  const token = jwtDecode(localStorage.getItem('token').slice(7));
 
   const { dateFormat } = useFormatter();
 
@@ -70,11 +64,11 @@ const ApprovalAttendance = () => {
 
   useEffect(() => {
     // 로그인 한 근태담당자의 휴가 전체 결재 내역
-    axios.get(`/manager-leave-approval?user_no=${user.user_no}`).then((res) => {
+    axios.get(`/manager-leave-approval?user_no=${token.user_no}`).then((res) => {
       setLeaveAppDatas(res.data);
     });
     // 로그인 한 근태담당의 출퇴근 전체 결재 내역
-    axios.get(`/manager-attend-approval?user_no=${user.user_no}`).then((res) => {
+    axios.get(`/manager-attend-approval?user_no=${token.user_no}`).then((res) => {
       setAttendAppDatas(res.data);
     });
   }, [value2, value3]);
@@ -96,6 +90,8 @@ const ApprovalAttendance = () => {
       .patch('/manager-leave-approval', {
         user_no: selectLeaveData.user_no,
         leaveapp_no: selectLeaveData.leaveapp_no,
+        leaveapp_start: selectLeaveData.leaveapp_start,
+        leaveapp_end: selectLeaveData.leaveapp_end,
         leaveapp_total: selectLeaveData.leaveapp_total,
         leaveapp_type: selectLeaveData.leaveapp_type,
         leaveappln_no: selectLeaveData.leaveappln_no,
@@ -380,7 +376,7 @@ const ApprovalAttendance = () => {
                   </Box>
                   <ApprovalTab value={value2} index={0}>
                     <Box pb={3}>
-                      <AdminAppLeaveTable datas={leaveAppDatas} setSelectLeaveData={setSelectLeaveData} />
+                      <AdminAppLeaveTable datas={leaveAppDatas} setSelectLeaveData={setSelectLeaveData} selectLeaveData={selectLeaveData}/>
                     </Box>
                   </ApprovalTab>
                   <ApprovalTab value={value2} index={1}>
@@ -388,6 +384,7 @@ const ApprovalAttendance = () => {
                       <AdminAppLeaveTable
                         datas={leaveAppDatas.filter((data) => data.leaveappln_status === 2)}
                         setSelectLeaveData={setSelectLeaveData}
+                        selectLeaveData={selectLeaveData}
                       />
                     </Box>
                   </ApprovalTab>
@@ -396,6 +393,7 @@ const ApprovalAttendance = () => {
                       <AdminAppLeaveTable
                         datas={leaveAppDatas.filter((data) => data.leaveappln_status === 0 || data.leaveappln_status === 1)}
                         setSelectLeaveData={setSelectLeaveData}
+                        selectLeaveData={selectLeaveData}
                       />
                     </Box>
                   </ApprovalTab>
@@ -417,13 +415,15 @@ const ApprovalAttendance = () => {
                             <Grid item>
                               <Typography variant="h5">휴가 상세 조회</Typography>
                             </Grid>
-                            {selectLeaveData.leaveapp_status === 0 && selectLeaveData.leaveapp_type !== 4 && (
-                              <Grid item>
-                                <Button variant="contained" size="medium">
-                                  휴가취소
-                                </Button>
-                              </Grid>
-                            )}
+                            {selectLeaveData.leaveapp_status === 0 &&
+                              selectLeaveData.leaveapp_type !== 4 &&
+                              selectLeaveData.leaveappln_order === 2 && (
+                                <Grid item>
+                                  <Button variant="contained" size="medium">
+                                    휴가취소
+                                  </Button>
+                                </Grid>
+                              )}
                           </Grid>
                           <Box clone mt={2}>
                             <BasicChip label="제목" color="#7c7d80" />

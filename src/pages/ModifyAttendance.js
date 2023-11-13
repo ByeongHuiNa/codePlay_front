@@ -28,23 +28,15 @@ import BasicAuto from 'components/AutoComplete/BasicAuto';
 import axios from '../../node_modules/axios/index';
 import SelectUserTable from 'components/Table/SelectUserTable';
 import ModalM from 'components/Modal/ModalM';
-import UserLeaveStateTable from 'components/Table/UserLeaveStateTable';
+import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
 
 const ModifyAttendance = () => {
-  // 선택한 사용자
-  const user = {
-    user_no: 1,
-    user_name: '이유나',
-    user_position: '팀장',
-    dept: {
-      dept_no: 1,
-      dept_name: '개발1팀'
-    }
-  };
+  //token 값을 decode해주는 코드
+  const token = jwtDecode(localStorage.getItem('token').slice(7));
 
   // 근태담당자와 같은 부서인 모든 직원 목록
   useEffect(() => {
-    axios.get(`manager-dept-users?user_no=${user.user_no}`).then((res) => {
+    axios.get(`manager-dept-users?user_no=${token.user_no}`).then((res) => {
       setAllUsers(res.data);
     });
   }, []);
@@ -54,7 +46,7 @@ const ModifyAttendance = () => {
   const handleTab = (event, newValue) => {
     setValue(newValue);
     setCheckItems([]);
-    setSelectDate(new Date().toISOString().slice(0, 10));
+    setSelectDate(new Date().setHours(0, 0, 0, 0));
     setAttendStartDefault('default');
     setAttendEndDefault('default');
     setUpdateStartTime('09:00:00');
@@ -62,8 +54,6 @@ const ModifyAttendance = () => {
     setSelectAttendData({});
     setStartChecked(true);
     setEndChecked(false);
-    setSelectUser({});
-    setLeaveData({});
   };
 
   // Tab : 0.출/퇴근 =============================================
@@ -105,12 +95,19 @@ const ModifyAttendance = () => {
   const [attendDatas, setAttendDatas] = useState([]);
 
   // 수정할 출퇴근 날짜 선택
-  const [selectDate, setSelectDate] = useState(new Date().toISOString().slice(0, 10));
+  const [selectDate, setSelectDate] = useState(new Date());
 
   const searchSelectDate = async () => {
     if (checkItems.length === 1) {
       try {
-        const response = await axios.get(`/user-attend-date?user_no=${checkItems[0]}&date=${selectDate.slice(0, 10)}`);
+        const response = await axios.get(
+          `/user-attend-date?user_no=${checkItems[0]}&date=${new Date(selectDate).toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+          })}`
+        );
+        console.log(response.data);
         setSelectAttendData(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -142,8 +139,8 @@ const ModifyAttendance = () => {
   const handleCloseAllSave = () => {
     setOpenAll(false);
     setSelectAttendData(searchAttendData);
-    setSearchStartDate(new Date().toISOString().slice(0, 10));
-    setSearchEndDate(new Date().toISOString().slice(0, 10));
+    setSearchStartDate(new Date().setHours(0, 0, 0, 0));
+    setSearchEndDate(new Date().setHours(0, 0, 0, 0));
     setAttendDatas([]);
   };
 
@@ -151,15 +148,15 @@ const ModifyAttendance = () => {
   const handleCloseAll = () => {
     setOpenAll(false);
     setSearchAttendData({});
-    setSearchStartDate(new Date().toISOString().slice(0, 10));
-    setSearchEndDate(new Date().toISOString().slice(0, 10));
+    setSearchStartDate(new Date().setHours(0, 0, 0, 0));
+    setSearchEndDate(new Date().setHours(0, 0, 0, 0));
     setAttendDatas([]);
   };
 
   // 출퇴근 전체조회 모달창 : 날짜 검색 시작일
-  const [searchStartDate, setSearchStartDate] = useState(new Date().toISOString().slice(0, 10));
+  const [searchStartDate, setSearchStartDate] = useState(new Date().setHours(0, 0, 0, 0));
   // 출퇴근 전체조회 모달창 : 날짜 검색 종료일
-  const [searchEndDate, setSearchEndDate] = useState(new Date().toISOString().slice(0, 10));
+  const [searchEndDate, setSearchEndDate] = useState(new Date().setHours(0, 0, 0, 0));
   // 출퇴근 전체조회 모달창에서 선택한 출/퇴근 데이터 값
   const [searchAttendData, setSearchAttendData] = useState({});
 
@@ -183,6 +180,10 @@ const ModifyAttendance = () => {
     }
   };
 
+  // 수정 제목, 사유
+  const [title, setTitle] = useState('');
+  const [reason, setReason] = useState('');
+
   // 퇴근 수정 요청 시 라디오 : 수정시간 기본값/직접입력 선택
   const [attendEndDefault, setAttendEndDefault] = useState('default'); // 퇴근수정시간
   const handleDefaultEndChange = (event) => {
@@ -203,7 +204,7 @@ const ModifyAttendance = () => {
       setAttendEndDefault('default');
       setUpdateStartTime('09:00:00');
       setUpdateEndTime('18:00:00');
-      setSelectDate(new Date(selectAttendData.attend_date).toISOString());
+      setSelectDate(new Date(selectAttendData.attend_date));
     }
   }, [selectAttendData]);
 
@@ -215,19 +216,37 @@ const ModifyAttendance = () => {
       setAttendEndDefault('default');
       setUpdateStartTime('09:00:00');
       setUpdateEndTime('18:00:00');
-      setSelectDate(new Date().toISOString().slice(0, 10));
+      setSelectDate(new Date().setHours(0, 0, 0, 0));
       setSelectAttendData({});
     }
   }, [checkItems]);
 
-  // Tab : 1.휴가 ===============================================
-  // 선택한 사원
-  const [selectUser, setSelectUser] = useState({});
-  // 선택한 사원의 휴가 데이터 값
-  const [leaveData, setLeaveData] = useState({});
-
-  console.log(updateStartTime);
-  console.log(updateEndTime);
+  function submitAttendModify() {
+    console.log(checkItems);
+    console.log(selectDate);
+    console.log(new Date(selectDate));
+    axios
+      .patch(`/manager-attend-modify`, {
+        user_no_list: checkItems,
+        attend_date: new Date(selectDate).toLocaleDateString('ko-KR', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit'
+        }),
+        attendedit_title: title,
+        attendedit_kind: startChecked === true && endChecked === false ? 3 : startChecked === false && endChecked === true ? 4 : 5,
+        attendedit_start_time: startChecked === true ? updateStartTime : '',
+        attendedit_end_time: endChecked === true ? updateEndTime : '',
+        attendapp_user_no: token.user_no,
+        attendapp_status: 3,
+        attendapp_reason: reason
+      })
+      .then((res) => {
+        console.log('결재완료 : ' + res.data);
+        alert('결재완료');
+        setCheckItems([]);
+      });
+  }
 
   // Tab 커스텀
   const MyTab = styled(Tab)`
@@ -250,55 +269,51 @@ const ModifyAttendance = () => {
   return (
     <ComponentSkeleton>
       <Box clone mx={1}>
+        <Box sx={{ borderBottom: 1, border: '0px' }}>
+          <MyTabs value={value} onChange={handleTab} aria-label="basic tabs example">
+            <MyTab label="수정" index="0" />
+            <MyTab label="조회" index="1" />
+          </MyTabs>
+        </Box>
         <BasicContainer>
-          <Grid container alignItems="center" justifyContent="space-between">
-            <Grid item>
-              <Typography variant="h4">근태 현황 수정</Typography>
-            </Grid>
-          </Grid>
-          <Box mt={1} ml={1}>
+          <ApprovalTab value={value} index={0} border={'none'}>
             <Grid container alignItems="center" justifyContent="space-between">
-              <Grid item xs={4} md={4} lg={4}>
-                <MainCard sx={{ pt: 2, mr: 1, height: '730px', borderRadius: 0 }} content={false}>
-                  <Box
-                    pr={2}
-                    pl={2}
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center'
-                    }}
-                  >
-                    <BasicChip label="사원선택" color="gray" />
-                    {/* 자동완성 부분 */}
-                    <BasicAuto
-                      label="이름"
-                      datas={allUsers}
-                      handleSelectUser={handleSelectUser}
-                      searchName={searchName}
-                      setSearchName={setSearchName}
-                    />
-                  </Box>
-                  <SelectUserTable
-                    value={value}
-                    datas={allUsers}
-                    searchName={searchName}
-                    handleAllCheck={handleAllCheck}
-                    handleSingleCheck={handleSingleCheck}
-                    checkItems={checkItems}
-                    setSelectUser={setSelectUser}
-                    setLeaveData={setLeaveData}
-                    selectUser={selectUser}
-                  />
-                </MainCard>
+              <Grid item>
+                <Typography variant="h4">근태 현황 수정</Typography>
               </Grid>
-              <Grid item xs={8} md={8} lg={8}>
-                <Box sx={{ borderBottom: 1, border: '0px' }}>
-                  <MyTabs value={value} onChange={handleTab} aria-label="basic tabs example">
-                    <MyTab label="출/퇴근" index="0" />
-                    <MyTab label="휴가" index="1" />
-                  </MyTabs>
-                </Box>
-                <ApprovalTab value={value} index={0} border={'none'}>
+            </Grid>
+            <Box mt={2} ml={1}>
+              <Grid container alignItems="center" justifyContent="space-between">
+                <Grid item xs={4} md={4} lg={4}>
+                  <MainCard sx={{ pt: 2, mr: 1, height: '730px', borderRadius: 0 }} content={false}>
+                    <Box
+                      pr={2}
+                      pl={2}
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center'
+                      }}
+                    >
+                      <BasicChip label="사원선택" color="gray" />
+                      {/* 자동완성 부분 */}
+                      <BasicAuto
+                        label="이름"
+                        datas={allUsers}
+                        handleSelectUser={handleSelectUser}
+                        searchName={searchName}
+                        setSearchName={setSearchName}
+                      />
+                    </Box>
+                    <SelectUserTable
+                      datas={allUsers}
+                      searchName={searchName}
+                      handleAllCheck={handleAllCheck}
+                      handleSingleCheck={handleSingleCheck}
+                      checkItems={checkItems}
+                    />
+                  </MainCard>
+                </Grid>
+                <Grid item xs={8} md={8} lg={8}>
                   {checkItems.length > 1 && (
                     <MainCard sx={{ pt: 2, pr: 2, pl: 2, height: '690px' }} content={false}>
                       <Grid container spacing={1} justifyContent="center">
@@ -365,12 +380,14 @@ const ModifyAttendance = () => {
                               )}
                             </Box>
                           )}
-                          <Box clone mt={1.5} mr={1}>
+                          <Box clone mt={2.5} mr={1}>
                             <BasicChip label="수정사유" color="gray" />
                             <TextField multiline rows={5} sx={{ width: '84%' }} />
                           </Box>
                           <Stack direction="row" justifyContent="flex-end" mt={2} mr={1.5}>
-                            <Button variant="contained">결재완료</Button>
+                            <Button variant="contained" onClick={submitAttendModify}>
+                              수정완료
+                            </Button>
                           </Stack>
                         </Grid>
                       </Grid>
@@ -378,7 +395,7 @@ const ModifyAttendance = () => {
                   )}
                   {checkItems.length <= 1 && (
                     <>
-                      <MainCard sx={{ mb: 1, pt: 2, height: '200px', borderRadius: 0 }} content={false}>
+                      <MainCard sx={{ mb: 1, pt: 2, height: '230px', borderRadius: 0 }} content={false}>
                         <Grid container alignItems="center" direction="row" spacing={1} sx={{ pl: 2 }}>
                           <Grid item xs={1.5} md={1.5} lg={1.5}>
                             <Typography variant="h5">날짜 선택</Typography>
@@ -420,7 +437,12 @@ const ModifyAttendance = () => {
                             <Typography variant="h4">출/퇴근 수정</Typography>
                             <Box clone mt={2.5}>
                               <BasicChip label="제목" color="gray" />
-                              <TextField size="small" />
+                              <TextField
+                                size="small"
+                                onChange={(e) => {
+                                  setTitle(e.target.value);
+                                }}
+                              />
                             </Box>
                             <Box clone mt={2.5}>
                               <BasicChip label="수정사항" color="gray" />
@@ -479,12 +501,21 @@ const ModifyAttendance = () => {
                                 )}
                               </Box>
                             )}
-                            <Box clone mt={1.5} mr={1}>
+                            <Box clone mt={2.5} mr={1}>
                               <BasicChip label="수정사유" color="gray" />
-                              <TextField multiline rows={5} sx={{ width: '84%' }} />
+                              <TextField
+                                multiline
+                                rows={5}
+                                sx={{ width: '84%' }}
+                                onChange={(e) => {
+                                  setReason(e.target.value);
+                                }}
+                              />
                             </Box>
                             <Stack direction="row" justifyContent="flex-end" mt={2} mr={3}>
-                              <Button variant="contained">결재완료</Button>
+                              <Button variant="contained" onClick={submitAttendModify}>
+                                수정완료
+                              </Button>
                             </Stack>
                           </Grid>
                         </Grid>
@@ -520,43 +551,19 @@ const ModifyAttendance = () => {
                       </Grid>
                     </Grid>
                   </ModalM>
-                </ApprovalTab>
-                <ApprovalTab value={value} index={1} border={'none'}>
-                  <MainCard sx={{ pt: 2, pr: 2, pl: 2, height: '690px', borderRadius: 0 }} content={false}>
-                    <Grid container alignItems="center" justifyContent="space-between">
-                      <Grid item>
-                        <Typography variant="h4">휴가 수정</Typography>
-                      </Grid>
-                    </Grid>
-                    <Box clone mt={2}>
-                      <UserLeaveStateTable data={leaveData} />
-                      {Object.keys(leaveData).length === 0 && (
-                        <Box
-                          p={1}
-                          sx={{
-                            display: 'flex',
-                            justifyContent: 'center', // 수평 중앙 정렬
-                            alignItems: 'center' // 수직 중앙 정렬
-                          }}
-                        >
-                          <Typography variant="h5">선택된 사원 없음</Typography>
-                        </Box>
-                      )}
-                    </Box>
-                    <Box clone mt={1}>
-                      <Grid container justifyContent="right" spacing={1}>
-                        <Grid item>
-                          <Button variant="contained" size="medium">
-                            완료
-                          </Button>
-                        </Grid>
-                      </Grid>
-                    </Box>
-                  </MainCard>
-                </ApprovalTab>
+                </Grid>
               </Grid>
-            </Grid>
-          </Box>
+            </Box>
+          </ApprovalTab>
+          <ApprovalTab value={value} index={1} border={'none'}>
+            <MainCard sx={{ pt: 2, pr: 2, pl: 2, height: '690px', borderRadius: 0 }} content={false}>
+              <Grid container alignItems="center" justifyContent="space-between">
+                <Grid item>
+                  <Typography variant="h4">출퇴근 수정 조회</Typography>
+                </Grid>
+              </Grid>
+            </MainCard>
+          </ApprovalTab>
         </BasicContainer>
       </Box>
     </ComponentSkeleton>

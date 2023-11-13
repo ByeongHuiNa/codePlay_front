@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
 
 // material-ui
 import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
@@ -38,7 +37,7 @@ const headCells = [
 
 // ==============================|| ORDER TABLE - HEADER ||============================== //
 
-function OrderTableHead({ order, orderBy }) {
+function OrderTableHead() {
   return (
     <TableHead>
       <TableRow>
@@ -47,7 +46,6 @@ function OrderTableHead({ order, orderBy }) {
             key={headCell.id}
             align={headCell.align}
             padding={headCell.disablePadding ? 'none' : 'normal'}
-            sortDirection={orderBy === headCell.id ? order : false}
             sx={{ height: '30px', p: 1 }}
           >
             {headCell.label}
@@ -57,11 +55,6 @@ function OrderTableHead({ order, orderBy }) {
     </TableHead>
   );
 }
-
-OrderTableHead.propTypes = {
-  order: PropTypes.string,
-  orderBy: PropTypes.string
-};
 
 // ==============================|| ORDER TABLE - STATUS ||============================== //
 
@@ -116,14 +109,13 @@ const OrderStatus = ({ status }) => {
 };
 
 OrderStatus.propTypes = {
-  status: PropTypes.number
+  color: PropTypes.string,
+  title: PropTypes.string
 };
 
 // ==============================|| ORDER TABLE ||============================== //
 
 export default function UserAttendInfoTable({ data }) {
-  const [order] = useState('asc');
-  const [orderBy] = useState('trackingNo');
   // 날짜 형식
   const { dateFormat } = useFormatter();
 
@@ -163,7 +155,7 @@ export default function UserAttendInfoTable({ data }) {
             }
           }}
         >
-          <OrderTableHead order={order} orderBy={orderBy} />
+          <OrderTableHead />
           <TableBody>
             <TableRow role="checkbox" sx={{ '&:last-child td, &:last-child th': { border: 0 } }} tabIndex={-1} key={data.date}>
               {Object.keys(data).length !== 0 && (

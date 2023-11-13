@@ -48,90 +48,90 @@ const routes = (isLoggedIn) => [
     path: '/',
     element: isLoggedIn ? <MainLayout /> : <Navigate to="/auth/login-form" />,
     children: [
-        {
-            path: '/',
-            element: <Main />
-          },
-          {
-            path: 'userAttendanceTotal',
-            element: <UserAttendanceTotal />
-          },
-          {
-            path: 'seeAllAttendance',
-            element: <SeeAllAttendance />
-          },
-          {
-            path: 'seeUserAttendance',
-            element: <SeeUserAttendance />
-          },
-          {
-            path: 'main',
-            element: <Main />
-          },
-          {
-            path: 'userInformation',
-            element: <UserInformation />
-          },
-          {
-            path: 'userInformationModify',
-            element: <UserInformationModify />
-          },
-          {
-            path: 'queryUserInformation',
-            element: <QueryUserInformation />
-          },
-          {
-            path: 'settingAccess',
-            element: <SettingAccess />
-          },
-          {
-            path: 'settingAuthority',
-            element: <SettingAuthority />
-          },
-          {
-            path: 'calendar',
-            element: <CalendarPage />
-          },
-          {
-            path: 'userattendance',
-            element: <UserAttendance />
-          },
-          {
-            path: 'userleave',
-            element: <UserLeave />
-          },
-          {
-            path: 'approvalattendance',
-            element: <ApprovalAttendance />
-          },
-          {
-            path: 'settingAttendancePolicy',
-            element: <SettingAttendancePolicy />
-          },
-          {
-            path: 'modifyattendance',
-            element: <ModifyAttendance />
-          }
-    ],
+      {
+        path: '/',
+        element: <Main />
+      },
+      {
+        path: 'userAttendanceTotal',
+        element: <UserAttendanceTotal />
+      },
+      {
+        path: 'seeAllAttendance',
+        element: <SeeAllAttendance />
+      },
+      {
+        path: 'seeUserAttendance',
+        element: <SeeUserAttendance />
+      },
+      {
+        path: 'main',
+        element: <Main />
+      },
+      {
+        path: 'userInformation',
+        element: <UserInformation />
+      },
+      {
+        path: 'userInformationModify',
+        element: <UserInformationModify />
+      },
+      {
+        path: 'queryUserInformation',
+        element: <QueryUserInformation />
+      },
+      {
+        path: 'settingAccess',
+        element: <SettingAccess />
+      },
+      {
+        path: 'settingAuthority',
+        element: <SettingAuthority />
+      },
+      {
+        path: 'calendar',
+        element: <CalendarPage />
+      },
+      {
+        path: 'userattendance',
+        element: <UserAttendance />
+      },
+      {
+        path: 'userleave',
+        element: <UserLeave />
+      },
+      {
+        path: 'approvalattendance',
+        element: <ApprovalAttendance />
+      },
+      {
+        path: 'settingAttendancePolicy',
+        element: <SettingAttendancePolicy />
+      },
+      {
+        path: 'modifyattendance',
+        element: <ModifyAttendance />
+      }
+    ]
   },
   {
     path: '/auth',
     element: !isLoggedIn ? <MinimalLayout /> : <Navigate to="/main" />,
     children: [
-        {
-            path: 'login-form',
-            element: <AuthLogin />
-          },
-          {
-            path: 'register',
-            element: <AuthRegister />
-          },
-          {
-            path: 'forgotPassword',
-            element: <ForgotPassword />
-          }
-    ],
-  },
+      {
+        path: 'login-form',
+        element: <AuthLogin />
+      },
+      {
+        path: 'register',
+        element: <AuthRegister />
+      },
+      {
+        path: 'forgotPassword',
+        element: <ForgotPassword />
+      }
+    ]
+  }
 ];
 
 export default routes;

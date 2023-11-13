@@ -331,7 +331,7 @@ export const useWorkingHourState = create(
     setHours: (newHours) => set(() => ({ hours: newHours }))
   }))
 );
-
+//로그인 여부
 export const useAuth = create(
   devtools((set) => ({
     isLoggedIn: false,
@@ -347,6 +347,14 @@ export const useMemoList = create(
     leaveNo: 0,
     setMemoList: (newMemoList) => set(() => ({ memoList: newMemoList })),
     setScheduleNo: (newScheduleNo) => set(() => ({ scheduleNo: newScheduleNo })),
-    setLeaveNo: (newLeaveNo) => set(() => ({ leaveNo: newLeaveNo })),
+    setLeaveNo: (newLeaveNo) => set(() => ({ leaveNo: newLeaveNo }))
+  }))
+);
+
+//알림내역
+export const useAlarm = create(
+  devtools((set) => ({
+    alarm: [],
+    setAlarm: (newAlarm) => set(() => ({ alarm: newAlarm }))
   }))
 );
