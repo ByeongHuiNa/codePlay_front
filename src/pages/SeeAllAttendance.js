@@ -135,7 +135,7 @@ const SeeAllAttendance = () => {
 
     fetchData();
     get();
-  }, [currentDate]);
+  }, []);
 
   return (
     <ComponentSkeleton>
