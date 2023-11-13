@@ -167,7 +167,7 @@ const PublicCalendar = ({ events }) => {
             <Grid item mt={1.3}>
               <Item>
                 <Grid container direction="column" justifyContent="space-between" alignItems="flex-start">
-                  <Grid pl sx={{ mt: -1 }}>
+                  <Grid pl sx={{ mt: -2.5, mb: 1 }}>
                     <h3>메모</h3>
                   </Grid>
                   <Grid sx={{ ml: -2, mt: -2 }}>

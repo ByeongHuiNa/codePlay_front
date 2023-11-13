@@ -7,25 +7,25 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import { Grid, ListItemButton } from '../../../node_modules/@mui/material/index';
-import { useCalendarGetScheduleList } from 'store/module';
+import { useCalendarGetScheduleList, useMemoList } from 'store/module';
+import axios from '../../../node_modules/axios/index';
 
 export default function CalendarDepWorkList() {
   const { shereDataList } = useCalendarGetScheduleList();
   // eslint-disable-next-line no-unused-vars
-  const handleToggle = (value) => () => {
-    // const currentIndex = checked.indexOf(value);
-    // const newChecked = [...checked];
-    // if (currentIndex === -1) {
-    //   newChecked.push(value);
-    // } else {
-    //   newChecked.splice(currentIndex, 1);
-    // }
-    // setChecked(newChecked);
+  const { setMemoList, setScheduleNo, setLeaveNo } = useMemoList();
+  const handleToggle = (e) => {
+    console.log(e);
+    axios.get(`/user-dep-schedulememo?schedule_no=${e}`).then((item) => {
+      setMemoList(item.data);
+    });
+    setScheduleNo(e);
+    setLeaveNo(0);
   };
 
   return (
     <>
-      <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+      <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper', maxHeight: 320, overflow: 'auto' }}>
         {shereDataList
           .filter((value) => value.schedule_share == true)
           .sort((a, b) => new Date(a.schedule_startday) - new Date(b.schedule_startday))
@@ -48,7 +48,7 @@ export default function CalendarDepWorkList() {
             return (
               <>
                 <ListItem alignItems="flex-start" sx={{ p: 0.5 }}>
-                  <ListItemButton role={undefined} onClick={handleToggle()} dense>
+                  <ListItemButton role={undefined} onClick={() => handleToggle(value.schedule_no)} dense>
                     <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
                       <Grid item xs={2} sx={{ ml: -1 }}>
                         <ListItemAvatar>
