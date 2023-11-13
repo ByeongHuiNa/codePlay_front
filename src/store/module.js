@@ -161,6 +161,7 @@ export const useLeaveState = create(
     setLeave: (newLeave) => set(() => ({ leave: newLeave }))
   }))
 );
+
 //모든 사용자의 휴가보유 현황
 export const useAllLeaveState = create(
   devtools((set) => ({
@@ -324,6 +325,14 @@ export const useFormatter = create(
   }))
 );
 
+// 휴가 신청자의 휴가 보유 현황
+export const useLeaveCnt = create(
+  devtools((set) => ({
+    leaveCnt: {},
+    setLeaveCnt: (newLeave) => set(() => ({ leaveCnt: newLeave }))
+  }))
+);
+
 //사용자의 주간근무시간
 export const useWorkingHourState = create(
   devtools((set) => ({
@@ -338,6 +347,19 @@ export const useAuth = create(
     setIsLoggedIn: (newLogin) => set(() => ({ isLoggedIn: newLogin }))
   }))
 );
+
+//캘린더 메모 리스트
+export const useMemoList = create(
+  devtools((set) => ({
+    memoList: [],
+    scheduleNo: 0,
+    leaveNo: 0,
+    setMemoList: (newMemoList) => set(() => ({ memoList: newMemoList })),
+    setScheduleNo: (newScheduleNo) => set(() => ({ scheduleNo: newScheduleNo })),
+    setLeaveNo: (newLeaveNo) => set(() => ({ leaveNo: newLeaveNo }))
+  }))
+);
+
 //알림내역
 export const useAlarm = create(
   devtools((set) => ({

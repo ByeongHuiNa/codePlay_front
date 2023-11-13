@@ -10,7 +10,8 @@ const BasicChip = ({ label, color }) => {
         color: 'white',
         width: '110px',
         height: '35px',
-        marginRight: '10px'
+        marginRight: '10px',
+        borderRadius: '0px'
       }}
     />
   );

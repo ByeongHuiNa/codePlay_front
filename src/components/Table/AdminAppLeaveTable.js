@@ -175,7 +175,7 @@ Type.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function AdminAppLeaveTable({ datas, setSelectLeaveData, selectLeaveData }) {
+export default function AdminAppLeaveTable({ datas, selectLeaveData, LeaveInfo }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
@@ -192,7 +192,7 @@ export default function AdminAppLeaveTable({ datas, setSelectLeaveData, selectLe
           position: 'relative',
           display: 'block',
           maxWidth: '100%',
-          height: '712px',
+          height: '822px',
           padding: '0px',
           '& td, & th': { whiteSpace: 'nowrap' },
           '&::-webkit-scrollbar': {
@@ -236,7 +236,9 @@ export default function AdminAppLeaveTable({ datas, setSelectLeaveData, selectLe
                   tabIndex={-1}
                   key={data.leaveapp_no}
                   selected={isItemSelected}
-                  onClick={() => setSelectLeaveData(data)}
+                  onClick={() => {
+                    LeaveInfo(data);
+                  }}
                 >
                   <TableCell component="th" id={labelId} scope="data" align="center">
                     {data.user_name}

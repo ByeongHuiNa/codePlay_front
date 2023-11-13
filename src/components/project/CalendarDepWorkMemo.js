@@ -7,49 +7,115 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import { Grid, IconButton, ListItemButton, TextField } from '../../../node_modules/@mui/material/index';
-import { useCalendarMemoModal } from 'store/module';
+import { useCalendarMemoModal, useMemoList } from 'store/module';
 import { Done } from '../../../node_modules/@mui/icons-material/index';
+import axios from '../../../node_modules/axios/index';
+import { jwtDecode } from '../../../node_modules/jwt-decode/build/cjs/index';
 
 // eslint-disable-next-line react/prop-types
 export default function CalendarDepWorkMemo() {
+  const token = jwtDecode(localStorage.getItem('token').slice(7));
   const { setMemoView } = useCalendarMemoModal();
+  const { setMemoList, memoList, scheduleNo, leaveNo } = useMemoList();
   const [value, setValue] = React.useState('');
+  console.log(memoList);
+
+  React.useEffect(() => {
+    setValue('');
+  }, [memoList]);
 
   const handleOnChange = (e) => {
     setValue(e.target.value);
   };
-  const handleIconClick = () => {};
+  const handleIconClick = () => {
+    console.log(scheduleNo);
+    const memoVo = {
+      schedule_no: scheduleNo == 0 ? null : scheduleNo,
+      schedule_memo_writer: token.user_no,
+      schedule_memo_content: value,
+      leaveapp_no: leaveNo == 0 ? null : leaveNo
+    };
+    axios.post(`/user-dep-memo`, memoVo).then(() => {
+      if (scheduleNo != 0) {
+        axios.get(`/user-dep-schedulememo?schedule_no=${scheduleNo}`).then((item) => {
+          setMemoList(item.data);
+        });
+      } else {
+        axios.get(`/user-dep-leavememo?leave_no=${leaveNo}`).then((item) => {
+          setMemoList(item.data);
+        });
+      }
+      setValue('');
+    });
+  };
   return (
     <>
-      <List sx={{ width: '110%', maxWidth: 360, bgcolor: 'background.paper' }}>
-        {[0, 1, 2, 3].map((value) => {
-          return (
-            <>
-              <Grid container direction="row" justifyContent="flex-start" alignItems="center">
-                <ListItem>
-                  <ListItemButton role={undefined} onClick={() => setMemoView(true)} dense>
-                    <ListItemAvatar>
-                      <Avatar alt="Remy Sharp" src="https://picsum.photos/200" sx={{ width: 30, height: 30 }} />
-                    </ListItemAvatar>
-                    <ListItemText>
-                      <Grid container direction="column" justifyContent="center" alignItems="flex-start" sx={{ ml: -1 }}>
-                        <Typography component="span" variant="body2" color="text.primary">
-                          {`이름 ${value}`}
-                        </Typography>
-                        <Typography component="span" variant="body3" color="text.primary">
-                          {`사용자가 남긴 메모 내역`}
-                        </Typography>
+      <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper', height: 280, maxHeight: 280, overflow: 'auto' }}>
+        {Object.keys(memoList).length > 0 &&
+          memoList
+            .sort((a, b) => new Date(b.schedule_memo_create) - new Date(a.schedule_memo_create))
+            .map((value) => {
+              // 메모를 생성한 시간 (예: '2023-11-13T14:27:39.303')
+              const memoCreateTime = new Date(value.schedule_memo_create);
+
+              // 현재 시간을 얻기
+              const now = new Date();
+
+              // 두 날짜의 차이 (밀리초 단위)
+              const timeDifference = now - memoCreateTime;
+
+              // 차이를 초 단위로 변환
+              const secondsDifference = Math.floor(timeDifference / 1000);
+
+              var displayText = '';
+
+              // 초 단위에 따라 다른 메시지 설정
+              if (secondsDifference < 60) {
+                displayText = '1분 미만';
+              } else if (secondsDifference < 3600) {
+                const minutes = Math.floor(secondsDifference / 60);
+                displayText = `${minutes}분 전`;
+              } else if (secondsDifference < 86400) {
+                const hours = Math.floor(secondsDifference / 3600);
+                displayText = `${hours}시간 전`;
+              } else {
+                const days = Math.floor(secondsDifference / 86400);
+                displayText = `${days}일 전`;
+              }
+              return (
+                <>
+                  <ListItem alignItems="flex-start">
+                    <ListItemButton role={undefined} onClick={() => setMemoView(true)} dense sx={{ mr: -1.5 }}>
+                      <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
+                        <Grid item xs={2} sx={{ ml: -0.5 }}>
+                          <ListItemAvatar>
+                            <Avatar alt="Remy Sharp" src={value.user.user_profile} sx={{ width: 30, height: 30 }} />
+                          </ListItemAvatar>
+                        </Grid>
+                        <Grid item xs={7} sx={{ ml: 1, textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                          <ListItemText>
+                            <Grid container direction="column" justifyContent="center" alignItems="flex-start" sx={{ ml: -1 }}>
+                              <Typography component="span" variant="body2" color="text.primary">
+                                {value.user.user_name}
+                              </Typography>
+                              <Typography component="span" variant="body3" color="text.primary">
+                                {value.schedule_memo_content}
+                              </Typography>
+                            </Grid>
+                          </ListItemText>
+                        </Grid>
+                        <Grid item xs={3} sx={{ mr: -1 }}>
+                          <ListItemText primary={displayText} />
+                        </Grid>
                       </Grid>
-                    </ListItemText>
-                    <ListItemText primary={`9:0${value} AM`} sx={{ ml: 1, mr: -1 }} />
-                  </ListItemButton>
-                </ListItem>
-              </Grid>
-              {value !== 3 && <Divider variant="inset" component="li" />}
-            </>
-          );
-        })}
+                    </ListItemButton>
+                  </ListItem>
+                  <Divider variant="inset" component="li" />
+                </>
+              );
+            })}
       </List>
+
       <TextField
         id="standard-name"
         variant="outlined"
@@ -58,12 +124,12 @@ export default function CalendarDepWorkMemo() {
         fullWidth
         InputProps={{
           endAdornment: (
-            <IconButton color="primary" onClick={handleIconClick}>
-              <Done sx={{ ml: 2 }} />
+            <IconButton color="primary" onClick={() => handleIconClick()} sx={{ mr: -1 }}>
+              <Done />
             </IconButton>
           )
         }}
-        sx={{ ml: 2, mt: -1, mb: -0.5 }}
+        sx={{ width: 300, ml: 1, mt: 1.5, mb: -0.5 }}
       />
     </>
   );
