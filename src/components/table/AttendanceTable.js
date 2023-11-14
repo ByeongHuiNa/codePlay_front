@@ -142,6 +142,8 @@ const AttendanceStatus = ({ status }) => {
   // 2 : 지각
   // 3 : 조퇴(조기퇴근)
   // 4 : 결근(출근 혹은 퇴근누락))
+  // 5 : 연장
+  // 6: 초과
 
   switch (status) {
     case '정상':
@@ -175,6 +177,14 @@ const AttendanceStatus = ({ status }) => {
     case '결근':
       color = 'error';
       title = '결근';
+      break;
+    case '연장':
+      color = 'success';
+      title = '연장';
+      break;
+    case '초과':
+      color = 'success';
+      title = '초과';
       break;
     default:
       color = 'error';
