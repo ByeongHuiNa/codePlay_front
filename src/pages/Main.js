@@ -7,7 +7,7 @@ import { Avatar, Box, Grid, Link, Typography } from '../../node_modules/@mui/mat
 import VacationDonutChart from 'components/chart/VacationDonutChart';
 import AttendChart from 'components/chart/AttendChart';
 import UserLeaveTable from 'components/Table/UserLeaveTable';
-import { useLeaveState, useProfileState, useWorkingHourState } from 'store/module';
+import { useAttendTotalState, useLeaveState, useProfileState, useWorkingHourState } from 'store/module';
 import React, { useEffect, useState } from 'react';
 import axios from '../../node_modules/axios/index';
 import TodayAttendancdForm from 'components/Form/TodayAttendanceForm';
@@ -27,11 +27,15 @@ const Main = () => {
 
   const { setLeave } = useLeaveState(); //휴가불러오기
 
+  const { setTotal } = useAttendTotalState();//근무시간 + 연장근무시간 불러오기
+
   React.useEffect(() => {
     async function get() {
       try {
         const result = await axios.get(`/user-leave?user_no=${token.user_no}`);
         setLeave(result.data);
+        const result2 = await axios.get(`/user-attend-total-week?user_no=${token.user_no}`);
+        setTotal(result2.data);
       } catch (error) {
         console.error('데이터를 불러오는 중 오류 발생:', error);
       }
@@ -61,6 +65,7 @@ const Main = () => {
       setHours(result2.data);
       console.log('dsadas: ' + hours);
 
+     
       const currentTime = new Date(); // 현재 시간 가져오기
       const attendTotalArray = result2.data.map((item) => {
         const attendTotal = item.attend_total ? item.attend_total : calculateAttendTotal(item.attend_start, currentTime);
@@ -117,7 +122,7 @@ const Main = () => {
     const formattedDate = date.toLocaleDateString('ko-KR', dateOptions);
     daysOfWeek.push(formattedDate);
   }
-  console.log("일주일: " + daysOfWeek);
+  console.log('일주일: ' + daysOfWeek);
 
   return (
     <Grid container spacing={2}>
@@ -207,6 +212,20 @@ const Main = () => {
           <VacationDonutChart />
         </MainCard>
       </Grid>
+
+      {/* <Grid item xs={4}>
+        <MainCard sx={{ height: '100%' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px', marginBottom: '30px' }}>
+            <Typography align="left" variant="h5">
+              근무시간
+            </Typography>
+            <Link variant="h5" onClick={leave}>
+              더보기
+            </Link>
+          </div>
+          <WeekAttendDonutChart series={weekTotal} total={12} />
+        </MainCard>
+      </Grid> */}
     </Grid>
   );
 };
