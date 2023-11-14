@@ -7,7 +7,14 @@ import { Avatar, Box, Grid, Link, Typography } from '../../node_modules/@mui/mat
 import VacationDonutChart from 'components/chart/VacationDonutChart';
 import AttendChart from 'components/chart/AttendChart';
 import UserLeaveTable from 'components/Table/UserLeaveTable';
-import { useAttendTotalState, useLeaveState, useProfileState, useWorkingHourState } from 'store/module';
+import {
+  useAttendTotalState,
+  useLeaveHourState,
+  useLeaveState,
+  useOverHourState,
+  useProfileState,
+  useWorkingHourState
+} from 'store/module';
 import React, { useEffect, useState } from 'react';
 import axios from '../../node_modules/axios/index';
 import TodayAttendancdForm from 'components/Form/TodayAttendanceForm';
@@ -19,15 +26,21 @@ import { useNavigate } from '../../node_modules/react-router-dom/dist/index';
 const Main = () => {
   //화면 초기값 셋팅
   const { profile, setProfile } = useProfileState();
-  const { hours, setHours } = useWorkingHourState();
-  const [time, setTime] = useState([]);
+  const { hours, setHours } = useWorkingHourState(); //주간 정상근무시간 일별
+  const { leaveHours, setLeaveHours } = useLeaveHourState(); //주간 휴가근무시간 일별
+  const { overHours, setOverHours } = useOverHourState(); //주간 초과근무시간 일별
+
+  const [time1, setTime1] = useState([]);
+  const [time2, setTime2] = useState([]);
+  const [time3, setTime3] = useState([]);
+  // const [leaveTime, setLeaveTime] = useState([]);
 
   //token 값을 decode해주는 코드
   const token = jwtDecode(localStorage.getItem('token').slice(7));
 
   const { setLeave } = useLeaveState(); //휴가불러오기
 
-  const { setTotal } = useAttendTotalState();//근무시간 + 연장근무시간 불러오기
+  const { setTotal } = useAttendTotalState(); //근무시간 + 연장근무시간 불러오기
 
   React.useEffect(() => {
     async function get() {
@@ -62,21 +75,45 @@ const Main = () => {
       console.log('토큰사원번호 : ' + token.user_no);
 
       const result2 = await axios.get(`/user-attend-total?user_no=${token.user_no}`);
-      setHours(result2.data);
+      setHours('주간근무1: ' + result2.data);
       console.log('dsadas: ' + hours);
 
-     
+      const result3 = await axios.get(`/user-attend-total-leave?user_no=${token.user_no}`);
+      setLeaveHours('주간근무2: ' + result3.data);
+      console.log('dsadas: ' + leaveHours);
+
+      const result4 = await axios.get(`/user-attend-total-over?user_no=${token.user_no}`);
+      setOverHours('주간근무3 ' + result4.data);
+      console.log('dsadas: ' + overHours);
+
       const currentTime = new Date(); // 현재 시간 가져오기
-      const attendTotalArray = result2.data.map((item) => {
-        const attendTotal = item.attend_total ? item.attend_total : calculateAttendTotal(item.attend_start, currentTime);
+
+      const attendTotalArray1 = Array.isArray(result2.data)
+        ? result2.data.map((item) => {
+            const attendTotal = item.attend_total ? item.attend_total : calculateAttendTotal(item.attend_start, currentTime);
+            return {
+              attend_total: attendTotal
+            };
+          })
+        : [];
+
+      const attendTotalArray2 = result3.data.map((item) => {
+        const attendTotal = item.attend_total ? item.attend_total : 0;
         return {
           attend_total: attendTotal
         };
       });
 
-      console.log('attendtotal : ' + attendTotalArray);
+      const attendTotalArray3 = result4.data.map((item) => {
+        const attendTotal = item.attend_total ? item.attend_total : 0;
+        return {
+          attend_total: attendTotal
+        };
+      });
 
-      const convertedArray = attendTotalArray.map((item) => {
+      console.log('attendtotal : ' + attendTotalArray1);
+
+      const convertedArray1 = attendTotalArray1.map((item) => {
         if (item.attend_total) {
           const totalParts = item.attend_total.split(':');
           const totalHours = parseInt(totalParts[0], 10);
@@ -84,10 +121,38 @@ const Main = () => {
           return `${totalHours}.${totalMinutes}`;
         } else {
           // attend_total이 null인 경우 대체값 또는 원하는 처리
-          return '대체값 또는 원하는 처리';
+          return 0;
         }
       });
-      setTime(convertedArray);
+      setTime1(convertedArray1);
+
+      const convertedArray2 = attendTotalArray2.map((item) => {
+        if (item.attend_total) {
+          const totalParts = item.attend_total.split(':');
+          const totalHours = parseInt(totalParts[0], 10);
+          const totalMinutes = parseInt(totalParts[1], 10);
+          return `${totalHours}.${totalMinutes}`;
+        } else {
+          // attend_total이 null인 경우 대체값 또는 원하는 처리
+          return 0;
+        }
+      });
+      setTime2(convertedArray2);
+      console.log('타임2' + convertedArray2);
+
+      const convertedArray3 = attendTotalArray3.map((item) => {
+        if (item.attend_total) {
+          const totalParts = item.attend_total.split(':');
+          const totalHours = parseInt(totalParts[0], 10);
+          const totalMinutes = parseInt(totalParts[1], 10);
+          return `${totalHours}.${totalMinutes}`;
+        } else {
+          // attend_total이 null인 경우 대체값 또는 원하는 처리
+          return 0;
+        }
+      });
+      setTime3(convertedArray3);
+      console.log('타임3' + convertedArray3);
     }
     get();
   }, []);
@@ -165,19 +230,19 @@ const Main = () => {
                   name: '정상근무',
                   type: 'column',
                   fill: 'solid',
-                  data: time
+                  data: time1
                 },
                 {
                   name: '초과근무',
                   type: 'column',
                   fill: 'solid',
-                  data: [0, 0, 0, 0, 0, 0, 0]
+                  data: time3
                 },
                 {
                   name: '휴가',
                   type: 'column',
                   fill: 'solid',
-                  data: [0, 0, 0, 0, 0, 0, 0]
+                  data: time2
                 }
               ]
             }}
