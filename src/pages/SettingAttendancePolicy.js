@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // material-ui
 import { Typography } from '@mui/material';
 
@@ -85,8 +86,8 @@ const SettingAttendancePolicy = () => {
       <Grid container direction="row">
         <Grid item xs={view == 1 ? 8 : 12}>
           <MainCard>
-            <Typography variant="h4">사용자명으로 검색</Typography>
-            <InputSearch isPersonIcon={true} onClick={() => search_user(search)}></InputSearch>
+            {/* <Typography variant="h4">사용자명으로 검색</Typography>
+            <InputSearch isPersonIcon={true} onClick={() => search_user(search)}></InputSearch> */}
             <SettingTab></SettingTab>
             <SettingAttendancePolicyTable />
           </MainCard>
