@@ -8,7 +8,6 @@ import {
   Badge,
   Box,
   ClickAwayListener,
-  Divider,
   IconButton,
   List,
   ListItemButton,
@@ -58,16 +57,13 @@ const Notification = () => {
 
   useEffect(() => {
     let eventSource = undefined;
-    console.log('알림창 useEffect');
     eventSource = new EventSource(`/api/alarm?user_no=${token.user_no}`);
     eventSource.onopen = () => {
       console.log('connection opened');
     };
     eventSource.onmessage = (event) => {
-      console.log('result', event);
       //0번은 커넥션 이벤트
       if (event.lastEventId != '0') {
-        console.log(JSON.parse(event.data));
         setAlarm([...alarm, JSON.parse(event.data)]);
       }
     };
@@ -87,6 +83,13 @@ const Notification = () => {
 
   const theme = useTheme();
   const matchesXs = useMediaQuery(theme.breakpoints.down('md'));
+  const removeState = (alarm_no) => {
+    setAlarm(alarm.filter((item) => item.alarm_no !== alarm_no));
+  };
+  const updateState = (alarm_no) => {
+    // TODO:state 업데이트 되게 수정
+    // alarm.filter((item) => item.alarm_no == alarm_no).status = 1;
+  };
 
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
@@ -181,6 +184,7 @@ const Notification = () => {
                             key={item.alarm_no}
                             onClick={() => {
                               axios.put(`/alarm?alarm_no=${item.alarm_no}`);
+                              updateState(item.alarm_no)
                               navigate(item.go_to_url, {
                                 state: {
                                   val: 0,
@@ -213,6 +217,7 @@ const Notification = () => {
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   axios.put(`/alarm-delete?alarm_no=${item.alarm_no}`);
+                                  removeState(item.alarm_no);
                                 }}
                               >
                                 <CloseOutlined />

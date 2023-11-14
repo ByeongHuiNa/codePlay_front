@@ -1,14 +1,12 @@
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 // material-ui
 import { Box, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 // project import
-import { Button, Chip } from '../../../node_modules/@mui/material/index';
-import { useApprovalState2 } from 'store/module';
-import axios from '../../../node_modules/axios/index';
-import { useNavigate } from '../../../node_modules/react-router-dom/dist/index';
+import { Chip } from '../../../node_modules/@mui/material/index';
+import { useFormatter } from 'store/module';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -40,40 +38,40 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: 'leaveStart',
+    id: 'reqDate',
     align: 'center',
     disablePadding: false,
-    label: '휴가시작일'
+    label: '요청날짜'
   },
   {
-    id: 'leaveEnd',
+    id: 'start',
     align: 'center',
     disablePadding: false,
-    label: '휴가종료일'
+    label: '시작시간'
   },
   {
-    id: 'leaveType',
+    id: 'end',
     align: 'center',
     disablePadding: false,
-    label: '휴가종류'
+    label: '종료시간'
   },
   {
-    id: 'leaveCnt',
+    id: 'total',
     align: 'center',
     disablePadding: false,
-    label: '휴가사용일수'
+    label: '총시간'
   },
   {
-    id: 'approver1',
+    id: 'content',
     align: 'center',
     disablePadding: false,
-    label: '1차결재자'
+    label: '근무내용'
   },
   {
-    id: 'approver2',
+    id: 'updateDate',
     align: 'center',
     disablePadding: false,
-    label: '2차결재자'
+    label: '신청일자'
   },
   {
     id: 'status',
@@ -85,7 +83,7 @@ const headCells = [
     id: 'cancel',
     align: 'center',
     disablePadding: false,
-    label: '취소신청'
+    label: '취소'
   }
 ];
 
@@ -116,7 +114,7 @@ OrderTableHead.propTypes = {
 };
 
 // ==============================|| ORDER TABLE - STATUS ||============================== //
-//결재상태
+
 const OrderStatus = ({ status }) => {
   let color;
   let title;
@@ -135,11 +133,11 @@ const OrderStatus = ({ status }) => {
       break;
     case 2:
       color = 'primary';
-      title = '결재진행중';
+      title = '결재대기';
       break;
     case 3:
-      color = 'primary';
-      title = '결재대기';
+      color = 'error';
+      title = '사용자취소';
       break;
   }
 
@@ -153,78 +151,16 @@ const OrderStatus = ({ status }) => {
 OrderStatus.propTypes = {
   status: PropTypes.number
 };
-//휴가종류
-const Type = ({ type }) => {
-  let title;
-
-  // 0 : 연차
-  // 1 : 오전반차
-  // 2 : 오후반차
-  // 3 : 공가
-  // 4 : 휴가취소
-
-  switch (type) {
-    case 0:
-      title = '연차';
-      break;
-    case 1:
-      title = '오전반차';
-      break;
-    case 2:
-      title = '오후반차';
-      break;
-    case 3:
-      title = '공가';
-      break;
-    case 4:
-      title = '휴가취소';
-      break;
-  }
-
-  return (
-    <Stack direction="row" alignItems="center" justifyContent="center" spacing={1}>
-      {title}
-    </Stack>
-  );
-};
-
-Type.propTypes = {
-  type: PropTypes.number
-};
 
 // ==============================|| ORDER TABLE ||============================== //
-//대기테이블
-export default function AppLeaveTotalTable({ month, handleOpen, user_no }) {
-  //requestLeaveCancel,
+
+export default function OverTimeTable({ datas }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
-  const { apps, setApps } = useApprovalState2();
-
-  let navigate = useNavigate();
-
-  function cancelClick() {
-    navigate('/userleave');
-  }
-
-  useEffect(() => {
-    async function get() {
-      //const endPoints = ['http://localhost:8000/leave_approval'];
-      //const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
-      const result = await axios.get(`/user-leave-request?user_no=${user_no}&month=${month}`);
-      // result[0].data를 필터링하여 leave_status가 1인 데이터만 추출
-      //const filteredData = result[0].data.filter((item) => item.leaveapp_status === 0 || item.leaveapp_status === 1);
-      console.log('result: ' + result.data);
-      setApps(result.data);
-    }
-    get();
-  }, [month]);
-
- 
-
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
-
-  
+  // 날짜 형식
+  const { dateFormat } = useFormatter();
 
   return (
     <Box>
@@ -235,10 +171,21 @@ export default function AppLeaveTotalTable({ month, handleOpen, user_no }) {
           position: 'relative',
           display: 'block',
           maxWidth: '100%',
-          '& td, & th': { whiteSpace: 'nowrap' }
+          '& td, & th': { whiteSpace: 'nowrap' },
+          '&::-webkit-scrollbar': {
+            width: 5
+          },
+          '&::-webkit-scrollbar-track': {
+            backgroundColor: 'white'
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: 'gray',
+            borderRadius: 2
+          }
         }}
       >
         <Table
+          stickyHeader
           aria-labelledby="tableTitle"
           sx={{
             '& .MuiTableCell-root:first-of-type': {
@@ -251,8 +198,8 @@ export default function AppLeaveTotalTable({ month, handleOpen, user_no }) {
         >
           <OrderTableHead order={order} orderBy={orderBy} />
           <TableBody>
-            {stableSort(apps, getComparator(order, orderBy)).map((app, index) => {
-              const isItemSelected = isSelected(app.date);
+            {stableSort(datas, getComparator(order, orderBy)).map((data, index) => {
+              const isItemSelected = isSelected(data.date);
               const labelId = `enhanced-table-checkbox-${index}`;
 
               return (
@@ -262,30 +209,25 @@ export default function AppLeaveTotalTable({ month, handleOpen, user_no }) {
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   aria-checked={isItemSelected}
                   tabIndex={-1}
-                  key={app.data}
+                  key={data.attend_no}
                   selected={isItemSelected}
                   onClick={() => {
-                    handleOpen(app);
+                    // handleOpenRead(data);
                   }}
                 >
                   <TableCell component="th" id={labelId} scope="data" align="center">
-                    {app.leaveapp_start}
+                    {dateFormat(new Date(data.attend_date))}
                   </TableCell>
-                  {/* <TableCell align="center">{app.leaveEnd}</TableCell> */}
-                  <TableCell align="center">{app.leaveapp_end}</TableCell>
+                  <TableCell align="center">{data.attend_start}</TableCell>
+                  <TableCell align="center">{data.attend_end}</TableCell>
+                  <TableCell align="center">{data.overtime_time}</TableCell>
+                  <TableCell align="center">{data.overtime_content}</TableCell>
+                  <TableCell align="center">{dateFormat(new Date(data.overtime_date))}</TableCell>
                   <TableCell align="center">
-                    <Type type={app.leaveapp_type} />
-                  </TableCell>
-                  <TableCell align="center">{app.leaveapp_total}</TableCell>
-                  <TableCell align="center">{app.firstapp_user_name}</TableCell>
-                  <TableCell align="center">{app.secondapp_user_name}</TableCell>
-                  <TableCell align="center">
-                    <OrderStatus status={app.leaveapp_status} />
+                    <OrderStatus status={data.overtimeapp_status} />
                   </TableCell>
                   <TableCell align="center">
-                    <Button variant="contained" size="small" onClick={cancelClick}>
-                      취소신청
-                    </Button>
+                    {data.overtimeapp_status === 2 || data.overtimeapp_status === 0 ? '취소버튼' : '취소버튼없음'}
                   </TableCell>
                 </TableRow>
               );
@@ -293,9 +235,6 @@ export default function AppLeaveTotalTable({ month, handleOpen, user_no }) {
           </TableBody>
         </Table>
       </TableContainer>
-      {/* <Stack alignItems="center" mt={3}>
-        <Pagination count={5} variant="outlined" shape="rounded" />
-      </Stack> */}
     </Box>
   );
 }

@@ -3,6 +3,7 @@ import { Avatar, Button, MenuItem, Stack, TextField, Typography } from '../../..
 import { useDetailCardState, useTabState } from 'store/module';
 import BasicTimePicker from 'components/DatePicker/BasicTimePicker';
 import dayjs from 'dayjs';
+import axios from '../../../node_modules/axios/index';
 
 const AttendancePolicyDetailCard = () => {
   const { tab } = useTabState();
@@ -20,6 +21,10 @@ const AttendancePolicyDetailCard = () => {
     temp[`standard_start_time`] = dayjs(`0000T${7 + Number(value)}`);
     temp[`standard_end_time`] = dayjs(`0000T${16 + Number(value)}`);
     setContent(temp);
+  };
+  const savePolice = () => {
+    axios.post('/user-policy-detail', content);
+    //TODO: post이후 rerendering 안됨.(위의 숫자라도 바뀌게끔)
   };
 
   return (
@@ -47,7 +52,7 @@ const AttendancePolicyDetailCard = () => {
             <Stack direction="row" justifyContent="space-around" spacing={2} alignItems="center">
               <BasicTimePicker
                 label={'출근시간'}
-                value={dayjs(content.standard_start_time)}
+                 value={dayjs(content.standard_start_time)}
                 onChange={(newValue) => changeTime(newValue, 'start')}
               />
               <BasicTimePicker
@@ -58,7 +63,14 @@ const AttendancePolicyDetailCard = () => {
             </Stack>
           </>
         )}
-        <Button onClick={() => setView(false)}>저장</Button>
+        <Button
+          onClick={() => {
+            setView(false);
+            savePolice();
+          }}
+        >
+          저장
+        </Button>
       </Stack>
     </MainCard>
   );

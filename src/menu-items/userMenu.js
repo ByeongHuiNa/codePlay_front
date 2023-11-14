@@ -74,6 +74,14 @@ const userMenu = {
       url: '/userleave',
       icon: icons.SmileOutlined,
       breadcrumbs: false
+    },
+    {
+      id: '14',
+      title: '초과 근무 신청',
+      type: 'item',
+      url: '/userOverTimeReq',
+      icon: icons.CarOutlined,
+      breadcrumbs: false
     }
   ]
 };
