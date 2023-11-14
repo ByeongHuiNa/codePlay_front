@@ -184,8 +184,13 @@ const Notification = () => {
                             key={item.alarm_no}
                             onClick={() => {
                               axios.put(`/alarm?alarm_no=${item.alarm_no}`);
-                              updateState(item.alarm_no)
-                              navigate(item.go_to_url);
+                              navigate(item.go_to_url, {
+                                state: {
+                                  val: 0,
+                                  index: item.alarm_index,
+                                  data_no: item.alarm_data_no
+                                }
+                              });
                             }}
                           >
                             {item.kind == 0 && (
