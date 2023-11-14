@@ -277,7 +277,11 @@ const UserAttendance = () => {
     });
     // 로그인 한 사용자의 전체 출퇴근 내역 조회 (이상 근태 내역은 전체 내역에서 필터링 처리)
     axios.get(`/user-attend?user_no=${token.user_no}`).then((res) => {
-      setAttendDatas(res.data);
+      setAttendDatas(
+        res.data.filter(
+          (attend) => attend.attend_status !== '연장' && attend.attend_status !== '초과' && new Date(attend.attend_date) <= new Date()
+        )
+      );
     });
     // 로그인 한 사용자의 전체 출퇴근 수정 내역 조회
     axios.get(`/attend-edit?user_no=${token.user_no}`).then((res) => {

@@ -36,6 +36,7 @@ import UserLeaveInfoTable from 'components/Table/UserLeaveInfoTable';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
 import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
+import BasicChip from 'components/Chip/BasicChip';
 
 const UserLeave = () => {
   const { index, setIndex } = useLeaveTab();
@@ -257,11 +258,11 @@ const UserLeave = () => {
     content = (
       <>
         <Box clone mt={2}>
-          <MyChip label="시작날짜" />
+          <BasicChip label="시작날짜" color="#46a5f3" />
           <BasicDatePicker sx={{ width: '30px' }} setDate={setStart} val={start} />
         </Box>
         <Box clone mt={2}>
-          <MyChip label="종료날짜" />
+          <BasicChip label="종료날짜" color="#46a5f3" />
           <BasicDatePicker sx={{ width: '30px' }} setDate={setEnd} val={end} />
         </Box>
       </>
@@ -361,7 +362,7 @@ const UserLeave = () => {
                 </Grid>
               </Grid>
               <Box clone mt={2}>
-                <MyChip label="제목" />
+                <BasicChip label="제목" color="#46a5f3" />
                 <TextField
                   label="제목"
                   id="title"
@@ -378,7 +379,7 @@ const UserLeave = () => {
                 </Typography>
               </Box>
               <Box clone mt={2} sx={{ display: 'flex' }}>
-                <MyChip label="1차 결재자" />
+                <BasicChip label="1차 결재자" color="#46a5f3" />
                 <AppAuto
                   label="1차 결재자"
                   datas={allUsers.filter((data) => data !== secondApprover)}
@@ -389,7 +390,7 @@ const UserLeave = () => {
                 />
               </Box>
               <Box clone mt={2} sx={{ display: 'flex' }}>
-                <MyChip label="2차 결재자" />
+                <BasicChip label="2차 결재자" color="#46a5f3" />
                 <AppAuto
                   label="2차 결재자"
                   datas={allUsers.filter((data) => data !== firstApprover)}
@@ -400,7 +401,7 @@ const UserLeave = () => {
                 />
               </Box>
               <Box clone mt={2}>
-                <MyChip label="휴가 종류" />
+                <BasicChip label="휴가 종류" color="#46a5f3" />
                 <FormControl sx={{ ml: 1 }}>
                   <RadioGroup
                     row
@@ -419,7 +420,7 @@ const UserLeave = () => {
                 </Box>
               </Box>
               <Box clone mt={2}>
-                <MyChip label="휴가 사유" />
+                <BasicChip label="휴가 사유" color="#46a5f3" />
               </Box>
               <Box clone mt={2}>
                 <TextField
@@ -457,7 +458,7 @@ const UserLeave = () => {
                 </Grid>
               </Grid>
               <Box clone mt={2}>
-                <MyChip label="제목" />
+                <BasicChip label="제목" color="#46a5f3" />
                 <TextField label="제목" id="title" size="small" onChange={(e) => setTitle(e.target.value)} />
               </Box>
               <Box clone mt={1} sx={{ display: 'flex', alignItems: 'center' }}>
@@ -467,7 +468,7 @@ const UserLeave = () => {
                 </Typography>
               </Box>
               <Box clone mt={2} sx={{ display: 'flex' }}>
-                <MyChip label="결재자" />
+                <BasicChip label="결재자" color="#46a5f3" />
                 <AppAuto
                   label="결재자"
                   datas={allUsers}
@@ -478,7 +479,7 @@ const UserLeave = () => {
                 />
               </Box>
               <Box clone mt={2}>
-                <MyChip label="휴가 선택" />
+                <BasicChip label="휴가 선택" color="#46a5f3" />
                 <TextField
                   label="휴가 선택"
                   id="leave"
@@ -518,7 +519,7 @@ const UserLeave = () => {
                 )}
               </Box>
               <Box clone mt={2}>
-                <MyChip label="취소 사유" />
+                <BasicChip label="취소 사유" color="#46a5f3" />
               </Box>
               <Box clone mt={2}>
                 <TextField
