@@ -20,6 +20,7 @@ import axios from '../../node_modules/axios/index';
 import { useLeaveState, useWorkingHourState } from 'store/module';
 import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
 import { useLocation } from '../../node_modules/react-router-dom/dist/index';
+import WeekAttendDonutChart from 'components/chart/WeekAttendDonutChart';
 
 const UserAttendanceTotalPage = () => {
   const location = useLocation();
@@ -36,6 +37,7 @@ const UserAttendanceTotalPage = () => {
   console.log('token@@@: ' + token.user_no);
 
   const [time, setTime] = useState([]);
+  //const [weekTotal, setWeekTotal] = useState([0, 0]);
 
   useEffect(() => {
     const endPoints = [];
@@ -75,6 +77,18 @@ const UserAttendanceTotalPage = () => {
       setTime(convertedArray);
 
       console.log('convert: ' + convertedArray);
+
+      // // const result3 = axios.get(`/user-attend-total-week?user_no=${token.user_no}`);
+      // const attendData = result3.data;
+
+      // // attend_total에서 시간을 추출
+      // const totalHours = parseInt(attendData.attend_total.split(':')[0]);
+      // console.log("attend_total: " + attendData.attendDate);
+      // const totalMinutes = parseInt(attendData.attend_total.split(':')[1]);
+
+      // // 시간과 분을 합하여 8시 0분 형식으로 변환
+      // const formattedTotal = `${totalHours}.${totalMinutes}`;
+      // setWeekTotal([0, (formattedTotal / 40) * 100]);
     }
 
     get();
@@ -182,7 +196,7 @@ const UserAttendanceTotalPage = () => {
           <Grid item xs={4} sm={4} md={4} lg={4}>
             <MainCard>
               <Typography variant="h5">휴가현황</Typography>
-              <VacationDonutChart /> 
+              <VacationDonutChart />
             </MainCard>
           </Grid>
           {/* row 2 */}
@@ -244,9 +258,9 @@ const UserAttendanceTotalPage = () => {
 
       {/* tab 2 */}
       <BasicTab value={value} index={1}>
-        <Grid container rowSpacing={1} columnSpacing={1}>
+        <Grid container columnSpacing={1}>
           {/* row 2 */}
-          <Grid item xs={12}>
+          <Grid item xs={8}>
             <MainCard>
               <Typography align="left" variant="h5">
                 금주 근무 시간
@@ -277,6 +291,18 @@ const UserAttendanceTotalPage = () => {
                   ]
                 }}
               />
+            </MainCard>
+          </Grid>
+          <Grid item xs={4}>
+            <MainCard sx={{ height: '94%' }}>
+              <div
+                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px', marginBottom: '30px' }}
+              >
+                <Typography align="left" variant="h5">
+                  금주근무시간
+                </Typography>
+              </div>
+              <WeekAttendDonutChart />
             </MainCard>
           </Grid>
           <Grid item xs={12}>

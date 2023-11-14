@@ -161,6 +161,13 @@ export const useLeaveState = create(
     setLeave: (newLeave) => set(() => ({ leave: newLeave }))
   }))
 );
+//사용자의 주간근무시간의 합 
+export const useAttendTotalState = create(
+  devtools((set) => ({
+    total: {},
+    setTotal: (newTotal) => set(() => ({ total: newTotal }))
+  }))
+);
 
 //모든 사용자의 휴가보유 현황
 export const useAllLeaveState = create(
