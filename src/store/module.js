@@ -340,11 +340,25 @@ export const useLeaveCnt = create(
   }))
 );
 
-//사용자의 주간근무시간
+//사용자의 주간근무시간(정상근무)
 export const useWorkingHourState = create(
   devtools((set) => ({
     hours: {},
     setHours: (newHours) => set(() => ({ hours: newHours }))
+  }))
+);
+//사용자의 주간근무시간(휴가)
+export const useLeaveHourState = create(
+  devtools((set) => ({
+    leaveHours: {},
+    setLeaveHours: (newLeaveHours) => set(() => ({ leaveHours: newLeaveHours }))
+  }))
+);
+//사용자의 주간근무시간(초과근무)
+export const useOverHourState = create(
+  devtools((set) => ({
+    overHours: {},
+    setOverHours: (newOverHours) => set(() => ({ overHours: newOverHours }))
   }))
 );
 //로그인 여부
