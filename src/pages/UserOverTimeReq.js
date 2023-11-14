@@ -32,6 +32,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 import dayjs from 'dayjs';
 import { over } from 'lodash';
+import OverTimeTable from 'components/Table/OverTimeTable';
 // import styled from 'styled-components';
 
 // // 파일 업로드
@@ -98,11 +99,11 @@ const UserOverTimeReq = () => {
       axios
         .post(`/over-time`, {
           overtimeVo: {
-            overtime_type: overTimeKind,
+            overtime_type: overTimeKind == 'weekend' ? 0 : 1,
             // overtime_time :
             overtime_content: overTimeContent,
-            overTime_reason: reason,
-            overtime_user_no: token.user_no
+            overtimeapp_reason: reason,
+            overtime_user_no: approver.user_no
           },
           attendanceVo: {
             user_no: token.user_no,
@@ -121,13 +122,16 @@ const UserOverTimeReq = () => {
   }
 
   // 탭 1. 출/퇴근 수정 목록 조회 ====================================
-  const [selectAttendEditData, setSelectAttendEditData] = useState({}); //목록에서 선택한 수정 데이터 : 모달창에서 상세 조회
+  // const [selectAttendEditData, setSelectAttendEditData] = useState({}); //목록에서 선택한 수정 데이터 : 모달창에서 상세 조회
 
   // 날짜별 데이터 검색 =========================================
-  const [searchStartDate, setSearchStartDate] = useState(new Date().toISOString().slice(0, 10)); // 검색 시작 날짜
-  const [searchEndDate, setSearchEndDate] = useState(new Date().toISOString().slice(0, 10)); // 검색 종료 날짜
-  const [filteredAttendData, setFilteredAttendData] = useState([0, []]); // 검색 결과 : 출퇴근 내역
-  const [filteredAttendEditData, setFilteredAttendEditData] = useState([0, []]); // 검색 결과 : 출퇴근 수정 내역
+  var d = new Date();
+  d.setMonth(d.getMonth() - 3);
+  const [searchStartDate, setSearchStartDate] = useState(d.toISOString().slice(0, 10)); // 검색 시작 날짜
+  var c = new Date();
+  c.setDate(c.getDate() + 1);
+  const [searchEndDate, setSearchEndDate] = useState(c.toISOString().slice(0, 10)); // 검색 종료 날짜
+  const [filteredAttendEditData, setFilteredAttendEditData] = useState([]); // 검색 결과 : 출퇴근 수정 내역
 
   // 출퇴근 수정 내역 검색 함수
   const searchAttendEditButton = () => {
@@ -152,10 +156,13 @@ const UserOverTimeReq = () => {
 
   // 검색 초기화
   const searchInitial = () => {
-    setFilteredAttendData([0, []]);
     setFilteredAttendEditData([0, []]);
-    setSearchStartDate(new Date());
-    setSearchEndDate(new Date());
+    var d = new Date();
+    d.setMonth(d.getMonth() - 3);
+    setSearchStartDate(d);
+    var c = new Date();
+    c.setDate(c.getDate() + 1);
+    setSearchEndDate(c);
   };
 
   // 같은 부서의 근태담당자 사용자 데이터
@@ -169,8 +176,9 @@ const UserOverTimeReq = () => {
     axios.get(`/dept-manager?dept_no=${token.dept_no}`).then((res) => {
       setAllUsers(res.data);
     });
-    // 로그인 한 사용자의 전체 출퇴근 수정 내역 조회
-    axios.get(`/attend-edit?user_no=${token.user_no}`).then((res) => {
+    // 로그인 한 사용자의 전체 초과근무 신청 내역 조회
+    console.log(searchStartDate);
+    axios.get(`/over-time?user_no=${token.user_no}&start_date=${searchStartDate}&end_date=${searchEndDate}`).then((res) => {
       setOverTimeDatas(res.data);
     });
   }, [value]);
@@ -323,24 +331,27 @@ const UserOverTimeReq = () => {
           <BasicContainer sx={{ height: '760px' }}>
             <Grid container>
               <Grid item xs={6} md={6} lg={4.5}>
-                <Typography variant="h4">출/퇴근 수정 요청 목록</Typography>
+                <Typography variant="h4">초과근무 신청 목록</Typography>
               </Grid>
               <Grid item xs={6} md={6} lg={7.5}>
                 <Grid container direction="row" spacing={1} sx={{ display: 'flex', alignItems: 'center' }}>
                   <Grid item sx={{ display: 'flex', mt: 1 }}>
                     <Box mr={1.5} sx={{ display: 'flex', alignItems: 'center' }}>
                       <Typography variant="h5" sx={{ color: 'gray' }}>
-                        수정 날짜 선택
+                        신청 날짜 선택
                       </Typography>
                     </Box>
                     <Box mr={1}>
-                      <BasicDatePicker setDate={setSearchStartDate} val={searchStartDate} />
+                      <BasicDatePicker
+                        setDate={(e) => setSearchStartDate(e.target.value.toISOString().slice(0, 10))}
+                        val={searchStartDate}
+                      />
                     </Box>
                     <Box mr={1} sx={{ display: 'flex', alignItems: 'center' }}>
                       <Typography variant="h4">~</Typography>
                     </Box>
                     <Box mr={1}>
-                      <BasicDatePicker setDate={setSearchEndDate} val={searchEndDate} />
+                      <BasicDatePicker setDate={(e) => setSearchEndDate(e.target.value.toISOString().slice(0, 10))} val={searchEndDate} />
                     </Box>
                     <Box mr={0.5} mt={0.3}>
                       <Button variant="contained" color="secondary" onClick={searchAttendEditButton}>
@@ -357,7 +368,7 @@ const UserOverTimeReq = () => {
               </Grid>
             </Grid>
             <MainCard sx={{ mt: 2 }} content={false}>
-              <UpdateAttendTable datas={filteredAttendEditData[0] === 0 ? overTimeDatas : filteredAttendEditData[1]} />
+              <OverTimeTable datas={overTimeDatas} />
             </MainCard>
           </BasicContainer>
         </Box>
