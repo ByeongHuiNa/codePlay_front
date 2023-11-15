@@ -37,7 +37,7 @@ const PersonalCalendar = ({ events }) => {
   //이벤트에 표기될 정보
   function renderEventContent(eventInfo) {
     return (
-      <Typography variant="body2" component="div">
+      <Typography variant="body2" component="div" sx={{ pl: 0.5 }}>
         {eventInfo.event.title}
       </Typography>
     );
@@ -139,15 +139,18 @@ const PersonalCalendar = ({ events }) => {
     const scheduleDescription = targetObject ? targetObject.schedule_description : null;
     // scheduleDescription에는 schedule_no가 일치하는 객체의 schedule_description 값이 저장
 
-    setStartDate(clickInfo.event.startStr);
-    setEndDate(newDateStr);
-    setEvent(clickInfo.event);
-    setTitle(clickInfo.event.title);
-    setAllDay(clickInfo.event.allDay);
-    setScheduleType(ScheduleType);
-    setShareType(scheduleShare);
-    setContent(scheduleDescription);
-    setClickView(true);
+    //결근 및 이상은 드로워 안뜨게 설정
+    if (!(clickInfo.event.backgroundColor == '#e57373' || clickInfo.event.backgroundColor == '#ffecb3')) {
+      setStartDate(clickInfo.event.startStr);
+      setEndDate(newDateStr);
+      setEvent(clickInfo.event);
+      setTitle(clickInfo.event.title);
+      setAllDay(clickInfo.event.allDay);
+      setScheduleType(ScheduleType);
+      setShareType(scheduleShare);
+      setContent(scheduleDescription);
+      setClickView(true);
+    }
   }
   //CalendarWorkModal on/off
   const [calendarWorkModal, setCalendarWorkModal] = React.useState(false);

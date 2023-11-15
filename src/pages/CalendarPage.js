@@ -38,7 +38,8 @@ function a11yProps(index) {
 const CalendarPage = () => {
   const token = jwtDecode(localStorage.getItem('token').slice(7));
   const [value, setValue] = React.useState(0);
-  const { scheduleList, leaveList, setScheduleList, setLeaveList, setDataList } = useCalendarGetScheduleList();
+  const { scheduleList, leaveList, attendanceList, setScheduleList, setLeaveList, setDataList, setAttendanceList } =
+    useCalendarGetScheduleList();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -108,6 +109,29 @@ const CalendarPage = () => {
       });
   };
 
+  const getAttendanceList = () => {
+    axios
+      .get(`/user-attend?user_no=${token.user_no}`)
+      .then((response) => {
+        const leaveListAdd = response.data
+          .filter((list) => ['결근', '지각', '조퇴'].includes(list.attend_status))
+          .map((list) => {
+            return {
+              title: list.attend_status,
+              start: list.attend_date,
+              color: list.attend_status === '결근' ? '#e57373' : '#ffecb3', // 부드러운 톤의 빨간색과 노란색
+              textColor: list.attend_status === '결근' ? '#ffebee' : '#000000', // 조금 어두운 빨간색과 검정색
+              allDay: true
+            };
+          });
+        setAttendanceList(leaveListAdd);
+      })
+      .catch((error) => {
+        console.error('휴가 리스트를 불러오는 중 오류 발생: ', error);
+      });
+  };
+
+  //공유 캘린더 리스트
   const {
     shereDataList,
     shereScheduleList,
@@ -117,7 +141,6 @@ const CalendarPage = () => {
     setShereDataList,
     setShereLeaveDataList
   } = useCalendarGetScheduleList();
-  //공유 캘린더 리스트
   const getShereScheduleList = () => {
     axios
       .get(`/user-dep-schedulelist?user_no=${token.user_no}`)
@@ -192,6 +215,7 @@ const CalendarPage = () => {
     getLeaveList();
     getShereScheduleList();
     getShereLeaveList();
+    getAttendanceList();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // 비어있는 종속성 배열을 사용하여 초기 로딩 시에만 실행되도록 함
 
@@ -215,15 +239,15 @@ const CalendarPage = () => {
     const selectedScheduleNos = shereDataList.filter((list) => list.schedule_share == true).map((list) => list.schedule_no);
     // shereScheduleList에서 selectedScheduleNos와 id가 일치하는 객체만 추출
     const filteredShereScheduleList = shereScheduleList.filter((item) => selectedScheduleNos.includes(item.id));
-    setPersonalEvents([...scheduleList, ...leaveList]);
+    setPersonalEvents([...scheduleList, ...leaveList, ...attendanceList]);
     setPublicEvents([...filteredShereScheduleList, ...shereLeaveList]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scheduleList, leaveList, shereScheduleList, shereLeaveList, shereDataList, value]);
+  }, [scheduleList, leaveList, shereScheduleList, shereLeaveList, shereDataList, attendanceList, value]);
 
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={value} onChange={handleChange} aria-label="icon label tabs example">
+        <Tabs value={value} onChange={handleChange} aria-label="icon label tabs example" sx={{ mt: -2.5 }}>
           <Tab icon={<PermContactCalendarIcon />} label="개인 캘린더" {...a11yProps(0)} />
           <Tab icon={<GroupsIcon />} label="공용 캘린더" {...a11yProps(1)} />
         </Tabs>
