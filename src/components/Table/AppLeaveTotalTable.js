@@ -220,23 +220,11 @@ export default function AppLeaveTotalTable({ month, handleOpen, user_no }) {
     get();
   }, [month]);
 
-  // const handleClose = () => {
-  //   setModalOpen(false);
-  // };
+ 
 
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
 
-  // function createData(leaveStart, leaveEnd, leaveType, leaveCnt, appDate, approver, status) {
-  //   return { leaveStart, leaveEnd, leaveType, leaveCnt, appDate, approver, status };
-  // }
-
-  // const datas = [
-  //   createData('2023/10/11', '2023/10/11', '연차', '1', '2023/10/07', '이유나 팀장', 0),
-  //   createData('2023/10/11', '2023/10/11', '반차(오전)', '0.5', '2023/10/07', '이유나 팀장', 0),
-  //   createData('2023/10/11', '2023/10/11', '연차', '1', '2023/10/07', '이유나 팀장', 1),
-  //   createData('2023/10/11', '2023/10/13', '연차', '3', '2023/10/07', '이유나 팀장', 0),
-  //   createData('2023/10/11', '2023/10/11', '연차', '1', '2023/10/07', '이유나 팀장', 0)
-  // ];
+  
 
   return (
     <Box>

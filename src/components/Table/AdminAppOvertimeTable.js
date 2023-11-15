@@ -37,22 +37,22 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: 'attendUser',
+    id: 'overtimUser',
     align: 'center',
     disablePadding: false,
-    label: '수정신청자'
+    label: '신청자'
   },
   {
-    id: 'attendDate',
+    id: 'overtimeDate',
     align: 'center',
     disablePadding: false,
-    label: '수정신청일'
+    label: '초과근무 날짜'
   },
   {
-    id: 'attendKind',
+    id: 'overtimeKind',
     align: 'center',
     disablePadding: false,
-    label: '수정사항'
+    label: '초과근무 종류'
   },
   {
     id: 'status',
@@ -109,6 +109,10 @@ const OrderStatus = ({ status }) => {
     case 2:
       color = 'primary';
       title = '결재대기';
+      break;
+    case 3:
+      color = 'error';
+      title = '취소처리';
   }
 
   return (
@@ -121,7 +125,7 @@ const OrderStatus = ({ status }) => {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function AdminAppAttendTable({ datas, setSelectAttendData, selectAttendData }) {
+export default function AdminAppOvertimeTable({ datas, setSelectOvertimeData }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
@@ -171,25 +175,20 @@ export default function AdminAppAttendTable({ datas, setSelectAttendData, select
                 <TableRow
                   hover
                   role="checkbox"
-                  sx={{
-                    '&:last-child td, &:last-child th': { border: 0 },
-                    backgroundColor: data === selectAttendData ? '#e4e3e3' : 'inherit'
-                  }}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   aria-checked={isItemSelected}
                   tabIndex={-1}
                   key={data.attend_no}
                   selected={isItemSelected}
-                  onClick={() => setSelectAttendData(data)}
+                  onClick={() => setSelectOvertimeData(data)}
                 >
                   <TableCell component="th" id={labelId} scope="data" align="center">
                     {data.user_name}
                   </TableCell>
                   <TableCell align="center">{dateFormat(new Date(data.attend_date))}</TableCell>
+                  <TableCell align="center">{data.overtime_type === 0 ? '주말 근무' : '연장 근무'}</TableCell>
                   <TableCell align="center">
-                    {data.attendedit_kind === 0 ? '출근' : data.attendedit_kind === 1 ? '퇴근' : '출근, 퇴근'}
-                  </TableCell>
-                  <TableCell align="center">
-                    <OrderStatus status={data.attendapp_status} />
+                    <OrderStatus status={data.overtimeapp_status} />
                   </TableCell>
                 </TableRow>
               );

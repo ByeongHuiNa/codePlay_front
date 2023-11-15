@@ -86,6 +86,18 @@ const headCells = [
     label: '퇴근시각'
   },
   {
+    id: 'total',
+    align: 'center',
+    disablePadding: false,
+    label: '근무시간'
+  },
+  {
+    id: 'total',
+    align: 'center',
+    disablePadding: false,
+    label: '연장근무시간'
+  },
+  {
     id: 'status',
     align: 'center',
     disablePadding: false,
@@ -130,6 +142,8 @@ const AttendanceStatus = ({ status }) => {
   // 2 : 지각
   // 3 : 조퇴(조기퇴근)
   // 4 : 결근(출근 혹은 퇴근누락))
+  // 5 : 연장
+  // 6: 초과
 
   switch (status) {
     case '정상':
@@ -163,6 +177,14 @@ const AttendanceStatus = ({ status }) => {
     case '결근':
       color = 'error';
       title = '결근';
+      break;
+    case '연장':
+      color = 'success';
+      title = '연장';
+      break;
+    case '초과':
+      color = 'success';
+      title = '초과';
       break;
     default:
       color = 'error';
@@ -336,6 +358,8 @@ export default function AttendanceTable({ month, user_no }) {
                     <TableCell align="center">{dayName}</TableCell>
                     <TableCell align="center">{attendance.attend_start}</TableCell>
                     <TableCell align="center">{attendance.attend_end}</TableCell>
+                    <TableCell align="center">{attendance.attend_total}</TableCell>
+                    <TableCell align="center"></TableCell>
                     <TableCell align="center">
                       <AttendanceStatus status={attendance.attend_status} />
                     </TableCell>

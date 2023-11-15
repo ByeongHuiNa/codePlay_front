@@ -36,6 +36,7 @@ import UserLeaveInfoTable from 'components/Table/UserLeaveInfoTable';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
 import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
+import BasicChip from 'components/Chip/BasicChip';
 
 const UserLeave = () => {
   const { index, setIndex } = useLeaveTab();
@@ -90,6 +91,25 @@ const UserLeave = () => {
   const [firstApprover, setFirstApprover] = useState({});
   const [secondApprover, setSecondApprover] = useState({});
 
+  // 특정 날짜가 주말인지 확인하는 함수
+  function isWeekend(date) {
+    const day = date.getDay(); // 0은 일요일, 1은 월요일, ..., 6은 토요일
+    return day === 0 || day === 6; // 일요일 또는 토요일이면 주말
+  }
+
+  // 총 휴가일수 구하는 함수
+  function calculateLeaveTotal(start, end) {
+    let total = 0;
+    // 휴가 일수 계산
+    for (let date = new Date(start); date <= new Date(end); date.setDate(date.getDate() + 1)) {
+      // 주말이 아닌 경우에만 일수 추가
+      if (!isWeekend(date)) {
+        total++;
+      }
+    }
+    return total;
+  }
+
   // 사원선택의 자동완성 창에서 검색어 변경(검색) 될 때마다 searchName 설정
   const handleSelectUser = (event, newValue) => {
     setSearchName(newValue);
@@ -108,6 +128,13 @@ const UserLeave = () => {
     // 로그인 한 사용자 부서의 근태 담당자 내역 -> 결재자 검색창 autocomplete
     axios.get(`/dept-manager?dept_no=${token.dept_no}`).then((res) => {
       setAllUsers(res.data);
+    });
+  }, []);
+
+  useEffect(() => {
+    // 로그인 한 사용자의 결재대기 상태인 모든 휴가신청내역 가져오기
+    axios.get(`/user-leave-request-await?user_no=${token.user_no}`).then((res) => {
+      setLeaveRequestAwait(res.data);
     });
     // 로그인 한 사용자의 휴가 보유 현황 가져오기
     axios.get(`/user-leave?user_no=${token.user_no}`).then((res) => {
@@ -130,13 +157,6 @@ const UserLeave = () => {
       setSelectLeaveCancel({});
     }
   }, [index]);
-
-  useEffect(() => {
-    // 로그인 한 사용자의 결재대기 상태인 모든 휴가신청내역 가져오기
-    axios.get(`/user-leave-request-await?user_no=${token.user_no}`).then((res) => {
-      setLeaveRequestAwait(res.data);
-    });
-  }, [leaveRequestAwait]);
 
   // 휴가 신청 버튼
   function submitLeaveRequest() {
@@ -166,12 +186,7 @@ const UserLeave = () => {
           leaveapp_content: reason,
           leaveapp_start: start,
           leaveapp_end: selectedValue === 'half' ? start : end,
-          leaveapp_total:
-            selectedValue === 'half'
-              ? 0.5
-              : selectedValue === 'public'
-              ? 0
-              : Math.floor((new Date(end).getTime() - new Date(start).getTime()) / (1000 * 60 * 60 * 24)) + 1,
+          leaveapp_total: selectedValue === 'half' ? 0.5 : selectedValue === 'public' ? 0 : calculateLeaveTotal(start, end),
           leaveapp_type: selectedValue === 'annual' ? 0 : selectedValue === 'public' ? 3 : selectedHalfValue === 'am' ? 1 : 2,
           firstapp_no: firstApprover.user_no,
           secondapp_no: secondApprover.user_no
@@ -243,11 +258,11 @@ const UserLeave = () => {
     content = (
       <>
         <Box clone mt={2}>
-          <MyChip label="시작날짜" />
+          <BasicChip label="시작날짜" color="#46a5f3" />
           <BasicDatePicker sx={{ width: '30px' }} setDate={setStart} val={start} />
         </Box>
         <Box clone mt={2}>
-          <MyChip label="종료날짜" />
+          <BasicChip label="종료날짜" color="#46a5f3" />
           <BasicDatePicker sx={{ width: '30px' }} setDate={setEnd} val={end} />
         </Box>
       </>
@@ -347,7 +362,7 @@ const UserLeave = () => {
                 </Grid>
               </Grid>
               <Box clone mt={2}>
-                <MyChip label="제목" />
+                <BasicChip label="제목" color="#46a5f3" />
                 <TextField
                   label="제목"
                   id="title"
@@ -364,7 +379,7 @@ const UserLeave = () => {
                 </Typography>
               </Box>
               <Box clone mt={2} sx={{ display: 'flex' }}>
-                <MyChip label="1차 결재자" />
+                <BasicChip label="1차 결재자" color="#46a5f3" />
                 <AppAuto
                   label="1차 결재자"
                   datas={allUsers.filter((data) => data !== secondApprover)}
@@ -375,7 +390,7 @@ const UserLeave = () => {
                 />
               </Box>
               <Box clone mt={2} sx={{ display: 'flex' }}>
-                <MyChip label="2차 결재자" />
+                <BasicChip label="2차 결재자" color="#46a5f3" />
                 <AppAuto
                   label="2차 결재자"
                   datas={allUsers.filter((data) => data !== firstApprover)}
@@ -386,7 +401,7 @@ const UserLeave = () => {
                 />
               </Box>
               <Box clone mt={2}>
-                <MyChip label="휴가 종류" />
+                <BasicChip label="휴가 종류" color="#46a5f3" />
                 <FormControl sx={{ ml: 1 }}>
                   <RadioGroup
                     row
@@ -405,7 +420,7 @@ const UserLeave = () => {
                 </Box>
               </Box>
               <Box clone mt={2}>
-                <MyChip label="휴가 사유" />
+                <BasicChip label="휴가 사유" color="#46a5f3" />
               </Box>
               <Box clone mt={2}>
                 <TextField
@@ -443,7 +458,7 @@ const UserLeave = () => {
                 </Grid>
               </Grid>
               <Box clone mt={2}>
-                <MyChip label="제목" />
+                <BasicChip label="제목" color="#46a5f3" />
                 <TextField label="제목" id="title" size="small" onChange={(e) => setTitle(e.target.value)} />
               </Box>
               <Box clone mt={1} sx={{ display: 'flex', alignItems: 'center' }}>
@@ -453,7 +468,7 @@ const UserLeave = () => {
                 </Typography>
               </Box>
               <Box clone mt={2} sx={{ display: 'flex' }}>
-                <MyChip label="결재자" />
+                <BasicChip label="결재자" color="#46a5f3" />
                 <AppAuto
                   label="결재자"
                   datas={allUsers}
@@ -464,7 +479,7 @@ const UserLeave = () => {
                 />
               </Box>
               <Box clone mt={2}>
-                <MyChip label="휴가 선택" />
+                <BasicChip label="휴가 선택" color="#46a5f3" />
                 <TextField
                   label="휴가 선택"
                   id="leave"
@@ -504,7 +519,7 @@ const UserLeave = () => {
                 )}
               </Box>
               <Box clone mt={2}>
-                <MyChip label="취소 사유" />
+                <BasicChip label="취소 사유" color="#46a5f3" />
               </Box>
               <Box clone mt={2}>
                 <TextField

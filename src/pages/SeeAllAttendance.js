@@ -24,7 +24,7 @@ const SeeAllAttendance = () => {
 
   const { profile, setProfile } = useProfileState();
 
-  const [mon, setMon] = useState('');
+  
 
   //token 값을 decode해주는 코드
   const token = jwtDecode(localStorage.getItem('token').slice(7));
@@ -53,20 +53,22 @@ const SeeAllAttendance = () => {
     setValue2(newValue);
   };
 
-  const [date, setDate] = useState(() => new Date().toLocaleDateString());
+  const [date, setDate] = useState(() => new Date().toLocaleDateString()); //일별 근태에서 씀
   //const [filterDate, setFilterDate] = useState(() => date.toLocaleDateString());
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(new Date()); //주별 근태에서 씀
 
-  const [currentWeek, setCurrentWeek] = useState(0);
+  const [currentWeek, setCurrentWeek] = useState(0); //몇주인지 나타냄
 
-  const handlePrevDay = () => {
+  const [mon, setMon] = useState(''); //주별 월요일 날짜를 받기위해 씀
+
+  const handlePrevDay = () => { //어제날짜
     const newDate = new Date(date);
     newDate.setDate(newDate.getDate() - 1);
     setDate(newDate.toLocaleDateString());
     //setFilterDate(date);
   };
 
-  const handleNextDay = () => {
+  const handleNextDay = () => { //내일날짜
     const newDate = new Date(date);
     newDate.setDate(newDate.getDate() + 1);
     setDate(newDate.toLocaleDateString());
@@ -78,7 +80,7 @@ const SeeAllAttendance = () => {
     newDate.setDate(newDate.getDate() - 7); // 7일을 빼면 1주를 뺀다
     //setCurrentDate(newDate.getFormattedMonday());
     setCurrentDate(newDate);
-    
+    //setMon(getFormattedMonday());
 
     // 주차를 갱신
     setCurrentWeek(currentWeek - 1);
@@ -89,6 +91,7 @@ const SeeAllAttendance = () => {
     newDate.setDate(newDate.getDate() + 7); // 7일을 더하면 1주를 더한다
     //setCurrentDate(newDate.getFormattedMonday());
     setCurrentDate(newDate);
+    //setMon(getFormattedMonday());
     
     // 주차를 갱신
     setCurrentWeek(currentWeek + 1);
@@ -100,18 +103,18 @@ const SeeAllAttendance = () => {
     const day = currentDate.getDate().toString().padStart(2, '0');
     return `${year}-${month}-${day}`;
   };
-
+  //let monday = new Date();
   useEffect(() => {
     // 현재 날짜를 가져오고 그 날짜의 주차를 계산
     const now = new Date();
     const startOfYear = new Date(now.getFullYear(), 0, 1);
     const weekNumber = Math.ceil(((now - startOfYear) / 86400000 + 1) / 7);
 
-    const monday = new Date();
-    monday.setDate(currentDate.getDate() - currentDate.getDay() + (currentDate.getDay() === 0 ? -6 : 1));
+   
+    //monday.setDate(currentDate.getDate() - currentDate.getDay() + (currentDate.getDay() === 0 ? -6 : 1));
 
     // setCurrentDate를 사용하여 상태를 업데이트
-    setCurrentDate(monday);
+    //setCurrentDate(monday);
     // console.log('이번주의 월요일 : ' + currentDate.toLocaleDateString());
 
     // console.log('이번주의 월요일2 : ' + getFormattedMonday());
@@ -135,7 +138,7 @@ const SeeAllAttendance = () => {
 
     fetchData();
     get();
-  }, []);
+  }, [currentWeek]);
 
   return (
     <ComponentSkeleton>

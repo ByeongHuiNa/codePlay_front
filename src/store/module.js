@@ -161,6 +161,14 @@ export const useLeaveState = create(
     setLeave: (newLeave) => set(() => ({ leave: newLeave }))
   }))
 );
+//사용자의 주간근무시간의 합 
+export const useAttendTotalState = create(
+  devtools((set) => ({
+    total: {},
+    setTotal: (newTotal) => set(() => ({ total: newTotal }))
+  }))
+);
+
 //모든 사용자의 휴가보유 현황
 export const useAllLeaveState = create(
   devtools((set) => ({
@@ -326,11 +334,33 @@ export const useFormatter = create(
   }))
 );
 
-//사용자의 주간근무시간
+// 휴가 신청자의 휴가 보유 현황
+export const useLeaveCnt = create(
+  devtools((set) => ({
+    leaveCnt: {},
+    setLeaveCnt: (newLeave) => set(() => ({ leaveCnt: newLeave }))
+  }))
+);
+
+//사용자의 주간근무시간(정상근무)
 export const useWorkingHourState = create(
   devtools((set) => ({
     hours: {},
     setHours: (newHours) => set(() => ({ hours: newHours }))
+  }))
+);
+//사용자의 주간근무시간(휴가)
+export const useLeaveHourState = create(
+  devtools((set) => ({
+    leaveHours: {},
+    setLeaveHours: (newLeaveHours) => set(() => ({ leaveHours: newLeaveHours }))
+  }))
+);
+//사용자의 주간근무시간(초과근무)
+export const useOverHourState = create(
+  devtools((set) => ({
+    overHours: {},
+    setOverHours: (newOverHours) => set(() => ({ overHours: newOverHours }))
   }))
 );
 //로그인 여부
