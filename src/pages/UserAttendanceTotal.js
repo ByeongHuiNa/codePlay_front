@@ -136,7 +136,7 @@ const UserAttendanceTotalPage = () => {
         }
       });
       setTime1(convertedArray1);
-
+      
       const convertedArray2 = attendTotalArray2.map((item) => {
         if (item.attend_total) {
           const totalParts = item.attend_total.split(':');
