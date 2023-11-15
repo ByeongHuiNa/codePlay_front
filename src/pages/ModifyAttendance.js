@@ -541,7 +541,11 @@ const ModifyAttendance = () => {
                         <Button variant="contained">검색</Button>
                       </Grid>
                     </Grid>
-                    <UserAllAttendTable datas={attendDatas} handleMyCard={setSearchAttendData} height={'470px'} />
+                    <UserAllAttendTable
+                      datas={attendDatas.filter((data) => data.attend_status !== '초과')}
+                      handleMyCard={setSearchAttendData}
+                      height={'470px'}
+                    />
                     <Grid container justifyContent="right" spacing={1} sx={{ mt: 2 }}>
                       <Grid item>
                         <Button variant="contained" size="medium" onClick={handleCloseAll}>

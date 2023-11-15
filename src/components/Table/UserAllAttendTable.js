@@ -74,6 +74,7 @@ function OrderTableHead({ order, orderBy }) {
             align={headCell.align}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
+            sx={{ backgroundColor: '#e5edf026' }}
           >
             {headCell.label}
           </TableCell>
@@ -161,7 +162,7 @@ export default function UserAllAttendTable({ datas, handleMyCard, height, select
       <TableContainer
         sx={{
           width: '100%',
-          overflowX: 'auto',
+          overflow: 'auto',
           position: 'relative',
           display: 'block',
           maxWidth: '100%',
