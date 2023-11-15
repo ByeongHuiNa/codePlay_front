@@ -29,13 +29,12 @@ const SettingAuthority = () => {
 
   //화면 초기값 셋팅
   useEffect(() => {
-    setIndex(1);
+    setIndex('');
     setIndex(0);
-    async function get() {
-      const endPoints = ['/role-count', '/dept-list'];
-      const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
-      const tabs = [];
-      for (let i of result[0].data) {
+    axios.get('/dept-list').then((res)=> setDeptList(res.data));
+    const tabs = [];
+    axios.get('/role-count').then((res)=> {
+      for (let i of res.data) {
         const tab_temp = {
           id: i.role_level,
           name: i.role_name,
@@ -44,12 +43,10 @@ const SettingAuthority = () => {
         };
         tabs.push(tab_temp);
       }
-      setTab(tabs);
-      setView(false);
-      setSearch('');
-      setDeptList(result[1].data);
-    }
-    get();
+        setTab(tabs);
+    })
+    setView(false);
+    setSearch('');
   }, []);
 
   //index 값(탭) 변경시 테이블 변경 셋팅
@@ -66,7 +63,7 @@ const SettingAuthority = () => {
   return (
     <>
       <Typography variant="h2">권한관리</Typography>
-      <Grid container direction="row">
+      <Grid container direction="row" spacing={1}>
         <Grid item xs={view == 1 ? 8 : 12}>
           <MainCard>
             {/*TODO: 추가 기능 구현예정 <Typography variant="h4">사용자명으로 검색</Typography>

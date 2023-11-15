@@ -57,7 +57,11 @@ const AuthorityDetailCard = () => {
       user_no: id,
       role: content
     };
-    await axios.post(`/role-save`, RoleQueryUserDetailRequestVo);
+    //TODO: Role number 변경
+    await axios.post(`/role-save`, RoleQueryUserDetailRequestVo).then((res) => { for (let i of res.data.preRoleLevel) { const temp = tab.filter((item) => item.id == i); 
+      for(let j of temp){j.number = j.number - 1;} } 
+    for (let i of res.data.postRoleLevel) { const temp = tab.filter((item) => item.id == i); for(let j of temp){j.number = j.number + 1;} } 
+  });
   }
 
   return (
