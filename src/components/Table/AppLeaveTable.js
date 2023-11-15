@@ -204,11 +204,21 @@ export default function AppLeaveTable({ requestLeaveCancel, datas, handleOpen })
       <TableContainer
         sx={{
           width: '100%',
-          overflowX: 'auto',
+          overflow: 'auto',
           position: 'relative',
           display: 'block',
           maxWidth: '100%',
-          '& td, & th': { whiteSpace: 'nowrap' }
+          '& td, & th': { whiteSpace: 'nowrap' },
+          '&::-webkit-scrollbar': {
+            width: 5
+          },
+          '&::-webkit-scrollbar-track': {
+            backgroundColor: 'white'
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: 'gray',
+            borderRadius: 2
+          }
         }}
       >
         <Table

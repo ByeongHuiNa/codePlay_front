@@ -2,7 +2,6 @@
 import { Grid, Typography } from '@mui/material';
 
 // project import
-import ComponentSkeleton from './components-overview/ComponentSkeleton';
 import BasicContainer from 'components/container/BasicContainer';
 import {
   Box,
@@ -314,7 +313,7 @@ const UserLeave = () => {
   }
 
   return (
-    <ComponentSkeleton>
+    <>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={index} onChange={handleChange} aria-label="basic tabs example">
           <Tab label="휴가조회" />
@@ -324,29 +323,29 @@ const UserLeave = () => {
       </Box>
       <BasicTab value={index} index={0}>
         <Grid container spacing={1}>
-          <Grid item xs={4} sm={4} md={4} lg={4} sx={{ height: '360px' }}>
-            <BasicContainer sx={{ height: 1 }}>
+          <Grid item xs={4} sm={4} md={4} lg={3.5}>
+            <BasicContainer sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               <LeaveDonutChart series={leaveCnt} />
             </BasicContainer>
           </Grid>
-          <Grid item xs={8} sm={8} md={8} lg={8} sx={{ overflow: 'auto' }}>
+          <Grid item xs={8} sm={8} md={8} lg={8.5}>
             <BasicContainer>
               <Grid container alignItems="center" justifyContent="space-between">
                 <Grid item>
-                  <Typography variant="h4">결재 대기 내역</Typography>
+                  <Typography variant="h5">결재 대기 내역</Typography>
                 </Grid>
               </Grid>
               <UnappLeaveTable leaveCancel={leaveCancel} datas={leaveRequestAwait} handleOpen={handleOpen} />
             </BasicContainer>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            <BasicContainer sx={{ height: '520px' }}>
+            <BasicContainer sx={{ height: '420px' }}>
               <Grid container alignItems="center" justifyContent="space-between">
                 <Grid item>
-                  <Typography variant="h4">결재 진행중인 최근 내역</Typography>
+                  <Typography variant="h5">결재 진행중인 최근 내역</Typography>
                 </Grid>
               </Grid>
-              <AppLeaveTable requestLeaveCancel={requestLeaveCancel} datas={leaveRequestRecent.slice(0, 7)} handleOpen={handleOpen} />
+              <AppLeaveTable requestLeaveCancel={requestLeaveCancel} datas={leaveRequestRecent.slice(0, 5)} handleOpen={handleOpen} />
             </BasicContainer>
           </Grid>
         </Grid>
@@ -566,7 +565,7 @@ const UserLeave = () => {
           </ModalM>
         </BasicContainer>
       </BasicTab>
-    </ComponentSkeleton>
+    </>
   );
 };
 
