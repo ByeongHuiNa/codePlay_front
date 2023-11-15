@@ -125,6 +125,7 @@ const Main = () => {
         }
       });
       setTime1(convertedArray1);
+      console.log('타임1: ' + convertedArray1);
 
       const convertedArray2 = attendTotalArray2.map((item) => {
         if (item.attend_total) {
@@ -138,7 +139,7 @@ const Main = () => {
         }
       });
       setTime2(convertedArray2);
-      console.log('타임2' + convertedArray2);
+      console.log('타임2: ' + convertedArray2);
 
       const convertedArray3 = attendTotalArray3.map((item) => {
         if (item.attend_total) {
@@ -152,7 +153,7 @@ const Main = () => {
         }
       });
       setTime3(convertedArray3);
-      console.log('타임3' + convertedArray3);
+      console.log('타임3: ' + convertedArray3);
     }
     get();
   }, []);
@@ -194,7 +195,7 @@ const Main = () => {
       <Grid item xs={4} sm={4} md={4} lg={4}>
         {Object.keys(profile).length > 0 && (
           <MainCard sx={{ height: '350px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px 15px' }}>
               <Typography align="left" variant="h5">
                 내 정보
               </Typography>
@@ -219,9 +220,11 @@ const Main = () => {
       </Grid>
       <Grid item xs={4} sm={4} md={4} lg={4}>
         <MainCard>
-          <Typography align="left" variant="h5">
-            금주 근무 시간
-          </Typography>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px 15px' }}>
+            <Typography align="left" variant="h5">
+              금주 근무 시간
+            </Typography>
+          </div>
           <AttendChart
             chart={{
               labels: daysOfWeek,
@@ -252,7 +255,7 @@ const Main = () => {
 
       <Grid item xs={4}>
         <MainCard style={{ height: '415px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px 15px' }}>
             <Typography align="left" variant="h5">
               휴가신청목록
             </Typography>
@@ -266,7 +269,9 @@ const Main = () => {
 
       <Grid item xs={4}>
         <MainCard sx={{ height: '100%' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px', marginBottom: '30px' }}>
+          <div
+            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px 15px', marginBottom: '20px' }}
+          >
             <Typography align="left" variant="h5">
               휴가현황
             </Typography>
