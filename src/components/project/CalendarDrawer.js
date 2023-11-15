@@ -23,8 +23,10 @@ import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import axios from '../../../node_modules/axios/index';
 import { jwtDecode } from '../../../node_modules/jwt-decode/build/cjs/index';
+import { useNavigate } from '../../../node_modules/react-router-dom/dist/index';
 
 export default function CalendarDrawer() {
+  const navigate = useNavigate();
   var token;
   if (localStorage.getItem('token')) {
     token = jwtDecode(localStorage.getItem('token').slice(7));
@@ -123,6 +125,23 @@ export default function CalendarDrawer() {
   const handleEndDateFieldOnAccept = (e) => {
     setEndDate(new Date(e));
     setEndDatePicker((pre) => !pre);
+  };
+
+  const handleAddLeaveOnClick = () => {
+    const start = new Date(startDate);
+    const end = leaveType ? new Date(endDate) : new Date(startDate);
+
+    // navigate('/userleave');
+
+    navigate('/userleave', {
+      state: {
+        val: 1,
+        selectedValue: leaveType ? 'half' : 'annual',
+        start: start.setHours(0, 0, 0, 0),
+        end: end.setHours(0, 0, 0, 0)
+      }
+    });
+    setView(false);
   };
 
   //AddEventOnClick
@@ -425,7 +444,7 @@ export default function CalendarDrawer() {
                     size="large"
                     variant="contained"
                     color="primary"
-                    onClick={handleAddEventOnClick}
+                    onClick={handleAddLeaveOnClick}
                     sx={{
                       mt: 62
                     }}

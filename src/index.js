@@ -15,8 +15,6 @@ import 'assets/third-party/apex-chart.css';
 import App from './App';
 import { store } from 'store';
 import reportWebVitals from './reportWebVitals';
-import CalendarDrawer from 'components/project/CalendarDrawer';
-import CalendarClickDrawer from 'components/project/CalendarClickDrawer';
 
 // ==============================|| MAIN - REACT DOM RENDER  ||============================== //
 
@@ -24,8 +22,6 @@ const container = document.getElementById('root');
 const root = createRoot(container); // createRoot(container!) if you use TypeScript
 root.render(
   <>
-    <CalendarDrawer />
-    <CalendarClickDrawer />
     <StrictMode>
       <ReduxProvider store={store}>
         <BrowserRouter>
