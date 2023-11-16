@@ -31,9 +31,9 @@ const SettingAuthority = () => {
   useEffect(() => {
     setIndex('');
     setIndex(0);
-    axios.get('/dept-list').then((res)=> setDeptList(res.data));
+    axios.get('/dept-list').then((res) => setDeptList(res.data));
     const tabs = [];
-    axios.get('/role-count').then((res)=> {
+    axios.get('/role-count').then((res) => {
       for (let i of res.data) {
         const tab_temp = {
           id: i.role_level,
@@ -43,8 +43,8 @@ const SettingAuthority = () => {
         };
         tabs.push(tab_temp);
       }
-        setTab(tabs);
-    })
+      setTab(tabs);
+    });
     setView(false);
     setSearch('');
   }, []);
@@ -53,7 +53,7 @@ const SettingAuthority = () => {
   useEffect(() => {
     async function get() {
       setPage(1);
-      const result = await axios.get(`/role-query-list?role_level=${index+1}&page=1&limit=7`);
+      const result = await axios.get(`/role-query-list?role_level=${index + 1}&page=1&limit=7`);
       setTableList(result.data);
       setView(false);
     }
@@ -62,10 +62,12 @@ const SettingAuthority = () => {
 
   return (
     <>
-      <Typography variant="h2">권한관리</Typography>
-      <Grid container direction="row" spacing={1}>
+      <Typography variant="h2" mb={2}>
+        권한관리
+      </Typography>
+      <Grid container direction="row" spacing={2}>
         <Grid item xs={view == 1 ? 8 : 12}>
-          <MainCard>
+          <MainCard sx={{ pt: 2, pr: 3, pl: 3, borderRadius: 0, height: '45rem' }} content={false}>
             {/*TODO: 추가 기능 구현예정 <Typography variant="h4">사용자명으로 검색</Typography>
             <InputSeach isPersonIcon={true}></InputSeach> */}
             <SettingTab />

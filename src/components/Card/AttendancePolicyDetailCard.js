@@ -28,7 +28,7 @@ const AttendancePolicyDetailCard = () => {
   };
 
   return (
-    <MainCard>
+    <MainCard sx={{ pt: 2, pr: 3, pl: 3, borderRadius: 0, height: '45rem' }} content={false}>
       <Stack direction="column" spacing={2}>
         {Object.keys(content).length > 0 && (
           <>
@@ -52,7 +52,7 @@ const AttendancePolicyDetailCard = () => {
             <Stack direction="row" justifyContent="space-around" spacing={2} alignItems="center">
               <BasicTimePicker
                 label={'출근시간'}
-                 value={dayjs(content.standard_start_time)}
+                value={dayjs(content.standard_start_time)}
                 onChange={(newValue) => changeTime(newValue, 'start')}
               />
               <BasicTimePicker

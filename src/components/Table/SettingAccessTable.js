@@ -32,7 +32,9 @@ const headCells = [
   },
   {
     id: 'button',
-    label: '버튼'
+    label: '버튼',
+    pl: 0
+
   }
 ];
 function OrderTableHead({ order, orderBy }) {
@@ -40,7 +42,7 @@ function OrderTableHead({ order, orderBy }) {
     <TableHead>
       <TableRow>
         {headCells.map((headCell) => (
-          <TableCell key={headCell.id} align="center" padding={'normal'} sortDirection={orderBy === headCell.id ? order : false}>
+          <TableCell key={headCell.id} align="center" sx={{ pl: headCell.pl }} sortDirection={orderBy === headCell.id ? order : false}>
             {headCell.label}
           </TableCell>
         ))}
@@ -86,7 +88,7 @@ export default function SettingAccessTable() {
 
   return (
     <>
-      <Box>
+      <Box sx={{ height: '32rem' }}>
         <TableContainer
           sx={{
             width: '100%',
@@ -124,14 +126,22 @@ export default function SettingAccessTable() {
                     key={row.user_no}
                     selected={isItemSelected}
                   >
-                    <TableCell component="th" id={labelId} scope="row" align="center">
+                    <TableCell component="th" id={labelId} scope="row" align="center" sx={{ width: 60 }}>
                       <Avatar src={row.user_profile} sx={{ width: 50, height: 50, margin: 'auto' }}></Avatar>
                     </TableCell>
-                    <TableCell align="center">{row.dept_name}</TableCell>
-                    <TableCell align="center">{row.user_name}</TableCell>
-                    <TableCell align="center">{row.user_position}</TableCell>
-                    <TableCell align="center">{row.role_designated_date}</TableCell>
-                    <TableCell align="center">
+                    <TableCell align="center" sx={{ width: '5rem' }}>
+                      {row.dept_name}
+                    </TableCell>
+                    <TableCell align="center" sx={{ width: '8rem' }}>
+                      {row.user_name}
+                    </TableCell>
+                    <TableCell align="center" sx={{ width: '4rem' }}>
+                      {row.user_position}
+                    </TableCell>
+                    <TableCell align="center" sx={{ width: '7rem' }}>
+                      {row.role_designated_date}
+                    </TableCell>
+                    <TableCell align="center" sx={{ width: '8rem', pl: 0 }}>
                       <Button onClick={() => clickChangeAccess(row.user_no)}> 접근 변경</Button>
                     </TableCell>
                   </TableRow>

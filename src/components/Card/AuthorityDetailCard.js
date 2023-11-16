@@ -11,7 +11,7 @@ const AuthorityDetailCard = () => {
   //권한 고정(사용자, 근태담당자, 관리자, 메인관리자 추가 불가능)
   const { setView, content, setContent, id } = useDetailCardState();
   const { tableContentList } = useTableListState();
-  const { tab } = useTabState();
+  const { tab, setTab } = useTabState();
   const { deptList } = useDeptListState();
   function getToday() {
     var date = new Date();
@@ -58,18 +58,30 @@ const AuthorityDetailCard = () => {
       role: content
     };
     //TODO: Role number 변경
-    await axios.post(`/role-save`, RoleQueryUserDetailRequestVo).then((res) => { for (let i of res.data.preRoleLevel) { const temp = tab.filter((item) => item.id == i); 
-      for(let j of temp){j.number = j.number - 1;} } 
-    for (let i of res.data.postRoleLevel) { const temp = tab.filter((item) => item.id == i); for(let j of temp){j.number = j.number + 1;} } 
-  });
+    await axios.post(`/role-save`, RoleQueryUserDetailRequestVo).then((res) => {
+      for (let i of res.data.preRoleLevel) {
+        const temp = tab.filter((item) => item.id == i);
+        for (let j of temp) {
+          j.number = j.number - 1;
+        }
+      }
+      for (let i of res.data.postRoleLevel) {
+        const temp = tab.filter((item) => item.id == i);
+        for (let j of temp) {
+          j.number = j.number + 1;
+        }
+      }
+      setTab(ab);
+    });
+    alert('권한변경 되었습니다.');
   }
 
   return (
-    <MainCard>
-      <Stack direction="row" justifyContent="center" mb={3}>
+    <MainCard sx={{ pt: 2, pr: 3, pl: 3, borderRadius: 0, height: '45rem' }} content={false}>
+      <Stack direction="row" justifyContent="center" mb={3} mt="4rem">
         <Avatar src={tableContentList.find((e) => e.user_no == id).user_profile} sx={{ width: 150, height: 150 }}></Avatar>
       </Stack>
-      <Stack direction="column" spacing={1}>
+      <Stack direction="column" spacing={1} mb={3}>
         <Stack direction="row" justifyContent="space-around">
           <Typography variant="h4">{tableContentList.find((e) => e.user_no == id).user_name}</Typography>
         </Stack>
@@ -78,14 +90,16 @@ const AuthorityDetailCard = () => {
             {`${tableContentList.find((e) => e.user_no == id).dept_name}/${tableContentList.find((e) => e.user_no == id).user_position}`}
           </Typography>
         </Stack>
+      </Stack>
+      <Stack direction="column" spacing={3}>
         {Object.keys(content).length > 0 &&
           content.role.map((value, index) => {
             return (
-              <Stack direction="row" justifyContent="space-around" alignItems="center" key={index}>
+              <Stack direction="row" justifyContent="space-between" alignItems="center" key={index} sx={{ pl: 3, pr: 3 }}>
                 <TextField
                   select
                   size="normal"
-                  sx={{ width: '8rem' }}
+                  sx={value.role_level == 2 ? { width: '8rem' } : { width: '18rem' }}
                   value={value.role_level}
                   onChange={(e) => changeRole(e.target.value, value)}
                   inputProps={index == 0 ? { readOnly: true } : {}}
@@ -126,14 +140,18 @@ const AuthorityDetailCard = () => {
               </Stack>
             );
           })}
-        <Button
-          onClick={() => {
-            setView(false);
-            save();
-          }}
-        >
-          저장
-        </Button>
+        <Stack direction="row" justifyContent="space-around">
+          <Button
+            variant="contained"
+            sx={{ width: '23rem' }}
+            onClick={() => {
+              setView(false);
+              save();
+            }}
+          >
+            저장
+          </Button>
+        </Stack>
       </Stack>
     </MainCard>
   );
