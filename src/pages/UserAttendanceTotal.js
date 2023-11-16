@@ -14,10 +14,10 @@ import AttendanceTable from 'components/Table/AttendanceTable';
 import AppLeaveTotalTable from 'components/Table/AppLeaveTotalTable';
 import VacationDonutChart from 'components/chart/VacationDonutChart';
 import UnappLeaveTotalTable from 'components/Table/UnappLeaveTotalTable';
-import { FormControl, MenuItem, NativeSelect, TextField } from '../../node_modules/@mui/material/index';
+import { FormControl, MenuItem, TextField } from '../../node_modules/@mui/material/index';
 import AttendChart from 'components/chart/AttendChart';
 import axios from '../../node_modules/axios/index';
-import { useLeaveHourState, useLeaveState, useOverHourState, useWorkingHourState } from 'store/module';
+import { useAttendTotalState, useLeaveHourState, useLeaveState, useOverHourState, useWorkingHourState } from 'store/module';
 import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
 import { useLocation } from '../../node_modules/react-router-dom/dist/index';
 import WeekAttendDonutChart from 'components/chart/WeekAttendDonutChart';
@@ -28,7 +28,6 @@ const UserAttendanceTotalPage = () => {
   const { hours, setHours } = useWorkingHourState(); //주간 정상근무시간 일별
   const { leaveHours, setLeaveHours } = useLeaveHourState(); //주간 휴가근무시간 일별
   const { overHours, setOverHours } = useOverHourState(); //주간 초과근무시간 일별
-
 
   //결재대기 내역 이번달로 설정
   //const [month1, setMonth1] = useState(new Date().getMonth() + 1);
@@ -48,6 +47,38 @@ const UserAttendanceTotalPage = () => {
   const [time3, setTime3] = useState([]);
   //const [weekTotal, setWeekTotal] = useState([0, 0]);
 
+  const { total, setTotal } = useAttendTotalState(); //근무시간 + 연장근무시간 불러오기
+
+  React.useEffect(() => {
+    console.log('try');
+    async function get() {
+      try {
+        axios
+          .get(`/user-attend-total-week?user_no=${token.user_no}`)
+          .then((response) => {
+            console.log(response.data);
+            const result2 = response.data;
+            const defaultObject = {
+              // 기본 객체의 필드 및 값들을 정의합니다.
+              // 예시로 빈 값으로 설정
+              attend_total: '00:00:00'
+
+              // ...
+            };
+
+            setTotal(result2 || defaultObject);
+          })
+          .catch((error) => {
+            // 에러 처리
+            console.error('Error fetching data:', error);
+          });
+      } catch (error) {
+        console.error('데이터를 불러오는 중 오류 발생:', error);
+      }
+    }
+
+    get();
+  }, []);
   useEffect(() => {
     const endPoints = [];
     console.log('token@@@: ' + token.user_no);
@@ -270,14 +301,14 @@ const UserAttendanceTotalPage = () => {
     <>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="휴가" />
           <Tab label="출/퇴근" />
+          <Tab label="휴가" />
         </Tabs>
       </Box>
 
       {/* tab 1 */}
       {/* row 1 */}
-      <BasicTab value={value} index={0}>
+      <BasicTab value={value} index={1}>
         <Grid container spacing={1}>
           {/* row 3 - 휴가현황 그리드 */}
           <Grid item xs={4} sm={4} md={4} lg={4}>
@@ -308,14 +339,6 @@ const UserAttendanceTotalPage = () => {
                 <Typography variant="h5">{month2}월 결재 진행/완료내역</Typography>
 
                 <FormControl sx={{ marginLeft: 3 }}>
-                  {/* <NativeSelect
-                    defaultValue={month2}
-                    onChange={month2Change}
-                    inputProps={{
-                      name: 'month',
-                      id: 'uncontrolled-native'
-                    }}
-                  > */}
                   <TextField
                     select
                     size="normal"
@@ -340,20 +363,6 @@ const UserAttendanceTotalPage = () => {
                     <MenuItem value={2}>2월</MenuItem>
                     <MenuItem value={1}>1월</MenuItem>
                   </TextField>
-
-                  {/* <option ></option>
-                  <option value={11}>11월</option>
-                  <option value={10}>10월</option>
-                  <option value={9}>9월</option>
-                  <option value={8}>8월</option>
-                  <option value={7}>7월</option>
-                  <option value={6}>6월</option>
-                  <option value={5}>5월</option>
-                  <option value={4}>4월</option>
-                  <option value={3}>3월</option>
-                  <option value={2}>2월</option>
-                  <option value={1}>1월</option> */}
-                  {/* </NativeSelect> */}
                 </FormControl>
               </div>
               {location.state ? (
@@ -369,7 +378,7 @@ const UserAttendanceTotalPage = () => {
       </BasicTab>
 
       {/* tab 2 */}
-      <BasicTab value={value} index={1}>
+      <BasicTab value={value} index={0}>
         <Grid container spacing={1}>
           {/* row 2 */}
           <Grid item xs={8}>
@@ -412,7 +421,7 @@ const UserAttendanceTotalPage = () => {
                   금주근무시간총합
                 </Typography>
               </div>
-              <WeekAttendDonutChart />
+              {Object.keys(total).length > 0 && (<WeekAttendDonutChart />)}
             </MainCard>
           </Grid>
           <Grid item xs={12}>
@@ -421,27 +430,30 @@ const UserAttendanceTotalPage = () => {
                 <Typography variant="h5">{month3}월 출/퇴근 현황</Typography>
 
                 <FormControl sx={{ marginLeft: 3 }}>
-                  <NativeSelect
-                    defaultValue={month3}
+                  <TextField
+                    select
+                    size="normal"
+                    sx={{ width: '8rem' }}
+                    value={month3}
                     onChange={month3Change}
                     inputProps={{
                       name: 'month',
                       id: 'uncontrolled-native'
                     }}
                   >
-                    <option value={12}>12월</option>
-                    <option value={11}>11월</option>
-                    <option value={10}>10월</option>
-                    <option value={9}>9월</option>
-                    <option value={8}>8월</option>
-                    <option value={7}>7월</option>
-                    <option value={6}>6월</option>
-                    <option value={5}>5월</option>
-                    <option value={4}>4월</option>
-                    <option value={3}>3월</option>
-                    <option value={2}>2월</option>
-                    <option value={1}>1월</option>
-                  </NativeSelect>
+                    <MenuItem value={12}>12월</MenuItem>
+                    <MenuItem value={11}>11월</MenuItem>
+                    <MenuItem value={10}>10월</MenuItem>
+                    <MenuItem value={9}>9월</MenuItem>
+                    <MenuItem value={8}>8월</MenuItem>
+                    <MenuItem value={7}>7월</MenuItem>
+                    <MenuItem value={6}>6월</MenuItem>
+                    <MenuItem value={5}>5월</MenuItem>
+                    <MenuItem value={4}>4월</MenuItem>
+                    <MenuItem value={3}>3월</MenuItem>
+                    <MenuItem value={2}>2월</MenuItem>
+                    <MenuItem value={1}>1월</MenuItem>
+                  </TextField>
                 </FormControl>
               </div>
 

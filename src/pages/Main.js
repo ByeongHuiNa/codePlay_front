@@ -8,7 +8,7 @@ import VacationDonutChart from 'components/chart/VacationDonutChart';
 import AttendChart from 'components/chart/AttendChart';
 import UserLeaveTable from 'components/Table/UserLeaveTable';
 import {
-  useAttendTotalState,
+ 
   useLeaveHourState,
   useLeaveState,
   useOverHourState,
@@ -40,31 +40,13 @@ const Main = () => {
 
   const { setLeave } = useLeaveState(); //휴가불러오기
 
-  const { setTotal } = useAttendTotalState(); //근무시간 + 연장근무시간 불러오기
+  //const { setTotal } = useAttendTotalState(); //근무시간 + 연장근무시간 불러오기
 
   React.useEffect(() => {
     async function get() {
       try {
         const result = await axios.get(`/user-leave?user_no=${token.user_no}`);
         setLeave(result.data);
-        axios
-          .get(`/user-attend-total-week?user_no=${token.user_no}`)
-          .then((response) => {
-            const result2 = response.data;
-            const defaultObject = {
-              // 기본 객체의 필드 및 값들을 정의합니다.
-              // 예시로 빈 값으로 설정
-              attend_total: '00:00:00'
-              
-              // ...
-            };
-
-            setTotal(result2 || defaultObject);
-          })
-          .catch((error) => {
-            // 에러 처리
-            console.error('Error fetching data:', error);
-          });
       } catch (error) {
         console.error('데이터를 불러오는 중 오류 발생:', error);
       }

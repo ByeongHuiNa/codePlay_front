@@ -4,7 +4,7 @@ import { Typography, Grid, Tabs, Tab, Box } from '@mui/material';
 
 // project import
 import MainCard from 'components/MainCard';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import LeaveModal from 'components/Modal/LeaveModal';
 
 // material-ui
@@ -14,29 +14,69 @@ import AttendanceTable from 'components/Table/AttendanceTable';
 import AppLeaveTotalTable from 'components/Table/AppLeaveTotalTable';
 import VacationDonutChart from 'components/chart/VacationDonutChart';
 import UnappLeaveTotalTable from 'components/Table/UnappLeaveTotalTable';
-import { FormControl, NativeSelect } from '../../node_modules/@mui/material/index';
+import { FormControl, MenuItem, TextField } from '../../node_modules/@mui/material/index';
 import AttendChart from 'components/chart/AttendChart';
 import axios from '../../node_modules/axios/index';
-import { useWorkingHourState } from 'store/module';
+import { useAttendTotalState, useLeaveHourState, useLeaveState, useOverHourState, useWorkingHourState } from 'store/module';
 import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
 import { useLocation } from '../../node_modules/react-router-dom/dist/index';
+import WeekAttendDonutChart from 'components/chart/WeekAttendDonutChart';
 
 const SeeUserAttendance = () => {
   const location = useLocation();
 
+  const { hours, setHours } = useWorkingHourState(); //주간 정상근무시간 일별
+  const { leaveHours, setLeaveHours } = useLeaveHourState(); //주간 휴가근무시간 일별
+  const { overHours, setOverHours } = useOverHourState(); //주간 초과근무시간 일별
+
   //결재대기 내역 이번달로 설정
-  const [month1, setMonth1] = useState(new Date().getMonth() + 1);
+  //const [month1, setMonth1] = useState(new Date().getMonth() + 1);
   //결재완료 내역 이번달로 설정
   const [month2, setMonth2] = useState(new Date().getMonth() + 1);
 
-  const { hours, setHours } = useWorkingHourState();
+  //const { hours, setHours } = useWorkingHourState();
 
   //token 값을 decode해주는 코드
   const token = jwtDecode(localStorage.getItem('token').slice(7));
-  
+  console.log('token@@@: ' + token.user_no);
 
-  const [time, setTime] = useState([]);
+  //const [time, setTime] = useState([]);
 
+  const [time1, setTime1] = useState([]);
+  const [time2, setTime2] = useState([]);
+  const [time3, setTime3] = useState([]);
+  //const [weekTotal, setWeekTotal] = useState([0, 0]);
+
+  const { setTotal } = useAttendTotalState(); //근무시간 + 연장근무시간 불러오기
+
+  React.useEffect(() => {
+    async function get() {
+      try {
+        axios
+          .get(`/user-attend-total-week?user_no=${token.user_no}`)
+          .then((response) => {
+            const result2 = response.data;
+            const defaultObject = {
+              // 기본 객체의 필드 및 값들을 정의합니다.
+              // 예시로 빈 값으로 설정
+              attend_total: '00:00:00'
+              
+              // ...
+            };
+
+            setTotal(result2 || defaultObject);
+          })
+          .catch((error) => {
+            // 에러 처리
+            console.error('Error fetching data:', error);
+          });
+      } catch (error) {
+        console.error('데이터를 불러오는 중 오류 발생:', error);
+      }
+    }
+
+    get();
+  }, []);
   useEffect(() => {
     const endPoints = [];
     console.log('token@@@: ' + token.user_no);
@@ -48,20 +88,71 @@ const SeeUserAttendance = () => {
     }
 
     async function get() {
-      const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
-      //const result = await axios.get(`/user-attend-total?user_no=${token.user_no}`);
-      setHours(result[0].data);
-      console.log('dsadas: ' + hours);
+      // const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
+      // //const result = await axios.get(`/user-attend-total?user_no=${token.user_no}`);
+      // setHours(result[0].data);
+      // console.log('dsadas: ' + hours);
       const currentTime = new Date(); // 현재 시간 가져오기
-      const attendTotalArray = result[0].data.map((item) => {
-        const attendTotal = item.attend_total ? item.attend_total : calculateAttendTotal(item.attend_start, currentTime);
+      // const attendTotalArray = result[0].data.map((item) => {
+      //   const attendTotal = item.attend_total ? item.attend_total : calculateAttendTotal(item.attend_start, currentTime);
+      //   return {
+      //     attend_total: attendTotal
+      //   };
+      // });
+      // console.log('attendtotal : ' + attendTotalArray);
+
+      // const convertedArray = attendTotalArray.map((item) => {
+      //   if (item.attend_total) {
+      //     const totalParts = item.attend_total.split(':');
+      //     const totalHours = parseInt(totalParts[0], 10);
+      //     const totalMinutes = parseInt(totalParts[1], 10);
+      //     return `${totalHours}.${totalMinutes}`;
+      //   } else {
+      //     // attend_total이 null인 경우 대체값 또는 원하는 처리
+      //     return '대체값 또는 원하는 처리';
+      //   }
+      // });
+      // //setTime(convertedArray);
+
+      // console.log('convert: ' + convertedArray);
+      const result2 = await axios.get(`/user-attend-total?user_no=${token.user_no}`);
+      setHours('주간근무1: ' + result2.data);
+      console.log('주간근무1: : ' + hours);
+
+      const result3 = await axios.get(`/user-attend-total-leave?user_no=${token.user_no}`);
+      setLeaveHours('주간근무2: ' + result3.data);
+      console.log('주간근무2 : ' + leaveHours);
+
+      const result4 = await axios.get(`/user-attend-total-over?user_no=${token.user_no}`);
+      setOverHours('주간근무3 ' + result4.data);
+      console.log('주간근무3:  ' + overHours);
+
+      const attendTotalArray1 = Array.isArray(result2.data)
+        ? result2.data.map((item) => {
+            const attendTotal = item.attend_total ? item.attend_total : calculateAttendTotal(item.attend_start, currentTime);
+            return {
+              attend_total: attendTotal
+            };
+          })
+        : [];
+
+      const attendTotalArray2 = result3.data.map((item) => {
+        const attendTotal = item.attend_total ? item.attend_total : 0;
         return {
           attend_total: attendTotal
         };
       });
-      console.log('attendtotal : ' + attendTotalArray);
 
-      const convertedArray = attendTotalArray.map((item) => {
+      const attendTotalArray3 = result4.data.map((item) => {
+        const attendTotal = item.attend_total ? item.attend_total : 0;
+        return {
+          attend_total: attendTotal
+        };
+      });
+
+      console.log('attendtotal : ' + attendTotalArray1);
+
+      const convertedArray1 = attendTotalArray1.map((item) => {
         if (item.attend_total) {
           const totalParts = item.attend_total.split(':');
           const totalHours = parseInt(totalParts[0], 10);
@@ -69,12 +160,51 @@ const SeeUserAttendance = () => {
           return `${totalHours}.${totalMinutes}`;
         } else {
           // attend_total이 null인 경우 대체값 또는 원하는 처리
-          return '대체값 또는 원하는 처리';
+          return 0;
         }
       });
-      setTime(convertedArray);
+      setTime1(convertedArray1);
+      console.log('타임1: ' + convertedArray1);
 
-      console.log('convert: ' + convertedArray);
+      const convertedArray2 = attendTotalArray2.map((item) => {
+        if (item.attend_total) {
+          const totalParts = item.attend_total.split(':');
+          const totalHours = parseInt(totalParts[0], 10);
+          const totalMinutes = parseInt(totalParts[1], 10);
+          return `${totalHours}.${totalMinutes}`;
+        } else {
+          // attend_total이 null인 경우 대체값 또는 원하는 처리
+          return 0;
+        }
+      });
+      setTime2(convertedArray2);
+      console.log('타임2: ' + convertedArray2);
+
+      const convertedArray3 = attendTotalArray3.map((item) => {
+        if (item.attend_total) {
+          const totalParts = item.attend_total.split(':');
+          const totalHours = parseInt(totalParts[0], 10);
+          const totalMinutes = parseInt(totalParts[1], 10);
+          return `${totalHours}.${totalMinutes}`;
+        } else {
+          // attend_total이 null인 경우 대체값 또는 원하는 처리
+          return 0;
+        }
+      });
+      setTime3(convertedArray3);
+      console.log('타임3: ' + convertedArray3);
+
+      // // const result3 = axios.get(`/user-attend-total-week?user_no=${token.user_no}`);
+      // const attendData = result3.data;
+
+      // // attend_total에서 시간을 추출
+      // const totalHours = parseInt(attendData.attend_total.split(':')[0]);
+      // console.log("attend_total: " + attendData.attendDate);
+      // const totalMinutes = parseInt(attendData.attend_total.split(':')[1]);
+
+      // // 시간과 분을 합하여 8시 0분 형식으로 변환
+      // const formattedTotal = `${totalHours}.${totalMinutes}`;
+      // setWeekTotal([0, (formattedTotal / 40) * 100]);
     }
 
     get();
@@ -129,9 +259,9 @@ const SeeUserAttendance = () => {
     setValue(newValue);
   };
 
-  const month1Change = (event) => {
-    setMonth1(event.target.value);
-  };
+  // const month1Change = (event) => {
+  //   setMonth1(event.target.value);
+  // };
 
   const month2Change = (event) => {
     setMonth2(event.target.value);
@@ -150,6 +280,21 @@ const SeeUserAttendance = () => {
     });
   };
 
+  const { setLeave } = useLeaveState(); //휴가불러오기
+
+  React.useEffect(() => {
+    async function get() {
+      try {
+        const result = await axios.get(`/user-leave?user_no=${token.user_no}`);
+        setLeave(result.data);
+      } catch (error) {
+        console.error('데이터를 불러오는 중 오류 발생:', error);
+      }
+    }
+
+    get();
+  }, []);
+
   return (
     <>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -162,57 +307,25 @@ const SeeUserAttendance = () => {
       {/* tab 1 */}
       {/* row 1 */}
       <BasicTab value={value} index={0}>
-        <Grid container rowSpacing={4} columnSpacing={2.75}>
+        <Grid container spacing={1}>
           {/* row 3 - 휴가현황 그리드 */}
           <Grid item xs={4} sm={4} md={4} lg={4}>
             <MainCard>
               <Typography variant="h5">휴가현황</Typography>
-              {location.state ? (
-              <VacationDonutChart user_no={location.state.user_no} />
-              ) : (
-                <VacationDonutChart user_no={token.user_no} />
-              )
-              }
+              <VacationDonutChart />
             </MainCard>
           </Grid>
           {/* row 2 */}
           <Grid item xs={8} sm={8} md={8} lg={8}>
-            <MainCard>
+            <MainCard style={{ height: '380px' }}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <Typography variant="h5">{month1}월 결재대기내역</Typography>
-
-                <FormControl sx={{ marginLeft: 3 }}>
-                  {/* <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                    월
-                  </InputLabel> */}
-                  <NativeSelect
-                    defaultValue={month1}
-                    onChange={month1Change}
-                    inputProps={{
-                      name: 'month',
-                      id: 'uncontrolled-native'
-                    }}
-                  >
-                    <option value={12}>12월</option>
-                    <option value={11}>11월</option>
-                    <option value={10}>10월</option>
-                    <option value={9}>9월</option>
-                    <option value={8}>8월</option>
-                    <option value={7}>7월</option>
-                    <option value={6}>6월</option>
-                    <option value={5}>5월</option>
-                    <option value={4}>4월</option>
-                    <option value={3}>3월</option>
-                    <option value={2}>2월</option>
-                    <option value={1}>1월</option>
-                  </NativeSelect>
-                </FormControl>
+                <Typography variant="h5">결재대기내역</Typography>
               </div>
 
               {location.state ? (
-                <UnappLeaveTotalTable handleOpen={handleOpen} month={month1} leaveCancel={leaveCancel} user_no={location.state.user_no} />
+                <UnappLeaveTotalTable handleOpen={handleOpen} leaveCancel={leaveCancel} user_no={location.state.user_no} />
               ) : (
-                <UnappLeaveTotalTable handleOpen={handleOpen} month={month1} leaveCancel={leaveCancel} user_no={token.user_no} />
+                <UnappLeaveTotalTable handleOpen={handleOpen} leaveCancel={leaveCancel} user_no={token.user_no} />
               )}
             </MainCard>
           </Grid>
@@ -224,27 +337,30 @@ const SeeUserAttendance = () => {
                 <Typography variant="h5">{month2}월 결재 진행/완료내역</Typography>
 
                 <FormControl sx={{ marginLeft: 3 }}>
-                  <NativeSelect
-                    defaultValue={month2}
+                  <TextField
+                    select
+                    size="normal"
+                    sx={{ width: '8rem' }}
+                    value={month2}
                     onChange={month2Change}
                     inputProps={{
                       name: 'month',
                       id: 'uncontrolled-native'
                     }}
                   >
-                    <option value={12}>12월</option>
-                    <option value={11}>11월</option>
-                    <option value={10}>10월</option>
-                    <option value={9}>9월</option>
-                    <option value={8}>8월</option>
-                    <option value={7}>7월</option>
-                    <option value={6}>6월</option>
-                    <option value={5}>5월</option>
-                    <option value={4}>4월</option>
-                    <option value={3}>3월</option>
-                    <option value={2}>2월</option>
-                    <option value={1}>1월</option>
-                  </NativeSelect>
+                    <MenuItem value={12}>12월</MenuItem>
+                    <MenuItem value={11}>11월</MenuItem>
+                    <MenuItem value={10}>10월</MenuItem>
+                    <MenuItem value={9}>9월</MenuItem>
+                    <MenuItem value={8}>8월</MenuItem>
+                    <MenuItem value={7}>7월</MenuItem>
+                    <MenuItem value={6}>6월</MenuItem>
+                    <MenuItem value={5}>5월</MenuItem>
+                    <MenuItem value={4}>4월</MenuItem>
+                    <MenuItem value={3}>3월</MenuItem>
+                    <MenuItem value={2}>2월</MenuItem>
+                    <MenuItem value={1}>1월</MenuItem>
+                  </TextField>
                 </FormControl>
               </div>
               {location.state ? (
@@ -261,9 +377,9 @@ const SeeUserAttendance = () => {
 
       {/* tab 2 */}
       <BasicTab value={value} index={1}>
-        <Grid container rowSpacing={1} columnSpacing={1}>
+        <Grid container spacing={1}>
           {/* row 2 */}
-          <Grid item xs={12}>
+          <Grid item xs={8}>
             <MainCard>
               <Typography align="left" variant="h5">
                 금주 근무 시간
@@ -276,24 +392,34 @@ const SeeUserAttendance = () => {
                       name: '정상근무',
                       type: 'column',
                       fill: 'solid',
-                      data: time
+                      data: time1
                     },
 
                     {
                       name: '초과근무',
                       type: 'column',
                       fill: 'solid',
-                      data: [0, 0, 0, 0, 0, 0, 0]
+                      data: time3
                     },
                     {
                       name: '휴가',
                       type: 'column',
                       fill: 'solid',
-                      data: []
+                      data: time2
                     }
                   ]
                 }}
               />
+            </MainCard>
+          </Grid>
+          <Grid item xs={4}>
+            <MainCard>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Typography align="left" variant="h5">
+                  금주근무시간총합
+                </Typography>
+              </div>
+              <WeekAttendDonutChart />
             </MainCard>
           </Grid>
           <Grid item xs={12}>
@@ -302,27 +428,30 @@ const SeeUserAttendance = () => {
                 <Typography variant="h5">{month3}월 출/퇴근 현황</Typography>
 
                 <FormControl sx={{ marginLeft: 3 }}>
-                  <NativeSelect
-                    defaultValue={month3}
+                  <TextField
+                    select
+                    size="normal"
+                    sx={{ width: '8rem' }}
+                    value={month3}
                     onChange={month3Change}
                     inputProps={{
                       name: 'month',
                       id: 'uncontrolled-native'
                     }}
                   >
-                    <option value={12}>12월</option>
-                    <option value={11}>11월</option>
-                    <option value={10}>10월</option>
-                    <option value={9}>9월</option>
-                    <option value={8}>8월</option>
-                    <option value={7}>7월</option>
-                    <option value={6}>6월</option>
-                    <option value={5}>5월</option>
-                    <option value={4}>4월</option>
-                    <option value={3}>3월</option>
-                    <option value={2}>2월</option>
-                    <option value={1}>1월</option>
-                  </NativeSelect>
+                    <MenuItem value={12}>12월</MenuItem>
+                    <MenuItem value={11}>11월</MenuItem>
+                    <MenuItem value={10}>10월</MenuItem>
+                    <MenuItem value={9}>9월</MenuItem>
+                    <MenuItem value={8}>8월</MenuItem>
+                    <MenuItem value={7}>7월</MenuItem>
+                    <MenuItem value={6}>6월</MenuItem>
+                    <MenuItem value={5}>5월</MenuItem>
+                    <MenuItem value={4}>4월</MenuItem>
+                    <MenuItem value={3}>3월</MenuItem>
+                    <MenuItem value={2}>2월</MenuItem>
+                    <MenuItem value={1}>1월</MenuItem>
+                  </TextField>
                 </FormControl>
               </div>
 

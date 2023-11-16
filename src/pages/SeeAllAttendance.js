@@ -1,6 +1,6 @@
 import { Typography, Box, Grid, Tab, Tabs } from '@mui/material';
 import ComponentSkeleton from './components-overview/ComponentSkeleton';
-import { IconButton } from '../../node_modules/@mui/material/index';
+import { IconButton, ToggleButton, ToggleButtonGroup } from '../../node_modules/@mui/material/index';
 
 import VacationCountTable from 'components/Table/VacationCountTable';
 import AttendanceDayTable from 'components/Table/AttendanceDayTable';
@@ -24,8 +24,6 @@ const SeeAllAttendance = () => {
 
   const { profile, setProfile } = useProfileState();
 
-  
-
   //token 값을 decode해주는 코드
   const token = jwtDecode(localStorage.getItem('token').slice(7));
   console.log('token@@@: ' + token.dept_no);
@@ -43,15 +41,15 @@ const SeeAllAttendance = () => {
   // };
   // const [selectedDept, setSelectedDept] = useState(0); //선택한부서번호
   const [value, setValue] = useState(0);
-  const [value2, setValue2] = useState(0);
+  //const [value2, setValue2] = useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  const handleChange3 = (event, newValue) => {
-    setValue2(newValue);
-  };
+  // const handleChange3 = (event, newValue) => {
+  //   setValue2(newValue);
+  // };
 
   const [date, setDate] = useState(() => new Date().toLocaleDateString()); //일별 근태에서 씀
   //const [filterDate, setFilterDate] = useState(() => date.toLocaleDateString());
@@ -61,14 +59,16 @@ const SeeAllAttendance = () => {
 
   const [mon, setMon] = useState(''); //주별 월요일 날짜를 받기위해 씀
 
-  const handlePrevDay = () => { //어제날짜
+  const handlePrevDay = () => {
+    //어제날짜
     const newDate = new Date(date);
     newDate.setDate(newDate.getDate() - 1);
     setDate(newDate.toLocaleDateString());
     //setFilterDate(date);
   };
 
-  const handleNextDay = () => { //내일날짜
+  const handleNextDay = () => {
+    //내일날짜
     const newDate = new Date(date);
     newDate.setDate(newDate.getDate() + 1);
     setDate(newDate.toLocaleDateString());
@@ -92,7 +92,7 @@ const SeeAllAttendance = () => {
     //setCurrentDate(newDate.getFormattedMonday());
     setCurrentDate(newDate);
     //setMon(getFormattedMonday());
-    
+
     // 주차를 갱신
     setCurrentWeek(currentWeek + 1);
   };
@@ -103,14 +103,20 @@ const SeeAllAttendance = () => {
     const day = currentDate.getDate().toString().padStart(2, '0');
     return `${year}-${month}-${day}`;
   };
-  //let monday = new Date();
+
+  const [alignment, setAlignment] = useState('day');
+
+  const handleChange5 = (event, newAlignment) => {
+    if (newAlignment !== null) {
+      setAlignment(newAlignment);
+    }
+  };
   useEffect(() => {
     // 현재 날짜를 가져오고 그 날짜의 주차를 계산
     const now = new Date();
     const startOfYear = new Date(now.getFullYear(), 0, 1);
     const weekNumber = Math.ceil(((now - startOfYear) / 86400000 + 1) / 7);
 
-   
     //monday.setDate(currentDate.getDate() - currentDate.getDay() + (currentDate.getDay() === 0 ? -6 : 1));
 
     // setCurrentDate를 사용하여 상태를 업데이트
@@ -198,16 +204,27 @@ const SeeAllAttendance = () => {
       </BasicTab>
 
       <BasicTab value={value} index={1}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Typography variant="h3">근태현황</Typography>
+        {/* <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={value2} onChange={handleChange3} aria-label="basic tabs example">
             <Tab label="일별" />
             <Tab label="주간" />
           </Tabs>
-        </Box>
-        <BasicTab value={value2} index={0}>
+        </Box> */}
+        {/* <BasicTab value={value2} index={0}> */}
+        {alignment === 'day' && (
           <Grid item xs={12} sm={6} md={5} lg={7}>
             <MainCard>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ flex: 1, textAlign: 'center', paddingLeft:100}}>
+                  <Typography variant="h5">{profile.dept_name ? `${profile.dept_name}` : ''}</Typography>
+                </div>
+                <ToggleButtonGroup color="primary" value={alignment} exclusive onChange={handleChange5} aria-label="Platform">
+                  <ToggleButton value="day">일별</ToggleButton>
+                  <ToggleButton value="week">주별</ToggleButton>
+                </ToggleButtonGroup>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20}}>
                 <IconButton onClick={handlePrevDay} aria-label="이전 날짜">
                   <ArrowBackIosNewOutlinedIcon />
                 </IconButton>
@@ -219,39 +236,25 @@ const SeeAllAttendance = () => {
                   <ArrowForwardIosOutlinedIcon />
                 </IconButton>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Typography variant="h5" sx={{ textAlign: 'center' }}>
-                  <Typography variant="h5">{profile.dept_name ? `${profile.dept_name} 일별 근태 현황` : ' 일별 근태 현황 '}</Typography>
-                </Typography>
-                {/* <FormControl sx={{ marginLeft: 3 }}>
-                  <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                    부서
-                  </InputLabel>
-                  <NativeSelect
-                    onChange={handleChange4}
-                    inputProps={{
-                      name: 'dept_no',
-                      id: 'uncontrolled-native'
-                    }}
-                  >
-                     {depts.map((dept) => (
-                      <option key={dept.dept_no} value={dept.dept_no}>
-                        {dept.dept_name}
-                      </option>
-                    ))}
-                    
-                  </NativeSelect>
-                </FormControl> */}
-              </div>
 
               <AttendanceDayTable depts={token.dept_no} filterDate={date} />
             </MainCard>
           </Grid>
-        </BasicTab>
-        <BasicTab value={value2} index={1}>
+        )}
+        {alignment === 'week' && (
           <Grid item xs={12} sm={6} md={5} lg={7}>
             <MainCard>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ flex: 1, textAlign: 'center', paddingLeft:100}}>
+                  <Typography variant="h5">{profile.dept_name ? `${profile.dept_name}` : ''}</Typography>
+                </div>
+                <ToggleButtonGroup color="primary" value={alignment} exclusive onChange={handleChange5} aria-label="Platform">
+                  <ToggleButton value="day">일별</ToggleButton>
+                  <ToggleButton value="week">주별</ToggleButton>
+                </ToggleButtonGroup>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20}}>
                 <IconButton onClick={handlePrevWeek} aria-label="이전 날짜">
                   <ArrowBackIosNewOutlinedIcon />
                 </IconButton>
@@ -262,32 +265,12 @@ const SeeAllAttendance = () => {
                   <ArrowForwardIosOutlinedIcon />
                 </IconButton>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Typography variant="h5" sx={{ textAlign: 'center' }}>
-                  <Typography variant="h5">{profile.dept_name ? `${profile.dept_name} 주간 근태 현황` : '주간 근태 현황 '}</Typography>
-                </Typography>
-                {/* <FormControl sx={{ marginLeft: 3 }}>
-                  <InputLabel variant="standard" htmlFor="uncontrolled-native">
-                    부서
-                  </InputLabel>
-                  <NativeSelect
-                    onChange={handleChange2}
-                    inputProps={{
-                      name: 'month',
-                      id: 'uncontrolled-native'
-                    }}
-                  >
-                    <option value={'개발'}>개발</option>
-                    <option value={'인사'}>인사</option>
-                    <option value={'회계'}>회계</option>
-                  </NativeSelect>
-                </FormControl> */}
-              </div>
 
-              <AttendanceWeekTable depts={token.dept_no} filterDate={mon} />
+              <AttendanceWeekTable depts={token.dept_no} filterDate={mon}/>
             </MainCard>
           </Grid>
-        </BasicTab>
+        )}
+        {/* </BasicTab> */}
       </BasicTab>
     </ComponentSkeleton>
   );
