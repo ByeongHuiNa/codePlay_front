@@ -5,6 +5,7 @@ import ScrollTop from 'components/ScrollTop';
 import axios from '../node_modules/axios/index';
 import CalendarDrawer from 'components/project/CalendarDrawer';
 import CalendarClickDrawer from 'components/project/CalendarClickDrawer';
+import CalendarClickDrawerPublic from 'components/project/CalendarClickDrawerPublic';
 
 // ==============================|| APP - THEME, ROUTER, LOCAL  ||============================== //
 
@@ -49,6 +50,7 @@ const App = () => {
     <>
       <CalendarDrawer />
       <CalendarClickDrawer />
+      <CalendarClickDrawerPublic />
       <ThemeCustomization>
         <ScrollTop>
           <Routes />

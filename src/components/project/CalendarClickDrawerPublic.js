@@ -23,14 +23,14 @@ import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import axios from '../../../node_modules/axios/index';
 
-export default function CalendarClickDrawer() {
+export default function CalendarClickDrawerPublic() {
   const { updateScheduleList, updateDataList, deleteDataList, deleteScheduleList, updateShereDataList, updateShereScheduleList } =
     useCalendarGetScheduleList();
   const { event } = useCalendarEvent();
   //AddEventOnClick
   const { title, setTitle, allDay, setAllDay, shareType, setShareType, content, setContent } = useCalendarEventClick();
 
-  const { clickView, setClickView } = useCalendarDrawer();
+  const { clickPublicView, setClickPublicView } = useCalendarDrawer();
 
   //일정종류
   const { scheduleType, setScheduleType } = useCalendarEventClick();
@@ -84,7 +84,7 @@ export default function CalendarClickDrawer() {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
     }
-    setClickView(open);
+    setClickPublicView(open);
     setScheduleType('');
     setTitle('');
     setContent('');
@@ -154,7 +154,7 @@ export default function CalendarClickDrawer() {
       updateShereScheduleList(scheduleListAdd);
     });
 
-    setClickView(false);
+    setClickPublicView(false);
   };
 
   const handleDeleteEventOnClick = () => {
@@ -162,7 +162,7 @@ export default function CalendarClickDrawer() {
       deleteDataList(event.id);
       deleteScheduleList(event.id);
     });
-    setClickView(false);
+    setClickPublicView(false);
   };
 
   const list = () => {
@@ -186,7 +186,7 @@ export default function CalendarClickDrawer() {
               ml: 2
             }}
           >
-            Edit Event
+            Check Event
           </Typography>
         </Box>
         <Grid container direction="column" justifyContent="flex-start" alignItems="center" spacing={2}>
@@ -471,7 +471,7 @@ export default function CalendarClickDrawer() {
   };
 
   return (
-    <Drawer sx={{ zIndex: '1300' }} anchor={'right'} open={clickView} onClose={toggleDrawer(false)}>
+    <Drawer sx={{ zIndex: '1300' }} anchor={'right'} open={clickPublicView} onClose={toggleDrawer(false)}>
       {list()}
     </Drawer>
   );
