@@ -25,7 +25,7 @@ export default function CalendarDepWorkList() {
 
   return (
     <>
-      <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper', maxHeight: 320, overflow: 'auto' }}>
+      <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper', maxHeight: 260, overflow: 'auto' }}>
         {shereDataList
           .filter((value) => value.schedule_share == true)
           .sort((a, b) => new Date(a.schedule_startday) - new Date(b.schedule_startday))
