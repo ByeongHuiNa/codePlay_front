@@ -242,6 +242,7 @@ const ApprovalAttendance = () => {
     axios
       .patch(`/manager-overtime-approval`, {
         overtime_no: selectOvertimeData.overtime_no,
+        attend_no: selectOvertimeData.attend_no,
         overtimeapp_status: appOvertimeStatus === 'overtimeApp' ? 0 : 1,
         overtimeapp_reason: reason
       })

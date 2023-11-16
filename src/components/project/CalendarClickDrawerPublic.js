@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import { useCalendarDate, useCalendarDrawer, useCalendarGetScheduleList } from 'store/module';
+import { useCalendarDate, useCalendarDrawer, useCalendarEvent, useCalendarEventClick, useCalendarGetScheduleList } from 'store/module';
 import {
   Button,
   FormControl,
@@ -22,65 +22,61 @@ import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import axios from '../../../node_modules/axios/index';
-import { jwtDecode } from '../../../node_modules/jwt-decode/build/cjs/index';
-import { useNavigate } from '../../../node_modules/react-router-dom/dist/index';
 
-export default function CalendarDrawer() {
-  const navigate = useNavigate();
-  var token;
-  if (localStorage.getItem('token')) {
-    token = jwtDecode(localStorage.getItem('token').slice(7));
-  }
+export default function CalendarClickDrawerPublic() {
+  const { updateScheduleList, updateDataList, deleteDataList, deleteScheduleList, updateShereDataList, updateShereScheduleList } =
+    useCalendarGetScheduleList();
+  const { event } = useCalendarEvent();
+  //AddEventOnClick
+  const { title, setTitle, allDay, setAllDay, shareType, setShareType, content, setContent } = useCalendarEventClick();
 
-  const { view, setView } = useCalendarDrawer();
+  const { clickPublicView, setClickPublicView } = useCalendarDrawer();
 
   //일정종류
-  const [scheduleType, setScheduleType] = React.useState('');
+  const { scheduleType, setScheduleType } = useCalendarEventClick();
 
   const handleSelectChange = (event) => {
     setScheduleType(event.target.value);
   };
 
-  //제목 입력
-  const [title, setTitle] = React.useState('');
-
+  //제목 수정
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
   };
-
-  //내용 입력
-  const [content, setContent] = React.useState('');
 
   const handleContentChange = (e) => {
     setContent(e.target.value);
   };
 
   //AllDay스위치 on/off
-  const [allDayType, setAllDayType] = React.useState(true);
-
   const handleAllDayTypeSwitchChange = () => {
-    setAllDayType((pre) => !pre);
+    if (allDay == true) {
+      setAllDay(false);
+    } else {
+      setAllDay(true);
+    }
   };
 
   //LEAVETYPE스위치 on/off
-  const [leaveType, setLeaveType] = React.useState(false);
+  // const [leaveType, setLeaveType] = React.useState(false);
 
-  const handleLeaveTypeSwitchChange = () => {
-    setLeaveType((pre) => !pre);
-  };
+  // const handleLeaveTypeSwitchChange = () => {
+  //   setLeaveType((pre) => !pre);
+  // };
 
   //LEAVEHALF_TYPE스위치 on/off
-  const [leaveHalfType, setLeaveHalfType] = React.useState(false);
+  // const [leaveHalfType, setLeaveHalfType] = React.useState(false);
 
-  const handleLeaveHalfTypeSwitchChange = () => {
-    setLeaveHalfType((pre) => !pre);
-  };
-
-  //공유 스위치 on/off
-  const [shareType, setShareType] = React.useState(false);
+  // const handleLeaveHalfTypeSwitchChange = () => {
+  //   setLeaveHalfType((pre) => !pre);
+  // };
 
   const handleShareTypeSwitchChange = () => {
-    setShareType((pre) => !pre);
+    if (shareType == true) {
+      setShareType(false);
+    } else {
+      setShareType(true);
+    }
   };
 
   //Drawer on/off
@@ -88,16 +84,12 @@ export default function CalendarDrawer() {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
     }
-    setView(open);
+    setClickPublicView(open);
     setScheduleType('');
     setTitle('');
     setContent('');
     setStartDatePicker(false);
     setEndDatePicker(false);
-    setAllDayType(true);
-    setShareType(false);
-    setLeaveType(false);
-    setLeaveHalfType(false);
   };
 
   // eslint-disable-next-line no-unused-vars
@@ -127,72 +119,50 @@ export default function CalendarDrawer() {
     setEndDatePicker((pre) => !pre);
   };
 
-  const handleAddLeaveOnClick = () => {
-    const start = new Date(startDate);
-    const end = leaveType ? new Date(endDate) : new Date(startDate);
-
-    // navigate('/userleave');
-
-    navigate('/userleave', {
-      state: {
-        val: 1,
-        selectedValue: leaveType ? 'half' : 'annual',
-        start: start.setHours(0, 0, 0, 0),
-        end: end.setHours(0, 0, 0, 0)
-      }
-    });
-    setView(false);
-  };
-
-  //AddEventOnClick
-  const { addScheduleList, addDataList, addShereDataList, addShereScheduleList } = useCalendarGetScheduleList();
-
-  const handleAddEventOnClick = () => {
+  const handleUpdateEventOnClick = () => {
+    console.log(event.id);
     const schedule = {
-      user_no: token.user_no,
+      schedule_no: parseInt(event.id),
       schedule_startday: startDate,
       schedule_endday: endDate,
       schedule_type: scheduleType,
       schedule_title: title,
-      schedule_allday: allDayType,
+      schedule_allday: allDay,
       schedule_description: content,
-      schedule_share: shareType,
-      schedule_cardview: false
+      schedule_share: shareType
     };
-    axios.post(`/user-schedule`, schedule).then((response) => {
+    axios.patch(`/user-schedule`, schedule).then(() => {
       const start = new Date(startDate);
       const end = new Date(endDate);
 
       // 날짜를 비교하여 start와 end 값이 같지 않은 경우에만 +1을 적용
-      if (start.getDate() !== end.getDate()) {
+      if (start.getDate() !== end.getDate() && allDay == true) {
         end.setDate(end.getDate() + 1);
       }
       const scheduleListAdd = {
-        id: response.data,
+        id: parseInt(event.id),
         title: title,
         start: start,
         end: end,
-        allDay: allDayType,
+        allDay: allDay,
         color: scheduleType === '개인 일정' ? '#ef9a9a' : '#90caf9',
         textColor: scheduleType === '개인 일정' ? '#ffebee' : '#e3f2fd'
       };
-      schedule.schedule_no = response.data;
-      addDataList(schedule);
-      addScheduleList(scheduleListAdd);
-      addShereDataList(schedule);
-      addShereScheduleList(scheduleListAdd);
+      updateDataList(schedule);
+      updateScheduleList(scheduleListAdd);
+      updateShereDataList(schedule);
+      updateShereScheduleList(scheduleListAdd);
     });
 
-    setView(false);
-    setScheduleType('');
-    setTitle('');
-    setContent('');
-    setStartDatePicker(false);
-    setEndDatePicker(false);
-    setAllDayType(true);
-    setShareType(false);
-    setLeaveType(false);
-    setLeaveHalfType(false);
+    setClickPublicView(false);
+  };
+
+  const handleDeleteEventOnClick = () => {
+    axios.post(`/user-schedule-delete?schedule_no=${parseInt(event.id)}`).then(() => {
+      deleteDataList(event.id);
+      deleteScheduleList(event.id);
+    });
+    setClickPublicView(false);
   };
 
   const list = () => {
@@ -216,23 +186,38 @@ export default function CalendarDrawer() {
               ml: 2
             }}
           >
-            Add Event
+            Check Event
           </Typography>
         </Box>
         <Grid container direction="column" justifyContent="flex-start" alignItems="center" spacing={2}>
           <FormControl sx={{ width: '80%', mt: 2 }}>
             <InputLabel id="demo-simple-select-label">일정</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              label="일정"
-              value={scheduleType}
-              onChange={handleSelectChange}
-            >
-              <MenuItem value={'개인 일정'}>개인 일정</MenuItem>
-              <MenuItem value={'회사 일정'}>회사 일정</MenuItem>
-              <MenuItem value={'휴가 일정'}>휴가 일정</MenuItem>
-            </Select>
+            {scheduleType === '휴가 일정' ? (
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="일정"
+                value={scheduleType}
+                onChange={handleSelectChange}
+                disabled
+              >
+                <MenuItem value={'휴가 일정'}>휴가 일정</MenuItem>
+              </Select>
+            ) : (
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="일정"
+                value={scheduleType}
+                onChange={handleSelectChange}
+              >
+                <MenuItem value={'개인 일정'}>개인 일정</MenuItem>
+                <MenuItem value={'회사 일정'}>회사 일정</MenuItem>
+                <MenuItem value={'휴가 일정'} disabled>
+                  휴가 일정
+                </MenuItem>
+              </Select>
+            )}
             {/* 개인일정 및 회사일정을 선택하면 제목, All Day 버튼, 일자, 메모, 공유 버튼을 작성할 수 있는 폼을 제공한다. */}
             {/* 휴가일정을 선택하면 연차 및 반차 버튼, 일자를 선택할 수 있고 확인 및 취소 버튼을 포함하고있다 */}
             {scheduleType === '개인 일정' || scheduleType === '회사 일정' ? (
@@ -247,7 +232,7 @@ export default function CalendarDrawer() {
                     control={
                       <Switch
                         color="primary"
-                        checked={allDayType}
+                        checked={allDay}
                         onChange={handleAllDayTypeSwitchChange}
                         sx={{
                           justifyContent: 'flex-start' // 왼쪽 정렬
@@ -259,7 +244,7 @@ export default function CalendarDrawer() {
                   />
                 </Grid>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  {allDayType == true ? (
+                  {allDay == true ? (
                     <>
                       <DateField
                         sx={{
@@ -362,31 +347,48 @@ export default function CalendarDrawer() {
                   size="large"
                   variant="contained"
                   color="primary"
-                  onClick={handleAddEventOnClick}
+                  onClick={handleUpdateEventOnClick}
                   sx={{
-                    mt: 30
+                    mt: 28
                   }}
                 >
-                  일정 등록
+                  일정 수정
+                </Button>
+                <Button
+                  size="large"
+                  variant="contained"
+                  color="error"
+                  onClick={handleDeleteEventOnClick}
+                  sx={{
+                    mt: 2
+                  }}
+                >
+                  일정 취소
                 </Button>
               </>
             ) : (
+              //휴가일정 클릭
               scheduleType && (
                 <>
+                  <TextField sx={{ mt: 3 }} id="outlined-basic" label="제목" value={title} InputProps={{ readOnly: true }} />
                   <Grid container direction="row" justifyContent="flex-start" alignItems="center" sx={{ mt: 1.5, ml: 0.7 }}>
                     <Typography>연차</Typography>
-                    <Switch color="primary" checked={leaveType} onChange={handleLeaveTypeSwitchChange} />
+                    <Switch color="primary" checked={!allDay} disabled={true} />
                     <Typography sx={{ mr: 5 }}>반차</Typography>
-                    {leaveType && (
+                    {!allDay && (
                       <>
                         <Typography sx={{ ml: 5 }}>오전</Typography>
-                        <Switch color="primary" checked={leaveHalfType} onChange={handleLeaveHalfTypeSwitchChange} />
+                        <Switch
+                          color="primary"
+                          checked={!(new Date(startDate).getHours() >= 6 && new Date(startDate).getHours() <= 10)}
+                          disabled={true}
+                        />
                         <Typography>오후</Typography>
                       </>
                     )}
                   </Grid>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    {leaveType == false ? (
+                    {allDay ? (
                       <>
                         <DateField
                           sx={{
@@ -394,7 +396,7 @@ export default function CalendarDrawer() {
                           }}
                           label="시작일"
                           value={dayjs(`${startDate}`)}
-                          onClick={handleStartDateFieldOnClick}
+                          disabled
                         />
                         <DateField
                           sx={{
@@ -402,7 +404,7 @@ export default function CalendarDrawer() {
                           }}
                           label="종료일"
                           value={dayjs(`${endDate}`)}
-                          onClick={handleEndDateFieldOnClick}
+                          disabled
                         />
                         {startDatePicker && (
                           <StaticDatePicker
@@ -427,7 +429,11 @@ export default function CalendarDrawer() {
                           }}
                           disabled="true"
                           label="시작일"
-                          value={leaveHalfType == false ? dayjs(`${startDate}T09:00`) : dayjs(`${startDate}T14:00`)}
+                          value={
+                            (new Date(startDate).getHours() >= 6 && new Date(startDate).getHours() <= 10) == false
+                              ? dayjs(`${startDate}`)
+                              : dayjs(`${startDate}`)
+                          }
                         />
                         <DateTimeField
                           sx={{
@@ -435,22 +441,26 @@ export default function CalendarDrawer() {
                           }}
                           disabled="true"
                           label="종료일"
-                          value={leaveHalfType == false ? dayjs(`${startDate}T13:00`) : dayjs(`${startDate}T18:00`)}
+                          value={
+                            (new Date(startDate).getHours() >= 6 && new Date(startDate).getHours() <= 10) == false
+                              ? dayjs(`${endDate}`)
+                              : dayjs(`${endDate}`)
+                          }
                         />
                       </>
                     )}
                   </LocalizationProvider>
-                  <Button
+                  {/* <Button
                     size="large"
                     variant="contained"
-                    color="primary"
-                    onClick={handleAddLeaveOnClick}
+                    color="error"
+                    onClick={handleUpdateEventOnClick}
                     sx={{
                       mt: 62
                     }}
                   >
-                    휴가 등록
-                  </Button>
+                    휴가 취소
+                  </Button> */}
                 </>
               )
             )}
@@ -461,7 +471,7 @@ export default function CalendarDrawer() {
   };
 
   return (
-    <Drawer sx={{ zIndex: '1300' }} anchor={'right'} open={view} onClose={toggleDrawer(false)}>
+    <Drawer sx={{ zIndex: '1300' }} anchor={'right'} open={clickPublicView} onClose={toggleDrawer(false)}>
       {list()}
     </Drawer>
   );

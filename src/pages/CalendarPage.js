@@ -1,8 +1,6 @@
 import * as React from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
-import GroupsIcon from '@mui/icons-material/Groups';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import PersonalCalendar from 'components/project/PersonalCalendar';
@@ -38,7 +36,8 @@ function a11yProps(index) {
 const CalendarPage = () => {
   const token = jwtDecode(localStorage.getItem('token').slice(7));
   const [value, setValue] = React.useState(0);
-  const { scheduleList, leaveList, setScheduleList, setLeaveList, setDataList } = useCalendarGetScheduleList();
+  const { scheduleList, leaveList, attendanceList, setScheduleList, setLeaveList, setDataList, setAttendanceList } =
+    useCalendarGetScheduleList();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -86,6 +85,16 @@ const CalendarPage = () => {
           .map((list) => {
             const startDate = new Date(list.leaveapp_start);
             const endDate = new Date(list.leaveapp_end);
+            if (list.leaveapp_type == 1) {
+              startDate.setHours(9, 0, 0, 0); // 9am으로 설정
+              // 만약 endDate도 변경해야 한다면 아래와 같이 endDate도 수정합니다.
+              endDate.setHours(13, 0, 0, 0); // 5pm으로 설정 (예시로 5pm으로 설정한 것이니 필요에 따라 변경 가능합니다)
+            }
+            if (list.leaveapp_type == 2) {
+              startDate.setHours(14, 0, 0, 0); // 1pm으로 설정
+              // 만약 endDate도 변경해야 한다면 아래와 같이 endDate도 수정합니다.
+              endDate.setHours(18, 0, 0, 0); // 5pm으로 설정 (예시로 5pm으로 설정한 것이니 필요에 따라 변경 가능합니다)
+            }
 
             // 날짜를 비교하여 start와 end 값이 같지 않은 경우에만 +1을 적용
             if (startDate.getDate() !== endDate.getDate()) {
@@ -108,6 +117,29 @@ const CalendarPage = () => {
       });
   };
 
+  const getAttendanceList = () => {
+    axios
+      .get(`/user-attend?user_no=${token.user_no}`)
+      .then((response) => {
+        const leaveListAdd = response.data
+          .filter((list) => ['결근', '지각', '조퇴'].includes(list.attend_status))
+          .map((list) => {
+            return {
+              title: list.attend_status,
+              start: list.attend_date,
+              color: list.attend_status === '결근' ? '#e57373' : '#ffecb3', // 부드러운 톤의 빨간색과 노란색
+              textColor: list.attend_status === '결근' ? '#ffebee' : '#000000', // 조금 어두운 빨간색과 검정색
+              allDay: true
+            };
+          });
+        setAttendanceList(leaveListAdd);
+      })
+      .catch((error) => {
+        console.error('휴가 리스트를 불러오는 중 오류 발생: ', error);
+      });
+  };
+
+  //공유 캘린더 리스트
   const {
     shereDataList,
     shereScheduleList,
@@ -117,7 +149,6 @@ const CalendarPage = () => {
     setShereDataList,
     setShereLeaveDataList
   } = useCalendarGetScheduleList();
-  //공유 캘린더 리스트
   const getShereScheduleList = () => {
     axios
       .get(`/user-dep-schedulelist?user_no=${token.user_no}`)
@@ -161,6 +192,17 @@ const CalendarPage = () => {
             const startDate = new Date(list.leaveapp_start);
             const endDate = new Date(list.leaveapp_end);
 
+            if (list.leaveapp_type == 1) {
+              startDate.setHours(9, 0, 0, 0); // 9am으로 설정
+              // 만약 endDate도 변경해야 한다면 아래와 같이 endDate도 수정합니다.
+              endDate.setHours(13, 0, 0, 0); // 1pm으로 설정
+            }
+            if (list.leaveapp_type == 2) {
+              startDate.setHours(14, 0, 0, 0); // 1pm으로 설정
+              // 만약 endDate도 변경해야 한다면 아래와 같이 endDate도 수정합니다.
+              endDate.setHours(18, 0, 0, 0); // 6pm으로 설정
+            }
+
             // 날짜를 비교하여 start와 end 값이 같지 않은 경우에만 +1을 적용
             if (startDate.getDate() !== endDate.getDate()) {
               endDate.setDate(endDate.getDate() + 1);
@@ -176,7 +218,7 @@ const CalendarPage = () => {
             };
           });
         setShereLeaveList(leaveListAdd);
-        setShereLeaveDataList(response.data.filter((list) => list.leaveapp_status === 0));
+        setShereLeaveDataList(response.data.filter((list) => list.leaveapp_status == 0));
       })
       .catch((error) => {
         console.error('휴가 리스트를 불러오는 중 오류 발생: ', error);
@@ -192,6 +234,7 @@ const CalendarPage = () => {
     getLeaveList();
     getShereScheduleList();
     getShereLeaveList();
+    getAttendanceList();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // 비어있는 종속성 배열을 사용하여 초기 로딩 시에만 실행되도록 함
 
@@ -215,17 +258,17 @@ const CalendarPage = () => {
     const selectedScheduleNos = shereDataList.filter((list) => list.schedule_share == true).map((list) => list.schedule_no);
     // shereScheduleList에서 selectedScheduleNos와 id가 일치하는 객체만 추출
     const filteredShereScheduleList = shereScheduleList.filter((item) => selectedScheduleNos.includes(item.id));
-    setPersonalEvents([...scheduleList, ...leaveList]);
+    setPersonalEvents([...scheduleList, ...leaveList, ...attendanceList]);
     setPublicEvents([...filteredShereScheduleList, ...shereLeaveList]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scheduleList, leaveList, shereScheduleList, shereLeaveList, shereDataList, value]);
+  }, [scheduleList, leaveList, shereScheduleList, shereLeaveList, shereDataList, attendanceList, value]);
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 0 }}>
         <Tabs value={value} onChange={handleChange} aria-label="icon label tabs example">
-          <Tab icon={<PermContactCalendarIcon />} label="개인 캘린더" {...a11yProps(0)} />
-          <Tab icon={<GroupsIcon />} label="공용 캘린더" {...a11yProps(1)} />
+          <Tab label="개인 캘린더" {...a11yProps(0)} />
+          <Tab label="공용 캘린더" {...a11yProps(1)} />
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>

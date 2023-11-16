@@ -7,7 +7,7 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import { Grid, IconButton, ListItemButton, TextField } from '../../../node_modules/@mui/material/index';
-import { useCalendarMemoModal, useMemoList } from 'store/module';
+import { useCalendarMemoModal, useMemoDetail, useMemoList } from 'store/module';
 import { Done } from '../../../node_modules/@mui/icons-material/index';
 import axios from '../../../node_modules/axios/index';
 import { jwtDecode } from '../../../node_modules/jwt-decode/build/cjs/index';
@@ -17,6 +17,7 @@ export default function CalendarDepWorkMemo() {
   const token = jwtDecode(localStorage.getItem('token').slice(7));
   const { setMemoView } = useCalendarMemoModal();
   const { setMemoList, memoList, scheduleNo, leaveNo } = useMemoList();
+  const { setMemoDetail } = useMemoDetail();
   const [value, setValue] = React.useState('');
   console.log(memoList);
 
@@ -27,6 +28,13 @@ export default function CalendarDepWorkMemo() {
   const handleOnChange = (e) => {
     setValue(e.target.value);
   };
+
+  const handleToggle = (value) => {
+    console.log(value);
+    setMemoDetail(value);
+    setMemoView(true);
+  };
+
   const handleIconClick = () => {
     console.log(scheduleNo);
     const memoVo = {
@@ -85,7 +93,7 @@ export default function CalendarDepWorkMemo() {
               return (
                 <>
                   <ListItem alignItems="flex-start">
-                    <ListItemButton role={undefined} onClick={() => setMemoView(true)} dense sx={{ mr: -1.5 }}>
+                    <ListItemButton role={undefined} onClick={() => handleToggle(value)} dense sx={{ mr: -1.5 }}>
                       <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
                         <Grid item xs={2} sx={{ ml: -0.5 }}>
                           <ListItemAvatar>

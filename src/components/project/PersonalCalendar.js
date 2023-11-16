@@ -9,10 +9,9 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
 import CalendarWorkList from './CalendarWorkList';
-import { Stack, Typography } from '../../../node_modules/@mui/material/index';
+import { Typography } from '../../../node_modules/@mui/material/index';
 import { IconButton } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import { useCalendarDate, useCalendarDrawer, useCalendarEvent, useCalendarEventClick, useCalendarGetScheduleList } from 'store/module';
 import CalendarWorkModal from './CalendarWorkModal';
 import CalendarWorkModalContent from './CalendarWorkModalContent';
@@ -37,7 +36,7 @@ const PersonalCalendar = ({ events }) => {
   //이벤트에 표기될 정보
   function renderEventContent(eventInfo) {
     return (
-      <Typography variant="body2" component="div">
+      <Typography variant="body2" component="div" sx={{ pl: 0.5 }}>
         {eventInfo.event.title}
       </Typography>
     );
@@ -139,15 +138,18 @@ const PersonalCalendar = ({ events }) => {
     const scheduleDescription = targetObject ? targetObject.schedule_description : null;
     // scheduleDescription에는 schedule_no가 일치하는 객체의 schedule_description 값이 저장
 
-    setStartDate(clickInfo.event.startStr);
-    setEndDate(newDateStr);
-    setEvent(clickInfo.event);
-    setTitle(clickInfo.event.title);
-    setAllDay(clickInfo.event.allDay);
-    setScheduleType(ScheduleType);
-    setShareType(scheduleShare);
-    setContent(scheduleDescription);
-    setClickView(true);
+    //결근 및 이상은 드로워 안뜨게 설정
+    if (!(clickInfo.event.backgroundColor == '#e57373' || clickInfo.event.backgroundColor == '#ffecb3')) {
+      setStartDate(clickInfo.event.startStr);
+      setEndDate(newDateStr);
+      setEvent(clickInfo.event);
+      setTitle(clickInfo.event.title);
+      setAllDay(clickInfo.event.allDay);
+      setScheduleType(ScheduleType);
+      setShareType(scheduleShare);
+      setContent(scheduleDescription);
+      setClickView(true);
+    }
   }
   //CalendarWorkModal on/off
   const [calendarWorkModal, setCalendarWorkModal] = React.useState(false);
@@ -179,6 +181,7 @@ const PersonalCalendar = ({ events }) => {
           <Grid item xs={9}>
             <Item>
               <FullCalendar
+                height={700}
                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
                 headerToolbar={{
                   left: 'prev,next today',
@@ -200,12 +203,12 @@ const PersonalCalendar = ({ events }) => {
 
           <Grid item xs={3} container direction="column" justifyContent="space-between" alignItems="stretch">
             <Grid item>
-              <Item>
+              <Item sx={{ height: '370px' }}>
                 <Grid container direction="row" justifyContent="space-between" alignItems="flex-start" sx={{ mb: 2 }}>
                   <Grid pl>
                     <h3>휴가 현황</h3>
                   </Grid>
-                  <Grid sx={{ mt: 2.2, mr: 1 }}>
+                  <Grid sx={{ mt: 2.2, mr: 1, mb: -1 }}>
                     <button
                       onClick={handleMoreClick}
                       style={{
@@ -225,33 +228,26 @@ const PersonalCalendar = ({ events }) => {
                     </button>
                   </Grid>
                 </Grid>
-                <VacationDonutChart />
+                <Grid sx={{ mt: -1 }}>
+                  <VacationDonutChart />
+                </Grid>
               </Item>
             </Grid>
 
-            <Grid item mt={2}>
-              <Item sx={{ height: '380px' }}>
-                <Grid container direction="row" justifyContent="space-between" alignItems="flex-start">
+            <Grid item mt={1}>
+              <Item sx={{ height: '360px' }}>
+                <Grid container direction="row" justifyContent="space-between" alignItems="flex-start" sx={{ mb: 1 }}>
                   <Grid pl sx={{ mb: -2, mt: -0.5 }}>
                     <h3>중요 일정</h3>
                   </Grid>
-                  <Grid container justifyContent="flex-end">
-                    <Stack direction="row" spacing={1}>
-                      <IconButton
-                        onClick={() => {
-                          setCalendarWorkModal(true);
-                        }}
-                      >
-                        <AddIcon />
-                      </IconButton>
-                      <IconButton
-                        onClick={() => {
-                          console.log('-');
-                        }}
-                      >
-                        <RemoveIcon />
-                      </IconButton>
-                    </Stack>
+                  <Grid sx={{ mr: 1 }}>
+                    <IconButton
+                      onClick={() => {
+                        setCalendarWorkModal(true);
+                      }}
+                    >
+                      <FormatListBulletedIcon />
+                    </IconButton>
                   </Grid>
                 </Grid>
                 <CalendarWorkList />

@@ -118,8 +118,10 @@ export const useCalendarDrawer = create(
   devtools((set) => ({
     view: false,
     clickView: false,
+    clickPublicView: false,
     setView: (newView) => set(() => ({ view: newView })),
-    setClickView: (newClickView) => set(() => ({ clickView: newClickView }))
+    setClickView: (newClickView) => set(() => ({ clickView: newClickView })),
+    setClickPublicView: (newClickPublicView) => set(() => ({ clickPublicView: newClickPublicView }))
   }))
 );
 
@@ -229,6 +231,7 @@ export const useCalendarGetScheduleList = create(
     shereScheduleList: [],
     shereLeaveList: [],
     shereLeaveDataList: [],
+    attendanceList: [],
     setDataList: (newDataList) => set(() => ({ dataList: newDataList })),
     setScheduleList: (newScheduleList) => set(() => ({ scheduleList: newScheduleList })),
     setLeaveList: (newLeaveList) => set(() => ({ leaveList: newLeaveList })),
@@ -236,6 +239,7 @@ export const useCalendarGetScheduleList = create(
     setShereScheduleList: (newShereScheduleList) => set(() => ({ shereScheduleList: newShereScheduleList })),
     setShereLeaveList: (newShereLeaveList) => set(() => ({ shereLeaveList: newShereLeaveList })),
     setShereLeaveDataList: (newShereLeaveDataList) => set(() => ({ shereLeaveDataList: newShereLeaveDataList })),
+    setAttendanceList: (newAttendanceList) => set(() => ({ attendanceList: newAttendanceList })),
     addDataList: (newDataList) =>
       set((state) => ({
         dataList: [...state.dataList, newDataList]
@@ -378,6 +382,14 @@ export const useMemoList = create(
     setMemoList: (newMemoList) => set(() => ({ memoList: newMemoList })),
     setScheduleNo: (newScheduleNo) => set(() => ({ scheduleNo: newScheduleNo })),
     setLeaveNo: (newLeaveNo) => set(() => ({ leaveNo: newLeaveNo }))
+  }))
+);
+
+//캘린더 메모 상세
+export const useMemoDetail = create(
+  devtools((set) => ({
+    memoDetail: {},
+    setMemoDetail: (newMemoDetail) => set(() => ({ memoDetail: newMemoDetail }))
   }))
 );
 

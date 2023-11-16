@@ -61,5 +61,5 @@ export default function LeaveDonutChart({ series }) {
     }
   };
 
-  return <ReactApexChart options={chartOptions.options} series={series} type="donut" width="400" />;
+  return <ReactApexChart options={chartOptions.options} series={series} type="donut" width="370" />;
 }

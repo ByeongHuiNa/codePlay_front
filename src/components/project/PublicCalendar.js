@@ -43,7 +43,7 @@ const PublicCalendar = ({ events }) => {
     );
   }
   //zustand
-  const { setClickView } = useCalendarDrawer();
+  const { setClickPublicView } = useCalendarDrawer();
   const { setStartDate, setEndDate } = useCalendarDate();
   const { setEvent } = useCalendarEvent();
 
@@ -110,7 +110,7 @@ const PublicCalendar = ({ events }) => {
     setScheduleType(ScheduleType);
     setShareType(scheduleShare);
     setContent(scheduleDescription);
-    setClickView(true);
+    setClickPublicView(true);
   }
 
   //CalendarMemoModal on/off
@@ -137,6 +137,7 @@ const PublicCalendar = ({ events }) => {
           <Grid item xs={9}>
             <Item>
               <FullCalendar
+                height={700}
                 plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
                 headerToolbar={{
                   left: 'prev,next today',
@@ -158,7 +159,7 @@ const PublicCalendar = ({ events }) => {
           <Grid item xs={3} justifyContent="flex-start">
             <Grid item>
               <Item>
-                <Grid sx={{ mt: -1 }}>
+                <Grid sx={{ mt: -1, height: '305px' }}>
                   <CalendarDepWorkListTab />
                 </Grid>
               </Item>
@@ -167,7 +168,7 @@ const PublicCalendar = ({ events }) => {
             <Grid item mt={1.3}>
               <Item>
                 <Grid container direction="column" justifyContent="space-between" alignItems="flex-start">
-                  <Grid pl sx={{ mt: -2.5, mb: 1 }}>
+                  <Grid pl sx={{ mt: -2, mb: 0.5 }}>
                     <h3>메모</h3>
                   </Grid>
                   <Grid sx={{ ml: -2, mt: -2 }}>

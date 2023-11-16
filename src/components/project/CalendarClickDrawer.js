@@ -58,18 +58,18 @@ export default function CalendarClickDrawer() {
   };
 
   //LEAVETYPE스위치 on/off
-  const [leaveType, setLeaveType] = React.useState(false);
+  // const [leaveType, setLeaveType] = React.useState(false);
 
-  const handleLeaveTypeSwitchChange = () => {
-    setLeaveType((pre) => !pre);
-  };
+  // const handleLeaveTypeSwitchChange = () => {
+  //   setLeaveType((pre) => !pre);
+  // };
 
   //LEAVEHALF_TYPE스위치 on/off
-  const [leaveHalfType, setLeaveHalfType] = React.useState(false);
+  // const [leaveHalfType, setLeaveHalfType] = React.useState(false);
 
-  const handleLeaveHalfTypeSwitchChange = () => {
-    setLeaveHalfType((pre) => !pre);
-  };
+  // const handleLeaveHalfTypeSwitchChange = () => {
+  //   setLeaveHalfType((pre) => !pre);
+  // };
 
   const handleShareTypeSwitchChange = () => {
     if (shareType == true) {
@@ -90,8 +90,6 @@ export default function CalendarClickDrawer() {
     setContent('');
     setStartDatePicker(false);
     setEndDatePicker(false);
-    setLeaveType(false);
-    setLeaveHalfType(false);
   };
 
   // eslint-disable-next-line no-unused-vars
@@ -369,22 +367,28 @@ export default function CalendarClickDrawer() {
                 </Button>
               </>
             ) : (
+              //휴가일정 클릭
               scheduleType && (
                 <>
+                  <TextField sx={{ mt: 3 }} id="outlined-basic" label="제목" value={title} InputProps={{ readOnly: true }} />
                   <Grid container direction="row" justifyContent="flex-start" alignItems="center" sx={{ mt: 1.5, ml: 0.7 }}>
                     <Typography>연차</Typography>
-                    <Switch color="primary" checked={leaveType} onChange={handleLeaveTypeSwitchChange} />
+                    <Switch color="primary" checked={!allDay} disabled={true} />
                     <Typography sx={{ mr: 5 }}>반차</Typography>
-                    {leaveType && (
+                    {!allDay && (
                       <>
                         <Typography sx={{ ml: 5 }}>오전</Typography>
-                        <Switch color="primary" checked={leaveHalfType} onChange={handleLeaveHalfTypeSwitchChange} />
+                        <Switch
+                          color="primary"
+                          checked={!(new Date(startDate).getHours() >= 6 && new Date(startDate).getHours() <= 10)}
+                          disabled={true}
+                        />
                         <Typography>오후</Typography>
                       </>
                     )}
                   </Grid>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    {leaveType == false ? (
+                    {allDay ? (
                       <>
                         <DateField
                           sx={{
@@ -392,7 +396,7 @@ export default function CalendarClickDrawer() {
                           }}
                           label="시작일"
                           value={dayjs(`${startDate}`)}
-                          onClick={handleStartDateFieldOnClick}
+                          disabled
                         />
                         <DateField
                           sx={{
@@ -400,7 +404,7 @@ export default function CalendarClickDrawer() {
                           }}
                           label="종료일"
                           value={dayjs(`${endDate}`)}
-                          onClick={handleEndDateFieldOnClick}
+                          disabled
                         />
                         {startDatePicker && (
                           <StaticDatePicker
@@ -425,7 +429,11 @@ export default function CalendarClickDrawer() {
                           }}
                           disabled="true"
                           label="시작일"
-                          value={leaveHalfType == false ? dayjs(`${startDate}T09:00`) : dayjs(`${startDate}T14:00`)}
+                          value={
+                            (new Date(startDate).getHours() >= 6 && new Date(startDate).getHours() <= 10) == false
+                              ? dayjs(`${startDate}`)
+                              : dayjs(`${startDate}`)
+                          }
                         />
                         <DateTimeField
                           sx={{
@@ -433,12 +441,16 @@ export default function CalendarClickDrawer() {
                           }}
                           disabled="true"
                           label="종료일"
-                          value={leaveHalfType == false ? dayjs(`${startDate}T13:00`) : dayjs(`${startDate}T18:00`)}
+                          value={
+                            (new Date(startDate).getHours() >= 6 && new Date(startDate).getHours() <= 10) == false
+                              ? dayjs(`${endDate}`)
+                              : dayjs(`${endDate}`)
+                          }
                         />
                       </>
                     )}
                   </LocalizationProvider>
-                  <Button
+                  {/* <Button
                     size="large"
                     variant="contained"
                     color="error"
@@ -448,7 +460,7 @@ export default function CalendarClickDrawer() {
                     }}
                   >
                     휴가 취소
-                  </Button>
+                  </Button> */}
                 </>
               )
             )}

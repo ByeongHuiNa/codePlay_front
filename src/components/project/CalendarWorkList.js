@@ -35,7 +35,18 @@ export default function CalendarList() {
   const currentDate = new Date();
 
   return (
-    <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper', maxHeight: 267, overflow: 'auto' }}>
+    <List
+      sx={{
+        width: '100%',
+        maxWidth: 360,
+        bgcolor: 'background.paper',
+        maxHeight: 266,
+        overflow: 'auto'
+        // '&::-webkit-scrollbar': {
+        //   width: '0' // 스크롤바의 너비를 0으로 설정하여 투명하게 만듭니다.
+        // }
+      }}
+    >
       {dataList.map((value) => {
         const labelId = `checkbox-list-label-${value}`;
         const scheduleEndDay = new Date(value.schedule_endday);
@@ -53,9 +64,19 @@ export default function CalendarList() {
               <ListItem key={value.schedule_no} disablePadding>
                 <ListItemButton role={undefined} onClick={handleToggle(value.schedule_no)} dense>
                   <ListItemIcon>
-                    <Checkbox edge="start" tabIndex={-1} disableRipple inputProps={{ 'aria-labelledby': labelId }} />
+                    <Checkbox
+                      edge="start"
+                      tabIndex={-1}
+                      disableRipple
+                      inputProps={{ 'aria-labelledby': labelId }}
+                      sx={{ pointerEvents: 'none' }}
+                    />
                   </ListItemIcon>
-                  <ListItemText id={labelId} primary={value.schedule_title} />
+                  <ListItemText
+                    id={labelId}
+                    primary={value.schedule_title}
+                    primaryTypographyProps={{ fontSize: '13px', fontWeight: 'bold' }}
+                  />
                   <Chip
                     label={
                       scheduleStartDay.getDate() <= currentDate.getDate() && currentDate.getDate() <= scheduleEndDay.getDate()

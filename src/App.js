@@ -3,11 +3,13 @@ import Routes from 'routes';
 import ThemeCustomization from 'themes';
 import ScrollTop from 'components/ScrollTop';
 import axios from '../node_modules/axios/index';
+import CalendarDrawer from 'components/project/CalendarDrawer';
+import CalendarClickDrawer from 'components/project/CalendarClickDrawer';
+import CalendarClickDrawerPublic from 'components/project/CalendarClickDrawerPublic';
 
 // ==============================|| APP - THEME, ROUTER, LOCAL  ||============================== //
 
 const App = () => {
-
   //이후 axios 부터 token 값을 헤더로 전달하게 해주는 코드
   axios.interceptors.request.use(function (config) {
     config.baseURL = '/api';
@@ -45,11 +47,16 @@ const App = () => {
     }
   );
   return (
-    <ThemeCustomization>
-      <ScrollTop>
-        <Routes />
-      </ScrollTop>
-    </ThemeCustomization>
+    <>
+      <CalendarDrawer />
+      <CalendarClickDrawer />
+      <CalendarClickDrawerPublic />
+      <ThemeCustomization>
+        <ScrollTop>
+          <Routes />
+        </ScrollTop>
+      </ThemeCustomization>
+    </>
   );
 };
 

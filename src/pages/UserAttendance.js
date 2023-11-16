@@ -2,7 +2,6 @@
 import { Grid, Typography } from '@mui/material';
 
 // project import
-import BasicContainer from 'components/container/BasicContainer';
 import MainCard from 'components/MainCard';
 import {
   Box,
@@ -35,6 +34,7 @@ import AppAuto from 'components/AutoComplete/AppAuto';
 import ModalS from 'components/Modal/ModalS';
 import { useFormatter } from 'store/module';
 import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
+import { useLocation } from '../../node_modules/react-router-dom/dist/index';
 
 // 파일 업로드
 const VisuallyHiddenInput = styled.input`
@@ -52,9 +52,18 @@ const VisuallyHiddenInput = styled.input`
 const UserAttendance = () => {
   // 날짜 형식
   const { dateFormat } = useFormatter();
+  const location = useLocation();
 
   //token 값을 decode해주는 코드
   const token = jwtDecode(localStorage.getItem('token').slice(7));
+
+  useEffect(() => {
+    console.log(location.state);
+    if (location.state && location.state.val === 0) {
+      console.log(location.state);
+      setValue(location.state.index);
+    }
+  }, []);
 
   // 탭(0.출/퇴근수정, 1.수정요청목록) ================================
   const [value, setValue] = useState(0);
@@ -310,174 +319,173 @@ const UserAttendance = () => {
       </Box>
       <BasicTab value={value} index={0}>
         <Box pb={2}>
-          <BasicContainer>
-            <Grid container alignItems="center" justifyContent="space-between">
-              <Grid item xs={4} md={4} lg={4}>
-                <MainCard sx={{ mr: 1, pt: 2, height: '740px', borderRadius: 0 }} content={false}>
-                  <Box ml={2} mr={1} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <Typography variant="h5">최근 이상 근태 내역</Typography>
-                    <Button onClick={handleOpenAll}>전체보기</Button>
-                  </Box>
-                  <Box mt={1}>
-                    <UserAllAttendTable
-                      datas={attendDatas.filter(
-                        (data) => data.attend_status === '지각' || data.attend_status === '결근' || data.attend_status === '조퇴'
+          <Grid container alignItems="center" justifyContent="space-between">
+            <Grid item xs={5} md={5} lg={5}>
+              <Grid container direction="column">
+                <Grid item xs={5} md={5} lg={5}>
+                  <MainCard sx={{ mb: 2, pt: 2, height: '160px' }} content={false}>
+                    <Grid container alignItems="center" direction="row" spacing={1} sx={{ pl: 2 }}>
+                      <Grid item>
+                        <Typography variant="h5">선택된 날짜</Typography>
+                      </Grid>
+                    </Grid>
+                    <Box mt={1}>
+                      <UserAttendInfoTable data={selectAttendData} />
+                      {Object.keys(selectAttendData).length === 0 && (
+                        <Box
+                          p={1}
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center', // 수평 중앙 정렬
+                            alignItems: 'center' // 수직 중앙 정렬
+                          }}
+                        >
+                          <ErrorOutlineIcon fontSize="medium" color="secondary" sx={{ mx: 1 }} />
+                          <Typography size="small" color="secondary">
+                            선택된 날짜 없음
+                          </Typography>
+                        </Box>
                       )}
-                      handleMyCard={handleMyCard}
-                      height={'650px'}
-                      selectAttendData={selectAttendData}
-                    />
-                  </Box>
-                </MainCard>
-              </Grid>
-              <Grid item xs={8} md={8} lg={8}>
-                <Grid container direction="column">
-                  <Grid item xs={5} md={5} lg={5}>
-                    <MainCard sx={{ pt: 2, height: '150px', borderRadius: 0 }} content={false}>
-                      <Grid container alignItems="center" direction="row" spacing={1} sx={{ pl: 2 }}>
-                        <Grid item>
-                          <Typography variant="h5">선택된 날짜</Typography>
-                        </Grid>
-                      </Grid>
-                      <Box mt={1}>
-                        <UserAttendInfoTable data={selectAttendData} />
-                        {Object.keys(selectAttendData).length === 0 && (
-                          <Box
-                            p={1}
-                            sx={{
-                              display: 'flex',
-                              justifyContent: 'center', // 수평 중앙 정렬
-                              alignItems: 'center' // 수직 중앙 정렬
-                            }}
-                          >
-                            <ErrorOutlineIcon fontSize="medium" color="secondary" sx={{ mx: 1 }} />
-                            <Typography size="small" color="secondary">
-                              선택된 날짜 없음
-                            </Typography>
-                          </Box>
+                    </Box>
+                  </MainCard>
+                </Grid>
+                <Grid item xs={7} md={7} lg={7}>
+                  <MainCard sx={{ pt: 2, height: '560px' }} content={false}>
+                    <Box mr={1} pl={2} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <Typography variant="h5">최근 이상 근태 내역</Typography>
+                      <Button onClick={handleOpenAll}>전체보기</Button>
+                    </Box>
+                    <Box mt={1}>
+                      <UserAllAttendTable
+                        datas={attendDatas.filter(
+                          (data) => data.attend_status === '지각' || data.attend_status === '결근' || data.attend_status === '조퇴'
                         )}
-                      </Box>
-                    </MainCard>
-                  </Grid>
-                  <Grid item xs={7} md={7} lg={7}>
-                    <MainCard sx={{ mt: 1, pt: 2, pr: 2, pl: 2, height: '580px', borderRadius: 0 }} content={false}>
-                      <Grid container spacing={1} justifyContent="center">
-                        <Grid item xs={12} sm={12} md={12} lg={12}>
-                          <Typography variant="h5">출/퇴근 수정</Typography>
-                          <Box mt={3}>
-                            <BasicChip label="제목" color="gray" />
-                            <TextField
-                              size="small"
-                              onChange={(e) => {
-                                setTitle(e.target.value);
-                              }}
-                            />
-                          </Box>
-                          <Box mt={1} sx={{ display: 'flex', alignItems: 'center' }}>
-                            <EditNoteRoundedIcon fontSize="medium" color="secondary" sx={{ mx: 1 }} />
-                            <Typography size="small" color="secondary">
-                              제목을 입력하지 않을 시 자동 지정됩니다.
-                            </Typography>
-                          </Box>
-                          <Box mt={2.5} sx={{ display: 'flex' }}>
-                            <BasicChip label="결재자" color="gray" />
-                            <AppAuto
-                              label="결재자"
-                              datas={allUsers}
-                              handleSelectUser={handleSelectUser}
-                              searchName={searchName}
-                              setSearchName={setSearchName}
-                              setApprover={setApprover}
-                            />
-                          </Box>
-                          <Box mt={2.5}>
-                            <BasicChip label="수정사항" color="gray" />
-                            <Checkbox size="small" checked={startChecked} onChange={handleStartChange} /> 출근
-                            <Checkbox size="small" checked={endChecked} onChange={handleEndChange} /> 퇴근
-                          </Box>
-                          {startChecked === true && (
-                            <Box mt={2.5}>
-                              <BasicChip label="출근수정시간" color="gray" />
-                              <FormControl sx={{ ml: 1 }}>
-                                <RadioGroup
-                                  row
-                                  sx={{ justifyContent: 'center', alignItems: 'center' }}
-                                  value={attendStartDefault}
-                                  onChange={handleDefaultStartChange}
-                                >
-                                  <FormControlLabel value="default" control={<Radio size="small" />} label="기본값" />
-                                  <FormControlLabel value="other" control={<Radio size="small" />} label="직접입력" />
-                                </RadioGroup>
-                              </FormControl>
-                              {attendStartDefault == 'other' && <TimePicker2 label={'출근수정시간'} setTime={setUpdateStartTime} />}
-                              {attendStartDefault == 'default' && (
-                                <TextField
-                                  size="small"
-                                  defaultValue="09:00:00"
-                                  key={attendStartDefault}
-                                  inputProps={{ readOnly: true }}
-                                  sx={{ width: '30%' }}
-                                />
-                              )}
-                            </Box>
-                          )}
-                          {endChecked === true && (
-                            <Box mt={2.5}>
-                              <BasicChip label="퇴근수정시간" color="gray" />
-                              <FormControl sx={{ ml: 1 }}>
-                                <RadioGroup
-                                  row
-                                  sx={{ justifyContent: 'center', alignItems: 'center' }}
-                                  value={attendEndDefault}
-                                  onChange={handleDefaultEndChange}
-                                >
-                                  <FormControlLabel value="default" control={<Radio size="small" />} label="기본값" />
-                                  <FormControlLabel value="other" control={<Radio size="small" />} label="직접입력" />
-                                </RadioGroup>
-                              </FormControl>
-                              {attendEndDefault == 'other' && <TimePicker2 label={'퇴근수정시간'} setTime={setUpdateEndTime} />}
-                              {attendEndDefault == 'default' && (
-                                <TextField
-                                  size="small"
-                                  defaultValue="18:00:00"
-                                  key={attendEndDefault}
-                                  inputProps={{ readOnly: true }}
-                                  sx={{ width: '30%' }}
-                                />
-                              )}
-                            </Box>
-                          )}
-                          <Box mt={2.5}>
-                            <BasicChip label="증빙 업로드" color="gray" />
-                            <Button component="label" variant="contained" size="medium" endIcon={<UploadOutlined />}>
-                              파일 선택
-                              <VisuallyHiddenInput type="file" />
-                            </Button>
-                          </Box>
-                          <Box mt={2.5} mr={1}>
-                            <BasicChip label="수정사유" color="gray" />
-                            <TextField
-                              multiline
-                              rows={3}
-                              sx={{ width: '84%' }}
-                              onChange={(e) => {
-                                setReason(e.target.value);
-                              }}
-                            />
-                          </Box>
-                          <Stack direction="row" justifyContent="flex-end" mt={2.5} mr={1}>
-                            <Button variant="contained" onClick={submitAttendEdit}>
-                              수정완료
-                            </Button>
-                          </Stack>
-                        </Grid>
-                      </Grid>
-                    </MainCard>
-                  </Grid>
+                        handleMyCard={handleMyCard}
+                        height={'450px'}
+                        selectAttendData={selectAttendData}
+                      />
+                    </Box>
+                  </MainCard>
                 </Grid>
               </Grid>
             </Grid>
-          </BasicContainer>
+            <Grid item xs={7} md={7} lg={7}>
+              <MainCard sx={{ ml: 2, pt: 2, pr: 2, pl: 2, height: '730px' }} content={false}>
+                <Typography variant="h5">출/퇴근 수정</Typography>
+                <Grid container spacing={1} justifyContent="center" sx={{ pl: 2 }}>
+                  <Grid item xs={12} sm={12} md={12} lg={12}>
+                    <Box mt={3}>
+                      <BasicChip label="제목" color="#46a5f3" />
+                      <TextField
+                        size="medium"
+                        sx={{ ml: 1 }}
+                        onChange={(e) => {
+                          setTitle(e.target.value);
+                        }}
+                      />
+                    </Box>
+                    <Box mt={1} sx={{ display: 'flex', alignItems: 'center' }}>
+                      <EditNoteRoundedIcon fontSize="medium" color="secondary" sx={{ mx: 1 }} />
+                      <Typography size="small" color="secondary">
+                        제목을 입력하지 않을 시 자동 지정됩니다.
+                      </Typography>
+                    </Box>
+                    <Box mt={2.5} sx={{ display: 'flex' }}>
+                      <BasicChip label="결재자" color="#46a5f3" />
+                      <AppAuto
+                        label="결재자"
+                        datas={allUsers}
+                        handleSelectUser={handleSelectUser}
+                        searchName={searchName}
+                        setSearchName={setSearchName}
+                        setApprover={setApprover}
+                      />
+                    </Box>
+                    <Box mt={2.5}>
+                      <BasicChip label="수정사항" color="#46a5f3" />
+                      <Checkbox size="small" checked={startChecked} onChange={handleStartChange} /> 출근
+                      <Checkbox size="small" checked={endChecked} onChange={handleEndChange} /> 퇴근
+                    </Box>
+                    {startChecked === true && (
+                      <Box mt={2.5}>
+                        <BasicChip label="출근수정시간" color="#46a5f3" />
+                        <FormControl sx={{ ml: 1 }}>
+                          <RadioGroup
+                            row
+                            sx={{ justifyContent: 'center', alignItems: 'center' }}
+                            value={attendStartDefault}
+                            onChange={handleDefaultStartChange}
+                          >
+                            <FormControlLabel value="default" control={<Radio size="small" />} label="기본값" />
+                            <FormControlLabel value="other" control={<Radio size="small" />} label="직접입력" />
+                          </RadioGroup>
+                        </FormControl>
+                        {attendStartDefault == 'other' && <TimePicker2 label={'출근수정시간'} setTime={setUpdateStartTime} />}
+                        {attendStartDefault == 'default' && (
+                          <TextField
+                            size="small"
+                            defaultValue="09:00:00"
+                            key={attendStartDefault}
+                            inputProps={{ readOnly: true }}
+                            sx={{ width: '30%' }}
+                          />
+                        )}
+                      </Box>
+                    )}
+                    {endChecked === true && (
+                      <Box mt={2.5}>
+                        <BasicChip label="퇴근수정시간" color="#46a5f3" />
+                        <FormControl sx={{ ml: 1 }}>
+                          <RadioGroup
+                            row
+                            sx={{ justifyContent: 'center', alignItems: 'center' }}
+                            value={attendEndDefault}
+                            onChange={handleDefaultEndChange}
+                          >
+                            <FormControlLabel value="default" control={<Radio size="small" />} label="기본값" />
+                            <FormControlLabel value="other" control={<Radio size="small" />} label="직접입력" />
+                          </RadioGroup>
+                        </FormControl>
+                        {attendEndDefault == 'other' && <TimePicker2 label={'퇴근수정시간'} setTime={setUpdateEndTime} />}
+                        {attendEndDefault == 'default' && (
+                          <TextField
+                            size="small"
+                            defaultValue="18:00:00"
+                            key={attendEndDefault}
+                            inputProps={{ readOnly: true }}
+                            sx={{ width: '30%' }}
+                          />
+                        )}
+                      </Box>
+                    )}
+                    <Box mt={2.5}>
+                      <BasicChip label="증빙 업로드" color="#46a5f3" />
+                      <Button component="label" variant="contained" size="medium" endIcon={<UploadOutlined />} color="secondary">
+                        파일 선택
+                        <VisuallyHiddenInput type="file" />
+                      </Button>
+                    </Box>
+                    <Box mt={2.5} mr={1}>
+                      <BasicChip label="수정사유" color="#46a5f3" />
+                      <TextField
+                        multiline
+                        rows={3}
+                        sx={{ width: '82%' }}
+                        onChange={(e) => {
+                          setReason(e.target.value);
+                        }}
+                      />
+                    </Box>
+                    <Stack direction="row" justifyContent="flex-end" mt={2.5} mr={2.5}>
+                      <Button variant="contained" onClick={submitAttendEdit}>
+                        수정완료
+                      </Button>
+                    </Stack>
+                  </Grid>
+                </Grid>
+              </MainCard>
+            </Grid>
+          </Grid>
         </Box>
         <AttendUpdateModal open={openAll} handleClose={handleCloseAll}>
           <Grid container alignItems="center" direction="row" spacing={1} sx={{ mb: 2 }}>
@@ -522,50 +530,43 @@ const UserAttendance = () => {
         </AttendUpdateModal>
       </BasicTab>
       <BasicTab value={value} index={1}>
-        <Box mx={1} my={1} pb={2}>
-          <BasicContainer sx={{ height: '760px' }}>
-            <Grid container>
-              <Grid item xs={6} md={6} lg={4.5}>
-                <Typography variant="h4">출/퇴근 수정 요청 목록</Typography>
-              </Grid>
-              <Grid item xs={6} md={6} lg={7.5}>
-                <Grid container direction="row" spacing={1} sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Grid item sx={{ display: 'flex', mt: 1 }}>
-                    <Box mr={1.5} sx={{ display: 'flex', alignItems: 'center' }}>
-                      <Typography variant="h5" sx={{ color: 'gray' }}>
-                        수정 날짜 선택
-                      </Typography>
-                    </Box>
-                    <Box mr={1}>
-                      <BasicDatePicker setDate={setSearchStartDate} val={searchStartDate} />
-                    </Box>
-                    <Box mr={1} sx={{ display: 'flex', alignItems: 'center' }}>
-                      <Typography variant="h4">~</Typography>
-                    </Box>
-                    <Box mr={1}>
-                      <BasicDatePicker setDate={setSearchEndDate} val={searchEndDate} />
-                    </Box>
-                    <Box mr={0.5} mt={0.3}>
-                      <Button variant="contained" color="secondary" onClick={searchAttendEditButton}>
-                        조회
-                      </Button>
-                    </Box>
-                    <Box mt={0.3}>
-                      <Button variant="contained" color="secondary" onClick={searchInitial}>
-                        초기화
-                      </Button>
-                    </Box>
-                  </Grid>
+        <Box mx={1}>
+          <Grid container>
+            <Grid item xs={5.5} md={5.5} lg={5.5} sx={{ display: 'flex', alignItems: 'center' }}>
+              <Typography variant="h4">출/퇴근 수정 요청 목록</Typography>
+            </Grid>
+            <Grid item xs={6.5} md={6.5} lg={6.5}>
+              <Grid container direction="row" spacing={1} sx={{ display: 'flex', alignItems: 'center' }}>
+                <Grid item sx={{ display: 'flex' }}>
+                  <Box mr={1}>
+                    <BasicDatePicker setDate={setSearchStartDate} val={searchStartDate} />
+                  </Box>
+                  <Box mr={1} sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Typography variant="h4">~</Typography>
+                  </Box>
+                  <Box mr={1}>
+                    <BasicDatePicker setDate={setSearchEndDate} val={searchEndDate} />
+                  </Box>
+                  <Box mr={0.5} mt={0.3}>
+                    <Button variant="contained" onClick={searchAttendEditButton}>
+                      수정날짜 조회
+                    </Button>
+                  </Box>
+                  <Box mt={0.3}>
+                    <Button variant="contained" onClick={searchInitial}>
+                      초기화
+                    </Button>
+                  </Box>
                 </Grid>
               </Grid>
             </Grid>
-            <MainCard sx={{ mt: 2 }} content={false}>
-              <UpdateAttendTable
-                handleOpenRead={handleOpenRead}
-                datas={filteredAttendEditData[0] === 0 ? attendEditDatas : filteredAttendEditData[1]}
-              />
-            </MainCard>
-          </BasicContainer>
+          </Grid>
+          <MainCard sx={{ mt: 2 }} content={false}>
+            <UpdateAttendTable
+              handleOpenRead={handleOpenRead}
+              datas={filteredAttendEditData[0] === 0 ? attendEditDatas : filteredAttendEditData[1]}
+            />
+          </MainCard>
         </Box>
         <ModalS open={openRead} handleClose={handleCloseRead}>
           <Box py={2}>
