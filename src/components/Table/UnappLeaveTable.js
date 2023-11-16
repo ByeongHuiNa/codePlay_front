@@ -143,12 +143,22 @@ export default function UnappLeaveTable({ leaveCancel, handleOpen, datas }) {
       <TableContainer
         sx={{
           width: '100%',
-          overflowX: 'auto',
+          overflow: 'auto',
           position: 'relative',
           display: 'block',
           maxWidth: '100%',
-          height: '286px',
-          '& td, & th': { whiteSpace: 'nowrap' }
+          height: '253px',
+          '& td, & th': { whiteSpace: 'nowrap' },
+          '&::-webkit-scrollbar': {
+            width: 5
+          },
+          '&::-webkit-scrollbar-track': {
+            backgroundColor: 'white'
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: 'gray',
+            borderRadius: 2
+          }
         }}
       >
         <Table

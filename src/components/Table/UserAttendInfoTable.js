@@ -46,7 +46,7 @@ function OrderTableHead() {
             key={headCell.id}
             align={headCell.align}
             padding={headCell.disablePadding ? 'none' : 'normal'}
-            sx={{ height: '30px', p: 1 }}
+            sx={{ height: '30px', p: 1, backgroundColor: '#e5edf026' }}
           >
             {headCell.label}
           </TableCell>
