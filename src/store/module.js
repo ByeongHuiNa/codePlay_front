@@ -118,8 +118,10 @@ export const useCalendarDrawer = create(
   devtools((set) => ({
     view: false,
     clickView: false,
+    clickPublicView: false,
     setView: (newView) => set(() => ({ view: newView })),
-    setClickView: (newClickView) => set(() => ({ clickView: newClickView }))
+    setClickView: (newClickView) => set(() => ({ clickView: newClickView })),
+    setClickPublicView: (newClickPublicView) => set(() => ({ clickPublicView: newClickPublicView }))
   }))
 );
 

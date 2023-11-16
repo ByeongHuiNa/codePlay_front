@@ -26,7 +26,7 @@ export default function CalendarDepLeaveList() {
 
   return (
     <>
-      <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper', maxHeight: 320, overflow: 'auto' }}>
+      <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper', maxHeight: 260, overflow: 'auto' }}>
         {shereLeaveDataList
           .filter((value) => value.leaveapp_status == 0)
           .sort((a, b) => new Date(a.leaveapp_start) - new Date(b.leaveapp_end))
