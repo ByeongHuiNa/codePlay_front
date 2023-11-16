@@ -129,9 +129,13 @@ const TodayAttendancdForm = ({ user_no }) => {
 
   return (
     <MainCard sx={{ height: '350px' }}>
-      <Typography align="left" variant="h5">
-        출/퇴근
-      </Typography>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px 15px' }}>
+        <Typography align="left" variant="h5">
+          출/퇴근
+        </Typography>
+        {formattedDate}
+      </div>
+
       <Box mt={4} mb={4} ml={3}>
         <Grid container justifyContent="center" spacing={1}>
           <Grid item xs={3} sm={3} md={3} lg={3}>
@@ -155,8 +159,6 @@ const TodayAttendancdForm = ({ user_no }) => {
           <Grid item xs={8} sm={8} md={8} lg={8} sx={{ paddingRight: 5 }} align="right">
             {attend ? (
               <Typography variant="text" align="right" sx={{ fontSize: 15 }}>
-                {formattedDate}
-                <br />
                 {attend.attend_start}
               </Typography>
             ) : (
@@ -178,8 +180,6 @@ const TodayAttendancdForm = ({ user_no }) => {
           <Grid item xs={8} sm={8} md={8} lg={8} sx={{ paddingRight: 5 }} align="right">
             {attend ? (
               <Typography variant="text" sx={{ fontSize: 15 }}>
-                {formattedDate}
-                <br />
                 {attend.attend_end}
               </Typography>
             ) : (

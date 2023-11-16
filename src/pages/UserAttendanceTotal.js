@@ -14,7 +14,7 @@ import AttendanceTable from 'components/Table/AttendanceTable';
 import AppLeaveTotalTable from 'components/Table/AppLeaveTotalTable';
 import VacationDonutChart from 'components/chart/VacationDonutChart';
 import UnappLeaveTotalTable from 'components/Table/UnappLeaveTotalTable';
-import { FormControl, NativeSelect } from '../../node_modules/@mui/material/index';
+import { FormControl, MenuItem, NativeSelect, TextField } from '../../node_modules/@mui/material/index';
 import AttendChart from 'components/chart/AttendChart';
 import axios from '../../node_modules/axios/index';
 import { useLeaveHourState, useLeaveState, useOverHourState, useWorkingHourState } from 'store/module';
@@ -59,45 +59,44 @@ const UserAttendanceTotalPage = () => {
     }
 
     async function get() {
-      const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
-      //const result = await axios.get(`/user-attend-total?user_no=${token.user_no}`);
-      setHours(result[0].data);
-      console.log('dsadas: ' + hours);
+      // const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
+      // //const result = await axios.get(`/user-attend-total?user_no=${token.user_no}`);
+      // setHours(result[0].data);
+      // console.log('dsadas: ' + hours);
       const currentTime = new Date(); // 현재 시간 가져오기
-      const attendTotalArray = result[0].data.map((item) => {
-        const attendTotal = item.attend_total ? item.attend_total : calculateAttendTotal(item.attend_start, currentTime);
-        return {
-          attend_total: attendTotal
-        };
-      });
-      console.log('attendtotal : ' + attendTotalArray);
+      // const attendTotalArray = result[0].data.map((item) => {
+      //   const attendTotal = item.attend_total ? item.attend_total : calculateAttendTotal(item.attend_start, currentTime);
+      //   return {
+      //     attend_total: attendTotal
+      //   };
+      // });
+      // console.log('attendtotal : ' + attendTotalArray);
 
-      const convertedArray = attendTotalArray.map((item) => {
-        if (item.attend_total) {
-          const totalParts = item.attend_total.split(':');
-          const totalHours = parseInt(totalParts[0], 10);
-          const totalMinutes = parseInt(totalParts[1], 10);
-          return `${totalHours}.${totalMinutes}`;
-        } else {
-          // attend_total이 null인 경우 대체값 또는 원하는 처리
-          return '대체값 또는 원하는 처리';
-        }
-      });
-      //setTime(convertedArray);
+      // const convertedArray = attendTotalArray.map((item) => {
+      //   if (item.attend_total) {
+      //     const totalParts = item.attend_total.split(':');
+      //     const totalHours = parseInt(totalParts[0], 10);
+      //     const totalMinutes = parseInt(totalParts[1], 10);
+      //     return `${totalHours}.${totalMinutes}`;
+      //   } else {
+      //     // attend_total이 null인 경우 대체값 또는 원하는 처리
+      //     return '대체값 또는 원하는 처리';
+      //   }
+      // });
+      // //setTime(convertedArray);
 
-      console.log('convert: ' + convertedArray);
+      // console.log('convert: ' + convertedArray);
       const result2 = await axios.get(`/user-attend-total?user_no=${token.user_no}`);
       setHours('주간근무1: ' + result2.data);
-      console.log('dsadas: ' + hours);
+      console.log('주간근무1: : ' + hours);
 
       const result3 = await axios.get(`/user-attend-total-leave?user_no=${token.user_no}`);
       setLeaveHours('주간근무2: ' + result3.data);
-      console.log('dsadas: ' + leaveHours);
+      console.log('주간근무2 : ' + leaveHours);
 
       const result4 = await axios.get(`/user-attend-total-over?user_no=${token.user_no}`);
       setOverHours('주간근무3 ' + result4.data);
-      console.log('dsadas: ' + overHours);
-
+      console.log('주간근무3:  ' + overHours);
 
       const attendTotalArray1 = Array.isArray(result2.data)
         ? result2.data.map((item) => {
@@ -136,6 +135,7 @@ const UserAttendanceTotalPage = () => {
         }
       });
       setTime1(convertedArray1);
+      console.log('타임1: ' + convertedArray1);
 
       const convertedArray2 = attendTotalArray2.map((item) => {
         if (item.attend_total) {
@@ -149,7 +149,7 @@ const UserAttendanceTotalPage = () => {
         }
       });
       setTime2(convertedArray2);
-      console.log('타임2' + convertedArray2);
+      console.log('타임2: ' + convertedArray2);
 
       const convertedArray3 = attendTotalArray3.map((item) => {
         if (item.attend_total) {
@@ -163,7 +163,7 @@ const UserAttendanceTotalPage = () => {
         }
       });
       setTime3(convertedArray3);
-      console.log('타임3' + convertedArray3);
+      console.log('타임3: ' + convertedArray3);
 
       // // const result3 = axios.get(`/user-attend-total-week?user_no=${token.user_no}`);
       // const attendData = result3.data;
@@ -278,7 +278,7 @@ const UserAttendanceTotalPage = () => {
       {/* tab 1 */}
       {/* row 1 */}
       <BasicTab value={value} index={0}>
-        <Grid container rowSpacing={4} columnSpacing={2.75}>
+        <Grid container spacing={1}>
           {/* row 3 - 휴가현황 그리드 */}
           <Grid item xs={4} sm={4} md={4} lg={4}>
             <MainCard>
@@ -308,27 +308,52 @@ const UserAttendanceTotalPage = () => {
                 <Typography variant="h5">{month2}월 결재 진행/완료내역</Typography>
 
                 <FormControl sx={{ marginLeft: 3 }}>
-                  <NativeSelect
+                  {/* <NativeSelect
                     defaultValue={month2}
                     onChange={month2Change}
                     inputProps={{
                       name: 'month',
                       id: 'uncontrolled-native'
                     }}
+                  > */}
+                  <TextField
+                    select
+                    size="normal"
+                    sx={{ width: '8rem' }}
+                    value={month2}
+                    onChange={month2Change}
+                    inputProps={{
+                      name: 'month',
+                      id: 'uncontrolled-native'
+                    }}
                   >
-                    <option value={12}>12월</option>
-                    <option value={11}>11월</option>
-                    <option value={10}>10월</option>
-                    <option value={9}>9월</option>
-                    <option value={8}>8월</option>
-                    <option value={7}>7월</option>
-                    <option value={6}>6월</option>
-                    <option value={5}>5월</option>
-                    <option value={4}>4월</option>
-                    <option value={3}>3월</option>
-                    <option value={2}>2월</option>
-                    <option value={1}>1월</option>
-                  </NativeSelect>
+                    <MenuItem value={12}>12월</MenuItem>
+                    <MenuItem value={11}>11월</MenuItem>
+                    <MenuItem value={10}>10월</MenuItem>
+                    <MenuItem value={9}>9월</MenuItem>
+                    <MenuItem value={8}>8월</MenuItem>
+                    <MenuItem value={7}>7월</MenuItem>
+                    <MenuItem value={6}>6월</MenuItem>
+                    <MenuItem value={5}>5월</MenuItem>
+                    <MenuItem value={4}>4월</MenuItem>
+                    <MenuItem value={3}>3월</MenuItem>
+                    <MenuItem value={2}>2월</MenuItem>
+                    <MenuItem value={1}>1월</MenuItem>
+                  </TextField>
+
+                  {/* <option ></option>
+                  <option value={11}>11월</option>
+                  <option value={10}>10월</option>
+                  <option value={9}>9월</option>
+                  <option value={8}>8월</option>
+                  <option value={7}>7월</option>
+                  <option value={6}>6월</option>
+                  <option value={5}>5월</option>
+                  <option value={4}>4월</option>
+                  <option value={3}>3월</option>
+                  <option value={2}>2월</option>
+                  <option value={1}>1월</option> */}
+                  {/* </NativeSelect> */}
                 </FormControl>
               </div>
               {location.state ? (
@@ -345,7 +370,7 @@ const UserAttendanceTotalPage = () => {
 
       {/* tab 2 */}
       <BasicTab value={value} index={1}>
-        <Grid container columnSpacing={1}>
+        <Grid container spacing={1}>
           {/* row 2 */}
           <Grid item xs={8}>
             <MainCard>
@@ -381,12 +406,10 @@ const UserAttendanceTotalPage = () => {
             </MainCard>
           </Grid>
           <Grid item xs={4}>
-            <MainCard sx={{ height: '94%' }}>
-              <div
-                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px', marginBottom: '30px' }}
-              >
+            <MainCard>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Typography align="left" variant="h5">
-                  금주근무시간
+                  금주근무시간총합
                 </Typography>
               </div>
               <WeekAttendDonutChart />

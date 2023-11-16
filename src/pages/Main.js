@@ -47,8 +47,24 @@ const Main = () => {
       try {
         const result = await axios.get(`/user-leave?user_no=${token.user_no}`);
         setLeave(result.data);
-        const result2 = await axios.get(`/user-attend-total-week?user_no=${token.user_no}`);
-        setTotal(result2.data);
+        axios
+          .get(`/user-attend-total-week?user_no=${token.user_no}`)
+          .then((response) => {
+            const result2 = response.data;
+            const defaultObject = {
+              // 기본 객체의 필드 및 값들을 정의합니다.
+              // 예시로 빈 값으로 설정
+              attend_total: '00:00:00'
+              
+              // ...
+            };
+
+            setTotal(result2 || defaultObject);
+          })
+          .catch((error) => {
+            // 에러 처리
+            console.error('Error fetching data:', error);
+          });
       } catch (error) {
         console.error('데이터를 불러오는 중 오류 발생:', error);
       }
@@ -125,6 +141,7 @@ const Main = () => {
         }
       });
       setTime1(convertedArray1);
+      console.log('타임1: ' + convertedArray1);
 
       const convertedArray2 = attendTotalArray2.map((item) => {
         if (item.attend_total) {
@@ -138,7 +155,7 @@ const Main = () => {
         }
       });
       setTime2(convertedArray2);
-      console.log('타임2' + convertedArray2);
+      console.log('타임2: ' + convertedArray2);
 
       const convertedArray3 = attendTotalArray3.map((item) => {
         if (item.attend_total) {
@@ -152,7 +169,7 @@ const Main = () => {
         }
       });
       setTime3(convertedArray3);
-      console.log('타임3' + convertedArray3);
+      console.log('타임3: ' + convertedArray3);
     }
     get();
   }, []);
@@ -194,7 +211,7 @@ const Main = () => {
       <Grid item xs={4} sm={4} md={4} lg={4}>
         {Object.keys(profile).length > 0 && (
           <MainCard sx={{ height: '350px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px 15px' }}>
               <Typography align="left" variant="h5">
                 내 정보
               </Typography>
@@ -219,9 +236,11 @@ const Main = () => {
       </Grid>
       <Grid item xs={4} sm={4} md={4} lg={4}>
         <MainCard>
-          <Typography align="left" variant="h5">
-            금주 근무 시간
-          </Typography>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px 15px' }}>
+            <Typography align="left" variant="h5">
+              금주 근무 시간
+            </Typography>
+          </div>
           <AttendChart
             chart={{
               labels: daysOfWeek,
@@ -252,7 +271,7 @@ const Main = () => {
 
       <Grid item xs={4}>
         <MainCard style={{ height: '415px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px 15px' }}>
             <Typography align="left" variant="h5">
               휴가신청목록
             </Typography>
@@ -266,7 +285,9 @@ const Main = () => {
 
       <Grid item xs={4}>
         <MainCard sx={{ height: '100%' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px', marginBottom: '30px' }}>
+          <div
+            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px 15px', marginBottom: '20px' }}
+          >
             <Typography align="left" variant="h5">
               휴가현황
             </Typography>

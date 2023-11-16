@@ -57,7 +57,7 @@ export default function AttendChart({ chart, ...other }) {
   return (
     <Card {...other} sx={{ boxShadow: 0 }}>
       <Box sx={{ p: 0 }}>
-        <Chart series={series} options={chartOptions} width="95%" height={270} />
+        <Chart series={series} options={chartOptions} width="95%" height={260} />
       </Box>
     </Card>
   );
