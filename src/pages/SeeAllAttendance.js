@@ -16,6 +16,7 @@ import MainCard from 'components/MainCard';
 import axios from '../../node_modules/axios/index';
 import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
 import { useProfileState } from 'store/module';
+import VacationBarChart from 'components/chart/VacationBarChart';
 
 const SeeAllAttendance = () => {
   //const [userInput, setUserInput] = useState(''); //사원검색창 입력값
@@ -198,7 +199,9 @@ const SeeAllAttendance = () => {
             </MainCard>
           </Grid>
           <Grid item xs={6}>
-            <MainCard></MainCard>
+            <MainCard>
+              <VacationBarChart />
+            </MainCard>
           </Grid>
         </Grid>
       </BasicTab>
@@ -216,7 +219,7 @@ const SeeAllAttendance = () => {
           <Grid item xs={12} sm={6} md={5} lg={7}>
             <MainCard>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div style={{ flex: 1, textAlign: 'center', paddingLeft:100}}>
+                <div style={{ flex: 1, textAlign: 'center', paddingLeft: 100 }}>
                   <Typography variant="h5">{profile.dept_name ? `${profile.dept_name}` : ''}</Typography>
                 </div>
                 <ToggleButtonGroup color="primary" value={alignment} exclusive onChange={handleChange5} aria-label="Platform">
@@ -224,7 +227,7 @@ const SeeAllAttendance = () => {
                   <ToggleButton value="week">주별</ToggleButton>
                 </ToggleButtonGroup>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20}}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
                 <IconButton onClick={handlePrevDay} aria-label="이전 날짜">
                   <ArrowBackIosNewOutlinedIcon />
                 </IconButton>
@@ -244,8 +247,8 @@ const SeeAllAttendance = () => {
         {alignment === 'week' && (
           <Grid item xs={12} sm={6} md={5} lg={7}>
             <MainCard>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div style={{ flex: 1, textAlign: 'center', paddingLeft:100}}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ flex: 1, textAlign: 'center', paddingLeft: 100 }}>
                   <Typography variant="h5">{profile.dept_name ? `${profile.dept_name}` : ''}</Typography>
                 </div>
                 <ToggleButtonGroup color="primary" value={alignment} exclusive onChange={handleChange5} aria-label="Platform">
@@ -254,7 +257,7 @@ const SeeAllAttendance = () => {
                 </ToggleButtonGroup>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20}}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
                 <IconButton onClick={handlePrevWeek} aria-label="이전 날짜">
                   <ArrowBackIosNewOutlinedIcon />
                 </IconButton>
@@ -266,7 +269,7 @@ const SeeAllAttendance = () => {
                 </IconButton>
               </div>
 
-              <AttendanceWeekTable depts={token.dept_no} filterDate={mon}/>
+              <AttendanceWeekTable depts={token.dept_no} filterDate={mon} />
             </MainCard>
           </Grid>
         )}
