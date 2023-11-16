@@ -276,15 +276,19 @@ const UserAttendance = () => {
   const [allUsers, setAllUsers] = useState([]);
   // 로그인 한 사용자의 출/퇴근 기록 가져오기
   const [attendDatas, setAttendDatas] = useState([]);
+  // 로그인 한 사용자의 이상 출/퇴근 기록 가져오기
+  const [attendWrongDatas, setAttendWrongDatas] = useState([]);
   // 로그인 한 사용자의 출/퇴근 수정 기록 가져오기
   const [attendEditDatas, setAttendEditDatas] = useState([]);
+  // 로그인 한 사용자의 출퇴근 정책 가져오기
+  const [attendPolicy, setAttendPolicy] = useState({});
 
   useEffect(() => {
     // 로그인 한 사용자 부서의 근태 담당자 내역 -> 결재자 검색창 autocomplete
     axios.get(`/dept-manager?dept_no=${token.dept_no}`).then((res) => {
       setAllUsers(res.data);
     });
-    // 로그인 한 사용자의 전체 출퇴근 내역 조회 (이상 근태 내역은 전체 내역에서 필터링 처리)
+    // 로그인 한 사용자의 전체 출퇴근 내역 조회
     axios.get(`/user-attend?user_no=${token.user_no}`).then((res) => {
       setAttendDatas(
         res.data.filter(
@@ -292,9 +296,18 @@ const UserAttendance = () => {
         )
       );
     });
+    // 로그인 한 사용자의 이상 출퇴근 내역 조회 (결재 진행중인 내역은 제외)
+    axios.get(`/user-wrong-attend?user_no=${token.user_no}`).then((res) => {
+      setAttendWrongDatas(res.data);
+      console.log(res.data);
+    });
     // 로그인 한 사용자의 전체 출퇴근 수정 내역 조회
     axios.get(`/attend-edit?user_no=${token.user_no}`).then((res) => {
       setAttendEditDatas(res.data);
+    });
+    // 로그인 한 사용자의 현재 출퇴근 정책
+    axios.get(`/user-attend-policy?user_no=${token.user_no}`).then((res) => {
+      setAttendPolicy(res.data);
     });
   }, [value]);
 
@@ -357,9 +370,7 @@ const UserAttendance = () => {
                     </Box>
                     <Box mt={1}>
                       <UserAllAttendTable
-                        datas={attendDatas.filter(
-                          (data) => data.attend_status === '지각' || data.attend_status === '결근' || data.attend_status === '조퇴'
-                        )}
+                        datas={attendWrongDatas}
                         handleMyCard={handleMyCard}
                         height={'450px'}
                         selectAttendData={selectAttendData}
@@ -378,7 +389,7 @@ const UserAttendance = () => {
                       <BasicChip label="제목" color="#46a5f3" />
                       <TextField
                         size="medium"
-                        sx={{ ml: 1 }}
+                        sx={{ ml: 1, width: '57%' }}
                         onChange={(e) => {
                           setTitle(e.target.value);
                         }}
@@ -392,14 +403,16 @@ const UserAttendance = () => {
                     </Box>
                     <Box mt={2.5} sx={{ display: 'flex' }}>
                       <BasicChip label="결재자" color="#46a5f3" />
-                      <AppAuto
-                        label="결재자"
-                        datas={allUsers}
-                        handleSelectUser={handleSelectUser}
-                        searchName={searchName}
-                        setSearchName={setSearchName}
-                        setApprover={setApprover}
-                      />
+                      <Box sx={{ ml: 1 }}>
+                        <AppAuto
+                          label="결재자"
+                          datas={allUsers}
+                          handleSelectUser={handleSelectUser}
+                          searchName={searchName}
+                          setSearchName={setSearchName}
+                          setApprover={setApprover}
+                        />
+                      </Box>
                     </Box>
                     <Box mt={2.5}>
                       <BasicChip label="수정사항" color="#46a5f3" />
@@ -424,10 +437,10 @@ const UserAttendance = () => {
                         {attendStartDefault == 'default' && (
                           <TextField
                             size="small"
-                            defaultValue="09:00:00"
+                            defaultValue={attendPolicy.standard_start_time}
                             key={attendStartDefault}
                             inputProps={{ readOnly: true }}
-                            sx={{ width: '30%' }}
+                            sx={{ width: '32%' }}
                           />
                         )}
                       </Box>
@@ -450,17 +463,24 @@ const UserAttendance = () => {
                         {attendEndDefault == 'default' && (
                           <TextField
                             size="small"
-                            defaultValue="18:00:00"
+                            defaultValue={attendPolicy.standard_end_time}
                             key={attendEndDefault}
                             inputProps={{ readOnly: true }}
-                            sx={{ width: '30%' }}
+                            sx={{ width: '32%' }}
                           />
                         )}
                       </Box>
                     )}
                     <Box mt={2.5}>
                       <BasicChip label="증빙 업로드" color="#46a5f3" />
-                      <Button component="label" variant="contained" size="medium" endIcon={<UploadOutlined />} color="secondary">
+                      <Button
+                        component="label"
+                        variant="contained"
+                        size="medium"
+                        endIcon={<UploadOutlined />}
+                        color="secondary"
+                        sx={{ ml: 1 }}
+                      >
                         파일 선택
                         <VisuallyHiddenInput type="file" />
                       </Button>
@@ -470,13 +490,13 @@ const UserAttendance = () => {
                       <TextField
                         multiline
                         rows={3}
-                        sx={{ width: '82%' }}
+                        sx={{ ml: 1, width: '82%' }}
                         onChange={(e) => {
                           setReason(e.target.value);
                         }}
                       />
                     </Box>
-                    <Stack direction="row" justifyContent="flex-end" mt={2.5} mr={2.5}>
+                    <Stack direction="row" justifyContent="flex-end" mt={2.5} mr={1.5}>
                       <Button variant="contained" onClick={submitAttendEdit}>
                         수정완료
                       </Button>

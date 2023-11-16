@@ -26,7 +26,7 @@ export default function AppAuto({ datas, handleSelectUser, setSearchName, setApp
       id="combo-box-demo"
       options={datas}
       getOptionLabel={(option) => `${option.user_name} ${option.user_position}`} // 사원명 + 직책
-      sx={{ width: 160 }}
+      sx={{ width: 190 }}
       size="small"
       inputValue={inputValue}
       onInputChange={handleInputChange}

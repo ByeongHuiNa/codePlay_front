@@ -17,50 +17,28 @@ export default function LeaveAppDonutChart({ series }) {
           donut: {
             size: '0%'
           }
-          // donut: {
-          //   size: '50%',
-          //   labels: {
-          //     show: true,
-          //     total: {
-          //       showAlways: true,
-          //       show: true,
-          //       label: '총 연차',
-          //       fontSize: '12px',
-          //       color: 'black'
-          //     },
-          //     value: {
-          //       fontSize: '22px',
-          //       show: true,
-          //       color: 'black'
-          //     }
-          //   }
-          // }
         }
       },
       dataLabels: {
         enabled: true,
         formatter: function (val, opts) {
           return `${opts.w.config.series[opts.seriesIndex]}일(${(
-            opts.w.config.series[opts.seriesIndex] /
+            (opts.w.config.series[opts.seriesIndex] * 100) /
             (opts.w.config.series[0] + opts.w.config.series[1])
-          ).toFixed(1)}%)`;
+          ).toFixed(0)}%)`;
+        },
+        dropShadow: {
+          enabled: false
+        },
+        style: {
+          colors: ['#525252'],
+          fontSize: '13px',
+          fontWeight: '20px'
         }
-        // formatter: function (val, opts) {
-        //   const originalData = opts.originalData;
-        //   const originalValue = originalData[opts.seriesIndex][opts.dataPointIndex];
-        //   return `${originalValue} (${val}%)`;
-        // },
       },
-      // colors: ["#ffeb9b", "#c5f2ba"],
+      colors: ['rgb(144, 202, 249)', 'rgb(205, 229, 247)'],
       labels: ['사용연차', '잔여연차'],
       series: series
-      // title: {
-      //   text: '나의 휴가 현황',
-      //   align: 'center',
-      //   style: {
-      //     fontSize: '16px'
-      //   }
-      // }
     }
   };
 
