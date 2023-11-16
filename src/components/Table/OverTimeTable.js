@@ -163,7 +163,7 @@ export default function OverTimeTable({ datas }) {
   const { dateFormat } = useFormatter();
 
   return (
-    <Box>
+    <Box mt={3}>
       <TableContainer
         sx={{
           width: '100%',

@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from '../../node_modules/react-router-dom/di
 import { useHasDrity, useMangerProfileState } from 'store/module';
 import { useEffect } from 'react';
 import axios from '../../node_modules/axios/index';
+import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
 
 // ==============================|| 유저정보 수정 PAGE ||============================== //
 
@@ -21,13 +22,14 @@ const UserInformationModify = () => {
   const { profile, setProfile } = useMangerProfileState();
   const { setHasDrity } = useHasDrity();
   //TODO: ismodifyed 를 이용하여 unstable_usePrompt 로 변경이 됬는데, 주소를 옮길시 화면전환이 안되게 만들기
-  //TODO: 로그인한 사용자의 user_no 가져올것.
 
   useEffect(() => {
     const endPoints = [];
     console.log(location);
     if (location.state == null) {
-      endPoints.push(`/user-information?user_no=1`);
+      //token 값을 decode해주는 코드
+      const token = jwtDecode(localStorage.getItem('token').slice(7));
+      endPoints.push(`/user-information?user_no=${token.user_no}`);
     } else {
       endPoints.push(`/user-information?user_no=${location.state.user_no}`);
     }
@@ -54,11 +56,18 @@ const UserInformationModify = () => {
   }
 
   function saveUserInformationModify() {
-    //TODO: 로그인한 사용자의 user_no 가져올것.
-    axios.patch('/user-information?user_no=1', profile).then(() => {
-      setHasDrity(false);
-      cancelClick();
-    });
+    if (location.state == null) {
+      const token = jwtDecode(localStorage.getItem('token').slice(7));
+      axios.patch(`/user-information?user_no=${token.user_no}`, profile).then(() => {
+        setHasDrity(false);
+        cancelClick();
+      });
+    } else {
+      axios.patch(`/user-information?user_no=${location.state.user_no}`, profile).then(() => {
+        setHasDrity(false);
+        cancelClick();
+      });
+    }
   }
 
   return (

@@ -17,7 +17,11 @@ import UnappLeaveTotalTable from 'components/Table/UnappLeaveTotalTable';
 import { FormControl, MenuItem, TextField } from '../../node_modules/@mui/material/index';
 import AttendChart from 'components/chart/AttendChart';
 import axios from '../../node_modules/axios/index';
+<<<<<<< HEAD
+import { useLeaveHourState, useLeaveState, useOverHourState, useWorkingHourState } from 'store/module';
+=======
 import { useAttendTotalState, useLeaveHourState, useLeaveState, useOverHourState, useWorkingHourState } from 'store/module';
+>>>>>>> 184388588191b8fe5bbb1c30cfc68567c3da2d56
 import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
 import { useLocation } from '../../node_modules/react-router-dom/dist/index';
 import WeekAttendDonutChart from 'components/chart/WeekAttendDonutChart';
@@ -29,6 +33,10 @@ const UserAttendanceTotalPage = () => {
   const { leaveHours, setLeaveHours } = useLeaveHourState(); //주간 휴가근무시간 일별
   const { overHours, setOverHours } = useOverHourState(); //주간 초과근무시간 일별
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> 184388588191b8fe5bbb1c30cfc68567c3da2d56
   //결재대기 내역 이번달로 설정
   //const [month1, setMonth1] = useState(new Date().getMonth() + 1);
   //결재완료 내역 이번달로 설정
@@ -41,6 +49,14 @@ const UserAttendanceTotalPage = () => {
   console.log('token@@@: ' + token.user_no);
 
   //const [time, setTime] = useState([]);
+<<<<<<< HEAD
+
+  const [time1, setTime1] = useState([]);
+  const [time2, setTime2] = useState([]);
+  const [time3, setTime3] = useState([]);
+  //const [weekTotal, setWeekTotal] = useState([0, 0]);
+=======
+>>>>>>> 184388588191b8fe5bbb1c30cfc68567c3da2d56
 
   const [time1, setTime1] = useState([]);
   const [time2, setTime2] = useState([]);

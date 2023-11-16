@@ -38,6 +38,9 @@ export default function LeaveDonutChart({ series }) {
         enabled: true,
         formatter: function (val, opts) {
           return `${opts.w.config.series[opts.seriesIndex]}일`;
+        },
+        dropShadow: {
+          enabled: false
         }
         // formatter: function (val, opts) {
         //   const originalData = opts.originalData;
