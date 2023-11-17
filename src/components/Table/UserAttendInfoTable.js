@@ -46,7 +46,7 @@ function OrderTableHead() {
             key={headCell.id}
             align={headCell.align}
             padding={headCell.disablePadding ? 'none' : 'normal'}
-            sx={{ height: '30px', p: 1, backgroundColor: '#e5edf026' }}
+            sx={{ width: `${headCell.id === 'date' ? '120px' : '100px'}`, height: '30px', p: 1, backgroundColor: '#f9f9f9' }}
           >
             {headCell.label}
           </TableCell>
@@ -123,11 +123,9 @@ export default function UserAttendInfoTable({ data }) {
     <Box>
       <TableContainer
         sx={{
-          width: '100%',
-          overflowX: 'auto',
+          overflow: 'auto',
           position: 'relative',
           display: 'block',
-          maxWidth: '100%',
           height: `${Object.keys(data).length === 0 ? '47px' : '100px'}`,
           padding: '0px',
           '& td, & th': { whiteSpace: 'nowrap' },
@@ -157,15 +155,19 @@ export default function UserAttendInfoTable({ data }) {
         >
           <OrderTableHead />
           <TableBody>
-            <TableRow role="checkbox" sx={{ '&:last-child td, &:last-child th': { border: 0 } }} tabIndex={-1} key={data.date}>
+            <TableRow role="checkbox" sx={{ '&:last-child td, &:last-child th': { border: 0 } }} tabIndex={-1} key={data.attend_date}>
               {Object.keys(data).length !== 0 && (
                 <>
-                  <TableCell component="th" scope="data" align="center">
+                  <TableCell component="th" scope="data" align="center" sx={{ width: '120px' }}>
                     {dateFormat(new Date(data.attend_date))}
                   </TableCell>
-                  <TableCell align="center">{data.attend_start ? data.attend_start : '-'}</TableCell>
-                  <TableCell align="center">{data.attend_end ? data.attend_end : '-'}</TableCell>
-                  <TableCell align="center">
+                  <TableCell align="center" sx={{ width: '100px' }}>
+                    {data.attend_start ? data.attend_start : '-'}
+                  </TableCell>
+                  <TableCell align="center" sx={{ width: '100px' }}>
+                    {data.attend_end ? data.attend_end : '-'}
+                  </TableCell>
+                  <TableCell align="center" sx={{ width: '100px' }}>
                     <OrderStatus status={data.attend_status} />
                   </TableCell>
                 </>

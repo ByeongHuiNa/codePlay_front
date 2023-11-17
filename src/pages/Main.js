@@ -8,7 +8,7 @@ import VacationDonutChart from 'components/chart/VacationDonutChart';
 import AttendChart from 'components/chart/AttendChart';
 import UserLeaveTable from 'components/Table/UserLeaveTable';
 import {
- 
+  useAttendTotalState,
   useLeaveHourState,
   useLeaveState,
   useOverHourState,
@@ -40,13 +40,15 @@ const Main = () => {
 
   const { setLeave } = useLeaveState(); //휴가불러오기
 
-  //const { setTotal } = useAttendTotalState(); //근무시간 + 연장근무시간 불러오기
+  const { setTotal } = useAttendTotalState(); //근무시간 + 연장근무시간 불러오기
 
   React.useEffect(() => {
     async function get() {
       try {
         const result = await axios.get(`/user-leave?user_no=${token.user_no}`);
         setLeave(result.data);
+        const result2 = await axios.get(`/user-attend-total-week?user_no=${token.user_no}`);
+        setTotal(result2.data);
       } catch (error) {
         console.error('데이터를 불러오는 중 오류 발생:', error);
       }

@@ -64,7 +64,7 @@ const managerMenu = {
       url: '/settingAttendancePolicy',
       icon: icons.FormOutlined,
       breadcrumbs: false
-    },
+    }
   ]
 };
 

@@ -4,7 +4,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 
-export default function BasicDatePicker({ label, setDate, val, width }) {
+export default function LimitDatePicker({ label, setDate, width, minDate, maxDate, val, bool }) {
   const datePickerFormat = 'YYYY-MM-DD';
   const datePickerUtils = {
     format: datePickerFormat,
@@ -12,13 +12,13 @@ export default function BasicDatePicker({ label, setDate, val, width }) {
   };
 
   const startDateChange = (date) => {
-    setDate(date.toDate().setHours(0, 0, 0, 0));
+    setDate(date.toDate());
   };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} dateFormats={datePickerUtils}>
       <DatePicker
-        value={val ? dayjs(val) : ''}
+        value={val !== '' ? dayjs(val) : null}
         label={label}
         slotProps={{
           textField: {
@@ -31,8 +31,11 @@ export default function BasicDatePicker({ label, setDate, val, width }) {
         }}
         sx={{
           width: `${width ? width : '100%'}`,
-          backgroundColor: 'white'
+          ml: 1
         }}
+        minDate={minDate ? dayjs(minDate) : undefined}
+        maxDate={maxDate ? dayjs(maxDate) : undefined}
+        disabled={bool}
       />
     </LocalizationProvider>
   );

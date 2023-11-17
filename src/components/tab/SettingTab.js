@@ -5,7 +5,7 @@ const SettingTab = () => {
   const { index, setIndex, tab } = useTabState();
 
   return (
-    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+    <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
       <Tabs value={index} onChange={(e, v) => setIndex(v)} aria-label="basic tabs example">
         {Object.keys(tab).length > 0 &&
           tab.map((tabItem) => {

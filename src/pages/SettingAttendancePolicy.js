@@ -27,12 +27,11 @@ const SettingAttendancePolicy = () => {
 
   //화면 초기값 셋팅
   useEffect(() => {
-    get();
-    async function get() {
-      const endPoints = ['/policy-count'];
-      const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
-      const tabs = [];
-      for (let i of result[0].data) {
+    setIndex('');
+    setIndex(0);
+    const tabs = [];
+    axios.get('/policy-count').then((res) => {
+      for (let i of res.data) {
         const tab_temp = {
           id: i.policy_no,
           name: i.policy_name,
@@ -40,12 +39,11 @@ const SettingAttendancePolicy = () => {
           total: Math.floor(i.count / 7) + (i.count % 7 == 0 ? 0 : 1)
         };
         tabs.push(tab_temp);
+        setTab(tabs);
+        setView(false);
+        setSearch('');
       }
-      setTab(tabs);
-      setView(false);
-      setSearch('');
-    }
-    setIndex(0);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -73,6 +71,7 @@ const SettingAttendancePolicy = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [now_page]);
 
+  //TODO:사용자명으로 검색?
   async function search_user(search) {
     setPage(1);
     const result = await axios.get(`/user-policy-list?policy_no=${index + 1}&user_name=${search}&page=1&limit=7`);
@@ -82,10 +81,12 @@ const SettingAttendancePolicy = () => {
 
   return (
     <>
-      <Typography variant="h2">정규 출/퇴근 정책</Typography>
-      <Grid container direction="row">
+      <Typography variant="h2" mb={2}>
+        정규 출/퇴근 정책
+      </Typography>
+      <Grid container direction="row" spacing={2}>
         <Grid item xs={view == 1 ? 8 : 12}>
-          <MainCard>
+          <MainCard sx={{ pt: 2, pr: 3, pl: 3, borderRadius: 0, height: '45rem' }} content={false}>
             {/* <Typography variant="h4">사용자명으로 검색</Typography>
             <InputSearch isPersonIcon={true} onClick={() => search_user(search)}></InputSearch> */}
             <SettingTab></SettingTab>

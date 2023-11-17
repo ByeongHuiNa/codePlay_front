@@ -48,7 +48,6 @@ const UserAttendanceTotalPage = () => {
   console.log('token@@@: ' + token.user_no);
 
   //const [time, setTime] = useState([]);
-
   const [time1, setTime1] = useState([]);
   const [time2, setTime2] = useState([]);
   const [time3, setTime3] = useState([]);
