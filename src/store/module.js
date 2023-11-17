@@ -163,11 +163,19 @@ export const useLeaveState = create(
     setLeave: (newLeave) => set(() => ({ leave: newLeave }))
   }))
 );
-//사용자의 주간근무시간의 합 
+//사용자의 주간정규근무시간의 합 
 export const useAttendTotalState = create(
   devtools((set) => ({
     total: {},
     setTotal: (newTotal) => set(() => ({ total: newTotal }))
+  }))
+);
+
+//사용자의 주간초과근무시간의 합 
+export const useAttendTotalOverState = create(
+  devtools((set) => ({
+    overTotal: {},
+    setOverTotal: (newOverTotal) => set(() => ({ overTotal: newOverTotal }))
   }))
 );
 

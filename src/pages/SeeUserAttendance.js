@@ -17,7 +17,7 @@ import UnappLeaveTotalTable from 'components/Table/UnappLeaveTotalTable';
 import { FormControl, MenuItem, TextField } from '../../node_modules/@mui/material/index';
 import AttendChart from 'components/chart/AttendChart';
 import axios from '../../node_modules/axios/index';
-import { useAttendTotalState, useLeaveHourState, useLeaveState, useOverHourState, useWorkingHourState } from 'store/module';
+import { useAttendTotalOverState, useAttendTotalState, useLeaveHourState, useLeaveState, useOverHourState, useWorkingHourState } from 'store/module';
 import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
 import { useLocation } from '../../node_modules/react-router-dom/dist/index';
 import WeekAttendDonutChart from 'components/chart/WeekAttendDonutChart';
@@ -47,20 +47,23 @@ const SeeUserAttendance = () => {
   const [time3, setTime3] = useState([]);
   //const [weekTotal, setWeekTotal] = useState([0, 0]);
 
-  const { setTotal } = useAttendTotalState(); //근무시간 + 연장근무시간 불러오기
+  const { total, setTotal } = useAttendTotalState(); //한주의 정규근무시간 불러오기
+  const { overTotal, setOverTotal } = useAttendTotalOverState(); //한주의 정규근무시간 불러오기
 
   React.useEffect(() => {
+    console.log('try');
     async function get() {
       try {
         axios
-          .get(`/user-attend-total-week?user_no=${token.user_no}`)
+          .get(`/user-attend-total-week?user_no=${location.state.user_no}`)
           .then((response) => {
+            console.log(response.data);
             const result2 = response.data;
             const defaultObject = {
               // 기본 객체의 필드 및 값들을 정의합니다.
               // 예시로 빈 값으로 설정
               attend_total: '00:00:00'
-              
+
               // ...
             };
 
@@ -74,8 +77,34 @@ const SeeUserAttendance = () => {
         console.error('데이터를 불러오는 중 오류 발생:', error);
       }
     }
+    async function get1() {
+      try {
+        axios
+          .get(`/user-attend-total-week-over?user_no=${location.state.user_no}`)
+          .then((response) => {
+            console.log(response.data);
+            const result2 = response.data;
+            const defaultObject = {
+              // 기본 객체의 필드 및 값들을 정의합니다.
+              // 예시로 빈 값으로 설정
+              attend_total: '00:00:00'
+
+              // ...
+            };
+
+            setOverTotal(result2 || defaultObject);
+          })
+          .catch((error) => {
+            // 에러 처리
+            console.error('Error fetching data:', error);
+          });
+      } catch (error) {
+        console.error('데이터를 불러오는 중 오류 발생:', error);
+      }
+    }
 
     get();
+    get1();
   }, []);
   useEffect(() => {
     const endPoints = [];
@@ -115,15 +144,15 @@ const SeeUserAttendance = () => {
       // //setTime(convertedArray);
 
       // console.log('convert: ' + convertedArray);
-      const result2 = await axios.get(`/user-attend-total?user_no=${token.user_no}`);
+      const result2 = await axios.get(`/user-attend-total?user_no=${location.state.user_no}`);
       setHours('주간근무1: ' + result2.data);
       console.log('주간근무1: : ' + hours);
 
-      const result3 = await axios.get(`/user-attend-total-leave?user_no=${token.user_no}`);
+      const result3 = await axios.get(`/user-attend-total-leave?user_no=${location.state.user_no}`);
       setLeaveHours('주간근무2: ' + result3.data);
       console.log('주간근무2 : ' + leaveHours);
 
-      const result4 = await axios.get(`/user-attend-total-over?user_no=${token.user_no}`);
+      const result4 = await axios.get(`/user-attend-total-over?user_no=${location.state.user_no}`);
       setOverHours('주간근무3 ' + result4.data);
       console.log('주간근무3:  ' + overHours);
 
@@ -299,14 +328,15 @@ const SeeUserAttendance = () => {
     <>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="휴가" />
+          
           <Tab label="출/퇴근" />
+          <Tab label="휴가" />
         </Tabs>
       </Box>
 
       {/* tab 1 */}
       {/* row 1 */}
-      <BasicTab value={value} index={0}>
+      <BasicTab value={value} index={1}>
         <Grid container spacing={1}>
           {/* row 3 - 휴가현황 그리드 */}
           <Grid item xs={4} sm={4} md={4} lg={4}>
@@ -376,7 +406,7 @@ const SeeUserAttendance = () => {
       </BasicTab>
 
       {/* tab 2 */}
-      <BasicTab value={value} index={1}>
+      <BasicTab value={value} index={0}>
         <Grid container spacing={1}>
           {/* row 2 */}
           <Grid item xs={8}>
@@ -419,7 +449,7 @@ const SeeUserAttendance = () => {
                   금주근무시간총합
                 </Typography>
               </div>
-              <WeekAttendDonutChart />
+              {Object.keys(total).length > 0 && Object.keys(overTotal).length > 0 && <WeekAttendDonutChart />}
             </MainCard>
           </Grid>
           <Grid item xs={12}>

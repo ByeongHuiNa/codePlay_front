@@ -164,39 +164,43 @@ const AttendanceWeekStatus = ({ status }) => {
   switch (status) {
     case '정상':
       color = 'success';
-      title = '정상';
+      title = '정상 ';
       break;
     case '휴가(연차)':
       color = 'primary';
-      title = '휴가(연차)';
+      title = '연차 ';
       break;
     case '휴가(오전반차)':
       color = 'primary';
-      title = '휴가(오전반차)';
+      title = '반차 ';
       break;
     case '휴가(오후반차)':
       color = 'primary';
-      title = '휴가(오후반차)';
+      title = '반차 ';
       break;
     case '휴가(공가)':
       color = 'primary';
-      title = '휴가(공가)';
+      title = '공가';
       break;
     case '지각':
-      color = 'secondary';
-      title = '지각';
+      color = 'warning';
+      title = '지각 ';
       break;
     case '조퇴':
       color = 'warning';
-      title = '조퇴';
+      title = '조퇴 ';
       break;
     case '결근':
       color = 'error';
-      title = '결근';
+      title = '결근 ';
+      break;
+      case '초과':
+      color = 'success';
+      title = '초과 ';
       break;
     default:
-      color = 'error';
-      title = '결근';
+      color = 'secondary';
+      title = '미처리';
   }
 
   return (

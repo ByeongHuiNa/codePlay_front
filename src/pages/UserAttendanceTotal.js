@@ -17,7 +17,14 @@ import UnappLeaveTotalTable from 'components/Table/UnappLeaveTotalTable';
 import { FormControl, MenuItem, TextField } from '../../node_modules/@mui/material/index';
 import AttendChart from 'components/chart/AttendChart';
 import axios from '../../node_modules/axios/index';
-import { useAttendTotalState, useLeaveHourState, useLeaveState, useOverHourState, useWorkingHourState } from 'store/module';
+import {
+  useAttendTotalOverState,
+  useAttendTotalState,
+  useLeaveHourState,
+  useLeaveState,
+  useOverHourState,
+  useWorkingHourState
+} from 'store/module';
 import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
 import { useLocation } from '../../node_modules/react-router-dom/dist/index';
 import WeekAttendDonutChart from 'components/chart/WeekAttendDonutChart';
@@ -46,7 +53,8 @@ const UserAttendanceTotalPage = () => {
   const [time3, setTime3] = useState([]);
   //const [weekTotal, setWeekTotal] = useState([0, 0]);
 
-  const { total, setTotal } = useAttendTotalState(); //근무시간 + 연장근무시간 불러오기
+  const { total, setTotal } = useAttendTotalState(); //한주의 정규근무시간 불러오기
+  const { overTotal, setOverTotal } = useAttendTotalOverState(); //한주의 정규근무시간 불러오기
 
   React.useEffect(() => {
     console.log('try');
@@ -75,8 +83,34 @@ const UserAttendanceTotalPage = () => {
         console.error('데이터를 불러오는 중 오류 발생:', error);
       }
     }
+    async function get1() {
+      try {
+        axios
+          .get(`/user-attend-total-week-over?user_no=${token.user_no}`)
+          .then((response) => {
+            console.log(response.data);
+            const result2 = response.data;
+            const defaultObject = {
+              // 기본 객체의 필드 및 값들을 정의합니다.
+              // 예시로 빈 값으로 설정
+              attend_total: '00:00:00'
+
+              // ...
+            };
+
+            setOverTotal(result2 || defaultObject);
+          })
+          .catch((error) => {
+            // 에러 처리
+            console.error('Error fetching data:', error);
+          });
+      } catch (error) {
+        console.error('데이터를 불러오는 중 오류 발생:', error);
+      }
+    }
 
     get();
+    get1();
   }, []);
   useEffect(() => {
     const endPoints = [];
@@ -420,7 +454,7 @@ const UserAttendanceTotalPage = () => {
                   금주근무시간총합
                 </Typography>
               </div>
-              {Object.keys(total).length > 0 && (<WeekAttendDonutChart />)}
+              {Object.keys(total).length > 0 && Object.keys(overTotal).length > 0 && <WeekAttendDonutChart />}
             </MainCard>
           </Grid>
           <Grid item xs={12}>
