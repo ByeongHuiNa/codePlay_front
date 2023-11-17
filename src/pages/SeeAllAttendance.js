@@ -163,9 +163,7 @@ const SeeAllAttendance = () => {
           <Grid item xs={12}>
             <MainCard>
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Typography variant="h5">
-                  {profile.dept_name ? `${profile.dept_name} 부서 휴가보유 현황` : '부서 휴가보유 현황 '}
-                </Typography>
+                <Typography variant="h5">{profile.dept_name ? `${profile.dept_name} 휴가보유 현황` : '휴가보유 현황 '}</Typography>
                 {/* <FormControl sx={{ marginLeft: 3 }}>
                   <NativeSelect
                     onChange={handleChange4}

@@ -194,6 +194,10 @@ const AttendanceWeekStatus = ({ status }) => {
       color = 'error';
       title = '결근 ';
       break;
+      case '초과':
+      color = 'success';
+      title = '초과 ';
+      break;
     default:
       color = 'secondary';
       title = '미처리';
