@@ -58,6 +58,7 @@ const SettingAuthority = () => {
       setView(false);
     }
     get();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index]);
 
   return (
@@ -67,7 +68,7 @@ const SettingAuthority = () => {
       </Typography>
       <Grid container direction="row" spacing={2}>
         <Grid item xs={view == 1 ? 8 : 12}>
-          <MainCard sx={{ pt: 2, pr: 3, pl: 3, borderRadius: 0, height: '45rem' }} content={false}>
+          <MainCard sx={{ pt: 2, pr: 3, pl: 3, ml: 2, mr: 2, height: '45rem' }} content={false}>
             {/*TODO: 추가 기능 구현예정 <Typography variant="h4">사용자명으로 검색</Typography>
             <InputSeach isPersonIcon={true}></InputSeach> */}
             <SettingTab />
