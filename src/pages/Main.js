@@ -8,11 +8,7 @@ import VacationDonutChart from 'components/chart/VacationDonutChart';
 import AttendChart from 'components/chart/AttendChart';
 import UserLeaveTable from 'components/Table/UserLeaveTable';
 import {
-<<<<<<< HEAD
   useAttendTotalState,
-=======
- 
->>>>>>> 184388588191b8fe5bbb1c30cfc68567c3da2d56
   useLeaveHourState,
   useLeaveState,
   useOverHourState,
@@ -44,11 +40,7 @@ const Main = () => {
 
   const { setLeave } = useLeaveState(); //휴가불러오기
 
-<<<<<<< HEAD
   const { setTotal } = useAttendTotalState(); //근무시간 + 연장근무시간 불러오기
-=======
-  //const { setTotal } = useAttendTotalState(); //근무시간 + 연장근무시간 불러오기
->>>>>>> 184388588191b8fe5bbb1c30cfc68567c3da2d56
 
   React.useEffect(() => {
     async function get() {
@@ -133,10 +125,7 @@ const Main = () => {
         }
       });
       setTime1(convertedArray1);
-<<<<<<< HEAD
-=======
       console.log('타임1: ' + convertedArray1);
->>>>>>> 184388588191b8fe5bbb1c30cfc68567c3da2d56
 
       const convertedArray2 = attendTotalArray2.map((item) => {
         if (item.attend_total) {
