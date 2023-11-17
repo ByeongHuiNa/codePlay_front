@@ -16,7 +16,7 @@ import MainCard from 'components/MainCard';
 import axios from '../../node_modules/axios/index';
 import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
 import { useProfileState } from 'store/module';
-import VacationBarChart from 'components/chart/VacationBarChart';
+
 
 const SeeAllAttendance = () => {
   //const [userInput, setUserInput] = useState(''); //사원검색창 입력값
@@ -112,6 +112,8 @@ const SeeAllAttendance = () => {
       setAlignment(newAlignment);
     }
   };
+
+  
   useEffect(() => {
     // 현재 날짜를 가져오고 그 날짜의 주차를 계산
     const now = new Date();
@@ -158,7 +160,7 @@ const SeeAllAttendance = () => {
 
       <BasicTab value={value} index={0}>
         <Grid container>
-          <Grid item xs={6}>
+          <Grid item xs={12}>
             <MainCard>
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <Typography variant="h5">
@@ -198,11 +200,11 @@ const SeeAllAttendance = () => {
               <VacationCountTable depts={token.dept_no} />
             </MainCard>
           </Grid>
-          <Grid item xs={6}>
+          {/* <Grid item xs={6}>
             <MainCard>
               <VacationBarChart />
             </MainCard>
-          </Grid>
+          </Grid> */}
         </Grid>
       </BasicTab>
 
