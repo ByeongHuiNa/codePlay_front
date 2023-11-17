@@ -32,8 +32,8 @@ export default function LeaveAppDonutChart({ series }) {
         },
         style: {
           colors: ['#525252'],
-          fontSize: '13px',
-          fontWeight: '20px'
+          fontSize: '14px',
+          fontWeight: '60px'
         }
       },
       colors: ['rgb(144, 202, 249)', 'rgb(205, 229, 247)'],
