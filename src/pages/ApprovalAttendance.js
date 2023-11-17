@@ -8,11 +8,12 @@ import {
   Button,
   Card,
   CardContent,
+  Fade,
   FormControl,
   FormControlLabel,
-  Paper,
   Radio,
   RadioGroup,
+  Switch,
   Tab,
   Tabs,
   TextField
@@ -20,7 +21,7 @@ import {
 import BasicTab from 'components/tab/BasicTab';
 import React, { useEffect, useState } from 'react';
 import ApprovalTab from 'components/tab/ApprovalTab';
-import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import AdminAppLeaveTable from 'components/Table/AdminAppLeaveTable';
 import AdminAppAttendTable from 'components/Table/AdminAppAttendTable';
 import BasicChip from 'components/Chip/BasicChip';
@@ -51,7 +52,6 @@ const ApprovalAttendance = () => {
   }, []);
 
   const LeaveInfo = (data) => {
-    setSelectLeaveData(data);
     console.log(data);
     // 신청자의 휴가 보유 현황 가져오기
     axios.get(`/user-leave?user_no=${data.user_no}`).then((res) => {
@@ -78,19 +78,21 @@ const ApprovalAttendance = () => {
       .then((res) => {
         setDeptLeaveCnt(res.data);
       });
+    setSelectLeaveData(data);
+    console.log(data);
   };
 
-  const Item = styled(Paper)(({ theme }) => ({
-    ...theme.typography.body2,
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-    height: 290,
-    marginTop: '20px',
-    paddingTop: '15px',
-    borderRadius: '0px'
-  }));
+  // const Item = styled(Paper)(({ theme }) => ({
+  //   ...theme.typography.body2,
+  //   textAlign: 'center',
+  //   color: theme.palette.text.secondary,
+  //   height: 290,
+  //   marginTop: '20px',
+  //   paddingTop: '15px',
+  //   borderRadius: '0px'
+  // }));
 
-  const lightTheme = createTheme({ palette: { mode: 'light' } });
+  // const lightTheme = createTheme({ palette: { mode: 'light' } });
 
   const [value1, setValue1] = useState(0); // 전체 Tab
   const handleChange1 = (event, newValue) => {
@@ -99,9 +101,16 @@ const ApprovalAttendance = () => {
     setValue2(0);
     setValue3(0);
     setValue4(0);
-    setSelectLeaveData({});
-    setSelectAttendData({});
-    setSelectOvertimeData({});
+    if (newValue === 0) {
+      setSelectAttendData({});
+      setSelectOvertimeData({});
+    } else if (newValue === 1) {
+      setSelectLeaveData({});
+      setSelectOvertimeData({});
+    } else {
+      setSelectLeaveData({});
+      setSelectAttendData({});
+    }
     setReason('');
   };
 
@@ -109,8 +118,15 @@ const ApprovalAttendance = () => {
   // 휴가 부분 Tab
   const handleChange2 = (event, newValue) => {
     setValue2(newValue);
-    setSelectLeaveData({});
     setReason('');
+
+    if (newValue === 0) {
+      LeaveInfo(leaveAppDatas[0]);
+    } else if (newValue === 1) {
+      LeaveInfo(leaveAppDatas.filter((data) => data.leaveappln_status === 2)[0]);
+    } else {
+      setSelectLeaveData(leaveAppDatas.filter((data) => data.leaveappln_status === 0 || data.leaveappln_status === 1)[0]);
+    }
   };
 
   const [value3, setValue3] = useState(0); // 출/퇴근 부분 Tab
@@ -129,33 +145,36 @@ const ApprovalAttendance = () => {
     setReason('');
   };
 
+  const [checked, setChecked] = useState(false);
+  const handleCheckedChange = () => {
+    setChecked((prev) => !prev);
+  };
+
   useEffect(() => {
     // 로그인 한 근태담당자의 휴가 전체 결재 내역
     axios.get(`/manager-leave-approval?user_no=${token.user_no}`).then((res) => {
       setLeaveAppDatas(res.data);
       if (location.state && location.state.val === 0 && location.state.index === 0) {
         LeaveInfo(res.data.find((data) => data.leaveapp_no === location.state.data_no));
+      } else {
+        LeaveInfo(res.data[0]);
       }
     });
-  }, [value2]);
-
-  useEffect(() => {
     // 로그인 한 근태담당의 출퇴근 전체 결재 내역
     axios.get(`/manager-attend-approval?user_no=${token.user_no}`).then((res) => {
       setAttendAppDatas(res.data);
       if (location.state && location.state.val === 0 && location.state.index === 1) {
         setSelectAttendData(res.data.find((data) => data.attendapp_no === location.state.data_no));
+      } else {
+        setSelectAttendData(res.data[0]);
       }
     });
-  }, [value3]);
-
-  useEffect(() => {
     // 로그인 한 근태담당자의 초과근무 전체 결재 내역
     axios.get(`/manager-overtime-approval?user_no=${token.user_no}`).then((res) => {
-      console.log(res.data);
       setOvertimeAppDatas(res.data);
+      setSelectOvertimeData(res.data[0]);
     });
-  }, [value4]);
+  }, [value1]);
 
   // Tab 0. 휴가 부분 =================================================
   const [leaveAppDatas, setLeaveAppDatas] = useState([]); // 전체 휴가 결재 데이터
@@ -462,15 +481,16 @@ const ApprovalAttendance = () => {
   let overtimeApp = 0;
   let overtimeUnapp = 0;
   let overtimeWaitapp = 0;
-  overtimeAppDatas.map((data) => {
-    if (data.overtimeapp_status == 0) {
-      overtimeApp++;
-    } else if (data.overtimeapp_status == 1) {
-      overtimeUnapp++;
-    } else if (data.overtimeapp_status == 2) {
-      overtimeWaitapp++;
-    }
-  });
+  overtimeAppDatas &&
+    overtimeAppDatas.map((data) => {
+      if (data.overtimeapp_status == 0) {
+        overtimeApp++;
+      } else if (data.overtimeapp_status == 1) {
+        overtimeUnapp++;
+      } else if (data.overtimeapp_status == 2) {
+        overtimeWaitapp++;
+      }
+    });
 
   return (
     <>
@@ -482,380 +502,430 @@ const ApprovalAttendance = () => {
         </Tabs>
       </Box>
       <BasicTab value={value1} index={0}>
-        <Box clone mx={1}>
-          <BasicContainer>
-            <Grid container spacing={2}>
-              <Grid item xs={2.5} sm={2.5} md={2.5} lg={2.5}>
-                <MyCardAll
-                  onClick={() => {
-                    setValue2(0);
-                    setSelectLeaveData({});
-                  }}
-                >
-                  <CardContent sx={{ textAlign: 'center' }}>
-                    <Typography variant="h4">전체 결재</Typography>
-                    <Typography variant="text">{leaveWaitapp + leaveUnapp + leaveApp}건</Typography>
-                  </CardContent>
-                </MyCardAll>
-              </Grid>
-              <Grid item xs={2.5} sm={2.5} md={2.5} lg={2.5}>
-                <MyCardM
-                  onClick={() => {
-                    setValue2(1);
-                    setSelectLeaveData({});
-                  }}
-                >
-                  <CardContent sx={{ textAlign: 'center' }}>
-                    <Typography variant="h4">결재 대기</Typography>
-                    <Typography variant="text">{leaveWaitapp}건</Typography>
-                  </CardContent>
-                </MyCardM>
-              </Grid>
-              <Grid item xs={7} sm={7} md={7} lg={7}>
-                <MyCardL
-                  onClick={() => {
-                    setValue2(2);
-                    setSelectLeaveData({});
-                  }}
-                >
-                  <CardContent sx={{ textAlign: 'center', padding: '18px' }}>
-                    <Grid container spacing={2}>
-                      <Grid
-                        item
-                        xs={4}
-                        sm={4}
-                        md={4}
-                        lg={4}
-                        sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center'
+        <Box sx={{ display: 'flex', justifyContent: 'right' }}>
+          <FormControlLabel control={<Switch checked={checked} onChange={handleCheckedChange} />} label="총 결재 수" />
+        </Box>
+        {checked && (
+          <Fade in={checked}>
+            <Box clone mx={1}>
+              <Box>
+                <BasicContainer>
+                  <Grid container spacing={2}>
+                    <Grid item xs={2.5} sm={2.5} md={2.5} lg={2.5}>
+                      <MyCardAll
+                        onClick={() => {
+                          setValue2(0);
+                          setSelectLeaveData({});
                         }}
                       >
-                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                          <Box ml={2}>
-                            <Typography variant="h4">결재 완료 </Typography>
-                            <Typography variant="text">총 {leaveApp + leaveUnapp}건</Typography>
-                          </Box>
-                        </Box>
-                      </Grid>
-                      <Grid item xs={4} sm={4} md={4} lg={4}>
-                        <MyCardS>
-                          <CardContent>
-                            <Typography variant="h5">결재 승인 </Typography>
-                            <Typography variant="text">{leaveApp}건</Typography>
-                          </CardContent>
-                        </MyCardS>
-                      </Grid>
-                      <Grid item xs={4} sm={4} md={4} lg={4}>
-                        <MyCardS>
-                          <CardContent>
-                            <Typography variant="h5">결재 반려</Typography>
-                            <Typography variant="text">{leaveUnapp}건</Typography>
-                          </CardContent>
-                        </MyCardS>
-                      </Grid>
+                        <CardContent sx={{ textAlign: 'center' }}>
+                          <Typography variant="h4">전체 결재</Typography>
+                          <Typography variant="text">{leaveWaitapp + leaveUnapp + leaveApp}건</Typography>
+                        </CardContent>
+                      </MyCardAll>
                     </Grid>
-                  </CardContent>
-                </MyCardL>
-              </Grid>
-            </Grid>
-          </BasicContainer>
-        </Box>
-        <Box clone mx={1} my={1}>
-          <BasicContainer>
-            <Grid item xs={12} md={12} lg={12}>
-              <Grid container alignItems="center" justifyContent="space-between">
-                <Grid item xs={5} md={5} lg={5}>
-                  <Box sx={{ borderBottom: 1, border: '0px' }}>
-                    <MyTabs value={value2} onChange={handleChange2} aria-label="basic tabs example">
-                      <MyTab label="전체" index="0" />
-                      <MyTab label="대기" index="1" />
-                      <MyTab label="완료" index="2" />
-                    </MyTabs>
-                  </Box>
-                  <ApprovalTab value={value2} index={0}>
-                    <Box pb={3}>
-                      <AdminAppLeaveTable datas={leaveAppDatas} LeaveInfo={LeaveInfo} selectLeaveData={selectLeaveData} />
-                    </Box>
-                  </ApprovalTab>
-                  <ApprovalTab value={value2} index={1}>
-                    <Box pb={3}>
-                      <AdminAppLeaveTable
-                        datas={leaveAppDatas.filter((data) => data.leaveappln_status === 2)}
-                        LeaveInfo={LeaveInfo}
-                        selectLeaveData={selectLeaveData}
-                      />
-                    </Box>
-                  </ApprovalTab>
-                  <ApprovalTab value={value2} index={2}>
-                    <Box pb={3}>
-                      <AdminAppLeaveTable
-                        datas={leaveAppDatas.filter((data) => data.leaveappln_status === 0 || data.leaveappln_status === 1)}
-                        LeaveInfo={LeaveInfo}
-                        selectLeaveData={selectLeaveData}
-                      />
-                    </Box>
-                  </ApprovalTab>
-                </Grid>
-                <Grid item xs={7} md={7} lg={7}>
-                  <Box
-                    sx={{
-                      marginTop: '36px',
-                      marginLeft: '5px',
-                      border: '1px solid #e6ebf1',
-                      height: '850px',
-                      p: 3,
-                      overflow: 'auto',
-                      '&::-webkit-scrollbar': {
-                        width: 5
-                      },
-                      '&::-webkit-scrollbar-track': {
-                        backgroundColor: 'white'
-                      },
-                      '&::-webkit-scrollbar-thumb': {
-                        backgroundColor: 'gray',
-                        borderRadius: 2
-                      }
-                    }}
-                  >
-                    {Object.keys(selectLeaveData).length !== 0 && (
-                      <Grid container spacing={1} justifyContent="center">
-                        <Grid item xs={11} sm={11} md={11} lg={11}>
-                          <Grid container alignItems="center" justifyContent="space-between">
-                            <Grid item>
-                              <Typography variant="h5">휴가 상세 조회</Typography>
+                    <Grid item xs={2.5} sm={2.5} md={2.5} lg={2.5}>
+                      <MyCardM
+                        onClick={() => {
+                          setValue2(1);
+                          setSelectLeaveData({});
+                        }}
+                      >
+                        <CardContent sx={{ textAlign: 'center' }}>
+                          <Typography variant="h4">결재 대기</Typography>
+                          <Typography variant="text">{leaveWaitapp}건</Typography>
+                        </CardContent>
+                      </MyCardM>
+                    </Grid>
+                    <Grid item xs={7} sm={7} md={7} lg={7}>
+                      <MyCardL
+                        onClick={() => {
+                          setValue2(2);
+                          setSelectLeaveData({});
+                        }}
+                      >
+                        <CardContent sx={{ textAlign: 'center', padding: '18px' }}>
+                          <Grid container spacing={2}>
+                            <Grid
+                              item
+                              xs={4}
+                              sm={4}
+                              md={4}
+                              lg={4}
+                              sx={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                              }}
+                            >
+                              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                <Box ml={2}>
+                                  <Typography variant="h4">결재 완료 </Typography>
+                                  <Typography variant="text">총 {leaveApp + leaveUnapp}건</Typography>
+                                </Box>
+                              </Box>
                             </Grid>
-                            {selectLeaveData.leaveapp_status === 0 &&
-                              selectLeaveData.leaveapp_type !== 4 &&
-                              selectLeaveData.leaveappln_order === 2 && (
-                                <Grid item>
-                                  <Button variant="contained" size="medium">
-                                    휴가취소
-                                  </Button>
-                                </Grid>
-                              )}
+                            <Grid item xs={4} sm={4} md={4} lg={4}>
+                              <MyCardS>
+                                <CardContent>
+                                  <Typography variant="h5">결재 승인 </Typography>
+                                  <Typography variant="text">{leaveApp}건</Typography>
+                                </CardContent>
+                              </MyCardS>
+                            </Grid>
+                            <Grid item xs={4} sm={4} md={4} lg={4}>
+                              <MyCardS>
+                                <CardContent>
+                                  <Typography variant="h5">결재 반려</Typography>
+                                  <Typography variant="text">{leaveUnapp}건</Typography>
+                                </CardContent>
+                              </MyCardS>
+                            </Grid>
                           </Grid>
+                        </CardContent>
+                      </MyCardL>
+                    </Grid>
+                  </Grid>
+                </BasicContainer>
+              </Box>
+            </Box>
+          </Fade>
+        )}
+        <Box clone mx={1} my={1}>
+          <Grid container alignItems="center" justifyContent="space-between" spacing={1}>
+            <Grid item xs={6} md={6} lg={5}>
+              <BasicContainer>
+                <Box sx={{ borderBottom: 1, border: '0px' }}>
+                  <MyTabs value={value2} onChange={handleChange2} aria-label="basic tabs example">
+                    <MyTab label="전체" index="0" />
+                    <MyTab label="대기" index="1" />
+                    <MyTab label="완료" index="2" />
+                  </MyTabs>
+                </Box>
+                <ApprovalTab value={value2} index={0}>
+                  <Box pb={3}>
+                    <AdminAppLeaveTable datas={leaveAppDatas} LeaveInfo={LeaveInfo} selectLeaveData={selectLeaveData} />
+                  </Box>
+                </ApprovalTab>
+                <ApprovalTab value={value2} index={1}>
+                  <Box pb={3}>
+                    <AdminAppLeaveTable
+                      datas={leaveAppDatas.filter((data) => data.leaveappln_status === 2)}
+                      LeaveInfo={LeaveInfo}
+                      selectLeaveData={selectLeaveData}
+                    />
+                  </Box>
+                </ApprovalTab>
+                <ApprovalTab value={value2} index={2}>
+                  <Box pb={3}>
+                    <AdminAppLeaveTable
+                      datas={leaveAppDatas.filter((data) => data.leaveappln_status === 0 || data.leaveappln_status === 1)}
+                      LeaveInfo={LeaveInfo}
+                      selectLeaveData={selectLeaveData}
+                    />
+                  </Box>
+                </ApprovalTab>
+              </BasicContainer>
+            </Grid>
+            <Grid item xs={7} md={7} lg={7}>
+              <BasicContainer>
+                <Box
+                  sx={{
+                    height: '900px',
+                    p: 2,
+                    overflow: 'auto',
+                    '&::-webkit-scrollbar': {
+                      width: 5
+                    },
+                    '&::-webkit-scrollbar-track': {
+                      backgroundColor: 'white'
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                      backgroundColor: 'gray',
+                      borderRadius: 2
+                    }
+                  }}
+                >
+                  {Object.keys(selectLeaveData).length !== 0 && (
+                    <Grid container spacing={1} justifyContent="center">
+                      <Grid item xs={11} sm={11} md={11} lg={12}>
+                        <Grid container alignItems="center" justifyContent="space-between">
+                          <Grid item>
+                            <Typography variant="h5">휴가 상세 조회</Typography>
+                          </Grid>
+                          {selectLeaveData.leaveapp_status === 0 &&
+                            selectLeaveData.leaveapp_type !== 4 &&
+                            selectLeaveData.leaveappln_order === 2 && (
+                              <Grid item>
+                                <Button variant="contained" size="medium">
+                                  휴가취소
+                                </Button>
+                              </Grid>
+                            )}
+                        </Grid>
+                        <Box clone mt={2}>
+                          <BasicChip label="제목" color="#46a5f3" />
+                          <TextField
+                            size="small"
+                            defaultValue={selectLeaveData.leaveapp_title}
+                            key={selectLeaveData.leaveapp_title}
+                            InputProps={{ readOnly: true, style: { borderRadius: 0 } }}
+                            sx={{ width: '40%' }}
+                          />
+                        </Box>
+                        <Box clone mt={2}>
+                          <BasicChip label="신청자" color="#46a5f3" />
+                          <TextField
+                            size="small"
+                            defaultValue={selectLeaveData.user_name}
+                            key={selectLeaveData.user_name}
+                            InputProps={{ readOnly: true, style: { borderRadius: 0 } }}
+                            sx={{ width: '20%' }}
+                          />
+                        </Box>
+                        <Box clone mt={2}>
+                          <BasicChip label="휴가 종류" color="#46a5f3" />
+                          <TextField
+                            size="small"
+                            defaultValue={
+                              selectLeaveData.leaveapp_type === 0
+                                ? '연차'
+                                : selectLeaveData.leaveapp_type === 1
+                                ? '오전 반차'
+                                : selectLeaveData.leaveapp_type === 2
+                                ? '오후 반차'
+                                : selectLeaveData.leaveapp_type === 3
+                                ? '공가'
+                                : '휴가 취소'
+                            }
+                            key={selectLeaveData.leaveapp_type}
+                            InputProps={{ readOnly: true, style: { borderRadius: 0 } }}
+                            sx={{ width: '20%', mr: 2 }}
+                          />
+                          <BasicChip label="휴가 사용일수" color="#46a5f3" />
+                          <TextField
+                            size="small"
+                            defaultValue={`${selectLeaveData.leaveapp_total}일`}
+                            key={selectLeaveData.leaveapp_total}
+                            InputProps={{ readOnly: true, style: { borderRadius: 0 } }}
+                            sx={{ width: '20%' }}
+                          />
+                        </Box>
+                        {(selectLeaveData.leaveapp_type == 0 || selectLeaveData.leaveapp_type == 3) && (
                           <Box clone mt={2}>
-                            <BasicChip label="제목" color="#46a5f3" />
+                            <BasicChip label="휴가 시작일" color="#46a5f3" />
                             <TextField
                               size="small"
-                              defaultValue={selectLeaveData.leaveapp_title}
-                              key={selectLeaveData.leaveapp_title}
+                              defaultValue={dateFormat(new Date(selectLeaveData.leaveapp_start))}
+                              key={`start-${selectLeaveData.leaveapp_start}`}
+                              InputProps={{ readOnly: true, style: { borderRadius: 0 } }}
+                              sx={{ width: '20%', mr: 2 }}
+                            />
+                            <BasicChip label="휴가 종료일" color="#46a5f3" />
+                            <TextField
+                              size="small"
+                              defaultValue={dateFormat(new Date(selectLeaveData.leaveapp_end))}
+                              key={selectLeaveData.leaveapp_end}
+                              InputProps={{ readOnly: true, style: { borderRadius: 0 } }}
+                              sx={{ width: '20%' }}
+                            />
+                          </Box>
+                        )}
+                        {(selectLeaveData.leaveapp_type === 1 || selectLeaveData.leaveapp_type === 2) && (
+                          <Box clone mt={2}>
+                            <BasicChip label="반차 사용일" color="#46a5f3" />
+                            <TextField
+                              size="small"
+                              defaultValue={`${dateFormat(new Date(selectLeaveData.leaveapp_start))} ${
+                                selectLeaveData.leaveapp_type == 1 ? '오전' : '오후'
+                              }`}
+                              key={selectLeaveData.leaveapp_type}
                               InputProps={{ readOnly: true, style: { borderRadius: 0 } }}
                               sx={{ width: '40%' }}
                             />
                           </Box>
+                        )}
+                        {selectLeaveData.leaveapp_type === 4 && (
                           <Box clone mt={2}>
-                            <BasicChip label="신청자" color="#46a5f3" />
+                            <BasicChip label="취소휴가 시작" color="#46a5f3" />
                             <TextField
                               size="small"
-                              defaultValue={selectLeaveData.user_name}
-                              key={selectLeaveData.user_name}
-                              InputProps={{ readOnly: true, style: { borderRadius: 0 } }}
-                              sx={{ width: '20%' }}
-                            />
-                          </Box>
-                          <Box clone mt={2}>
-                            <BasicChip label="휴가 종류" color="#46a5f3" />
-                            <TextField
-                              size="small"
-                              defaultValue={
-                                selectLeaveData.leaveapp_type === 0
-                                  ? '연차'
-                                  : selectLeaveData.leaveapp_type === 1
-                                  ? '오전 반차'
-                                  : selectLeaveData.leaveapp_type === 2
-                                  ? '오후 반차'
-                                  : selectLeaveData.leaveapp_type === 3
-                                  ? '공가'
-                                  : '휴가 취소'
-                              }
-                              key={selectLeaveData.leaveapp_type}
+                              defaultValue={dateFormat(new Date(selectLeaveData.leaveapp_start))}
+                              key={`cancel-start-${selectLeaveData.leaveapp_start}`}
                               InputProps={{ readOnly: true, style: { borderRadius: 0 } }}
                               sx={{ width: '20%', mr: 2 }}
                             />
-                            <BasicChip label="휴가 종류" color="#46a5f3" />
+                            <BasicChip label="취소휴가 종료" color="#46a5f3" />
                             <TextField
                               size="small"
-                              defaultValue={`${selectLeaveData.leaveapp_total}일`}
-                              key={selectLeaveData.leaveapp_total}
+                              defaultValue={dateFormat(new Date(selectLeaveData.leaveapp_end))}
+                              key={`cancel-end-${selectLeaveData.leaveapp_end}`}
                               InputProps={{ readOnly: true, style: { borderRadius: 0 } }}
                               sx={{ width: '20%' }}
                             />
                           </Box>
-                          {(selectLeaveData.leaveapp_type == 0 || selectLeaveData.leaveapp_type == 3) && (
+                        )}
+                        <Box clone mt={2}>
+                          <BasicChip label="휴가 사유" color="#46a5f3" />
+                          <TextField
+                            multiline
+                            rows={3}
+                            defaultValue={selectLeaveData.leaveapp_content}
+                            key={selectLeaveData.leaveapp_content}
+                            InputProps={{ readOnly: true, style: { borderRadius: 0 } }}
+                            sx={{ width: '80%' }}
+                          />
+                        </Box>
+                        {(selectLeaveData.leaveappln_status == 0 || selectLeaveData.leaveappln_status == 1) && (
+                          <>
                             <Box clone mt={2}>
-                              <BasicChip label="휴가 시작일" color="#46a5f3" />
+                              <BasicChip label="나의 결재 차수" color="#46a5f3" />
                               <TextField
                                 size="small"
-                                defaultValue={dateFormat(new Date(selectLeaveData.leaveapp_start))}
-                                key={`start-${selectLeaveData.leaveapp_start}`}
+                                defaultValue={`${selectLeaveData.leaveappln_order}차`}
+                                key={`order-${selectLeaveData.leaveappln_order}`}
                                 InputProps={{ readOnly: true, style: { borderRadius: 0 } }}
                                 sx={{ width: '20%', mr: 2 }}
                               />
-                              <BasicChip label="휴가 종료일" color="#46a5f3" />
+                              <BasicChip label="나의 결재 상태" color="#46a5f3" />
                               <TextField
                                 size="small"
-                                defaultValue={dateFormat(new Date(selectLeaveData.leaveapp_end))}
-                                key={selectLeaveData.leaveapp_end}
+                                defaultValue={selectLeaveData.leaveappln_status == 0 ? '승인' : '반려'}
+                                key={`status-${selectLeaveData.leaveappln_status}`}
                                 InputProps={{ readOnly: true, style: { borderRadius: 0 } }}
                                 sx={{ width: '20%' }}
                               />
                             </Box>
-                          )}
-                          {(selectLeaveData.leaveapp_type === 1 || selectLeaveData.leaveapp_type === 2) && (
                             <Box clone mt={2}>
-                              <BasicChip label="반차 사용일" color="#46a5f3" />
+                              <BasicChip label="최종 결재 상태" color="#46a5f3" />
                               <TextField
                                 size="small"
-                                defaultValue={`${dateFormat(new Date(selectLeaveData.leaveapp_start))} ${
-                                  selectLeaveData.leaveapp_type == 1 ? '오전' : '오후'
+                                defaultValue={`${
+                                  selectLeaveData.leaveapp_status === 0
+                                    ? '최종 승인'
+                                    : selectLeaveData.leaveapp_status === 1
+                                    ? '최종 반려'
+                                    : selectLeaveData.leaveapp_status === 2
+                                    ? '결재 진행중'
+                                    : selectLeaveData.leaveapp_status === 3
+                                    ? '결재 대기'
+                                    : '취소 처리된 휴가'
                                 }`}
-                                key={selectLeaveData.leaveapp_type}
+                                key={selectLeaveData.leaveapp_status}
                                 InputProps={{ readOnly: true, style: { borderRadius: 0 } }}
-                                sx={{ width: '40%' }}
+                                sx={{ width: '40%', mr: 2 }}
                               />
                             </Box>
-                          )}
-                          <Box clone mt={2}>
-                            <BasicChip label="휴가 사유" color="#46a5f3" />
-                            <TextField
-                              multiline
-                              rows={3}
-                              defaultValue={selectLeaveData.leaveapp_content}
-                              key={selectLeaveData.leaveapp_content}
-                              InputProps={{ readOnly: true, style: { borderRadius: 0 } }}
-                              sx={{ width: '80%' }}
-                            />
-                          </Box>
-                          {(selectLeaveData.leaveappln_status == 0 || selectLeaveData.leaveappln_status == 1) && (
-                            <>
-                              <Box clone mt={2}>
-                                <BasicChip label="나의 결재 차수" color="#46a5f3" />
-                                <TextField
-                                  size="small"
-                                  defaultValue={`${selectLeaveData.leaveappln_order}차`}
-                                  key={`order-${selectLeaveData.leaveappln_order}`}
-                                  InputProps={{ readOnly: true, style: { borderRadius: 0 } }}
-                                  sx={{ width: '20%', mr: 2 }}
-                                />
-                                <BasicChip label="나의 결재 상태" color="#46a5f3" />
-                                <TextField
-                                  size="small"
-                                  defaultValue={selectLeaveData.leaveappln_status == 0 ? '승인' : '반려'}
-                                  key={`status-${selectLeaveData.leaveappln_status}`}
-                                  InputProps={{ readOnly: true, style: { borderRadius: 0 } }}
-                                  sx={{ width: '20%' }}
-                                />
-                              </Box>
-                              <Box clone mt={2}>
-                                <BasicChip label="최종 결재 상태" color="#46a5f3" />
-                                <TextField
-                                  size="small"
-                                  defaultValue={`${
-                                    selectLeaveData.leaveapp_status === 0
-                                      ? '최종 승인'
-                                      : selectLeaveData.leaveapp_status === 1
-                                      ? '최종 반려'
-                                      : selectLeaveData.leaveapp_status === 2
-                                      ? '결재 진행중'
-                                      : selectLeaveData.leaveapp_status === 3
-                                      ? '결재 대기'
-                                      : '취소 처리된 휴가'
-                                  }`}
-                                  key={selectLeaveData.leaveapp_status}
-                                  InputProps={{ readOnly: true, style: { borderRadius: 0 } }}
-                                  sx={{ width: '40%', mr: 2 }}
-                                />
-                              </Box>
-                            </>
-                          )}
-                          {selectLeaveData.leaveappln_status === 2 && selectLeaveData.leaveapp_type !== 4 && (
-                            <>
-                              <Grid container spacing={1.5}>
-                                <Grid item xs={6} sm={6} md={6} lg={6}>
-                                  <ThemeProvider theme={lightTheme}>
-                                    <Item key={2} elevation={2}>
-                                      <Box mb={1}>{selectLeaveData.user_name}님의 잔여 휴가일수&#128197;</Box>
-                                      <LeaveAppDonutChart series={[leaveCnt.leave_use, leaveCnt.leave_remain]} />
-                                    </Item>
-                                  </ThemeProvider>
-                                </Grid>
-                                <Grid item xs={6} sm={6} md={6} lg={6}>
-                                  <ThemeProvider theme={lightTheme}>
-                                    <Item key={2} elevation={2}>
-                                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                        {selectLeaveData.dept_name}
-                                        <Typography variant="h6">&#128202;</Typography>
-                                      </Box>
-                                      휴가 신청일 중 휴가 사용율이 가장 높은 날
-                                      <Typography sx={{ fontSize: '18px', mt: 1, mb: 2 }}>{deptLeaveCnt[0]}</Typography>
-                                      <Box mx={2} my={2}>
-                                        <Progress
-                                          percent={25}
-                                          theme={{
-                                            active: {
-                                              color: progressColor(25)
-                                            }
-                                          }}
-                                        />
-                                      </Box>
-                                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                        <Typography variant="h5">{deptLeaveCnt[2]}</Typography>명 중{' '}
-                                        <Typography variant="h5">{deptLeaveCnt[1]}</Typography>명 휴가 사용
-                                      </Box>
-                                    </Item>
-                                  </ThemeProvider>
-                                </Grid>
-                                <Box mt={2} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                  <Typography variant="h5">&#128161;</Typography>
-                                </Box>
-                              </Grid>
-                              <Box clone mt={2}>
-                                <BasicChip label={`${selectLeaveData.leaveappln_order}차 결재`} color="#46a5f3" />
-                                <FormControl sx={{ ml: 1 }}>
-                                  <RadioGroup
-                                    row
-                                    sx={{ justifyContent: 'center', alignItems: 'center' }}
-                                    value={appLeaveStatus}
-                                    onChange={handleLeaveRadioChange}
-                                  >
-                                    <FormControlLabel value="leaveApp" control={<Radio size="small" />} label="승인" />
-                                    <FormControlLabel value="leaveUnapp" control={<Radio size="small" />} label="반려" />
-                                  </RadioGroup>
-                                </FormControl>
-                                {appLeaveStatus == 'leaveUnapp' && (
-                                  <Box clone mt={2}>
-                                    <BasicChip label="반려 사유" color="#46a5f3" />
-                                    <TextField
-                                      label="반려 사유"
-                                      size="small"
-                                      sx={{ width: '80%' }}
-                                      multiline
-                                      rows={2}
-                                      onChange={(e) => {
-                                        setReason(e.target.value);
-                                      }}
-                                    />
+                          </>
+                        )}
+                        {selectLeaveData.leaveappln_status === 2 && selectLeaveData.leaveapp_type !== 4 && (
+                          <>
+                            <Grid container spacing={1.5}>
+                              <Grid item xs={6} sm={6} md={6} lg={12}>
+                                {/* <ThemeProvider theme={lightTheme}> */}
+                                {/* <Item key={2} elevation={2}> */}
+                                <Box sx={{ display: 'flex', justifyContent: 'center' }} mt={3}>
+                                  <Box>
+                                    <Typography variant="h5" mb={1}>
+                                      {selectLeaveData.user_name}님의 잔여 휴가일수&#128197;
+                                    </Typography>
+                                    <LeaveAppDonutChart series={[leaveCnt.leave_use, leaveCnt.leave_remain]} />
                                   </Box>
-                                )}
+                                  <Box>
+                                    <Typography variant="h5">{selectLeaveData.dept_name}</Typography>중 휴가 사용율이 가장 높은 휴가 신청일
+                                    <Typography sx={{ fontSize: '18px', mt: 1, mb: 2 }}>{deptLeaveCnt[0]}</Typography>
+                                    <Box mx={2} my={2} sx={{ display: 'flex', justifyContent: 'center' }}>
+                                      <Progress
+                                        percent={(deptLeaveCnt[1] * 100) / deptLeaveCnt[2]}
+                                        theme={{
+                                          active: {
+                                            color: progressColor(25)
+                                          }
+                                        }}
+                                      />
+                                    </Box>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                      <Typography variant="h5">{deptLeaveCnt[2]}</Typography>명 중{' '}
+                                      <Typography variant="h5">{deptLeaveCnt[1]}</Typography>명 휴가 사용
+                                    </Box>
+                                  </Box>
+                                </Box>
+                                {/* </Item> */}
+                                {/* </ThemeProvider> */}
+                              </Grid>
+                              {/* <Grid item xs={6} sm={6} md={6} lg={6}>
+                                <ThemeProvider theme={lightTheme}>
+                                  <Item key={2} elevation={2}>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                      {selectLeaveData.dept_name}
+                                      <Typography variant="h6">&#128202;</Typography>
+                                    </Box>
+                                    휴가 신청일 중 휴가 사용율이 가장 높은 날
+                                    <Typography sx={{ fontSize: '18px', mt: 1, mb: 2 }}>{deptLeaveCnt[0]}</Typography>
+                                    <Box mx={2} my={2}>
+                                      <Progress
+                                        percent={25}
+                                        theme={{
+                                          active: {
+                                            color: progressColor(25)
+                                          }
+                                        }}
+                                      />
+                                    </Box>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                      <Typography variant="h5">{deptLeaveCnt[2]}</Typography>명 중{' '}
+                                      <Typography variant="h5">{deptLeaveCnt[1]}</Typography>명 휴가 사용
+                                    </Box>
+                                  </Item>
+                                </ThemeProvider>
+                              </Grid> */}
+                              <Box mt={2} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <Typography variant="h5">&#128161; sdfsfsdfsdfsdfsdfsdfdsf</Typography>
                               </Box>
-                              <Stack direction="row" justifyContent="flex-end" mt={2} mr={1}>
-                                <Button variant="contained" onClick={submitLeaveApproval}>
-                                  결재완료
-                                </Button>
-                              </Stack>
-                            </>
-                          )}
-                        </Grid>
+                            </Grid>
+                            <Box clone mt={2}>
+                              <BasicChip label={`${selectLeaveData.leaveappln_order}차 결재`} color="#46a5f3" />
+                              <FormControl sx={{ ml: 1 }}>
+                                <RadioGroup
+                                  row
+                                  sx={{ justifyContent: 'center', alignItems: 'center' }}
+                                  value={appLeaveStatus}
+                                  onChange={handleLeaveRadioChange}
+                                >
+                                  <FormControlLabel value="leaveApp" control={<Radio size="small" />} label="승인" />
+                                  <FormControlLabel value="leaveUnapp" control={<Radio size="small" />} label="반려" />
+                                </RadioGroup>
+                              </FormControl>
+                              {appLeaveStatus == 'leaveUnapp' && (
+                                <Box clone mt={2}>
+                                  <BasicChip label="반려 사유" color="#46a5f3" />
+                                  <TextField
+                                    label="반려 사유"
+                                    size="small"
+                                    sx={{ width: '80%' }}
+                                    multiline
+                                    rows={2}
+                                    onChange={(e) => {
+                                      setReason(e.target.value);
+                                    }}
+                                  />
+                                </Box>
+                              )}
+                            </Box>
+                            <Stack direction="row" justifyContent="flex-end" mt={2} mr={1}>
+                              <Button variant="contained" onClick={submitLeaveApproval}>
+                                결재완료
+                              </Button>
+                            </Stack>
+                          </>
+                        )}
                       </Grid>
-                    )}
-                  </Box>
-                </Grid>
-              </Grid>
+                    </Grid>
+                  )}
+                </Box>
+              </BasicContainer>
             </Grid>
-          </BasicContainer>
+          </Grid>
         </Box>
       </BasicTab>
       <BasicTab value={value1} index={1}>
@@ -1257,23 +1327,27 @@ const ApprovalAttendance = () => {
                   </Box>
                   <ApprovalTab value={value4} index={0}>
                     <Box pb={3}>
-                      <AdminAppOvertimeTable datas={overtimeAppDatas} setSelectOvertimeData={setSelectOvertimeData} />
+                      {overtimeAppDatas && <AdminAppOvertimeTable datas={overtimeAppDatas} setSelectOvertimeData={setSelectOvertimeData} />}
                     </Box>
                   </ApprovalTab>
                   <ApprovalTab value={value4} index={1}>
                     <Box pb={3}>
-                      <AdminAppOvertimeTable
-                        datas={overtimeAppDatas.filter((data) => data.overtimeapp_status === 2)}
-                        setSelectOvertimeData={setSelectOvertimeData}
-                      />
+                      {overtimeAppDatas && (
+                        <AdminAppOvertimeTable
+                          datas={overtimeAppDatas.filter((data) => data.overtimeapp_status === 2)}
+                          setSelectOvertimeData={setSelectOvertimeData}
+                        />
+                      )}
                     </Box>
                   </ApprovalTab>
                   <ApprovalTab value={value4} index={2}>
                     <Box pb={3}>
-                      <AdminAppOvertimeTable
-                        datas={overtimeAppDatas.filter((data) => data.overtimeapp_status === 0 || data.overtimeapp_status === 1)}
-                        setSelectOvertimeData={setSelectOvertimeData}
-                      />
+                      {overtimeAppDatas && (
+                        <AdminAppOvertimeTable
+                          datas={overtimeAppDatas.filter((data) => data.overtimeapp_status === 0 || data.overtimeapp_status === 1)}
+                          setSelectOvertimeData={setSelectOvertimeData}
+                        />
+                      )}
                     </Box>
                   </ApprovalTab>
                 </Grid>
@@ -1287,7 +1361,7 @@ const ApprovalAttendance = () => {
                       py: 3
                     }}
                   >
-                    {Object.keys(selectOvertimeData).length !== 0 && (
+                    {selectOvertimeData && (
                       <Grid container spacing={1} justifyContent="center">
                         <Grid item xs={11} sm={11} md={11} lg={11}>
                           <Grid container alignItems="center" justifyContent="space-between">

@@ -88,7 +88,7 @@ function OrderTableHead({ order, orderBy }) {
             align={headCell.align}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
-            sx={{ width: `${headCell.id === 'title' ? '338px' : '204px'}`, backgroundColor: '#e5edf026' }}
+            sx={{ width: `${headCell.id === 'title' ? '338px' : '204px'}`, backgroundColor: '#f9f9f9' }}
           >
             {headCell.label}
           </TableCell>
