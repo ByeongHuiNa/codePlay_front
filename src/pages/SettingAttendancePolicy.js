@@ -86,7 +86,7 @@ const SettingAttendancePolicy = () => {
       </Typography>
       <Grid container direction="row" spacing={2}>
         <Grid item xs={view == 1 ? 8 : 12}>
-          <MainCard sx={{ pt: 2, pr: 3, pl: 3, borderRadius: 0, height: '45rem' }} content={false}>
+          <MainCard sx={{ pt: 2, pr: 3, pl: 3, ml: 2, mr: 2, height: '45rem' }} content={false}>
             {/* <Typography variant="h4">사용자명으로 검색</Typography>
             <InputSearch isPersonIcon={true} onClick={() => search_user(search)}></InputSearch> */}
             <SettingTab></SettingTab>
@@ -95,7 +95,7 @@ const SettingAttendancePolicy = () => {
         </Grid>
         {view == 1 && (
           <Grid item xs={4}>
-            <AttendancePolicyDetailCard></AttendancePolicyDetailCard>
+            <AttendancePolicyDetailCard />
           </Grid>
         )}
       </Grid>

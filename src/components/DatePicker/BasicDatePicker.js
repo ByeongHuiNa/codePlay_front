@@ -8,7 +8,7 @@ export default function BasicDatePicker({ label, setDate, val, width }) {
   const datePickerFormat = 'YYYY-MM-DD';
   const datePickerUtils = {
     format: datePickerFormat,
-    parse: (value) => Dayjs(value, datePickerFormat, true).toDate()
+    parse: (value) => dayjs(value, datePickerFormat, true).toDate()
   };
 
   const startDateChange = (date) => {

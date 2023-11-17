@@ -11,7 +11,7 @@ const AuthorityDetailCard = () => {
   //권한 고정(사용자, 근태담당자, 관리자, 메인관리자 추가 불가능)
   const { setView, content, setContent, id } = useDetailCardState();
   const { tableContentList } = useTableListState();
-  const { tab, setTab } = useTabState();
+  const { tab, setTab, setIndex } = useTabState();
   const { deptList } = useDeptListState();
   function getToday() {
     var date = new Date();
@@ -33,6 +33,7 @@ const AuthorityDetailCard = () => {
 
   const removeRole = (id) => {
     const temp = { ...content };
+    console.log(temp);
     temp.role = temp.role.filter((role) => role.id !== id);
     setContent(temp);
   };
@@ -57,7 +58,6 @@ const AuthorityDetailCard = () => {
       user_no: id,
       role: content
     };
-    //TODO: Role number 변경
     await axios.post(`/role-save`, RoleQueryUserDetailRequestVo).then((res) => {
       for (let i of res.data.preRoleLevel) {
         const temp = tab.filter((item) => item.id == i);
@@ -71,7 +71,8 @@ const AuthorityDetailCard = () => {
           j.number = j.number + 1;
         }
       }
-      setTab(ab);
+      setTab(tab);
+      setIndex(res.data.postRoleLevel[0] - 1);
     });
     alert('권한변경 되었습니다.');
   }

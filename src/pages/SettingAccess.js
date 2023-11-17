@@ -100,7 +100,7 @@ const SettingAccess = () => {
         </Stack>
       </Grid>
       <div role="tabpanel" hidden={value !== 0} id={`simple-tabpanel-${0}`} aria-labelledby={`simple-tab-${0}`} value={value}>
-        <MainCard sx={{ pt: 2, pr: 3, pl: 3, borderRadius: 0, height: '45rem' }} content={false}>
+        <MainCard sx={{ pt: 2, pr: 3, pl: 3, ml: 2, mr: 2, height: '45rem' }} content={false}>
           <AccessTab />
           <Stack direction="row" spacing={12} mt={2}>
             <AccessCheckbox />
@@ -108,7 +108,7 @@ const SettingAccess = () => {
         </MainCard>
       </div>
       <div role="tabpanel" hidden={value !== 1} id={`simple-tabpanel-${1}`} aria-labelledby={`simple-tab-${1}`} value={value}>
-        <MainCard sx={{ pt: 2, pr: 3, pl: 3, borderRadius: 0, height: '45rem' }} content={false}>
+        <MainCard sx={{ pt: 2, pr: 3, pl: 3, ml: 2, mr: 2, height: '45rem' }} content={false}>
           <Typography mt={2} variant="h4">
             사용자명으로 검색
           </Typography>
