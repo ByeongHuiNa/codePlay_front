@@ -30,6 +30,7 @@ export default function CalendarDepWorkList() {
           .filter((value) => value.schedule_share == true)
           .sort((a, b) => new Date(a.schedule_startday) - new Date(b.schedule_startday))
           .map((value) => {
+            console.log(value);
             const originalStartDateTime = value.schedule_startday; // 시작 날짜 및 시간
             const originalEndDateTime = value.schedule_endday; // 종료 날짜 및 시간
 
@@ -52,7 +53,7 @@ export default function CalendarDepWorkList() {
                     <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
                       <Grid item xs={2} sx={{ ml: -1 }}>
                         <ListItemAvatar>
-                          <Avatar alt="Remy Sharp" src={`${value.user.user_profile}`} sx={{ width: 30, height: 30 }} />
+                          <Avatar alt="Remy Sharp" src={value.user.user_profile} sx={{ width: 30, height: 30 }} />
                         </ListItemAvatar>
                       </Grid>
                       <Grid item xs={6} sx={{ ml: 1, textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
@@ -71,10 +72,10 @@ export default function CalendarDepWorkList() {
                         <ListItemText>
                           <Grid container direction="column" justifyContent="space-between" alignItems="center" sx={{ ml: 1.5 }}>
                             <Typography component="span" variant="body2" color="text.primary">
-                              {`${formattedStartDate}`}
+                              {formattedStartDate}
                             </Typography>
                             <Typography component="span" variant="body2" color="text.primary">
-                              {`${formattedEndDate}`}
+                              {formattedEndDate}
                             </Typography>
                           </Grid>
                         </ListItemText>

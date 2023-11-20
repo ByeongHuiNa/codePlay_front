@@ -1,7 +1,7 @@
 import { Box, Tab, Tabs } from '../../../node_modules/@mui/material/index';
-import { useState } from 'react';
 import CalendarDepWorkList from './CalendarDepWorkList';
 import CalendarDepLeaveList from './CalendarDepLeaveList';
+import { useCalendarDepWorkListTab } from 'store/module';
 
 function CustomTabPanel(props) {
   // eslint-disable-next-line react/prop-types
@@ -22,7 +22,7 @@ function a11yProps(index) {
 }
 
 const CalendarDepWorkListTab = () => {
-  const [value, setValue] = useState(0);
+  const { value, setValue } = useCalendarDepWorkListTab();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

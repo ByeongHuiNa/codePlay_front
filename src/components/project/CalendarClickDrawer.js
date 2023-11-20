@@ -24,8 +24,16 @@ import { DateField } from '@mui/x-date-pickers/DateField';
 import axios from '../../../node_modules/axios/index';
 
 export default function CalendarClickDrawer() {
-  const { updateScheduleList, updateDataList, deleteDataList, deleteScheduleList, updateShereDataList, updateShereScheduleList } =
-    useCalendarGetScheduleList();
+  const {
+    updateScheduleList,
+    updateDataList,
+    deleteDataList,
+    deleteScheduleList,
+    updateShereDataList,
+    updateShereScheduleList,
+    deleteShereDataList,
+    deleteShereScheduleList
+  } = useCalendarGetScheduleList();
   const { event } = useCalendarEvent();
   //AddEventOnClick
   const { title, setTitle, allDay, setAllDay, shareType, setShareType, content, setContent } = useCalendarEventClick();
@@ -161,6 +169,8 @@ export default function CalendarClickDrawer() {
     axios.post(`/user-schedule-delete?schedule_no=${parseInt(event.id)}`).then(() => {
       deleteDataList(event.id);
       deleteScheduleList(event.id);
+      deleteShereDataList(event.id);
+      deleteShereScheduleList(event.id);
     });
     setClickView(false);
   };

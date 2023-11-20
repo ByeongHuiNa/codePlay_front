@@ -408,3 +408,11 @@ export const useAlarm = create(
     setAlarm: (newAlarm) => set(() => ({ alarm: newAlarm }))
   }))
 );
+
+//CalendarDepWorkListTab
+export const useCalendarDepWorkListTab = create(
+  devtools((set) => ({
+    value: 0,
+    setValue: (newValue) => set(() => ({ value: newValue }))
+  }))
+);
