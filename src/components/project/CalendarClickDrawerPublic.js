@@ -1,83 +1,23 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import { useCalendarDate, useCalendarDrawer, useCalendarEvent, useCalendarEventClick, useCalendarGetScheduleList } from 'store/module';
-import {
-  Button,
-  FormControl,
-  FormControlLabel,
-  Grid,
-  InputLabel,
-  MenuItem,
-  Select,
-  Switch,
-  TextField,
-  Typography
-} from '../../../node_modules/@mui/material/index';
+import { useCalendarDate, useCalendarDrawer, useCalendarEventClick } from 'store/module';
+import { FormControl, Grid, InputLabel, MenuItem, Select, Switch, TextField, Typography } from '../../../node_modules/@mui/material/index';
 import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { StaticDateTimePicker } from '@mui/x-date-pickers/StaticDateTimePicker';
-import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { DateTimeField } from '@mui/x-date-pickers/DateTimeField';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import axios from '../../../node_modules/axios/index';
+import CalendarDepWorkMemo from './CalendarDepWorkMemo';
 
 export default function CalendarClickDrawerPublic() {
-  const { updateScheduleList, updateDataList, deleteDataList, deleteScheduleList, updateShereDataList, updateShereScheduleList } =
-    useCalendarGetScheduleList();
-  const { event } = useCalendarEvent();
   //AddEventOnClick
-  const { title, setTitle, allDay, setAllDay, shareType, setShareType, content, setContent } = useCalendarEventClick();
+  const { title, setTitle, allDay, content, setContent } = useCalendarEventClick();
 
   const { clickPublicView, setClickPublicView } = useCalendarDrawer();
 
   //일정종류
   const { scheduleType, setScheduleType } = useCalendarEventClick();
-
-  const handleSelectChange = (event) => {
-    setScheduleType(event.target.value);
-  };
-
-  //제목 수정
-  const handleTitleChange = (e) => {
-    setTitle(e.target.value);
-  };
-
-  const handleContentChange = (e) => {
-    setContent(e.target.value);
-  };
-
-  //AllDay스위치 on/off
-  const handleAllDayTypeSwitchChange = () => {
-    if (allDay == true) {
-      setAllDay(false);
-    } else {
-      setAllDay(true);
-    }
-  };
-
-  //LEAVETYPE스위치 on/off
-  // const [leaveType, setLeaveType] = React.useState(false);
-
-  // const handleLeaveTypeSwitchChange = () => {
-  //   setLeaveType((pre) => !pre);
-  // };
-
-  //LEAVEHALF_TYPE스위치 on/off
-  // const [leaveHalfType, setLeaveHalfType] = React.useState(false);
-
-  // const handleLeaveHalfTypeSwitchChange = () => {
-  //   setLeaveHalfType((pre) => !pre);
-  // };
-
-  const handleShareTypeSwitchChange = () => {
-    if (shareType == true) {
-      setShareType(false);
-    } else {
-      setShareType(true);
-    }
-  };
 
   //Drawer on/off
   const toggleDrawer = (open) => (event) => {
@@ -88,82 +28,9 @@ export default function CalendarClickDrawerPublic() {
     setScheduleType('');
     setTitle('');
     setContent('');
-    setStartDatePicker(false);
-    setEndDatePicker(false);
   };
 
-  // eslint-disable-next-line no-unused-vars
-  const { startDate, setStartDate, endDate, setEndDate } = useCalendarDate();
-
-  //DatePicker on/off
-  const [startDatePicker, setStartDatePicker] = React.useState(false);
-  const [endDatePicker, setEndDatePicker] = React.useState(false);
-
-  const handleStartDateFieldOnClick = () => {
-    setStartDatePicker((pre) => !pre);
-    if (endDatePicker) setEndDatePicker(false);
-  };
-
-  const handleStartDateFieldOnAccept = (e) => {
-    setStartDate(new Date(e));
-    setStartDatePicker((pre) => !pre);
-  };
-
-  const handleEndDateFieldOnClick = () => {
-    setEndDatePicker((pre) => !pre);
-    if (startDatePicker) setStartDatePicker(false);
-  };
-
-  const handleEndDateFieldOnAccept = (e) => {
-    setEndDate(new Date(e));
-    setEndDatePicker((pre) => !pre);
-  };
-
-  const handleUpdateEventOnClick = () => {
-    console.log(event.id);
-    const schedule = {
-      schedule_no: parseInt(event.id),
-      schedule_startday: startDate,
-      schedule_endday: endDate,
-      schedule_type: scheduleType,
-      schedule_title: title,
-      schedule_allday: allDay,
-      schedule_description: content,
-      schedule_share: shareType
-    };
-    axios.patch(`/user-schedule`, schedule).then(() => {
-      const start = new Date(startDate);
-      const end = new Date(endDate);
-
-      // 날짜를 비교하여 start와 end 값이 같지 않은 경우에만 +1을 적용
-      if (start.getDate() !== end.getDate() && allDay == true) {
-        end.setDate(end.getDate() + 1);
-      }
-      const scheduleListAdd = {
-        id: parseInt(event.id),
-        title: title,
-        start: start,
-        end: end,
-        allDay: allDay,
-        color: scheduleType === '개인 일정' ? '#ef9a9a' : '#90caf9',
-        textColor: scheduleType === '개인 일정' ? '#ffebee' : '#e3f2fd'
-      };
-      updateDataList(schedule);
-      updateScheduleList(scheduleListAdd);
-      updateShereDataList(schedule);
-      updateShereScheduleList(scheduleListAdd);
-    });
-
-    setClickPublicView(false);
-  };
-
-  const handleDeleteEventOnClick = () => {
-    axios.post(`/user-schedule-delete?schedule_no=${parseInt(event.id)}`).then(() => {
-      deleteDataList(event.id);
-      deleteScheduleList(event.id);
-    });
-    setClickPublicView(false);
-  };
+  const { startDate, endDate } = useCalendarDate();
 
   const list = () => {
     return (
@@ -193,26 +60,17 @@ export default function CalendarClickDrawerPublic() {
           <FormControl sx={{ width: '80%', mt: 2 }}>
             <InputLabel id="demo-simple-select-label">일정</InputLabel>
             {scheduleType === '휴가 일정' ? (
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="일정"
-                value={scheduleType}
-                onChange={handleSelectChange}
-                disabled
-              >
+              <Select labelId="demo-simple-select-label" id="demo-simple-select" label="일정" value={scheduleType} disabled>
                 <MenuItem value={'휴가 일정'}>휴가 일정</MenuItem>
               </Select>
             ) : (
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="일정"
-                value={scheduleType}
-                onChange={handleSelectChange}
-              >
-                <MenuItem value={'개인 일정'}>개인 일정</MenuItem>
-                <MenuItem value={'회사 일정'}>회사 일정</MenuItem>
+              <Select labelId="demo-simple-select-label" id="demo-simple-select" label="일정" value={scheduleType} disabled>
+                <MenuItem value={'개인 일정'} disabled>
+                  개인 일정
+                </MenuItem>
+                <MenuItem value={'회사 일정'} disabled>
+                  회사 일정
+                </MenuItem>
                 <MenuItem value={'휴가 일정'} disabled>
                   휴가 일정
                 </MenuItem>
@@ -222,27 +80,15 @@ export default function CalendarClickDrawerPublic() {
             {/* 휴가일정을 선택하면 연차 및 반차 버튼, 일자를 선택할 수 있고 확인 및 취소 버튼을 포함하고있다 */}
             {scheduleType === '개인 일정' || scheduleType === '회사 일정' ? (
               <>
-                <TextField sx={{ mt: 3 }} id="outlined-basic" label="제목" onChange={handleTitleChange} value={title} />
-                <Grid container direction="row" justifyContent="flex-start" alignItems="center">
-                  <FormControlLabel
-                    sx={{
-                      mt: 1.5,
-                      ml: 0.7
-                    }}
-                    control={
-                      <Switch
-                        color="primary"
-                        checked={allDay}
-                        onChange={handleAllDayTypeSwitchChange}
-                        sx={{
-                          justifyContent: 'flex-start' // 왼쪽 정렬
-                        }}
-                      />
-                    }
-                    label="AllDay"
-                    labelPlacement="start"
-                  />
-                </Grid>
+                <TextField
+                  sx={{ mt: 3 }}
+                  id="outlined-basic"
+                  label="제목"
+                  value={title}
+                  InputProps={{
+                    readOnly: true // 리드온리로 설정
+                  }}
+                />
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   {allDay == true ? (
                     <>
@@ -252,7 +98,6 @@ export default function CalendarClickDrawerPublic() {
                         }}
                         label="시작일"
                         value={dayjs(`${startDate}`)}
-                        onClick={handleStartDateFieldOnClick}
                       />
                       <DateField
                         sx={{
@@ -260,22 +105,7 @@ export default function CalendarClickDrawerPublic() {
                         }}
                         label="종료일"
                         value={dayjs(`${endDate}`)}
-                        onClick={handleEndDateFieldOnClick}
                       />
-                      {startDatePicker && (
-                        <StaticDatePicker
-                          value={dayjs(`${startDate}`)}
-                          onAccept={handleStartDateFieldOnAccept}
-                          onClose={() => setStartDatePicker(false)}
-                        />
-                      )}
-                      {endDatePicker && (
-                        <StaticDatePicker
-                          value={dayjs(`${endDate}`)}
-                          onAccept={handleEndDateFieldOnAccept}
-                          onClose={() => setEndDatePicker(false)}
-                        />
-                      )}
                     </>
                   ) : (
                     <>
@@ -285,7 +115,6 @@ export default function CalendarClickDrawerPublic() {
                         }}
                         label="시작일"
                         value={dayjs(`${startDate}`)}
-                        onClick={handleStartDateFieldOnClick}
                       />
                       <DateTimeField
                         sx={{
@@ -293,78 +122,40 @@ export default function CalendarClickDrawerPublic() {
                         }}
                         label="종료일"
                         value={dayjs(`${endDate}`)}
-                        onClick={handleEndDateFieldOnClick}
                       />
-                      {startDatePicker && (
-                        <StaticDateTimePicker
-                          value={dayjs(`${startDate}`)}
-                          onAccept={handleStartDateFieldOnAccept}
-                          onClose={() => setStartDatePicker(false)}
-                        />
-                      )}
-                      {endDatePicker && (
-                        <StaticDateTimePicker
-                          value={dayjs(`${endDate}`)}
-                          onAccept={handleEndDateFieldOnAccept}
-                          onClose={() => setEndDatePicker(false)}
-                        />
-                      )}
                     </>
                   )}
                 </LocalizationProvider>
                 <TextField
                   id="outlined-multiline-flexible"
                   label="일정 내용"
+                  InputProps={{ readOnly: true }}
                   multiline
                   rows={3}
-                  onChange={handleContentChange}
                   value={content}
                   sx={{
                     mt: 3
                   }}
                 />
-                <Grid container direction="row" justifyContent="flex-start" alignItems="center">
-                  <FormControlLabel
-                    sx={{
-                      mt: 1.5,
-                      ml: 0.7
-                    }}
-                    control={
-                      <Switch
-                        color="primary"
-                        checked={shareType}
-                        onChange={handleShareTypeSwitchChange}
-                        sx={{
-                          justifyContent: 'flex-start' // 왼쪽 정렬
-                        }}
-                      />
-                    }
-                    label="공유하기"
-                    labelPlacement="start"
-                  />
-                </Grid>
-                <Button
-                  size="large"
-                  variant="contained"
-                  color="primary"
-                  onClick={handleUpdateEventOnClick}
+                <Grid
+                  container
+                  direction="column"
+                  justifyContent="space-between"
+                  alignItems="flex-start"
                   sx={{
-                    mt: 28
-                  }}
-                >
-                  일정 수정
-                </Button>
-                <Button
-                  size="large"
-                  variant="contained"
-                  color="error"
-                  onClick={handleDeleteEventOnClick}
-                  sx={{
+                    border: '1px solid #ccc', // 테두리 스타일 및 색상 지정
+                    borderRadius: '4px', // 테두리를 둥글게 만들기 위한 속성
+                    padding: '16px', // 내부 여백 설정
                     mt: 2
                   }}
                 >
-                  일정 취소
-                </Button>
+                  <Grid pl sx={{ mt: -2, mb: 0.5 }}>
+                    <h3>메모</h3>
+                  </Grid>
+                  <Grid sx={{ ml: -2, mt: -2 }}>
+                    <CalendarDepWorkMemo />
+                  </Grid>
+                </Grid>
               </>
             ) : (
               //휴가일정 클릭
@@ -396,7 +187,6 @@ export default function CalendarClickDrawerPublic() {
                           }}
                           label="시작일"
                           value={dayjs(`${startDate}`)}
-                          disabled
                         />
                         <DateField
                           sx={{
@@ -404,22 +194,7 @@ export default function CalendarClickDrawerPublic() {
                           }}
                           label="종료일"
                           value={dayjs(`${endDate}`)}
-                          disabled
                         />
-                        {startDatePicker && (
-                          <StaticDatePicker
-                            value={dayjs(`${startDate}`)}
-                            onAccept={handleStartDateFieldOnAccept}
-                            onClose={() => setStartDatePicker(false)}
-                          />
-                        )}
-                        {endDatePicker && (
-                          <StaticDatePicker
-                            value={dayjs(`${endDate}`)}
-                            onAccept={handleEndDateFieldOnAccept}
-                            onClose={() => setEndDatePicker(false)}
-                          />
-                        )}
                       </>
                     ) : (
                       <>
@@ -450,17 +225,25 @@ export default function CalendarClickDrawerPublic() {
                       </>
                     )}
                   </LocalizationProvider>
-                  {/* <Button
-                    size="large"
-                    variant="contained"
-                    color="error"
-                    onClick={handleUpdateEventOnClick}
+                  <Grid
+                    container
+                    direction="column"
+                    justifyContent="space-between"
+                    alignItems="flex-start"
                     sx={{
-                      mt: 62
+                      border: '1px solid #ccc', // 테두리 스타일 및 색상 지정
+                      borderRadius: '4px', // 테두리를 둥글게 만들기 위한 속성
+                      padding: '16px', // 내부 여백 설정
+                      mt: 2
                     }}
                   >
-                    휴가 취소
-                  </Button> */}
+                    <Grid pl sx={{ mt: -2, mb: 0.5 }}>
+                      <h3>메모</h3>
+                    </Grid>
+                    <Grid sx={{ ml: -2, mt: -2 }}>
+                      <CalendarDepWorkMemo />
+                    </Grid>
+                  </Grid>
                 </>
               )
             )}

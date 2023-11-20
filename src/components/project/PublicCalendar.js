@@ -16,11 +16,13 @@ import {
   useCalendarEvent,
   useCalendarEventClick,
   useCalendarGetScheduleList,
-  useCalendarMemoModal
+  useCalendarMemoModal,
+  useMemoList
 } from 'store/module';
 import CalendarMemoModal from './CalendarMemoModal';
 import CalendarMemoModalContent from './CalendarMemoModalContent';
 import { Typography } from '../../../node_modules/@mui/material/index';
+import axios from '../../../node_modules/axios/index';
 // import { jwtDecode } from '../../../node_modules/jwt-decode/build/cjs/index';
 
 // eslint-disable-next-line react/prop-types
@@ -37,7 +39,7 @@ const PublicCalendar = ({ events }) => {
   //이벤트에 표기될 정보
   function renderEventContent(eventInfo) {
     return (
-      <Typography variant="body2" component="div">
+      <Typography variant="body2" component="div" sx={{ pl: 0.5 }}>
         {eventInfo.event.title}
       </Typography>
     );
@@ -111,6 +113,7 @@ const PublicCalendar = ({ events }) => {
     setShareType(scheduleShare);
     setContent(scheduleDescription);
     setClickPublicView(true);
+    handleToggle(clickInfo.event.id, ScheduleType);
   }
 
   //CalendarMemoModal on/off
@@ -123,6 +126,24 @@ const PublicCalendar = ({ events }) => {
         <CalendarMemoModalContent />
       </>
     );
+  };
+
+  const { setMemoList, setScheduleNo, setLeaveNo } = useMemoList();
+  const handleToggle = (e, type) => {
+    console.log(e);
+    if (type == '휴가 일정') {
+      axios.get(`/user-dep-leavememo?leave_no=${e}`).then((item) => {
+        setMemoList(item.data);
+      });
+      setScheduleNo(0);
+      setLeaveNo(e);
+    } else {
+      axios.get(`/user-dep-schedulememo?schedule_no=${e}`).then((item) => {
+        setMemoList(item.data);
+      });
+      setScheduleNo(e);
+      setLeaveNo(0);
+    }
   };
 
   return (

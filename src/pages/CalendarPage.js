@@ -209,6 +209,7 @@ const CalendarPage = () => {
             }
 
             return {
+              id: list.leaveapp_no,
               title: list.leaveapp_title,
               start: startDate,
               end: endDate,
@@ -251,6 +252,7 @@ const CalendarPage = () => {
     }
 
     get();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {

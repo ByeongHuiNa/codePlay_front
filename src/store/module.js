@@ -163,7 +163,7 @@ export const useLeaveState = create(
     setLeave: (newLeave) => set(() => ({ leave: newLeave }))
   }))
 );
-//사용자의 주간근무시간의 합 
+//사용자의 주간근무시간의 합
 export const useAttendTotalState = create(
   devtools((set) => ({
     total: {},
@@ -398,5 +398,13 @@ export const useAlarm = create(
   devtools((set) => ({
     alarm: [],
     setAlarm: (newAlarm) => set(() => ({ alarm: newAlarm }))
+  }))
+);
+
+//CalendarDepWorkListTab
+export const useCalendarDepWorkListTab = create(
+  devtools((set) => ({
+    value: 0,
+    setValue: (newValue) => set(() => ({ value: newValue }))
   }))
 );

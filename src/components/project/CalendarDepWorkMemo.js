@@ -137,7 +137,7 @@ export default function CalendarDepWorkMemo() {
             </IconButton>
           )
         }}
-        sx={{ width: 300, ml: 1, mt: 1.5, mb: -0.5 }}
+        sx={{ width: 300, ml: 1.7, mt: 1.5, mb: -0.5 }}
       />
     </>
   );

@@ -145,7 +145,7 @@ export default function CalendarDrawer() {
   };
 
   //AddEventOnClick
-  const { addScheduleList, addDataList, addShereDataList, addShereScheduleList } = useCalendarGetScheduleList();
+  const { addScheduleList, addDataList, setShereDataList, addShereScheduleList } = useCalendarGetScheduleList();
 
   const handleAddEventOnClick = () => {
     const schedule = {
@@ -179,8 +179,10 @@ export default function CalendarDrawer() {
       schedule.schedule_no = response.data;
       addDataList(schedule);
       addScheduleList(scheduleListAdd);
-      addShereDataList(schedule);
       addShereScheduleList(scheduleListAdd);
+      axios.get(`/user-dep-schedulelist?user_no=${token.user_no}`).then((response) => {
+        setShereDataList(response.data);
+      });
     });
 
     setView(false);
