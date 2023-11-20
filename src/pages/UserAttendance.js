@@ -22,32 +22,18 @@ import AttendUpdateModal from '../components/Modal/ModalM';
 import UpdateAttendTable from 'components/Table/UpdateAttendTable';
 import BasicDatePicker from 'components/DatePicker/BasicDatePicker';
 import BasicChip from 'components/Chip/BasicChip';
-import { UploadOutlined } from '../../node_modules/@mui/icons-material/index';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
 import TimePicker2 from 'components/DatePicker/TimePicker';
 import UserAllAttendTable from 'components/Table/UserAllAttendTable';
 import UserAttendInfoTable from 'components/Table/UserAttendInfoTable';
-import styled from 'styled-components';
 import axios from '../../node_modules/axios/index';
 import AppAuto from 'components/AutoComplete/AppAuto';
 import ModalS from 'components/Modal/ModalS';
 import { useFormatter } from 'store/module';
 import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
 import { useLocation } from '../../node_modules/react-router-dom/dist/index';
-
-// 파일 업로드
-const VisuallyHiddenInput = styled.input`
-  clip: rect(0 0 0 0);
-  clippath: inset(50%);
-  height: 1;
-  overflow: hidden;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  whitespace: nowrap;
-  width: 1;
-`;
+import FileUpload from 'components/File/FileUpload';
 
 const UserAttendance = () => {
   // 날짜 형식
@@ -113,6 +99,7 @@ const UserAttendance = () => {
   const [reason, setReason] = useState(''); // 수정 사유
   const [updateStartTime, setUpdateStartTime] = useState(''); // 출근 : 수정할 시간
   const [updateEndTime, setUpdateEndTime] = useState(''); // 퇴근 : 수정할 시간
+  const [uploadedFile, setUploadedFile] = useState([]); // 파일 업로드를 위한 배열
 
   // 수정 요청 시 체크 박스 (true : 체크 O, false : 체크 X)
   const [startChecked, setStartChecked] = useState(false);
@@ -163,9 +150,28 @@ const UserAttendance = () => {
           attendoriginal_end_time: selectAttendData.attend_end,
           attendoriginal_status: selectAttendData.attend_status
         })
-        .then((res) => {
-          alert(res);
-          setValue(1);
+        .then(async (res) => {
+          const formData = new FormData();
+          Array.from(uploadedFile).forEach((file, index) => {
+            console.log(index + '. : ' + file);
+            formData.append(`files`, file);
+          });
+
+          try {
+            await axios
+              .post(`/file-upload?attached_app_no=${res.data}&attached_kind=0`, formData, {
+                headers: {
+                  'Content-Type': 'multipart/form-data'
+                }
+              })
+              .then((res) => {
+                console.log(res.data);
+                alert('신청완료');
+                setValue(1);
+              });
+          } catch (error) {
+            console.error('Error Uploading Files : ', error);
+          }
         });
     }
   }
@@ -471,19 +477,9 @@ const UserAttendance = () => {
                         )}
                       </Box>
                     )}
-                    <Box mt={2.5}>
+                    <Box mt={2.5} sx={{ display: 'flex' }}>
                       <BasicChip label="증빙 업로드" color="#46a5f3" />
-                      <Button
-                        component="label"
-                        variant="contained"
-                        size="medium"
-                        endIcon={<UploadOutlined />}
-                        color="secondary"
-                        sx={{ ml: 1 }}
-                      >
-                        파일 선택
-                        <VisuallyHiddenInput type="file" />
-                      </Button>
+                      <FileUpload setUploadedInfo={setUploadedFile} uploadedInfo={uploadedFile} width="500px" />
                     </Box>
                     <Box mt={2.5} mr={1}>
                       <BasicChip label="수정사유" color="#46a5f3" />
