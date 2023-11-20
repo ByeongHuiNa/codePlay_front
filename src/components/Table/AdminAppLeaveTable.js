@@ -78,8 +78,9 @@ function OrderTableHead({ order, orderBy }) {
           <TableCell
             key={headCell.id}
             align={headCell.align}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
+            padding={headCell.disablePadding ? 'none' : '400'}
             sortDirection={orderBy === headCell.id ? order : false}
+            sx={{ backgroundColor: '#f9f9f9' }}
           >
             {headCell.label}
           </TableCell>
@@ -129,7 +130,14 @@ const OrderStatus = ({ status }) => {
   return (
     <Stack direction="row" alignItems="center" justifyContent="center" spacing={1}>
       <Dot color={color} />
-      <Typography>{title}</Typography>
+      <Typography
+        sx={{
+          fontSize: '14px', // 원하는 폰트 크기로 조정
+          fontWeight: '400'
+        }}
+      >
+        {title}
+      </Typography>
     </Stack>
   );
 };
@@ -192,7 +200,7 @@ export default function AdminAppLeaveTable({ datas, selectLeaveData, LeaveInfo }
           position: 'relative',
           display: 'block',
           maxWidth: '100%',
-          height: '822px',
+          height: '837px',
           padding: '0px',
           '& td, & th': { whiteSpace: 'nowrap' },
           '&::-webkit-scrollbar': {
@@ -240,14 +248,45 @@ export default function AdminAppLeaveTable({ datas, selectLeaveData, LeaveInfo }
                     LeaveInfo(data);
                   }}
                 >
-                  <TableCell component="th" id={labelId} scope="data" align="center">
+                  <TableCell
+                    component="th"
+                    id={labelId}
+                    scope="data"
+                    align="center"
+                    sx={{
+                      fontSize: '14px', // 원하는 폰트 크기로 조정
+                      fontWeight: '400'
+                    }}
+                  >
                     {data.user_name}
                   </TableCell>
-                  <TableCell align="center">
+                  <TableCell
+                    align="center"
+                    sx={{
+                      fontSize: '14px', // 원하는 폰트 크기로 조정
+                      fontWeight: '400'
+                    }}
+                  >
                     <Type type={data.leaveapp_type} />
                   </TableCell>
-                  <TableCell align="center">{dateFormat(new Date(data.leaveapp_start))}</TableCell>
-                  <TableCell align="center">{dateFormat(new Date(data.leaveapp_end))}</TableCell>
+                  <TableCell
+                    align="center"
+                    sx={{
+                      fontSize: '14px', // 원하는 폰트 크기로 조정
+                      fontWeight: '400'
+                    }}
+                  >
+                    {dateFormat(new Date(data.leaveapp_start))}
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    sx={{
+                      fontSize: '14px', // 원하는 폰트 크기로 조정
+                      fontWeight: '400'
+                    }}
+                  >
+                    {dateFormat(new Date(data.leaveapp_end))}
+                  </TableCell>
                   <TableCell align="center">
                     <OrderStatus status={data.leaveapp_status} />
                   </TableCell>

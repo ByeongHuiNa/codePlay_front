@@ -8,6 +8,7 @@ import axios from '../../node_modules/axios/index';
 import AccessCheckbox from 'components/Checkbox/AccessCheckbox';
 import { useNavigate } from '../../node_modules/react-router-dom/dist/index';
 import SettingAccessTable from 'components/Table/SettingAccessTable';
+import InputSearch from 'components/Input/InputSearch';
 
 // ==============================|| 관리자 접근관리 PAGE ||============================== //
 
@@ -85,13 +86,13 @@ const SettingAccess = () => {
   return (
     <>
       <Grid container direction="row" justifyContent="space-between" alignItems="flex-end">
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }} mb={3}>
           <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
             <Tab label="권한별" />
             <Tab label={`개인 맞춤 (${customUser})`} />
           </Tabs>
         </Box>
-        <Stack direction="row" spacing={2}>
+        <Stack direction="row" spacing={2} mb={3}>
           <Button variant="contained">변경사항 저장</Button>
           <Button variant="contained" onClick={() => navigate(-1)}>
             변경취소
@@ -99,19 +100,19 @@ const SettingAccess = () => {
         </Stack>
       </Grid>
       <div role="tabpanel" hidden={value !== 0} id={`simple-tabpanel-${0}`} aria-labelledby={`simple-tab-${0}`} value={value}>
-        <MainCard>
+        <MainCard sx={{ pt: 2, pr: 3, pl: 3, ml: 2, mr: 2, height: '45rem' }} content={false}>
           <AccessTab />
-          <Stack direction="row" spacing={9} mt={2}>
+          <Stack direction="row" spacing={12} mt={2}>
             <AccessCheckbox />
           </Stack>
         </MainCard>
       </div>
       <div role="tabpanel" hidden={value !== 1} id={`simple-tabpanel-${1}`} aria-labelledby={`simple-tab-${1}`} value={value}>
-        <MainCard>
-          {/* <Typography mt={2} variant="h4">
+        <MainCard sx={{ pt: 2, pr: 3, pl: 3, ml: 2, mr: 2, height: '45rem' }} content={false}>
+          <Typography mt={2} variant="h4">
             사용자명으로 검색
           </Typography>
-          <InputSeach isPersonIcon={true}></InputSeach> */}
+          <InputSearch isPersonIcon={true}></InputSearch>
           {view ? (
             <>
               <Stack direction="row" justifyContent="flex-start" alignItems="center" spacing={3} mb={3}>

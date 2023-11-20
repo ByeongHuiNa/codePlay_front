@@ -6,11 +6,8 @@ import BasicContainer from 'components/container/BasicContainer';
 import {
   Box,
   Button,
-  Chip,
   FormControl,
   FormControlLabel,
-  IconButton,
-  InputAdornment,
   Radio,
   RadioGroup,
   Tab,
@@ -22,13 +19,15 @@ import React, { useEffect, useState } from 'react';
 import LeaveDonutChart from 'components/chart/LeaveDonutChart';
 import AppLeaveTable from 'components/Table/AppLeaveTable';
 import UnappLeaveTable from 'components/Table/UnappLeaveTable';
-import { SearchOutlined, UploadOutlined } from '../../node_modules/@mui/icons-material/index';
-import styled from 'styled-components';
-import BasicDatePicker from 'components/DatePicker/BasicDatePicker';
+import { SearchOutlined } from '../../node_modules/@mui/icons-material/index';
+// UploadOutlined
+// import styled from 'styled-components';
 import { useLeaveTab } from 'store/module';
 import LeaveModal from 'components/Modal/LeaveModal';
 import AppAuto from 'components/AutoComplete/AppAuto';
 import axios from '../../node_modules/axios/index';
+import { Progress } from 'react-sweet-progress';
+import 'react-sweet-progress/lib/style.css';
 import ModalM from 'components/Modal/ModalM';
 import CancelLeaveTable from 'components/Table/CancelLeaveTable';
 import UserLeaveInfoTable from 'components/Table/UserLeaveInfoTable';
@@ -36,11 +35,19 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
 import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
 import BasicChip from 'components/Chip/BasicChip';
+import LimitDatePicker from 'components/DatePicker/LimitDatePicker';
+import FileUpload from 'components/File/FileUpload';
 
 const UserLeave = () => {
   const { index, setIndex } = useLeaveTab();
   const [selectedValue, setSelectedValue] = useState('annual');
   const [selectedHalfValue, setHalfValue] = useState('am');
+
+  useEffect(() => {
+    setStart('');
+    setEnd('');
+    setHalfValue('am');
+  }, [selectedValue]);
 
   //token 값을 decode해주는 코드
   const token = jwtDecode(localStorage.getItem('token').slice(7));
@@ -48,10 +55,6 @@ const UserLeave = () => {
   const handleChange = (event, newValue) => {
     setIndex(newValue);
   };
-
-  useEffect(() => {
-    setIndex(0);
-  }, []);
 
   // 결재 대기 중인 휴가 취소 (바로 취소 가능)
   const leaveCancel = (leaveapp_no) => {
@@ -83,12 +86,14 @@ const UserLeave = () => {
   // 결재자 창에서 검색한 이름
   const [searchName, setSearchName] = useState('');
   // 휴가 신청 객체
-  const [title, setTitle] = useState('');
   const [reason, setReason] = useState('');
-  const [start, setStart] = useState(new Date());
-  const [end, setEnd] = useState(new Date());
+  const [start, setStart] = useState('');
+  const [end, setEnd] = useState('');
   const [firstApprover, setFirstApprover] = useState({});
   const [secondApprover, setSecondApprover] = useState({});
+  // 첨부파일
+  // const [selectedFile, setSelectedFile] = useState(null);
+  // console.log(selectedFile);
 
   // 특정 날짜가 주말인지 확인하는 함수
   function isWeekend(date) {
@@ -109,6 +114,34 @@ const UserLeave = () => {
     return total;
   }
 
+  // end (휴가 신청 가능한 날 표시)
+  function calculateEndLeaveCnt(start) {
+    let cnt = 0,
+      total = 0;
+    // 휴가 일수 계산
+    while (cnt < Math.floor(leaveCnt[1])) {
+      if (!isWeekend(new Date(new Date(start).getTime() + total * 24 * 60 * 60 * 1000))) {
+        cnt++;
+      }
+      total++;
+    }
+    return new Date(new Date(start).getTime() + (total - 1) * 24 * 60 * 60 * 1000);
+  }
+
+  // start (휴가 신청 가능한 날 표시)
+  function calculateStartLeaveCnt(start) {
+    let cnt = 0,
+      total = 0;
+    // 휴가 일수 계산
+    while (cnt < Math.floor(leaveCnt[1])) {
+      if (!isWeekend(new Date(new Date(start).getTime() - total * 24 * 60 * 60 * 1000))) {
+        cnt++;
+      }
+      total++;
+    }
+    return new Date(new Date(start).getTime() - (total - 1) * 24 * 60 * 60 * 1000);
+  }
+
   // 사원선택의 자동완성 창에서 검색어 변경(검색) 될 때마다 searchName 설정
   const handleSelectUser = (event, newValue) => {
     setSearchName(newValue);
@@ -124,6 +157,7 @@ const UserLeave = () => {
   const [leaveRequestRecent, setLeaveRequestRecent] = useState([]);
 
   useEffect(() => {
+    setIndex(0);
     // 로그인 한 사용자 부서의 근태 담당자 내역 -> 결재자 검색창 autocomplete
     axios.get(`/dept-manager?dept_no=${token.dept_no}`).then((res) => {
       setAllUsers(res.data);
@@ -144,10 +178,9 @@ const UserLeave = () => {
       setLeaveRequestRecent(res.data);
     });
     // 폼 초기화
-    setTitle('');
     setReason('');
-    setStart(new Date());
-    setEnd(new Date());
+    setStart('');
+    setEnd('');
     setFirstApprover({});
     setSecondApprover({});
     setSelectedValue('annual');
@@ -164,24 +197,9 @@ const UserLeave = () => {
     } else {
       axios
         .post(`/user-leave-request?user_no=${token.user_no}`, {
-          leaveapp_title:
-            title === ''
-              ? `${token.user_name}(${
-                  selectedValue === 'annual'
-                    ? '연차'
-                    : selectedValue === 'public'
-                    ? '공가'
-                    : selectedHalfValue === 'am'
-                    ? '오전반차'
-                    : '오후반차'
-                })${
-                  selectedValue === 'half'
-                    ? 0.5
-                    : selectedValue === 'public'
-                    ? 0
-                    : Math.floor((new Date(end).getTime() - new Date(start).getTime()) / (1000 * 60 * 60 * 24)) + 1
-                }일`
-              : title,
+          leaveapp_title: `${token.user_name}(${
+            selectedValue === 'annual' ? '연차' : selectedValue === 'public' ? '공가' : selectedHalfValue === 'am' ? '오전반차' : '오후반차'
+          })${selectedValue === 'half' ? 0.5 : selectedValue === 'public' ? 0 : calculateLeaveTotal(start, end)}일`,
           leaveapp_content: reason,
           leaveapp_start: start,
           leaveapp_end: selectedValue === 'half' ? start : end,
@@ -217,7 +235,7 @@ const UserLeave = () => {
     } else {
       axios
         .post(`/user-leave-cancel-request?user_no=${token.user_no}`, {
-          leaveapp_title: title === '' ? `${token.user_name}(휴가취소)${selectLeaveCancel.leaveapp_total}일` : title,
+          leaveapp_title: `${token.user_name}(휴가취소)${selectLeaveCancel.leaveapp_total}일`,
           leaveapp_content: reason,
           leaveapp_start: new Date(selectLeaveCancel.leaveapp_start),
           leaveapp_end: new Date(selectLeaveCancel.leaveapp_end),
@@ -231,50 +249,57 @@ const UserLeave = () => {
         });
     }
   }
-  // Chip 커스텀
-  const MyChip = styled(Chip)`
-    background-color: gray;
-    color: white;
-    width: 100px;
-    margin-right: 10px;
-  `;
 
   // 파일 업로드
-  const VisuallyHiddenInput = styled('input')`
-    clip: rect(0 0 0 0);
-    clippath: inset(50%);
-    height: 1;
-    overflow: hidden;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    whitespace: nowrap;
-    width: 1;
-  `;
+  // const VisuallyHiddenInput = styled('input')`
+  //   clip: rect(0 0 0 0);
+  //   clippath: inset(50%);
+  //   height: 1;
+  //   overflow: hidden;
+  //   position: absolute;
+  //   bottom: 0;
+  //   left: 0;
+  //   whitespace: nowrap;
+  //   width: 1;
+  // `;
 
   let content;
   if (selectedValue === 'annual') {
     content = (
-      <>
-        <Box clone mt={2}>
+      <Grid container>
+        <Grid item xs={12} sm={12} md={12} lg={12} mt={2}>
           <BasicChip label="시작날짜" color="#46a5f3" />
-          <BasicDatePicker sx={{ width: '30px' }} setDate={setStart} val={start} />
-        </Box>
-        <Box clone mt={2}>
+          <LimitDatePicker
+            width={'190px'}
+            val={start}
+            setDate={setStart}
+            maxDate={end}
+            minDate={calculateStartLeaveCnt(end)}
+            bool={leaveCnt[1] === 0 ? true : false}
+          />
+        </Grid>
+        <Grid item xs={12} sm={12} md={12} lg={12} mt={2}>
           <BasicChip label="종료날짜" color="#46a5f3" />
-          <BasicDatePicker sx={{ width: '30px' }} setDate={setEnd} val={end} />
-        </Box>
-      </>
+          <LimitDatePicker
+            width={'190px'}
+            val={end}
+            setDate={setEnd}
+            minDate={start}
+            maxDate={calculateEndLeaveCnt(start)}
+            bool={leaveCnt[1] === 0 ? true : false}
+          />
+        </Grid>
+      </Grid>
     );
   } else if (selectedValue === 'half') {
     content = (
-      <>
-        <Box clone mt={2}>
-          <MyChip label="날짜" />
-          <BasicDatePicker sx={{ width: '30px' }} setDate={setStart} val={start} />
-        </Box>
-        <Box clone mt={2}>
-          <MyChip label="반차 종류" />
+      <Grid container>
+        <Grid item xs={12} sm={12} md={12} lg={12} mt={2}>
+          <BasicChip label="날짜" color="#46a5f3" />
+          <LimitDatePicker width={'190px'} setDate={setStart} val={start} bool={leaveCnt[1] === 0 ? true : false} />
+        </Grid>
+        <Grid item xs={12} sm={12} md={12} lg={12} mt={2}>
+          <BasicChip label="반차 종류" color="#46a5f3" val={end} />
           <FormControl sx={{ ml: 1 }}>
             <RadioGroup
               row
@@ -287,28 +312,29 @@ const UserLeave = () => {
               <FormControlLabel value="pm" control={<Radio size="small" />} label="오후" />
             </RadioGroup>
           </FormControl>
-        </Box>
-      </>
+        </Grid>
+      </Grid>
     );
   } else if (selectedValue === 'public') {
     content = (
-      <>
-        <Box clone mt={2}>
-          <MyChip label="시작날짜" />
-          <BasicDatePicker sx={{ width: '30px' }} setDate={setStart} val={start} />
-        </Box>
-        <Box clone mt={2}>
-          <MyChip label="종료날짜" />
-          <BasicDatePicker sx={{ width: '30px' }} setDate={setEnd} val={end} />
-        </Box>
-        <Box clone mt={2}>
-          <MyChip label="증빙 업로드" />
-          <Button component="label" variant="contained" size="medium" endIcon={<UploadOutlined />}>
+      <Grid container>
+        <Grid item xs={12} sm={12} md={12} lg={12} mt={2}>
+          <BasicChip label="시작날짜" color="#46a5f3" />
+          <LimitDatePicker width={'190px'} val={start} setDate={setStart} maxDate={end} />
+        </Grid>
+        <Grid item xs={12} sm={12} md={12} lg={12} mt={2}>
+          <BasicChip label="종료날짜" color="#46a5f3" />
+          <LimitDatePicker width={'190px'} val={end} setDate={setEnd} minDate={start} />
+        </Grid>
+        <Grid item xs={12} sm={12} md={12} lg={12} mt={2} sx={{ display: 'flex' }}>
+          <BasicChip label="증빙 업로드" color="#46a5f3" />
+          <FileUpload />
+          {/* <Button sx={{ ml: 1 }} component="label" variant="contained" size="medium" color="secondary" endIcon={<UploadOutlined />}>
             파일 선택
             <VisuallyHiddenInput type="file" />
-          </Button>
-        </Box>
-      </>
+          </Button> */}
+        </Grid>
+      </Grid>
     );
   }
 
@@ -322,13 +348,13 @@ const UserLeave = () => {
         </Tabs>
       </Box>
       <BasicTab value={index} index={0}>
-        <Grid container spacing={1}>
-          <Grid item xs={4} sm={4} md={4} lg={3.5}>
+        <Grid container spacing={2}>
+          <Grid item xs={3.5} sm={3.5} md={3.5} lg={3.5}>
             <BasicContainer sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               <LeaveDonutChart series={leaveCnt} />
             </BasicContainer>
           </Grid>
-          <Grid item xs={8} sm={8} md={8} lg={8.5}>
+          <Grid item xs={8.5} sm={8.5} md={8.5} lg={8.5}>
             <BasicContainer>
               <Grid container alignItems="center" justifyContent="space-between">
                 <Grid item>
@@ -339,7 +365,7 @@ const UserLeave = () => {
             </BasicContainer>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            <BasicContainer sx={{ height: '420px' }}>
+            <BasicContainer sx={{ height: '415px' }}>
               <Grid container alignItems="center" justifyContent="space-between">
                 <Grid item>
                   <Typography variant="h5">결재 진행중인 최근 내역</Typography>
@@ -353,216 +379,260 @@ const UserLeave = () => {
       </BasicTab>
       <BasicTab value={index} index={1}>
         <BasicContainer>
-          <Grid container spacing={1} justifyContent="center">
-            <Grid item xs={11} sm={11} md={11} lg={11}>
-              <Grid container alignItems="center" justifyContent="space-between">
-                <Grid item>
-                  <Typography variant="h4">휴가 신청</Typography>
-                </Grid>
-              </Grid>
-              <Box clone mt={2}>
-                <BasicChip label="제목" color="#46a5f3" />
-                <TextField
-                  label="제목"
-                  id="title"
-                  size="small"
-                  onChange={(e) => {
-                    setTitle(e.target.value);
-                  }}
-                />
-              </Box>
-              <Box clone mt={1} sx={{ display: 'flex', alignItems: 'center' }}>
-                <EditNoteRoundedIcon fontSize="medium" color="secondary" sx={{ mx: 1 }} />
-                <Typography size="small" color="secondary">
-                  제목은 입력하지 않을 시 자동 지정됩니다.
-                </Typography>
-              </Box>
-              <Box clone mt={2} sx={{ display: 'flex' }}>
-                <BasicChip label="1차 결재자" color="#46a5f3" />
-                <AppAuto
-                  label="1차 결재자"
-                  datas={allUsers.filter((data) => data !== secondApprover)}
-                  handleSelectUser={handleSelectUser}
-                  searchName={searchName}
-                  setSearchName={setSearchName}
-                  setApprover={setFirstApprover}
-                />
-              </Box>
-              <Box clone mt={2} sx={{ display: 'flex' }}>
-                <BasicChip label="2차 결재자" color="#46a5f3" />
-                <AppAuto
-                  label="2차 결재자"
-                  datas={allUsers.filter((data) => data !== firstApprover)}
-                  handleSelectUser={handleSelectUser}
-                  searchName={searchName}
-                  setSearchName={setSearchName}
-                  setApprover={setSecondApprover}
-                />
-              </Box>
-              <Box clone mt={2}>
-                <BasicChip label="휴가 종류" color="#46a5f3" />
-                <FormControl sx={{ ml: 1 }}>
-                  <RadioGroup
-                    row
-                    value={selectedValue}
-                    onChange={(e) => {
-                      setSelectedValue(e.target.value);
-                    }}
-                  >
-                    <FormControlLabel value="annual" control={<Radio size="small" />} label="연차" />
-                    <FormControlLabel value="half" control={<Radio size="small" />} label="반차" />
-                    <FormControlLabel value="public" control={<Radio size="small" />} label="공가" />
-                  </RadioGroup>
-                </FormControl>
-                <Box clone mt={2}>
-                  {content}
-                </Box>
-              </Box>
-              <Box clone mt={2}>
-                <BasicChip label="휴가 사유" color="#46a5f3" />
-              </Box>
-              <Box clone mt={2}>
-                <TextField
-                  id="reason"
-                  multiline
-                  rows={8}
-                  sx={{
-                    width: '100%'
-                  }}
-                  onChange={(e) => {
-                    setReason(e.target.value);
-                  }}
-                />
-              </Box>
-              <Box clone mt={1}>
-                <Grid container justifyContent="right" spacing={1}>
-                  <Grid item>
-                    <Button variant="contained" size="medium" onClick={submitLeaveRequest}>
-                      완료
-                    </Button>
+          <Box sx={{ mx: 3, mt: 1, height: '710px' }}>
+            <Grid container spacing={1} justifyContent="center">
+              <Grid item xs={12} sm={12} md={12} lg={12}>
+                <Typography variant="h4">휴가 신청</Typography>
+                <Grid container spacing={1}>
+                  <Grid item xs={12} sm={12} md={12} lg={7}>
+                    <Box clone mt={2}>
+                      <BasicChip label="제목" color="#46a5f3" />
+                      <TextField
+                        label={`${token.user_name}(${
+                          selectedValue === 'annual'
+                            ? '연차'
+                            : selectedValue === 'public'
+                            ? '공가'
+                            : selectedHalfValue === 'am'
+                            ? '오전반차'
+                            : '오후반차'
+                        })${selectedValue === 'half' ? 0.5 : selectedValue === 'public' ? 0 : calculateLeaveTotal(start, end)}일`}
+                        id="title"
+                        size="small"
+                        sx={{ ml: 1 }}
+                        disabled
+                      />
+                    </Box>
+                    <Box clone mt={1} sx={{ display: 'flex', alignItems: 'center' }}>
+                      <EditNoteRoundedIcon fontSize="medium" color="secondary" sx={{ mx: 1 }} />
+                      <Typography size="small" color="secondary">
+                        제목은 자동 지정됩니다.
+                      </Typography>
+                    </Box>
+                    <Box mt={2} sx={{ display: 'flex' }}>
+                      <BasicChip label="1차 결재자" color="#46a5f3" />
+                      <Box ml={1}>
+                        <AppAuto
+                          label="1차 결재자"
+                          datas={allUsers.filter((data) => data !== secondApprover)}
+                          handleSelectUser={handleSelectUser}
+                          searchName={searchName}
+                          setSearchName={setSearchName}
+                          setApprover={setFirstApprover}
+                        />
+                      </Box>
+                    </Box>
+                    <Box mt={2} sx={{ display: 'flex' }}>
+                      <BasicChip label="2차 결재자" color="#46a5f3" />
+                      <Box ml={1}>
+                        <AppAuto
+                          label="2차 결재자"
+                          datas={allUsers.filter((data) => data !== firstApprover)}
+                          handleSelectUser={handleSelectUser}
+                          searchName={searchName}
+                          setSearchName={setSearchName}
+                          setApprover={setSecondApprover}
+                        />
+                      </Box>
+                    </Box>
+                    <Box clone mt={2}>
+                      <BasicChip label="휴가 종류" color="#46a5f3" />
+                      <FormControl sx={{ ml: 1 }}>
+                        <RadioGroup
+                          row
+                          value={selectedValue}
+                          onChange={(e) => {
+                            setSelectedValue(e.target.value);
+                          }}
+                        >
+                          <FormControlLabel value="annual" control={<Radio size="small" />} label="연차" />
+                          <FormControlLabel value="half" control={<Radio size="small" />} label="반차" />
+                          <FormControlLabel value="public" control={<Radio size="small" />} label="공가" />
+                        </RadioGroup>
+                      </FormControl>
+                      <Box>{content}</Box>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={6} sm={6} md={6} lg={5}>
+                    <Typography mb={5}>
+                      &#128161;현재 휴가 사용율은 {((leaveCnt[0] * 100) / (leaveCnt[0] + leaveCnt[1])).toFixed(0)}% (사용 {leaveCnt[0]}일 /
+                      잔여 {leaveCnt[1]}일)으로 {new Date().getMonth() + 1}월 기준으로{' '}
+                      {((leaveCnt[0] + leaveCnt[1]) / 12) * (new Date().getMonth() + 1) + 0.5 < leaveCnt[0]
+                        ? '많습니다.'
+                        : ((leaveCnt[0] + leaveCnt[1]) / 12) * (new Date().getMonth() + 1) - 0.5 > leaveCnt[0]
+                        ? '적습니다.'
+                        : '적당합니다.'}
+                    </Typography>
+                    <Box display="flex" justifyContent="center" mt={3}>
+                      <Progress
+                        type="circle"
+                        style={{
+                          width: '40%',
+                          height: '40%'
+                        }}
+                        theme={{
+                          active: {
+                            color: '#52c41a'
+                          }
+                        }}
+                        strokeWidth={15}
+                        percent={((leaveCnt[0] * 100) / (leaveCnt[0] + leaveCnt[1])).toFixed(0)}
+                      />
+                    </Box>
+                  </Grid>
+                  <Grid item xs={6} sm={6} md={6} lg={12}>
+                    <Box clone mt={2}>
+                      <BasicChip label="휴가 사유" color="#46a5f3" />
+                      <TextField
+                        id="reason"
+                        multiline
+                        rows={6}
+                        sx={{
+                          width: '89%',
+                          ml: 1
+                        }}
+                        onChange={(e) => {
+                          setReason(e.target.value);
+                        }}
+                      />
+                    </Box>
                   </Grid>
                 </Grid>
-              </Box>
+                <Box clone mt={2} mr={1.5}>
+                  <Grid container justifyContent="right" spacing={1}>
+                    <Grid item>
+                      <Button
+                        variant="contained"
+                        size="medium"
+                        onClick={submitLeaveRequest}
+                        disabled={leaveCnt[1] === 0 && selectedValue !== 'public' ? true : false}
+                      >
+                        완료
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Grid>
             </Grid>
-          </Grid>
+          </Box>
         </BasicContainer>
       </BasicTab>
       <BasicTab value={index} index={2}>
         <BasicContainer>
-          <Grid container spacing={1} justifyContent="center">
-            <Grid item xs={11} sm={11} md={11} lg={11}>
-              <Grid container alignItems="center" justifyContent="space-between">
-                <Grid item>
+          <Box sx={{ mx: 3, my: 1, height: '710px' }}>
+            <Grid container spacing={1} justifyContent="center">
+              <Grid item xs={12} sm={12} md={12} lg={12}>
+                <Box>
                   <Typography variant="h4">휴가 취소 신청</Typography>
-                </Grid>
-              </Grid>
-              <Box clone mt={2}>
-                <BasicChip label="제목" color="#46a5f3" />
-                <TextField label="제목" id="title" size="small" onChange={(e) => setTitle(e.target.value)} />
-              </Box>
-              <Box clone mt={1} sx={{ display: 'flex', alignItems: 'center' }}>
-                <EditNoteRoundedIcon fontSize="medium" color="secondary" sx={{ mx: 1 }} />
-                <Typography size="small" color="secondary">
-                  제목은 입력하지 않을 시 자동 지정됩니다.
-                </Typography>
-              </Box>
-              <Box clone mt={2} sx={{ display: 'flex' }}>
-                <BasicChip label="결재자" color="#46a5f3" />
-                <AppAuto
-                  label="결재자"
-                  datas={allUsers}
-                  handleSelectUser={handleSelectUser}
-                  searchName={searchName}
-                  setSearchName={setSearchName}
-                  setApprover={setFirstApprover}
-                />
-              </Box>
-              <Box clone mt={2}>
-                <BasicChip label="휴가 선택" color="#46a5f3" />
-                <TextField
-                  label="휴가 선택"
-                  id="leave"
-                  type="search"
-                  size="small"
-                  sx={{
-                    width: '170px'
-                  }}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton id="searchApp">
-                          <SearchOutlined />
-                        </IconButton>
-                      </InputAdornment>
-                    )
-                  }}
-                  onClick={handleOpenCancel}
-                />
-              </Box>
-              <Box clone mt={2}>
-                <UserLeaveInfoTable data={selectLeaveCancel} />
-                {Object.keys(selectLeaveCancel).length === 0 && (
-                  <Box
-                    p={1}
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'center', // 수평 중앙 정렬
-                      alignItems: 'center' // 수직 중앙 정렬
-                    }}
-                  >
-                    <ErrorOutlineIcon fontSize="medium" color="secondary" sx={{ mx: 1 }} />
-                    <Typography size="small" color="secondary">
-                      선택된 휴가 없음
-                    </Typography>
+                </Box>
+                <Box clone mt={2}>
+                  <BasicChip label="제목" color="#46a5f3" />
+                  <TextField
+                    label={`${token.user_name}(휴가취소)${selectLeaveCancel.leaveapp_total ? selectLeaveCancel.leaveapp_total + '일' : ''}`}
+                    id="title"
+                    size="small"
+                    sx={{ ml: 1 }}
+                    disabled
+                  />
+                </Box>
+                <Box clone mt={1} sx={{ display: 'flex', alignItems: 'center' }}>
+                  <EditNoteRoundedIcon fontSize="medium" color="secondary" sx={{ mx: 1 }} />
+                  <Typography size="small" color="secondary">
+                    제목은 자동 지정됩니다.
+                  </Typography>
+                </Box>
+                <Box clone mt={2} sx={{ display: 'flex' }}>
+                  <BasicChip label="결재자" color="#46a5f3" />
+                  <Box ml={1}>
+                    <AppAuto
+                      label="결재자"
+                      datas={allUsers}
+                      handleSelectUser={handleSelectUser}
+                      searchName={searchName}
+                      setSearchName={setSearchName}
+                      setApprover={setFirstApprover}
+                    />
                   </Box>
-                )}
-              </Box>
-              <Box clone mt={2}>
-                <BasicChip label="취소 사유" color="#46a5f3" />
-              </Box>
-              <Box clone mt={2}>
-                <TextField
-                  id="title"
-                  multiline
-                  rows={8}
-                  sx={{
-                    width: '100%'
-                  }}
-                  onChange={(e) => setReason(e.target.value)}
-                />
-              </Box>
-              <Box clone mt={1}>
-                <Grid container justifyContent="right" spacing={1}>
-                  <Grid item>
+                </Box>
+                <Box clone mt={2}>
+                  <BasicChip label="선택한 휴가" color="#46a5f3" />
+                  <Button
+                    sx={{ ml: 1 }}
+                    component="label"
+                    variant="contained"
+                    size="medium"
+                    color="secondary"
+                    onClick={handleOpenCancel}
+                    endIcon={<SearchOutlined />}
+                  >
+                    휴가 선택
+                  </Button>
+                </Box>
+                <Grid container sx={{ mt: 2 }}>
+                  <Grid item xs={2} md={2} lg={1.2}></Grid>
+                  <Grid item xs={2} md={10} lg={10.8}>
+                    <UserLeaveInfoTable data={selectLeaveCancel} />
+                    {Object.keys(selectLeaveCancel).length === 0 && (
+                      <Box
+                        p={1}
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center', // 수평 중앙 정렬
+                          alignItems: 'center' // 수직 중앙 정렬
+                        }}
+                      >
+                        <ErrorOutlineIcon fontSize="medium" color="secondary" sx={{ mx: 1 }} />
+                        <Typography size="small" color="secondary">
+                          선택된 휴가 없음
+                        </Typography>
+                      </Box>
+                    )}
+                  </Grid>
+                </Grid>
+                <Box clone mt={2}>
+                  <BasicChip label="취소 사유" color="#46a5f3" />
+                  <TextField
+                    id="title"
+                    multiline
+                    rows={8}
+                    sx={{
+                      width: '89.5%',
+                      ml: 1
+                    }}
+                    onChange={(e) => setReason(e.target.value)}
+                  />
+                </Box>
+                <Grid container justifyContent="right">
+                  <Grid item sx={{ mt: 2, mr: 0.5 }}>
                     <Button variant="contained" size="medium" onClick={submitLeaveCancelRequest}>
                       완료
                     </Button>
                   </Grid>
                 </Grid>
-              </Box>
-            </Grid>
-          </Grid>
-          <ModalM open={openCancel} handleClose={handleCloseCancel}>
-            <Grid container alignItems="center" direction="row" spacing={1} sx={{ mb: 2 }}>
-              <Grid item xs={3.4} md={3.4} lg={3.4}>
-                <Typography variant="h5">전체 휴가 신청 내역</Typography>
-              </Grid>
-              <Grid item xs={8.6} md={8.6} lg={8.6}></Grid>
-            </Grid>
-            <CancelLeaveTable
-              datas={leaveRequestRecent
-                .filter((data) => data.leaveapp_type !== 4)
-                .filter((data) => data.leaveapp_status !== 1 && data.leaveapp_status !== 2)}
-              handleSelectCancel={handleSelectCancel}
-            />
-            <Grid container justifyContent="right" spacing={1} sx={{ mt: 2 }}>
-              <Grid item>
-                <Button variant="contained" size="medium" onClick={handleCloseCancel}>
-                  닫기
-                </Button>
               </Grid>
             </Grid>
-          </ModalM>
+            <ModalM open={openCancel} handleClose={handleCloseCancel}>
+              <Grid container alignItems="center" direction="row" spacing={1} sx={{ mb: 2 }}>
+                <Grid item xs={3.4} md={3.4} lg={3.4}>
+                  <Typography variant="h5">전체 휴가 신청 내역</Typography>
+                </Grid>
+                <Grid item xs={8.6} md={8.6} lg={8.6}></Grid>
+              </Grid>
+              <CancelLeaveTable
+                datas={leaveRequestRecent
+                  .filter((data) => data.leaveapp_type !== 4)
+                  .filter((data) => data.leaveapp_status !== 1 && data.leaveapp_status !== 2)}
+                handleSelectCancel={handleSelectCancel}
+              />
+              <Grid container justifyContent="right" spacing={1} sx={{ mt: 2 }}>
+                <Grid item>
+                  <Button variant="contained" size="medium" onClick={handleCloseCancel}>
+                    닫기
+                  </Button>
+                </Grid>
+              </Grid>
+            </ModalM>
+          </Box>
         </BasicContainer>
       </BasicTab>
     </>

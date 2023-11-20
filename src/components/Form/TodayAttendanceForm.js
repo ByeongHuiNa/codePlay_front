@@ -99,19 +99,19 @@ const TodayAttendancdForm = ({ user_no }) => {
       return; // 이미 퇴근한 경우 함수를 종료합니다.
     }
 
-    const currentDate = new Date();
-    const currentHour = currentDate.getHours();
+    //const currentDate = new Date();
+    //const currentHour = currentDate.getHours();
 
-    // 6시 이전에 퇴근 버튼을 누르면 확인 메시지 표시
-    if (currentHour < 18) {
-      const confirmMessage = '6시 이전에 퇴근하시겠습니까?';
-      const userConfirmed = window.confirm(confirmMessage);
+    // // 6시 이전에 퇴근 버튼을 누르면 확인 메시지 표시
+    // if (currentHour < 18) {
+    //   const confirmMessage = '6시 이전에 퇴근하시겠습니까?';
+    //   const userConfirmed = window.confirm(confirmMessage);
 
-      if (!userConfirmed) {
-        // 사용자가 취소한 경우
-        return;
-      }
-    }
+    //   if (!userConfirmed) {
+    //     // 사용자가 취소한 경우
+    //     return;
+    //   }
+    // }
 
     axios
       .patch(`/user-attend-today?user_no=${user_no}`, formData)

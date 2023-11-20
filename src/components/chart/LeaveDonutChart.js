@@ -15,7 +15,7 @@ export default function LeaveDonutChart({ series }) {
       plotOptions: {
         pie: {
           donut: {
-            size: '50%',
+            size: '45%',
             labels: {
               show: true,
               total: {
@@ -28,7 +28,8 @@ export default function LeaveDonutChart({ series }) {
               value: {
                 fontSize: '22px',
                 show: true,
-                color: 'black'
+                color: 'black',
+                offsetY: 0.3
               }
             }
           }
@@ -36,14 +37,18 @@ export default function LeaveDonutChart({ series }) {
       },
       dataLabels: {
         enabled: true,
+        style: {
+          fontSize: '13px', // 글씨 크기 설정
+          colors: ['black'],
+          fontWeight: '10px',
+          textShadow: 'none'
+        },
+        dropShadow: {
+          enabled: false
+        },
         formatter: function (val, opts) {
           return `${opts.w.config.series[opts.seriesIndex]}일`;
         }
-        // formatter: function (val, opts) {
-        //   const originalData = opts.originalData;
-        //   const originalValue = originalData[opts.seriesIndex][opts.dataPointIndex];
-        //   return `${originalValue} (${val}%)`;
-        // },
       },
       // colors: ["#ffeb9b", "#c5f2ba"],
       labels: ['사용연차', '잔여연차'],
@@ -54,7 +59,8 @@ export default function LeaveDonutChart({ series }) {
         style: {
           fontSize: '16px'
         }
-      }
+      },
+      colors: ['rgb(144, 202, 249)', 'rgb(205, 229, 247)']
     }
   };
 

@@ -9,10 +9,13 @@ import { Box, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHea
 
 // project import
 import Dot from 'components/@extended/Dot';
-import { TextField } from '../../../node_modules/@mui/material/index';
+import { InputAdornment, TextField } from '../../../node_modules/@mui/material/index';
 import { useAllLeaveState } from 'store/module';
 import axios from '../../../node_modules/axios/index';
 import { useNavigate } from '../../../node_modules/react-router-dom/dist/index';
+import { Progress } from 'react-sweet-progress';
+import PersonSearchIcon from '@mui/icons-material/PersonSearch';
+import '../../assets/third-party/vacation-percent.css';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -72,6 +75,12 @@ const headCells = [
     align: 'center',
     disablePadding: false,
     label: '잔여일수'
+  },
+  {
+    id: 'percent',
+    align: 'center',
+    disablePadding: false,
+    label: '휴가사용률'
   }
 ];
 
@@ -148,6 +157,16 @@ export default function VacationCountTable({ depts }) {
   const [filteredAllLeave, setFilteredAllLeave] = useState([]);
   let navigate = useNavigate();
 
+  const progressColor = (percent) => {
+    if (percent >= 0 && percent <= 30) {
+      return '#00c642'; // 초록색
+    } else if (percent > 30 && percent <= 70) {
+      return '#29abe2'; // 파란색
+    } else {
+      return '#00c642'; // 기본값, 에러 상태 등에 사용될 색상
+    }
+  };
+
   useEffect(() => {
     async function get() {
       //const endPoints = ['http://localhost:8000/user_leave'];
@@ -174,16 +193,25 @@ export default function VacationCountTable({ depts }) {
 
   return (
     <Box>
-      <TextField
-        variant="outlined"
-        id="outlined-basic"
-        label="사원명"
-        onChange={(e) => setSearch(e.target.value)} // 검색어 업데이트
-        value={search}
-        InputLabelProps={{
-          shrink: true
-        }}
-      />
+      <div style={{ display: 'flex', justifyContent: 'right', alignItems: 'right' }}>
+        <TextField
+          variant="outlined"
+          id="outlined-basic"
+          label="사원명"
+          onChange={(e) => setSearch(e.target.value)} // 검색어 업데이트
+          value={search}
+          InputLabelProps={{
+            shrink: true
+          }}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <PersonSearchIcon />
+              </InputAdornment>
+            )
+          }}
+        />
+      </div>
       <TableContainer
         sx={{
           width: '100%',
@@ -227,9 +255,23 @@ export default function VacationCountTable({ depts }) {
                     </Link>
                   </TableCell>
                   <TableCell align="center">{allLeave.user_position}</TableCell>
-                  <TableCell align="center">{allLeave.leave_total}</TableCell>
-                  <TableCell align="center">{allLeave.leave_use}</TableCell>
-                  <TableCell align="center">{allLeave.leave_remain}</TableCell>
+                  <TableCell align="center">{allLeave.leave_total}일</TableCell>
+                  <TableCell align="center">{allLeave.leave_use}일</TableCell>
+                  <TableCell align="center">{allLeave.leave_remain}일</TableCell>
+                  <TableCell align="center">
+                    <Progress
+                      percent={allLeave.leave_percent}
+                      disableShrink
+                      theme={{
+                        active: {
+                          color: progressColor(allLeave.leave_percent)
+                        }
+                      }}
+                      style={{
+                        animation: 'none'
+                      }}
+                    />
+                  </TableCell>
                 </TableRow>
               );
             })}

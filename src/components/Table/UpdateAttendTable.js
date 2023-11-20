@@ -42,7 +42,7 @@ const headCells = [
     id: 'updateDate',
     align: 'center',
     disablePadding: false,
-    label: '수정날짜'
+    label: '수정대상날짜'
   },
   {
     id: 'title',
@@ -88,7 +88,7 @@ function OrderTableHead({ order, orderBy }) {
             align={headCell.align}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
-            sx={{ backgroundColor: '#e5edf026' }}
+            sx={{ width: `${headCell.id === 'title' ? '338px' : '204px'}`, backgroundColor: '#f9f9f9' }}
           >
             {headCell.label}
           </TableCell>
@@ -207,10 +207,10 @@ export default function UpdateAttendTable({ handleOpenRead, datas }) {
                   }}
                 >
                   <TableCell component="th" id={labelId} scope="data" align="center">
-                    {dateFormat(new Date(data.attendedit_date))}
+                    {dateFormat(new Date(data.attend_date))}
                   </TableCell>
                   <TableCell align="center">{data.attendedit_title}</TableCell>
-                  <TableCell align="center">{dateFormat(new Date(data.attend_date))}</TableCell>
+                  <TableCell align="center">{dateFormat(new Date(data.attendedit_date))}</TableCell>
                   <TableCell align="center">
                     {data.attendedit_kind === 0 ? '출근' : data.attendedit_kind === 1 ? '퇴근' : '출근/퇴근'}
                   </TableCell>
