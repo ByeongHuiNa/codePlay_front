@@ -11,6 +11,10 @@ import {
   Fade,
   FormControl,
   FormControlLabel,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
   Radio,
   RadioGroup,
   Switch,
@@ -34,6 +38,7 @@ import { Progress } from 'react-sweet-progress';
 import 'react-sweet-progress/lib/style.css';
 import AdminAppOvertimeTable from 'components/Table/AdminAppOvertimeTable';
 import { useLocation } from '../../node_modules/react-router-dom/dist/index';
+import { CloudDownload, InsertDriveFile } from '../../node_modules/@mui/icons-material/index';
 
 const ApprovalAttendance = () => {
   //token 값을 decode해주는 코드
@@ -53,6 +58,11 @@ const ApprovalAttendance = () => {
 
   const LeaveInfo = (data) => {
     console.log(data);
+    // 선택한 휴가의 첨부파일 가져오기
+    axios.get(`/file-list?attached_app_no=${data.leaveapp_no}&attached_kind=1`).then((res) => {
+      setSelectLeaveFileData(res.data);
+      console.log(res.data);
+    });
     // 신청자의 휴가 보유 현황 가져오기
     axios.get(`/user-leave?user_no=${data.user_no}`).then((res) => {
       setLeaveCnt(res.data);
@@ -80,6 +90,25 @@ const ApprovalAttendance = () => {
       });
     setSelectLeaveData(data);
     console.log(data);
+  };
+
+  const downloadFile = async (attached_name) => {
+    try {
+      const response = await axios.get(`/file/${attached_name}`, {
+        responseType: 'blob'
+      });
+
+      // 파일 다운로드를 위한 처리
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', attached_name);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Error downloading file: ', error);
+    }
   };
 
   // const Item = styled(Paper)(({ theme }) => ({
@@ -179,6 +208,7 @@ const ApprovalAttendance = () => {
   // Tab 0. 휴가 부분 =================================================
   const [leaveAppDatas, setLeaveAppDatas] = useState([]); // 전체 휴가 결재 데이터
   const [selectLeaveData, setSelectLeaveData] = useState({}); // 선택한 휴가 데이터 값
+  const [selectLeaveFileData, setSelectLeaveFileData] = useState([]);
   const [appLeaveStatus, setAppLeaveStatus] = useState('leaveApp'); // 휴가 결재 : 승인, 반려
   const [reason, setReason] = useState('');
 
@@ -275,6 +305,7 @@ const ApprovalAttendance = () => {
 
   useEffect(() => {
     setAppLeaveStatus('');
+    setSelectLeaveFileData([]);
   }, [selectLeaveData]);
 
   useEffect(() => {
@@ -729,6 +760,31 @@ const ApprovalAttendance = () => {
                               InputProps={{ readOnly: true, style: { borderRadius: 0 } }}
                               sx={{ width: '20%' }}
                             />
+                          </Box>
+                        )}
+                        {selectLeaveFileData.length !== 0 && selectLeaveData.leaveapp_type == 3 && (
+                          <Box clone mt={2} sx={{ display: 'flex' }}>
+                            <BasicChip label="증빙 파일" color="#46a5f3" />
+                            <Box>
+                              <List>
+                                {selectLeaveFileData.map((file, index) => (
+                                  <ListItem key={index} alignItems="center">
+                                    <ListItemIcon sx={{ mr: 2 }}>
+                                      <InsertDriveFile />
+                                    </ListItemIcon>
+                                    <ListItemText
+                                      primary={file.attached_name}
+                                      secondary={file.attached_type.replace('application/', '') + '파일'}
+                                    />
+                                    <ListItemIcon sx={{ ml: 3 }}>
+                                      <Button variant="outlined" color="primary" onClick={() => downloadFile(file.attached_name)}>
+                                        <CloudDownload />
+                                      </Button>
+                                    </ListItemIcon>
+                                  </ListItem>
+                                ))}
+                              </List>
+                            </Box>
                           </Box>
                         )}
                         {(selectLeaveData.leaveapp_type === 1 || selectLeaveData.leaveapp_type === 2) && (
