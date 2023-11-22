@@ -20,6 +20,7 @@ import axios from '../../node_modules/axios/index';
 import TodayAttendancdForm from 'components/Form/TodayAttendanceForm';
 import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
 import { useNavigate } from '../../node_modules/react-router-dom/dist/index';
+import UserAttendTable from 'components/Table/UserAttendTable';
 
 // ==============================|| 로그인 이후 무조건 들어올 메인페이지 ||============================== //
 
@@ -65,6 +66,9 @@ const Main = () => {
 
   function leave() {
     navigate('/userleave');
+  }
+  function attend() {
+    navigate('/userAttendanceTotal');
   }
 
   useEffect(() => {
@@ -199,7 +203,7 @@ const Main = () => {
               <Typography align="left" variant="h5">
                 내 정보
               </Typography>
-              <Link variant="h5" onClick={myinfo}>
+              <Link variant="h5" onClick={myinfo} style={{ cursor: 'pointer' }}>
                 더보기
               </Link>
             </div>
@@ -259,11 +263,24 @@ const Main = () => {
             <Typography align="left" variant="h5">
               휴가신청목록
             </Typography>
-            <Link variant="h5" onClick={leave}>
+            <Link variant="h5" onClick={leave} style={{ cursor: 'pointer' }}>
               더보기
             </Link>
           </div>
           <UserLeaveTable user_no={token.user_no} />
+        </MainCard>
+      </Grid>
+      <Grid item xs={4}>
+        <MainCard sx={{ height: '100%' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px 15px' }}>
+            <Typography align="left" variant="h5">
+              출/퇴근 내역
+            </Typography>
+            <Link variant="h5" onClick={attend} style={{ cursor: 'pointer' }}>
+              더보기
+            </Link>
+          </div>
+          <UserAttendTable user_no={token.user_no} />
         </MainCard>
       </Grid>
 
@@ -275,7 +292,7 @@ const Main = () => {
             <Typography align="left" variant="h5">
               휴가현황
             </Typography>
-            <Link variant="h5" onClick={leave}>
+            <Link variant="h5" onClick={leave} style={{ cursor: 'pointer' }}>
               더보기
             </Link>
           </div>

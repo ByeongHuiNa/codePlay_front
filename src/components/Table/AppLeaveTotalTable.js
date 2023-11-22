@@ -5,7 +5,8 @@ import { useEffect, useState } from 'react';
 import { Box, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 // project import
-import { Button, Chip } from '../../../node_modules/@mui/material/index';
+import Dot from 'components/@extended/Dot';
+import { Button, Typography } from '../../../node_modules/@mui/material/index';
 import { useApprovalState2 } from 'store/module';
 import axios from '../../../node_modules/axios/index';
 import { useNavigate } from '../../../node_modules/react-router-dom/dist/index';
@@ -145,7 +146,8 @@ const OrderStatus = ({ status }) => {
 
   return (
     <Stack direction="row" alignItems="center" justifyContent="center" spacing={1}>
-      <Chip label={title} color={color} />
+      <Dot color={color} />
+      <Typography>{title}</Typography>
     </Stack>
   );
 };
