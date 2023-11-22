@@ -345,7 +345,7 @@ const UserAttendanceTotalPage = () => {
         <Grid container spacing={1}>
           {/* row 3 - 휴가현황 그리드 */}
           <Grid item xs={4} sm={4} md={4} lg={4}>
-            <MainCard>
+            <MainCard style={{ height: '380px' }}>
               <Typography variant="h5">휴가현황</Typography>
               <VacationDonutChart />
             </MainCard>
@@ -451,7 +451,7 @@ const UserAttendanceTotalPage = () => {
             <MainCard>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Typography align="left" variant="h5">
-                  금주근무시간총합
+                  금주 근무 시간 총합
                 </Typography>
               </div>
               {Object.keys(total).length > 0 && Object.keys(overTotal).length > 0 && <WeekAttendDonutChart />}
@@ -460,7 +460,7 @@ const UserAttendanceTotalPage = () => {
           <Grid item xs={12}>
             <MainCard>
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <Typography variant="h5">{month3}월 출/퇴근 현황</Typography>
+                <Typography variant="h5">{month3}월 출/퇴근 내역</Typography>
 
                 <FormControl sx={{ marginLeft: 3 }}>
                   <TextField
