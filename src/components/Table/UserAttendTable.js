@@ -2,12 +2,11 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 
 // material-ui
-import { Box, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Typography, Box, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 // project import
 import Dot from 'components/@extended/Dot';
-import { Typography } from '../../../node_modules/@mui/material/index';
-import { useAllApprovalState1 } from 'store/module';
+//import { useAllApprovalState1 } from 'store/module';
 import axios from '../../../node_modules/axios/index';
 
 // function descendingComparator(a, b, orderBy) {
@@ -40,34 +39,34 @@ import axios from '../../../node_modules/axios/index';
 
 const headCells = [
   {
-    id: 'leaveType',
+    id: 'attendDate',
     align: 'center',
     disablePadding: false,
-    label: '휴가종류'
+    label: '날짜'
   },
   {
-    id: 'leaveStart',
+    id: 'attendStart',
     align: 'center',
     disablePadding: false,
-    label: '휴가시작일'
+    label: '출근 시각'
   },
   {
-    id: 'leaveEnd',
+    id: 'attendEnd',
     align: 'center',
     disablePadding: false,
-    label: '휴가종료일'
+    label: '퇴근시각'
   },
   {
-    id: 'leaveStatus',
+    id: 'attendStatus',
     align: 'center',
     disablePadding: false,
-    label: '결재상태'
+    label: '근태상태'
   }
 ];
 
 // ==============================|| ORDER TABLE - HEADER ||============================== //
 
-function UserLeaveTableHead({ order, orderBy }) {
+function UserAttendTableHead({ order, orderBy }) {
   return (
     <TableHead>
       <TableRow>
@@ -86,7 +85,7 @@ function UserLeaveTableHead({ order, orderBy }) {
   );
 }
 
-UserLeaveTableHead.propTypes = {
+UserAttendTableHead.propTypes = {
   order: PropTypes.string,
   orderBy: PropTypes.string
 };
@@ -94,30 +93,46 @@ UserLeaveTableHead.propTypes = {
 // ==============================|| ORDER TABLE - STATUS ||============================== //
 
 //결재상태
-const OrderStatus = ({ status }) => {
+const AttendanceStatus = ({ status }) => {
   let color;
   let title;
 
-  // 0 : 결재완료(승인)
-  // 1 : 결재완료(반려)
-  // 2 : 결재대기
   switch (status) {
-    case 0:
+    case '정상':
       color = 'success';
-      title = '결재승인';
+      title = '정상';
       break;
-    case 1:
+    case '휴가(연차)':
+      color = 'primary';
+      title = '연차';
+      break;
+    case '휴가(오전반차)':
+      color = 'primary';
+      title = '반차';
+      break;
+    case '휴가(오후반차)':
+      color = 'primary';
+      title = '반차';
+      break;
+    case '휴가(공가)':
+      color = 'primary';
+      title = '공가';
+      break;
+    case '지각':
+      color = 'secondary';
+      title = '지각';
+      break;
+    case '조퇴':
+      color = 'warning';
+      title = '조퇴';
+      break;
+    case '결근':
       color = 'error';
-      title = '결재반려';
+      title = '결근';
       break;
-    case 2:
-      color = 'primary';
-      title = '결재진행중';
-      break;
-    case 3:
-      color = 'primary';
-      title = '결재대기';
-      break;
+    default:
+      color = 'error';
+      title = '결근';
   }
 
   return (
@@ -128,62 +143,24 @@ const OrderStatus = ({ status }) => {
   );
 };
 
-OrderStatus.propTypes = {
+AttendanceStatus.propTypes = {
   status: PropTypes.number
-};
-//휴가종류
-const Type = ({ type }) => {
-  let title;
-
-  // 0 : 연차
-  // 1 : 오전반차
-  // 2 : 오후반차
-  // 3 : 공가
-  // 4 : 휴가취소
-
-  switch (type) {
-    case 0:
-      title = '연차';
-      break;
-    case 1:
-      title = '오전반차';
-      break;
-    case 2:
-      title = '오후반차';
-      break;
-    case 3:
-      title = '공가';
-      break;
-    case 4:
-      title = '휴가취소';
-      break;
-  }
-
-  return (
-    <Stack direction="row" alignItems="center" justifyContent="center" spacing={1}>
-      {title}
-    </Stack>
-  );
-};
-
-Type.propTypes = {
-  type: PropTypes.number
 };
 
 // ==============================|| ORDER TABLE ||============================== //
-//메인페이지 휴가신청목록
-export default function UserLeaveTable({ user_no }) {
+//메인페이지 최근5개근태목록
+export default function UserAttendTable({ user_no }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   //const [selected] = useState([]);
-  const { app, setApp } = useAllApprovalState1();
+  const [attend, setAttend] = useState([]);
 
   //const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
 
   useEffect(() => {
     async function get() {
-      const result = await axios.get(`/user-leave-request-main?user_no=${user_no}`);
-      setApp(result.data);
+      const result = await axios.get(`/user-attend?user_no=${user_no}`);
+      setAttend(result.data);
     }
     get();
   }, []);
@@ -211,31 +188,33 @@ export default function UserLeaveTable({ user_no }) {
             }
           }}
         >
-          <UserLeaveTableHead order={order} orderBy={orderBy} />
+          <UserAttendTableHead order={order} orderBy={orderBy} />
           <TableBody>
-            {Object.values(app)
-              //.slice(0, 5)
-              .map((app) => (
-                <TableRow
-                  hover
-                  role="checkbox"
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                  //aria-checked={isItemSelected}
-                  tabIndex={-1}
-                  key={app.leaveapp_no}
-                  //selected={isItemSelected}
-                >
-                  <TableCell component="th" id={app.leaveapp_no} scope="data" align="center">
-                    <Type type={app.leaveapp_type} />
-                  </TableCell>
-                  <TableCell align="center">{app.leaveapp_start}</TableCell>
-                  <TableCell align="center">{app.leaveapp_end}</TableCell>
+            {Object.values(attend)
+              .slice(0, 5)
+              .map((attend) => {
+                const dateObject = new Date(attend.attend_date);
+                const formattedDate = dateObject.toLocaleDateString();
+                return (
+                  <TableRow
+                    hover
+                    role="checkbox"
+                    sx={{ '&  :last-child td, &:last-child th': { border: 0 } }}
+                    //aria-checked={isItemSelected}
+                    tabIndex={-1}
+                    key={attend.attend_no}
+                    //selected={isItemSelected}
+                  >
+                    <TableCell align="center">{formattedDate}</TableCell>
+                    <TableCell align="center">{attend.attend_start}</TableCell>
+                    <TableCell align="center">{attend.attend_end}</TableCell>
 
-                  <TableCell align="center">
-                    <OrderStatus status={app.leaveapp_status} />
-                  </TableCell>
-                </TableRow>
-              ))}
+                    <TableCell align="center">
+                      <AttendanceStatus status={attend.attend_status} />
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
           </TableBody>
           {/* <TableBody>
             {stableSort(datas, getComparator(order, orderBy)).map((data, index) => {
