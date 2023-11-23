@@ -11,6 +11,7 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { useCalendarGetScheduleList } from 'store/module';
 import axios from '../../../node_modules/axios/index';
+import { Typography } from '../../../node_modules/@mui/material/index';
 
 function not(a, b) {
   return a.filter((value) => b.indexOf(value) === -1);
@@ -141,7 +142,11 @@ export default function CalendarWorkModalContent({ handleClose }) {
               }}
             />
           }
-          title={title}
+          title={
+            <Typography variant="h6" fontWeight="bold">
+              {title}
+            </Typography>
+          }
           subheader={`${numberOfChecked(items)}/${items.length} selected`}
         />
         <Divider />
@@ -174,18 +179,33 @@ export default function CalendarWorkModalContent({ handleClose }) {
 
             return (
               <ListItem key={value} role="listitem" button onClick={handleToggle(value)}>
-                <ListItemIcon>
-                  <Checkbox
-                    checked={checked.indexOf(value) !== -1}
-                    tabIndex={-1}
-                    disableRipple
-                    inputProps={{
-                      'aria-labelledby': labelId
-                    }}
-                  />
-                </ListItemIcon>
-                <ListItemText id={labelId} primary={`${value.schedule_title}`} sx={{ ml: 2, overflow: 'auto' }} />
-                <ListItemText primary={`${formattedStartDate} ~ ${formattedEndDate}`} sx={{ mr: -2, overflow: 'auto' }} />
+                <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
+                  <Grid item xs={1.5}>
+                    <ListItemIcon>
+                      <Checkbox
+                        checked={checked.indexOf(value) !== -1}
+                        tabIndex={-1}
+                        disableRipple
+                        inputProps={{
+                          'aria-labelledby': labelId
+                        }}
+                      />
+                    </ListItemIcon>
+                  </Grid>
+                  <Grid item xs={6.5} sx={{ ml: -1 }}>
+                    <ListItemText
+                      id={labelId}
+                      primary={<Typography variant="h6">{`${value.schedule_title}`}</Typography>}
+                      sx={{ ml: 2, overflow: 'auto' }}
+                    />
+                  </Grid>
+                  <Grid item xs={4} sx={{ ml: -1 }}>
+                    <ListItemText
+                      primary={<Typography variant="h6">{`${formattedStartDate} ~ ${formattedEndDate}`}</Typography>}
+                      sx={{ mr: -2, overflow: 'auto' }}
+                    />
+                  </Grid>
+                </Grid>
               </ListItem>
             );
           })}
@@ -199,7 +219,7 @@ export default function CalendarWorkModalContent({ handleClose }) {
       <Divider />
       <Grid container spacing={2} justifyContent="center" alignItems="center">
         <Grid item sx={{ width: '45%' }}>
-          {customList('리스트에 보이는 일정', left)}
+          {customList('중요 일정 선택', left)}
         </Grid>
         <Grid item>
           <Grid container direction="column" alignItems="center">
@@ -226,7 +246,7 @@ export default function CalendarWorkModalContent({ handleClose }) {
           </Grid>
         </Grid>
         <Grid item sx={{ width: '45%' }}>
-          {customList('리스트에 보이지 않는 일정', right)}
+          {customList('중요 일정 해제', right)}
         </Grid>
       </Grid>
       <Grid container direction="row" justifyContent="flex-end" alignItems="center">
