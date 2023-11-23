@@ -214,7 +214,7 @@ export default function UserLeaveTable({ user_no }) {
           <UserLeaveTableHead order={order} orderBy={orderBy} />
           <TableBody>
             {Object.values(app)
-              //.slice(0, 5)
+              .slice(0, 5)
               .map((app) => (
                 <TableRow
                   hover

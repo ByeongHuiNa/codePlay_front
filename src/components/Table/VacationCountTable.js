@@ -250,7 +250,7 @@ export default function VacationCountTable({ depts }) {
                   selected={isItemSelected}
                 >
                   <TableCell component="th" id={labelId} scope="row" align="center">
-                    <Link color="secondary" onClick={() => nameClick(allLeave.user_no)}>
+                    <Link color="secondary" onClick={() => nameClick(allLeave.user_no)} style={{ cursor: 'pointer' }}>
                       {allLeave.user_name}
                     </Link>
                   </TableCell>
