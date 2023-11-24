@@ -23,6 +23,7 @@ export default function CalendarDepLeaveList() {
     setScheduleNo(0);
     setLeaveNo(e);
   };
+  const currentDate = new Date();
 
   return (
     <>
@@ -36,56 +37,69 @@ export default function CalendarDepLeaveList() {
 
             // 시작 날짜 포맷
             const originalStartDate = new Date(originalStartDateTime.split('T')[0]);
+            originalStartDate.setDate(originalStartDate.getDate() + 1); // 1일을 더함
             const formattedStartDate = `${originalStartDate.getFullYear()}-${(originalStartDate.getMonth() + 1)
               .toString()
               .padStart(2, '0')}-${originalStartDate.getDate().toString().padStart(2, '0')}`;
 
             // 종료 날짜 포맷
             const originalEndDate = new Date(originalEndDateTime.split('T')[0]);
+            originalEndDate.setDate(originalEndDate.getDate() + 1); // 1일을 더함
             const formattedEndDate = `${originalEndDate.getFullYear()}-${(originalEndDate.getMonth() + 1)
               .toString()
               .padStart(2, '0')}-${originalEndDate.getDate().toString().padStart(2, '0')}`;
 
-            return (
-              <>
-                <ListItem alignItems="flex-start" sx={{ p: 0.5 }}>
-                  <ListItemButton role={undefined} onClick={() => handleToggle(value.leaveapp_no)} dense>
-                    <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
-                      <Grid item xs={2} sx={{ ml: -1 }}>
-                        <ListItemAvatar>
-                          <Avatar alt="Remy Sharp" src={`${value.user.user_profile}`} sx={{ width: 30, height: 30 }} />
-                        </ListItemAvatar>
+            const scheduleEndDay = new Date(originalEndDate);
+            const scheduleStartDay = new Date(originalStartDate);
+
+            if (
+              scheduleEndDay > currentDate ||
+              (scheduleEndDay.getFullYear() === currentDate.getFullYear() &&
+                scheduleEndDay.getMonth() === currentDate.getMonth() &&
+                scheduleStartDay.getDate() <= currentDate.getDate() &&
+                currentDate.getDate() <= scheduleEndDay.getDate())
+            ) {
+              return (
+                <>
+                  <ListItem alignItems="flex-start" sx={{ p: 0.5 }}>
+                    <ListItemButton role={undefined} onClick={() => handleToggle(value.leaveapp_no)} dense>
+                      <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={1}>
+                        <Grid item xs={2} sx={{ ml: -1 }}>
+                          <ListItemAvatar>
+                            <Avatar alt="Remy Sharp" src={`${value.user.user_profile}`} sx={{ width: 30, height: 30 }} />
+                          </ListItemAvatar>
+                        </Grid>
+                        <Grid item xs={6} sx={{ ml: 1, textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                          <ListItemText>
+                            <Grid container direction="column" justifyContent="center" alignItems="flex-start" sx={{ ml: -1 }}>
+                              <Typography component="span" variant="body2" color="text.primary">
+                                {value.user.user_name}
+                              </Typography>
+                              <Typography component="span" variant="body3" color="text.primary">
+                                {value.leaveapp_title}
+                              </Typography>
+                            </Grid>
+                          </ListItemText>
+                        </Grid>
+                        <Grid item xs={4}>
+                          <ListItemText>
+                            <Grid container direction="column" justifyContent="space-between" alignItems="center" sx={{ ml: 1.5 }}>
+                              <Typography component="span" variant="body2" color="text.primary">
+                                {`${formattedStartDate}`}
+                              </Typography>
+                              <Typography component="span" variant="body2" color="text.primary">
+                                {`${formattedEndDate}`}
+                              </Typography>
+                            </Grid>
+                          </ListItemText>
+                        </Grid>
                       </Grid>
-                      <Grid item xs={6} sx={{ ml: 1, textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
-                        <ListItemText>
-                          <Grid container direction="column" justifyContent="center" alignItems="flex-start" sx={{ ml: -1 }}>
-                            <Typography component="span" variant="body2" color="text.primary">
-                              {value.user.user_name}
-                            </Typography>
-                            <Typography component="span" variant="body3" color="text.primary">
-                              {value.leaveapp_title}
-                            </Typography>
-                          </Grid>
-                        </ListItemText>
-                      </Grid>
-                      <Grid item xs={4}>
-                        <ListItemText>
-                          <Grid container direction="column" justifyContent="space-between" alignItems="center" sx={{ ml: 1.5 }}>
-                            <Typography component="span" variant="body2" color="text.primary">
-                              {`${formattedStartDate}`}
-                            </Typography>
-                            <Typography component="span" variant="body2" color="text.primary">
-                              {`${formattedEndDate}`}
-                            </Typography>
-                          </Grid>
-                        </ListItemText>
-                      </Grid>
-                    </Grid>
-                  </ListItemButton>
-                </ListItem>
-                <Divider variant="inset" component="li" />
-              </>
-            );
+                    </ListItemButton>
+                  </ListItem>
+                  <Divider variant="inset" component="li" />
+                </>
+              );
+            }
           })}
       </List>
     </>

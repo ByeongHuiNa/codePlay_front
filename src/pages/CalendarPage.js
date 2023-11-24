@@ -36,7 +36,7 @@ function a11yProps(index) {
 const CalendarPage = () => {
   const token = jwtDecode(localStorage.getItem('token').slice(7));
   const [value, setValue] = React.useState(0);
-  const { scheduleList, leaveList, attendanceList, setScheduleList, setLeaveList, setDataList, setAttendanceList } =
+  const { scheduleList, leaveList, attendanceList, dataList, setScheduleList, setLeaveList, setDataList, setAttendanceList } =
     useCalendarGetScheduleList();
 
   const handleChange = (event, newValue) => {
@@ -231,11 +231,13 @@ const CalendarPage = () => {
   const [publicEvents, setPublicEvents] = React.useState([]);
 
   React.useEffect(() => {
-    getScheduleList();
-    getLeaveList();
-    getShereScheduleList();
-    getShereLeaveList();
-    getAttendanceList();
+    if (dataList.length === 0) {
+      getScheduleList();
+      getLeaveList();
+      getShereScheduleList();
+      getShereLeaveList();
+      getAttendanceList();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // 비어있는 종속성 배열을 사용하여 초기 로딩 시에만 실행되도록 함
 
