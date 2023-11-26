@@ -447,8 +447,8 @@ const UserAttendanceTotalPage = () => {
               />
             </MainCard>
           </Grid>
-          <Grid item xs={4}>
-            <MainCard>
+          <Grid item xs={4} >
+            <MainCard style={{ height: '340px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Typography align="left" variant="h5">
                   금주 근무 시간 총합

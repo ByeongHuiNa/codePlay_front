@@ -111,6 +111,7 @@ function AttendanceTableHead({ order, orderBy }) {
             align={headCell.align}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
+            sx={{ backgroundColor: '#f9f9f9' }}
           >
             {headCell.label}
           </TableCell>
