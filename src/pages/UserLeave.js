@@ -4,6 +4,7 @@ import { Grid, Typography } from '@mui/material';
 // project import
 import BasicContainer from 'components/container/BasicContainer';
 import {
+  Alert,
   Box,
   Button,
   FormControl,
@@ -35,16 +36,41 @@ import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
 import BasicChip from 'components/Chip/BasicChip';
 import LimitDatePicker from 'components/DatePicker/LimitDatePicker';
 import FileUpload from 'components/File/FileUpload';
+import SuccessModal from 'components/Modal/SuccessModal';
+import FailModal from 'components/Modal/FailModal';
+import { useLocation } from '../../node_modules/react-router-dom/dist/index';
 
 const UserLeave = () => {
   const { index, setIndex } = useLeaveTab();
   const [selectedValue, setSelectedValue] = useState('annual');
   const [selectedHalfValue, setHalfValue] = useState('am');
+  const [initialized, setInitialized] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
-    setStart('');
-    setEnd('');
-    setHalfValue('am');
+    if (location.state && location.state.val === 1) {
+      console.log(location.state);
+      setIndex(1);
+      setSelectedValue(location.state.selectedValue);
+      setHalfValue(location.state.selectedHalfValue);
+      setStart(location.state.start);
+      setEnd(location.state.end);
+    } else {
+      setIndex(0);
+    }
+    // 로그인 한 사용자 부서의 근태 담당자 내역 -> 결재자 검색창 autocomplete
+    axios.get(`/dept-manager?dept_no=${token.dept_no}`).then((res) => {
+      setAllUsers(res.data);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (initialized && !(location.state && location.state.val === 1)) {
+      setStart('');
+      setEnd('');
+      setHalfValue('am');
+      setInitialized(true);
+    }
   }, [selectedValue]);
 
   //token 값을 decode해주는 코드
@@ -56,9 +82,13 @@ const UserLeave = () => {
 
   // 결재 대기 중인 휴가 취소 (바로 취소 가능)
   const leaveCancel = (leaveapp_no) => {
-    axios.delete(`/user-leave-request-await?leaveapp_no=${leaveapp_no}`).then((res) => {
-      alert(res.data + ' 선택한 휴가 취소 완료');
-      setIndex(0);
+    axios.get(`/user-leave-request-delete?leaveapp_no=${leaveapp_no}`).then((res) => {
+      console.log(res.data);
+      handleOpenDeleteModal();
+      // 로그인 한 사용자의 결재대기 상태인 모든 휴가신청내역 가져오기
+      axios.get(`/user-leave-request-await?user_no=${token.user_no}`).then((res) => {
+        setLeaveRequestAwait(res.data);
+      });
     });
   };
 
@@ -78,6 +108,59 @@ const UserLeave = () => {
   };
   const handleClose = () => {
     setModalOpen(false);
+  };
+
+  // 모달창 1. 결재 대기중인 휴가 삭제 성공
+  const [deleteModal, setDeleteModal] = React.useState(false);
+  // 모달창 활성화 버튼
+  const handleOpenDeleteModal = () => {
+    setDeleteModal(true);
+    setTimeout(() => {
+      setDeleteModal(false);
+    }, 1500);
+  };
+  // 모달창 취소 버튼
+  const handleCloseDeleteModal = () => {
+    setDeleteModal(false);
+  };
+  // 모달창 2. 신청 실패
+  const [failModal, setFailModal] = React.useState(false);
+  // 모달창 활성화 버튼
+  const handleOpenFailModal = () => {
+    setFailModal(true);
+    setTimeout(() => {
+      setFailModal(false);
+    }, 1500);
+  };
+  // 모달창 취소 버튼
+  const handleCloseFailModal = () => {
+    setFailModal(false);
+  };
+  // 모달창 3. 휴가 신청 성공
+  const [successModal, setSuccessModal] = React.useState(false);
+  // 모달창 활성화 버튼
+  const handleOpenSuccessModal = () => {
+    setSuccessModal(true);
+    setTimeout(() => {
+      setSuccessModal(false);
+      setIndex(0);
+    }, 1500);
+  };
+  // 모달창 취소 버튼
+  const handleCloseSuccessModal = () => {
+    setSuccessModal(false);
+    setIndex(0);
+  };
+  // 모달창 3. 휴가 취소 신청 성공
+  const [successCancelModal, setSuccessCancelModal] = React.useState(false);
+  // 모달창 활성화 버튼
+  const handleOpenSuccessCancelModal = () => {
+    setSuccessCancelModal(true);
+  };
+  // 모달창 취소 버튼
+  const handleCloseSuccessCancelModal = () => {
+    setSuccessCancelModal(false);
+    setIndex(0);
   };
 
   // 자동완성
@@ -154,14 +237,6 @@ const UserLeave = () => {
   const [leaveRequestRecent, setLeaveRequestRecent] = useState([]);
 
   useEffect(() => {
-    setIndex(0);
-    // 로그인 한 사용자 부서의 근태 담당자 내역 -> 결재자 검색창 autocomplete
-    axios.get(`/dept-manager?dept_no=${token.dept_no}`).then((res) => {
-      setAllUsers(res.data);
-    });
-  }, []);
-
-  useEffect(() => {
     // 로그인 한 사용자의 결재대기 상태인 모든 휴가신청내역 가져오기
     axios.get(`/user-leave-request-await?user_no=${token.user_no}`).then((res) => {
       setLeaveRequestAwait(res.data);
@@ -176,12 +251,14 @@ const UserLeave = () => {
     });
     // 폼 초기화
     setReason('');
-    setStart('');
-    setEnd('');
+    if (initialized && !(location.state && location.state.val === 1)) {
+      setStart('');
+      setEnd('');
+      setSelectedValue('annual');
+      setHalfValue('am');
+    }
     setFirstApprover({});
     setSecondApprover({});
-    setSelectedValue('annual');
-    setHalfValue('am');
     if (index === 0 || index === 1) {
       setSelectLeaveCancel({});
     }
@@ -190,7 +267,8 @@ const UserLeave = () => {
   // 휴가 신청 버튼
   function submitLeaveRequest() {
     if (Object.keys(firstApprover).length === 0 || Object.keys(secondApprover).length === 0 || start === null || end === null) {
-      alert('날짜 선택하시고 결재자 선택하세요.');
+      handleOpenFailModal();
+      console.log(start);
     } else {
       axios
         .post(`/user-leave-request?user_no=${token.user_no}`, {
@@ -221,8 +299,7 @@ const UserLeave = () => {
               })
               .then((res) => {
                 console.log(res.data);
-                alert('신청완료');
-                setIndex(0);
+                handleOpenSuccessModal();
               });
           } catch (error) {
             console.error('Error Uploading Files : ', error);
@@ -260,24 +337,11 @@ const UserLeave = () => {
           firstapp_no: firstApprover.user_no
         })
         .then((res) => {
-          alert('신청완료 ' + res);
-          setIndex(0);
+          console.log(res.data);
+          handleOpenSuccessCancelModal();
         });
     }
   }
-
-  // 파일 업로드
-  // const VisuallyHiddenInput = styled('input')`
-  //   clip: rect(0 0 0 0);
-  //   clippath: inset(50%);
-  //   height: 1;
-  //   overflow: hidden;
-  //   position: absolute;
-  //   bottom: 0;
-  //   left: 0;
-  //   whitespace: nowrap;
-  //   width: 1;
-  // `;
 
   let content;
   if (selectedValue === 'annual') {
@@ -344,7 +408,7 @@ const UserLeave = () => {
         </Grid>
         <Grid item xs={12} sm={12} md={12} lg={12} mt={2} sx={{ display: 'flex' }}>
           <BasicChip label="증빙 업로드" color="#46a5f3" />
-          <FileUpload setUploadedInfo={setUploadedInfo} uploadedInfo={uploadedInfo} width="820px" />
+          <FileUpload setUploadedInfo={setUploadedInfo} uploadedInfo={uploadedInfo} width="320px" />
         </Grid>
       </Grid>
     );
@@ -375,6 +439,7 @@ const UserLeave = () => {
               </Grid>
               <UnappLeaveTable leaveCancel={leaveCancel} datas={leaveRequestAwait} handleOpen={handleOpen} />
             </BasicContainer>
+            <SuccessModal open={deleteModal} handleClose={handleCloseDeleteModal} color="#52c41a" msg="휴가 신청이 취소되었습니다." />
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12}>
             <BasicContainer sx={{ height: '415px' }}>
@@ -391,47 +456,49 @@ const UserLeave = () => {
       </BasicTab>
       <BasicTab value={index} index={1}>
         <BasicContainer>
-          <Box sx={{ mx: 2, mt: 0.5, height: '715px' }}>
+          <Box
+            sx={{
+              mx: 2,
+              mt: 0.5,
+              height: '715px'
+            }}
+          >
             <Grid container spacing={1} justifyContent="center">
               <Grid item xs={3} sm={3} md={3} lg={3}>
                 <Typography variant="h4">휴가 신청</Typography>
               </Grid>
               <Grid item xs={9} sm={9} md={9} lg={9}>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'right' }}>
-                  <Typography variant="h5" color="secondary">
-                    &#128161;현재 휴가 사용율은 &nbsp;
-                  </Typography>
-                  <Typography style={{ color: '#616567', fontSize: '20px', fontWeight: 'bold' }}>
-                    {((leaveCnt[0] * 100) / (leaveCnt[0] + leaveCnt[1])).toFixed(0)}% (잔여 {leaveCnt[1]}일 / 사용 {leaveCnt[0]}일)
-                  </Typography>
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Typography variant="h5" color="secondary">
-                      으로 {new Date().getMonth() + 1}월 기준으로 &nbsp;
+                  <Alert severity="info" sx={{ fontSize: '0.9rem' }}>
+                    현재 휴가 사용율은 &nbsp;
+                    <Typography component="span" fontWeight="bold">
+                      {((leaveCnt[0] * 100) / (leaveCnt[0] + leaveCnt[1])).toFixed(0)}% (잔여 {leaveCnt[1]}일 / 사용 {leaveCnt[0]}일)
                     </Typography>
-                    {((leaveCnt[0] + leaveCnt[1]) / 12) * (new Date().getMonth() + 1) + 0.5 < leaveCnt[0] ? (
-                      <>
-                        <Typography style={{ color: '#616567', fontSize: '20px', fontWeight: 'bold' }}>많이</Typography>
-                        <Typography variant="h5" color="secondary">
-                          사용하였습니다.
-                        </Typography>
-                      </>
-                    ) : ((leaveCnt[0] + leaveCnt[1]) / 12) * (new Date().getMonth() + 1) - 0.5 > leaveCnt[0] ? (
-                      <>
-                        <Typography style={{ color: '#616567', fontSize: '20px', fontWeight: 'bold' }}>적게</Typography> &nbsp;
-                        <Typography variant="h5" color="secondary">
-                          사용하였습니다.
-                        </Typography>
-                      </>
-                    ) : (
-                      '적당합니다.'
-                    )}
-                  </Box>
+                    으로 {new Date().getMonth() + 1}월 기준으로 &nbsp;
+                    <Typography component="span" fontWeight="bold">
+                      {((leaveCnt[0] + leaveCnt[1]) / 12) * (new Date().getMonth() + 1) + 0.5 < leaveCnt[0]
+                        ? '많이 사용하였습니다.'
+                        : ((leaveCnt[0] + leaveCnt[1]) / 12) * (new Date().getMonth() + 1) - 0.5 > leaveCnt[0]
+                        ? '적게 사용하였습니다.'
+                        : '적당합니다.'}
+                    </Typography>
+                  </Alert>
                 </Box>
               </Grid>
             </Grid>
-            <Grid container spacing={1}>
+            <Grid
+              container
+              spacing={1}
+              sx={{
+                overflow: 'scroll',
+                maxHeight: '700px',
+                '&::-webkit-scrollbar': {
+                  width: 0
+                }
+              }}
+            >
               <Grid item xs={12} sm={12} md={12} lg={12}>
-                <Box clone mt={2}>
+                <Box>
                   <BasicChip label="제목" color="#46a5f3" />
                   <TextField
                     label={`${token.user_name}(${
@@ -445,9 +512,15 @@ const UserLeave = () => {
                     })${selectedValue === 'half' ? 0.5 : selectedValue === 'public' ? 0 : calculateLeaveTotal(start, end)}일`}
                     id="title"
                     size="small"
-                    sx={{ ml: 1 }}
+                    sx={{ ml: 1, width: '22%' }}
                     disabled
                   />
+                </Box>
+                <Box mt={1} sx={{ display: 'flex', alignItems: 'center' }}>
+                  <EditNoteRoundedIcon fontSize="medium" color="secondary" sx={{ mx: 1 }} />
+                  <Typography size="small" color="secondary">
+                    제목은 자동 지정됩니다.
+                  </Typography>
                 </Box>
                 <Box mt={2} sx={{ display: 'flex' }}>
                   <BasicChip label="1차 결재자" color="#46a5f3" />
@@ -492,7 +565,7 @@ const UserLeave = () => {
                   </FormControl>
                   <Box>{content}</Box>
                 </Box>
-                <Box clone mt={2}>
+                <Box sx={{ marginTop: 2 }}>
                   <BasicChip label="휴가 사유" color="#46a5f3" />
                   <TextField
                     id="reason"
@@ -508,27 +581,31 @@ const UserLeave = () => {
                   />
                 </Box>
               </Grid>
-            </Grid>
-            <Box clone mt={2} mr={2}>
-              <Grid container justifyContent="right" spacing={1}>
-                <Grid item>
-                  <Button
-                    variant="contained"
-                    size="medium"
-                    onClick={submitLeaveRequest}
-                    disabled={leaveCnt[1] === 0 && selectedValue !== 'public' ? true : false}
-                  >
-                    완료
-                  </Button>
-                </Grid>
+              <Grid item xs={12} sm={12} md={12} lg={12}>
+                <Box clone mt={2} mr={2} pb={2}>
+                  <Grid container justifyContent="right" spacing={1}>
+                    <Grid item>
+                      <Button
+                        variant="contained"
+                        size="medium"
+                        onClick={submitLeaveRequest}
+                        disabled={leaveCnt[1] === 0 && selectedValue !== 'public' ? true : false}
+                      >
+                        완료
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Box>
               </Grid>
-            </Box>
+            </Grid>
           </Box>
         </BasicContainer>
+        <FailModal open={failModal} handleClose={handleCloseFailModal} color="red" msg1="날짜, 결재자는" msg2="필수로 선택하셔야합니다." />
+        <SuccessModal open={successModal} handleClose={handleCloseSuccessModal} color="#46a5f3" msg="휴가 신청이 완료되었습니다." />
       </BasicTab>
       <BasicTab value={index} index={2}>
         <BasicContainer>
-          <Box sx={{ mx: 3, my: 1, height: '710px' }}>
+          <Box sx={{ mx: 2, my: 0.5, height: '710px' }}>
             <Grid container spacing={1} justifyContent="center">
               <Grid item xs={12} sm={12} md={12} lg={12}>
                 <Box>
@@ -598,7 +675,7 @@ const UserLeave = () => {
                     )}
                   </Grid>
                 </Grid>
-                <Box clone mt={2}>
+                <Box clone mt={selectedValue === 'public' ? 1 : 2}>
                   <BasicChip label="취소 사유" color="#46a5f3" />
                   <TextField
                     id="title"
@@ -620,6 +697,12 @@ const UserLeave = () => {
                 </Grid>
               </Grid>
             </Grid>
+            <SuccessModal
+              open={successCancelModal}
+              handleClose={handleCloseSuccessCancelModal}
+              color="#46a5f3"
+              msg="휴가 취소 신청이 완료되었습니다."
+            />
             <ModalM open={openCancel} handleClose={handleCloseCancel}>
               <Grid container alignItems="center" direction="row" spacing={1} sx={{ mb: 2 }}>
                 <Grid item xs={3.4} md={3.4} lg={3.4}>
