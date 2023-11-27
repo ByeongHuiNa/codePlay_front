@@ -259,11 +259,11 @@ const UserAttendanceTotalPage = () => {
     return `${totalHours}:${totalMinutes}`;
   }
   const now = new Date(); // 현재 날짜와 시간
-  const currentDay = now.getDay() - 1; // 현재 요일 (0: 일요일, 1: 월요일, ..., 6: 토요일)
+  const currentDay = now.getDay(); // 현재 요일 (0: 일요일, 1: 월요일, ..., 6: 토요일)
 
   // 현재 주의 월요일 날짜를 계산
   const startOfWeek = new Date(now);
-  startOfWeek.setDate(now.getDate() - currentDay);
+  startOfWeek.setDate(now.getDate() - currentDay + (currentDay === 0 ? -6 : 1));
 
   // 현재 주의 월요일부터 일요일까지의 날짜를 계산하고 포맷팅
   const daysOfWeek = [];
@@ -417,7 +417,7 @@ const UserAttendanceTotalPage = () => {
           <Grid item xs={8}>
             <MainCard>
               <Typography align="left" variant="h5">
-                금주 근무 시간
+                일별 근무 시간
               </Typography>
               <AttendChart
                 chart={{
@@ -447,11 +447,11 @@ const UserAttendanceTotalPage = () => {
               />
             </MainCard>
           </Grid>
-          <Grid item xs={4} >
+          <Grid item xs={4}>
             <MainCard style={{ height: '340px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Typography align="left" variant="h5">
-                  금주 근무 시간 총합
+                  금주 근무 시간
                 </Typography>
               </div>
               {Object.keys(total).length > 0 && Object.keys(overTotal).length > 0 && <WeekAttendDonutChart />}

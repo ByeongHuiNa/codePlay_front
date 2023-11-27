@@ -159,7 +159,7 @@ export default function VacationCountTable({ depts }) {
 
   const progressColor = (percent) => {
     if (percent >= 0 && percent <= 30) {
-      return '#00c642'; // 초록색
+      return '#ff0000'; // 초록색
     } else if (percent > 30 && percent <= 70) {
       return '#29abe2'; // 파란색
     } else {
