@@ -63,6 +63,24 @@ const headCells = [
     label: '수정항목'
   },
   {
+    id: 'updateStartTime',
+    align: 'center',
+    disablePadding: false,
+    label: '수정시간(출근)'
+  },
+  {
+    id: 'updateEndTime',
+    align: 'center',
+    disablePadding: false,
+    label: '수정시간(퇴근)'
+  },
+  {
+    id: 'approver',
+    align: 'center',
+    disablePadding: false,
+    label: '결재자'
+  },
+  {
     id: 'status',
     align: 'center',
     disablePadding: false,
@@ -140,7 +158,7 @@ OrderStatus.propTypes = {
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function UpdateAttendTable({ handleOpenRead, datas }) {
+export default function UpdateAttendTable({ datas, deleteAttendEdit }) {
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
@@ -198,13 +216,6 @@ export default function UpdateAttendTable({ handleOpenRead, datas }) {
                   tabIndex={-1}
                   key={data.attendapp_no}
                   selected={isItemSelected}
-                  onClick={(event) => {
-                    if (event.target.tagName.toLowerCase() === 'button') {
-                      event.stopPropagation();
-                    } else {
-                      handleOpenRead(data);
-                    }
-                  }}
                 >
                   <TableCell component="th" id={labelId} scope="data" align="center">
                     {dateFormat(new Date(data.attend_date))}
@@ -215,11 +226,18 @@ export default function UpdateAttendTable({ handleOpenRead, datas }) {
                     {data.attendedit_kind === 0 ? '출근' : data.attendedit_kind === 1 ? '퇴근' : '출근/퇴근'}
                   </TableCell>
                   <TableCell align="center">
+                    {data.attendedit_kind === 0 || data.attendedit_kind === 2 ? data.attendedit_start_time : '-'}
+                  </TableCell>
+                  <TableCell align="center">
+                    {data.attendedit_kind === 1 || data.attendedit_kind === 2 ? data.attendedit_end_time : '-'}
+                  </TableCell>
+                  <TableCell align="center">{data.attendapp_user_name}</TableCell>
+                  <TableCell align="center">
                     <OrderStatus status={data.attendapp_status} />
                   </TableCell>
                   <TableCell align="center">
                     {data.attendapp_status === 2 && (
-                      <Button variant="contained" size="small">
+                      <Button variant="contained" size="small" onClick={() => deleteAttendEdit(data.attendapp_no)}>
                         취소신청
                       </Button>
                     )}
