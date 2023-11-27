@@ -295,7 +295,7 @@ const ModifyAttendance = () => {
                         alignItems: 'center'
                       }}
                     >
-                      <BasicChip label="사원선택" color="gray" />
+                      <BasicChip label="사원선택" color="#46a5f3" />
                       {/* 자동완성 부분 */}
                       <BasicAuto
                         label="이름"
@@ -316,22 +316,22 @@ const ModifyAttendance = () => {
                 </Grid>
                 <Grid item xs={8} md={8} lg={8}>
                   {checkItems.length > 1 && (
-                    <MainCard sx={{ pt: 2, pr: 2, pl: 2, height: '690px' }} content={false}>
+                    <MainCard sx={{ pt: 2, pr: 2, pl: 2, height: '740px' }} content={false}>
                       <Grid container spacing={1} justifyContent="center">
                         <Grid item xs={12} sm={12} md={12} lg={12}>
                           <Typography variant="h4">일괄 출/퇴근 수정</Typography>
                           <Box clone mt={2.5}>
-                            <BasicChip label="변경 날짜" color="gray" />
-                            <BasicDatePicker setDate={setSelectDate} val={selectDate} />
+                            <BasicChip label="변경 날짜" color="#46a5f3" />
+                            <BasicDatePicker setDate={setSelectDate} val={selectDate} width="22%" />
                           </Box>
                           <Box clone mt={2.5}>
-                            <BasicChip label="수정사항" color="gray" />
+                            <BasicChip label="수정사항" color="#46a5f3" />
                             <Checkbox size="small" checked={startChecked} onChange={handleStartChange} /> 출근
                             <Checkbox size="small" checked={endChecked} onChange={handleEndChange} /> 퇴근
                           </Box>
                           {startChecked === true && (
                             <Box clone mt={2.5}>
-                              <BasicChip label="출근수정시간" color="gray" />
+                              <BasicChip label="출근수정시간" color="#46a5f3" />
                               <FormControl sx={{ ml: 1 }}>
                                 <RadioGroup
                                   row
@@ -344,20 +344,11 @@ const ModifyAttendance = () => {
                                 </RadioGroup>
                               </FormControl>
                               {attendStartDefault == 'other' && <TimePicker2 label={'출근수정시간'} setTime={setUpdateStartTime} />}
-                              {attendStartDefault == 'default' && (
-                                <TextField
-                                  size="small"
-                                  defaultValue="09:00:00"
-                                  key={attendStartDefault}
-                                  inputProps={{ readOnly: true }}
-                                  sx={{ width: '30%' }}
-                                />
-                              )}
                             </Box>
                           )}
                           {endChecked === true && (
                             <Box clone mt={2.5}>
-                              <BasicChip label="퇴근수정시간" color="gray" />
+                              <BasicChip label="퇴근수정시간" color="#46a5f3" />
                               <FormControl sx={{ ml: 1 }}>
                                 <RadioGroup
                                   row
@@ -370,19 +361,10 @@ const ModifyAttendance = () => {
                                 </RadioGroup>
                               </FormControl>
                               {attendEndDefault == 'other' && <TimePicker2 label={'퇴근수정시간'} setTime={setUpdateEndTime} />}
-                              {attendEndDefault == 'default' && (
-                                <TextField
-                                  size="small"
-                                  defaultValue="18:00:00"
-                                  key={attendEndDefault}
-                                  inputProps={{ readOnly: true }}
-                                  sx={{ width: '30%' }}
-                                />
-                              )}
                             </Box>
                           )}
                           <Box clone mt={2.5} mr={1}>
-                            <BasicChip label="수정사유" color="gray" />
+                            <BasicChip label="수정사유" color="#46a5f3" />
                             <TextField multiline rows={5} sx={{ width: '84%' }} />
                           </Box>
                           <Stack direction="row" justifyContent="flex-end" mt={2} mr={1.5}>
@@ -440,7 +422,7 @@ const ModifyAttendance = () => {
                           <Grid item xs={12} sm={12} md={12} lg={12}>
                             <Typography variant="h4">출/퇴근 수정</Typography>
                             <Box clone mt={2.5}>
-                              <BasicChip label="제목" color="gray" />
+                              <BasicChip label="제목" color="#46a5f3" />
                               <TextField
                                 size="small"
                                 onChange={(e) => {
@@ -449,13 +431,13 @@ const ModifyAttendance = () => {
                               />
                             </Box>
                             <Box clone mt={2.5}>
-                              <BasicChip label="수정사항" color="gray" />
+                              <BasicChip label="수정사항" color="#46a5f3" />
                               <Checkbox size="small" checked={startChecked} onChange={handleStartChange} /> 출근
                               <Checkbox size="small" checked={endChecked} onChange={handleEndChange} /> 퇴근
                             </Box>
                             {startChecked === true && (
                               <Box clone mt={2.5}>
-                                <BasicChip label="출근수정시간" color="gray" />
+                                <BasicChip label="출근수정시간" color="#46a5f3" />
                                 <FormControl sx={{ ml: 1 }}>
                                   <RadioGroup
                                     row
@@ -481,7 +463,7 @@ const ModifyAttendance = () => {
                             )}
                             {endChecked === true && (
                               <Box clone mt={2.5}>
-                                <BasicChip label="퇴근수정시간" color="gray" />
+                                <BasicChip label="퇴근수정시간" color="#46a5f3" />
                                 <FormControl sx={{ ml: 1 }}>
                                   <RadioGroup
                                     row
@@ -506,7 +488,7 @@ const ModifyAttendance = () => {
                               </Box>
                             )}
                             <Box clone mt={2.5} mr={1}>
-                              <BasicChip label="수정사유" color="gray" />
+                              <BasicChip label="수정사유" color="#46a5f3" />
                               <TextField
                                 multiline
                                 rows={5}

@@ -17,23 +17,24 @@ import {
   TextField
 } from '../../node_modules/@mui/material/index';
 import BasicTab from 'components/tab/BasicTab';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import React, { useEffect, useState } from 'react';
 import AttendUpdateModal from '../components/Modal/ModalM';
 import UpdateAttendTable from 'components/Table/UpdateAttendTable';
 import BasicDatePicker from 'components/DatePicker/BasicDatePicker';
 import BasicChip from 'components/Chip/BasicChip';
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
 import TimePicker2 from 'components/DatePicker/TimePicker';
 import UserAllAttendTable from 'components/Table/UserAllAttendTable';
 import UserAttendInfoTable from 'components/Table/UserAttendInfoTable';
 import axios from '../../node_modules/axios/index';
 import AppAuto from 'components/AutoComplete/AppAuto';
-import ModalS from 'components/Modal/ModalS';
 import { useFormatter } from 'store/module';
 import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
 import { useLocation } from '../../node_modules/react-router-dom/dist/index';
 import FileUpload from 'components/File/FileUpload';
+import SuccessModal from 'components/Modal/SuccessModal';
+import FailModal from 'components/Modal/FailModal';
 
 const UserAttendance = () => {
   // 날짜 형식
@@ -95,7 +96,6 @@ const UserAttendance = () => {
   };
 
   // 출/퇴근 수정 폼
-  const [title, setTitle] = useState(''); // 수정 제목
   const [reason, setReason] = useState(''); // 수정 사유
   const [updateStartTime, setUpdateStartTime] = useState(''); // 출근 : 수정할 시간
   const [updateEndTime, setUpdateEndTime] = useState(''); // 퇴근 : 수정할 시간
@@ -104,12 +104,27 @@ const UserAttendance = () => {
   // 수정 요청 시 체크 박스 (true : 체크 O, false : 체크 X)
   const [startChecked, setStartChecked] = useState(false);
   const [endChecked, setEndChecked] = useState(false);
+  const [bothChecked, setBothChecked] = useState(false);
+
+  useEffect(() => {
+    if (startChecked && endChecked) {
+      setBothChecked(true);
+    } else {
+      setBothChecked(false);
+    }
+  }, [startChecked, endChecked]);
 
   const handleStartChange = (e) => {
     setStartChecked(e.target.checked);
   };
 
   const handleEndChange = (e) => {
+    setEndChecked(e.target.checked);
+  };
+
+  const handleBothChange = (e) => {
+    setBothChecked(e.target.checked);
+    setStartChecked(e.target.checked);
     setEndChecked(e.target.checked);
   };
 
@@ -132,15 +147,14 @@ const UserAttendance = () => {
       Object.keys(approver).length === 0 ||
       (startChecked === false && endChecked === false)
     ) {
-      alert('날짜 선택하시고 결재자 선택하시고 수정사항 선택하세요.');
+      // alert('날짜 선택하시고 결재자 선택하시고 수정사항 선택하세요.');
+      handleOpenFailModal();
     } else {
       axios
         .post(`/attend-edit?user_no=${token.user_no}&attend_no=${selectAttendData.attend_no}`, {
-          attendedit_title: title
-            ? title
-            : `${token.user_name}-${dateFormat(new Date(selectAttendData.attend_date))}-${
-                startChecked === true && endChecked === true ? '출퇴근' : startChecked === true ? '출근' : '퇴근'
-              }`,
+          attendedit_title: `${token.user_name}-${
+            Object.keys(selectAttendData).length !== 0 ? dateFormat(new Date(selectAttendData.attend_date)) : ''
+          }-${startChecked === true && endChecked === true ? '출퇴근' : startChecked === true ? '출근' : '퇴근'}`,
           attendedit_reason: reason,
           attendedit_kind: startChecked === true && endChecked === true ? 2 : startChecked === true ? 0 : 1,
           attendedit_start_time: startChecked !== true ? null : updateStartTime ? updateStartTime : '09:00:00',
@@ -166,8 +180,7 @@ const UserAttendance = () => {
               })
               .then((res) => {
                 console.log(res.data);
-                alert('신청완료');
-                setValue(1);
+                handleOpenSuccessModal();
               });
           } catch (error) {
             console.error('Error Uploading Files : ', error);
@@ -176,10 +189,19 @@ const UserAttendance = () => {
     }
   }
 
-  // 탭 1. 출/퇴근 수정 목록 조회 ====================================
-  const [selectAttendEditData, setSelectAttendEditData] = useState({}); //목록에서 선택한 수정 데이터 : 모달창에서 상세 조회
+  // 출퇴근 수정 내역 삭제 버튼 함수
+  function deleteAttendEdit(attendapp_no) {
+    axios.get(`/attend-edit-delete?attendapp_no=${attendapp_no}`).then((res) => {
+      console.log(res.data);
+      handleOpenDeleteModal();
+      axios.get(`/attend-edit?user_no=${token.user_no}`).then((res) => {
+        setAttendEditDatas(res.data);
+      });
+    });
+  }
 
-  // 날짜별 데이터 검색 =========================================
+  // 탭 1. 출/퇴근 수정 목록 조회 ====================================
+  // 날짜별 데이터 검색
   const [searchStartDate, setSearchStartDate] = useState(new Date().toISOString().slice(0, 10)); // 검색 시작 날짜
   const [searchEndDate, setSearchEndDate] = useState(new Date().toISOString().slice(0, 10)); // 검색 종료 날짜
   const [filteredAttendData, setFilteredAttendData] = useState([0, []]); // 검색 결과 : 출퇴근 내역
@@ -266,16 +288,48 @@ const UserAttendance = () => {
     });
   };
 
-  const [openRead, setOpenRead] = React.useState(false); // 탭 1. 수정 목록 상세 조회
+  // 모달창 1. 신청 실패
+  const [failModal, setFailModal] = React.useState(false);
   // 모달창 활성화 버튼
-  const handleOpenRead = (data) => {
-    setSelectAttendEditData(data);
-    setOpenRead(true);
+  const handleOpenFailModal = () => {
+    setFailModal(true);
+    setTimeout(() => {
+      setFailModal(false);
+    }, 1500);
   };
   // 모달창 취소 버튼
-  const handleCloseRead = () => {
-    setSelectAttendEditData({});
-    setOpenRead(false);
+  const handleCloseFailModal = () => {
+    setFailModal(false);
+  };
+  // 모달창 2. 신청 성공
+  const [successModal, setSuccessModal] = React.useState(false);
+
+  // 모달창 활성화 버튼
+  const handleOpenSuccessModal = () => {
+    setSuccessModal(true);
+    setTimeout(() => {
+      setSuccessModal(false);
+      setValue(1);
+    }, 1500);
+  };
+
+  // 모달창 취소 버튼
+  const handleCloseSuccessModal = () => {
+    setSuccessModal(false);
+    setValue(1);
+  };
+  // 모달창 3. 삭제 성공
+  const [deleteModal, setDeleteModal] = React.useState(false);
+  // 모달창 활성화 버튼
+  const handleOpenDeleteModal = () => {
+    setDeleteModal(true);
+    setTimeout(() => {
+      setDeleteModal(false);
+    }, 1500);
+  };
+  // 모달창 취소 버튼
+  const handleCloseDeleteModal = () => {
+    setDeleteModal(false);
   };
 
   // 같은 부서의 근태담당자 (우선 지금은 팀장) 사용자 데이터
@@ -394,17 +448,18 @@ const UserAttendance = () => {
                     <Box mt={3}>
                       <BasicChip label="제목" color="#46a5f3" />
                       <TextField
-                        size="medium"
-                        sx={{ ml: 1, width: '57%' }}
-                        onChange={(e) => {
-                          setTitle(e.target.value);
-                        }}
+                        label={`${token.user_name}${
+                          Object.keys(selectAttendData).length !== 0 ? '-' + dateFormat(new Date(selectAttendData.attend_date)) : ''
+                        }-${startChecked === true && endChecked === true ? '출퇴근' : startChecked === true ? '출근' : '퇴근'}`}
+                        size="small"
+                        sx={{ ml: 1, width: '40%' }}
+                        disabled
                       />
                     </Box>
                     <Box mt={1} sx={{ display: 'flex', alignItems: 'center' }}>
                       <EditNoteRoundedIcon fontSize="medium" color="secondary" sx={{ mx: 1 }} />
                       <Typography size="small" color="secondary">
-                        제목을 입력하지 않을 시 자동 지정됩니다.
+                        제목은 자동 지정됩니다.
                       </Typography>
                     </Box>
                     <Box mt={2.5} sx={{ display: 'flex' }}>
@@ -422,6 +477,7 @@ const UserAttendance = () => {
                     </Box>
                     <Box mt={2.5}>
                       <BasicChip label="수정사항" color="#46a5f3" />
+                      <Checkbox size="small" checked={bothChecked} onChange={handleBothChange} /> 출/퇴근
                       <Checkbox size="small" checked={startChecked} onChange={handleStartChange} /> 출근
                       <Checkbox size="small" checked={endChecked} onChange={handleEndChange} /> 퇴근
                     </Box>
@@ -481,7 +537,7 @@ const UserAttendance = () => {
                       <BasicChip label="증빙 업로드" color="#46a5f3" />
                       <FileUpload setUploadedInfo={setUploadedFile} uploadedInfo={uploadedFile} width="500px" />
                     </Box>
-                    <Box mt={2.5} mr={1}>
+                    <Box mt={2} mr={1}>
                       <BasicChip label="수정사유" color="#46a5f3" />
                       <TextField
                         multiline
@@ -544,6 +600,14 @@ const UserAttendance = () => {
             </Grid>
           </Grid>
         </AttendUpdateModal>
+        <FailModal
+          open={failModal}
+          handleClose={handleCloseFailModal}
+          color="red"
+          msg1="날짜, 결재자, 수정사항은"
+          msg2="필수로 선택하셔야합니다."
+        />
+        <SuccessModal open={successModal} handleClose={handleCloseSuccessModal} color="#46a5f3" msg="수정 완료되었습니다." />
       </BasicTab>
       <BasicTab value={value} index={1}>
         <Box mx={1}>
@@ -579,123 +643,12 @@ const UserAttendance = () => {
           </Grid>
           <MainCard sx={{ mt: 2 }} content={false}>
             <UpdateAttendTable
-              handleOpenRead={handleOpenRead}
               datas={filteredAttendEditData[0] === 0 ? attendEditDatas : filteredAttendEditData[1]}
+              deleteAttendEdit={deleteAttendEdit}
             />
           </MainCard>
         </Box>
-        <ModalS open={openRead} handleClose={handleCloseRead}>
-          <Box py={2}>
-            <Typography variant="h4">{selectAttendEditData.attendedit_title}</Typography>
-          </Box>
-          <Box py={2}>
-            <Grid container spacing={1} sx={{ display: 'flex', alignItems: 'center' }}>
-              {selectAttendEditData.attendedit_kind === 2 && (
-                <>
-                  <Grid item xs={3} md={3} lg={3}>
-                    <BasicChip label="수정사항" color="#42a5f5" />
-                  </Grid>
-                  <Grid item xs={9} md={9} lg={9}>
-                    <Typography>출근, 퇴근</Typography>
-                  </Grid>
-                  <Grid item xs={3} md={3} lg={3}>
-                    <BasicChip label="수정시간(출근)" color="#42a5f5" />
-                  </Grid>
-                  <Grid item xs={9} md={9} lg={9}>
-                    <Typography>{selectAttendEditData.attendedit_start_time}</Typography>
-                  </Grid>
-                  <Grid item xs={3} md={3} lg={3}>
-                    <BasicChip label="수정시간(퇴근)" color="#42a5f5" />
-                  </Grid>
-                  <Grid item xs={9} md={9} lg={9}>
-                    <Typography>{selectAttendEditData.attendedit_end_time}</Typography>
-                  </Grid>
-                </>
-              )}
-              {selectAttendEditData.attendedit_kind !== 2 && (
-                <>
-                  <Grid item xs={3} md={3} lg={3}>
-                    <BasicChip label="수정사항" color="#42a5f5" />
-                  </Grid>
-                  <Grid item xs={9} md={9} lg={9}>
-                    <Typography>{selectAttendEditData.attendedit_kind === 0 ? '출근' : '퇴근'}</Typography>
-                  </Grid>
-                  <Grid item xs={3} md={3} lg={3}>
-                    <BasicChip label={selectAttendEditData.attendedit_kind === 0 ? '수정시간(출근)' : '수정시간(퇴근)'} color="#42a5f5" />
-                  </Grid>
-                  <Grid item xs={9} md={9} lg={9}>
-                    <Typography>
-                      {selectAttendEditData.attendedit_kind === 0
-                        ? selectAttendEditData.attendedit_start_time
-                        : selectAttendEditData.attendedit_end_time}
-                    </Typography>
-                  </Grid>
-                </>
-              )}
-              <Grid item xs={3} md={3} lg={3}>
-                <BasicChip label="수정사유" color="#42a5f5" />
-              </Grid>
-              <Grid item xs={9} md={9} lg={9}>
-                <Typography>{selectAttendEditData.attendedit_reason}</Typography>
-              </Grid>
-              <Grid item xs={3} md={3} lg={3}>
-                <BasicChip label="요청일자" color="#42a5f5" />
-              </Grid>
-              <Grid item xs={9} md={9} lg={9}>
-                <Typography>{dateFormat(new Date(selectAttendEditData.attendedit_date))}</Typography>
-              </Grid>
-              <Grid item xs={3} md={3} lg={3}>
-                <BasicChip label="결재자" color="#42a5f5" />
-              </Grid>
-              <Grid item xs={9} md={9} lg={9}>
-                <Typography>{selectAttendEditData.attendapp_user_name}</Typography>
-              </Grid>
-              <Grid item xs={3} md={3} lg={3}>
-                <BasicChip label="결재상태" color="#42a5f5" />
-              </Grid>
-              <Grid item xs={9} md={9} lg={9}>
-                <Typography>
-                  {selectAttendEditData.attendapp_status === 0
-                    ? '결재승인'
-                    : selectAttendEditData.attendapp_status === 1
-                    ? '결재반려'
-                    : '결재대기'}
-                </Typography>
-              </Grid>
-              {selectAttendEditData.attendapp_status === 0 && (
-                <>
-                  <Grid item xs={3} md={3} lg={3}>
-                    <BasicChip label="결재날짜" color="#42a5f5" />
-                  </Grid>
-                  <Grid item xs={9} md={9} lg={9}>
-                    <Typography>{selectAttendEditData.attendapp_date}</Typography>
-                  </Grid>
-                </>
-              )}
-              {selectAttendEditData.attendapp_status === 1 && (
-                <>
-                  <Grid item xs={3} md={3} lg={3}>
-                    <BasicChip label="반려사유" color="#42a5f5" />
-                  </Grid>
-                  <Grid item xs={9} md={9} lg={9}>
-                    <Typography>{selectAttendEditData.attendapp_reason}</Typography>
-                  </Grid>
-                  <Grid item xs={3} md={3} lg={3}>
-                    <BasicChip label="결재날짜" color="#42a5f5" />
-                  </Grid>
-                  <Grid item xs={9} md={9} lg={9}>
-                    <Typography>{selectAttendEditData.attendapp_date}</Typography>
-                  </Grid>
-                </>
-              )}
-            </Grid>
-          </Box>
-          <Stack direction="row" justifyContent="flex-end" mt={2} mr={1.5}>
-            <Button variant="contained" size="medium" onClick={handleCloseRead} sx={{ backgroundColor: '#42a5f5' }}>
-              닫기
-            </Button>
-          </Stack>
-        </ModalS>
+        <SuccessModal open={deleteModal} handleClose={handleCloseDeleteModal} color="#52c41a" msg="수정 요청이 취소되었습니다." />
       </BasicTab>
     </>
   );
