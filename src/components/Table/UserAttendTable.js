@@ -76,6 +76,7 @@ function UserAttendTableHead({ order, orderBy }) {
             align={headCell.align}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
+            sx={{ width: `300px`, backgroundColor: '#f9f9f9' }}
           >
             {headCell.label}
           </TableCell>

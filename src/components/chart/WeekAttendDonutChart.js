@@ -28,7 +28,7 @@ export default function WeekAttendDonutChart() {
   // 시간과 분을 합하여 8.0분 형식으로 변환
   const formattedTotal2 = parseInt(`${totalHours2}`);
   console.log('attend_total 시 분: ' + formattedTotal2);
-  console.log('분합: ' + parseInt(totalMinutes1 +totalMinutes2));
+  console.log('분합: ' + parseInt(totalMinutes1 + totalMinutes2));
 
   // chart options
   const radialBarChartOptions = {
@@ -61,7 +61,10 @@ export default function WeekAttendDonutChart() {
     },
 
     labels: ['초과근무시간', '정규근무시간'],
-    colors: ['#FF5733', '#3498DB']
+    colors: ['#FF5733','#3498DB'],
+    legend: {
+      show: true
+    }
   };
 
   return (
@@ -73,7 +76,7 @@ export default function WeekAttendDonutChart() {
             series={[(formattedTotal2 / 12).toFixed(2) * 100, (formattedTotal1 / 40).toFixed(2) * 100]}
             add={formattedTotal1}
             type="radialBar"
-            height={296}
+            height={400}
           />
         </Grid>
       }

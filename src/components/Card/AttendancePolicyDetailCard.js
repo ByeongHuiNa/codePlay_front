@@ -32,14 +32,21 @@ const AttendancePolicyDetailCard = () => {
       <Stack direction="column" spacing={2}>
         {Object.keys(content).length > 0 && (
           <>
-            <TextField select value={content.policy_no} size="normal" sx={{ width: 'auto' }} onChange={(e) => changeInput(e.target.value)}>
-              {Object.keys(tab).length > 0 &&
-                tab.map((option) => (
+            {Object.keys(tab).length > 0 && (
+              <TextField
+                select
+                value={content.policy_no}
+                size="normal"
+                sx={{ width: 'auto' }}
+                onChange={(e) => changeInput(e.target.value)}
+              >
+                {tab.map((option) => (
                   <MenuItem key={option.id} value={option.id}>
                     {option.name}
                   </MenuItem>
                 ))}
-            </TextField>
+              </TextField>
+            )}
             <Stack direction="row" justifyContent="center" mb={3}>
               <Avatar src={content.user_profile} sx={{ width: 150, height: 150 }}></Avatar>
             </Stack>

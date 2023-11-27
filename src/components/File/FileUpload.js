@@ -20,7 +20,7 @@ const StyledUploadBox = styled('label')({
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
-  marginLeft: '10px',
+  marginLeft: '8px',
   cursor: 'pointer',
   '&:hover': {
     backgroundColor: '#f4f4f4'
@@ -43,35 +43,39 @@ const FileUpload = ({ setUploadedInfo, uploadedInfo, width }) => {
     event.preventDefault();
     setActive(false);
 
-    const filesLists = event.target.files;
-    let fileUrlLists = [...uploadedView];
+    const filesLists = event.dataTransfer.files;
+    if (filesLists) {
+      let fileUrlLists = [...uploadedView];
 
-    for (let i = 0; i < filesLists.length; i++) {
-      const { name, size: byteSize, type } = file;
-      const size = (byteSize / (1024 * 1024)).toFixed(2) + 'mb';
-      fileUrlLists.push({ name, size, type });
-      // const currentFileUrl = URL.createObjectURL(filesLists[i]);
-      // fileUrlLists.push(currentFileUrl);
+      for (let i = 0; i < filesLists.length; i++) {
+        const { name, size: byteSize, type } = filesLists[i];
+        const size = (byteSize / (1024 * 1024)).toFixed(2) + 'mb';
+        fileUrlLists.push({ name, size, type });
+        // const currentFileUrl = URL.createObjectURL(filesLists[i]);
+        // fileUrlLists.push(currentFileUrl);
+      }
+
+      setUploadedInfo(filesLists);
+      setUploadedView(fileUrlLists);
     }
-
-    setUploadedInfo(filesLists);
-    setUploadedView(fileUrlLists);
   };
 
   const handleUpload = (event) => {
     const filesLists = event.target.files;
-    let fileUrlLists = [...uploadedView];
+    if (filesLists) {
+      let fileUrlLists = [...uploadedView];
 
-    for (let i = 0; i < filesLists.length; i++) {
-      const { name, size: byteSize, type } = filesLists[i];
-      const size = (byteSize / (1024 * 1024)).toFixed(2) + 'mb';
-      fileUrlLists.push({ name, size, type });
-      // const currentFileUrl = URL.createObjectURL(filesLists[i]);
-      // fileUrlLists.push(currentFileUrl);
+      for (let i = 0; i < filesLists.length; i++) {
+        const { name, size: byteSize, type } = filesLists[i];
+        const size = (byteSize / (1024 * 1024)).toFixed(2) + 'mb';
+        fileUrlLists.push({ name, size, type });
+        // const currentFileUrl = URL.createObjectURL(filesLists[i]);
+        // fileUrlLists.push(currentFileUrl);
+      }
+
+      setUploadedInfo(filesLists);
+      setUploadedView(fileUrlLists);
     }
-
-    setUploadedInfo(filesLists);
-    setUploadedView(fileUrlLists);
   };
 
   // X 버튼 클릭 시 이미지 삭제
@@ -108,17 +112,16 @@ const FileUpload = ({ setUploadedInfo, uploadedInfo, width }) => {
         sx={{
           width: { width },
           height: 'auto',
-          overflowX: 'scroll',
           overflowY: 'scroll',
           display: 'flex',
           alignItems: 'center',
           '&::-webkit-scrollbar': {
-            width: '1px'
+            width: '0px'
           }
         }}
       >
         {uploadedView.length !== 0 ? (
-          <List>
+          <List sx={{ paddingBottom: 0, margin: 0 }}>
             {uploadedView.map((file, index) => (
               <ListItem key={index} alignItems="center">
                 <ListItemIcon sx={{ mr: 2 }}>
