@@ -103,7 +103,14 @@ const headCells = [
 
 function AttendanceTableHead({ order, orderBy }) {
   return (
-    <TableHead>
+    <TableHead
+      sx={{
+        position: 'sticky',
+        top: 0,
+        backgroundColor: '#f9f9f9',
+        zIndex: 1 // 다른 요소 위에 표시되도록 설정
+      }}
+    >
       <TableRow>
         {headCells.map((headCell) => (
           <TableCell
@@ -211,6 +218,26 @@ export default function AttendanceTable({ month, user_no }) {
   const { attendance, setAttendance } = useAttendanceState();
   const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
 
+  const [good, setGood] = useState([]); //정상 데이터 담을 배열
+  const [bad, setBad] = useState([]); //근태이상 데이터 담을 배열
+  const [vaca, setVaca] = useState([]); //휴가 데이터 담을 배열
+
+  const [currentData, setCurrentData] = useState([]);
+
+  // MainCard 컴포넌트 내에서 클릭 이벤트를 통해 상태 변경하는 함수
+  const handleCardClick = (selectedData) => {
+    // 선택된 데이터에 따라 currentData 업데이트
+    if (selectedData === '정상') {
+      setCurrentData(good);
+    } else if (selectedData === '근태이상') {
+      setCurrentData(bad);
+    } else if (selectedData === '휴가') {
+      setCurrentData(vaca);
+    } else if (selectedData === '전체') {
+      setCurrentData(attendance);
+    }
+  };
+
   // let normal = 0;
   // let notnormal = 0;
   // let leave = 0;
@@ -221,13 +248,29 @@ export default function AttendanceTable({ month, user_no }) {
   // const [leave, setLeave] = useState(0); //휴가 개수
 
   useEffect(() => {
+    
     async function get() {
-      //const endPoints = ['http://localhost:8000/attendance'];
-      //const result = await axios.all(endPoints.map((endPoint) => axios.get(endPoint)));
-      // result[0].data를 필터링하여 leave_status가 1인 데이터만 추출
       const result = await axios.get(`/user-attend-month?user_no=${user_no}&month=${month}`);
-
       setAttendance(result.data);
+      setCurrentData(result.data);
+      const filteredGood = result.data.filter((item) => item.attend_status === '정상');
+      setGood(filteredGood);
+
+      const filteredBad = result.data.filter(
+        (item) => item.attend_status === '지각' || item.attend_status === '조퇴' || item.attend_status === '결근'
+      );
+      setBad(filteredBad);
+
+      const filteredVaca = result.data.filter(
+        (item) =>
+          item.attend_status === '휴가(연차)' ||
+          item.attend_status === '휴가(오전반차)' ||
+          item.attend_status === '휴가(오후반차)' ||
+          item.attend_status === '휴가(공가)'
+      );
+      setVaca(filteredVaca);
+
+      
       console.log('attendance: ' + attendance);
       console.log('zzzz: ' + result.data.length);
 
@@ -264,7 +307,7 @@ export default function AttendanceTable({ month, user_no }) {
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <Grid container xs={9} rowSpacing={4} columnSpacing={2.75}>
           <Grid item xs={3}>
-            <MainCard>
+            <MainCard onClick={() => handleCardClick('전체')}>
               <Typography variant="h4" style={{ textAlign: 'center' }}>
                 전체
               </Typography>
@@ -274,7 +317,7 @@ export default function AttendanceTable({ month, user_no }) {
             </MainCard>
           </Grid>
           <Grid item xs={3}>
-            <MainCard>
+            <MainCard onClick={() => handleCardClick('정상')}>
               <Typography variant="h4" style={{ textAlign: 'center' }}>
                 정상
               </Typography>
@@ -284,7 +327,7 @@ export default function AttendanceTable({ month, user_no }) {
             </MainCard>
           </Grid>
           <Grid item xs={3}>
-            <MainCard>
+            <MainCard onClick={() => handleCardClick('근태이상')}>
               <Typography variant="h4" style={{ textAlign: 'center' }}>
                 근태이상
               </Typography>
@@ -294,7 +337,7 @@ export default function AttendanceTable({ month, user_no }) {
             </MainCard>
           </Grid>
           <Grid item xs={3}>
-            <MainCard>
+            <MainCard onClick={() => handleCardClick('휴가')}>
               <Typography variant="h4" style={{ textAlign: 'center' }}>
                 휴가
               </Typography>
@@ -312,7 +355,18 @@ export default function AttendanceTable({ month, user_no }) {
           position: 'relative',
           display: 'block',
           maxWidth: '100%',
+          overflowY: 'auto',
           '& td, & th': { whiteSpace: 'nowrap' },
+          '&::-webkit-scrollbar': {
+            width: 5
+          },
+          '&::-webkit-scrollbar-track': {
+            backgroundColor: 'white'
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: 'gray',
+            borderRadius: 2
+          },
           // maxHeight를 설정하여 테이블 높이를 제한
           maxHeight: '400px' // 원하는 높이로 변경하세요
         }}
@@ -330,36 +384,31 @@ export default function AttendanceTable({ month, user_no }) {
         >
           <AttendanceTableHead order={order} orderBy={orderBy} />
           <TableBody>
-            {Object.values(attendance)
-
-              // .slice(0, 5)
-              .map((attendance) => {
-                const dateObject = new Date(attendance.attend_date);
-                const dateObject1 = new Date(attendance.attend_date);
-                const formattedDate = dateObject.toLocaleDateString();
-                const day = dateObject1.getDay();
-                const dayName = daysOfWeek[day];
-                return (
-                  <TableRow
-                    hover
-                    role="checkbox"
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                    //aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={attendance.attend_no}
-                    //selected={isItemSelected}
-                  >
-                    <TableCell align="center">{formattedDate}</TableCell>
-                    <TableCell align="center">{dayName}</TableCell>
-                    <TableCell align="center">{attendance.attend_start}</TableCell>
-                    <TableCell align="center">{attendance.attend_end}</TableCell>
-                    <TableCell align="center">{attendance.attend_total}</TableCell>
-                    <TableCell align="center">
-                      <AttendanceStatus status={attendance.attend_status} />
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+            {Object.values(currentData).map((data) => {
+              const dateObject = new Date(data.attend_date);
+              const dateObject1 = new Date(data.attend_date);
+              const formattedDate = dateObject.toLocaleDateString();
+              const day = dateObject1.getDay();
+              const dayName = daysOfWeek[day];
+              return (
+                <TableRow
+                  hover
+                  role="checkbox"
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  tabIndex={-1}
+                  key={data.attend_no}
+                >
+                  <TableCell align="center">{formattedDate}</TableCell>
+                  <TableCell align="center">{dayName}</TableCell>
+                  <TableCell align="center">{data.attend_start}</TableCell>
+                  <TableCell align="center">{data.attend_end}</TableCell>
+                  <TableCell align="center">{data.attend_total}</TableCell>
+                  <TableCell align="center">
+                    <AttendanceStatus status={data.attend_status} />
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>
