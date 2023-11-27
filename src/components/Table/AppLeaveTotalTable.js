@@ -94,7 +94,14 @@ const headCells = [
 
 function OrderTableHead({ order, orderBy }) {
   return (
-    <TableHead>
+    <TableHead
+      sx={{
+        position: 'sticky',
+        top: 0,
+        backgroundColor: '#f9f9f9',
+        zIndex: 1 // 다른 요소 위에 표시되도록 설정
+      }}
+    >
       <TableRow>
         {headCells.map((headCell) => (
           <TableCell
@@ -234,7 +241,18 @@ export default function AppLeaveTotalTable({ month, handleOpen, user_no }) {
           position: 'relative',
           display: 'block',
           maxWidth: '100%',
-          '& td, & th': { whiteSpace: 'nowrap' }
+          overflowY: 'auto',
+          '& td, & th': { whiteSpace: 'nowrap' },
+          '&::-webkit-scrollbar': {
+            width: 5
+          },
+          '&::-webkit-scrollbar-track': {
+            backgroundColor: 'white'
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: 'gray',
+            borderRadius: 2
+          }
         }}
       >
         <Table
