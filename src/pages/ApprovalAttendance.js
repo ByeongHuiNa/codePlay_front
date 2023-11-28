@@ -1586,8 +1586,8 @@ const ApprovalAttendance = () => {
                             <BasicChip label="초과근무시간" color="#46a5f3" />
                             <TextField
                               size="small"
-                              defaultValue={`${selectOvertimeData.attend_total} (${selectOvertimeData.attend_start} ~ ${selectOvertimeData.attend_end})`}
-                              key={`time-${selectOvertimeData.attend_total}`}
+                              defaultValue={`${selectOvertimeData.overtime_time} (${selectOvertimeData.attend_start} ~ ${selectOvertimeData.attend_end})`}
+                              key={`time-${selectOvertimeData.overtime_time}`}
                               InputProps={{ readOnly: true, style: { borderRadius: 0 } }}
                               sx={{ width: '35%' }}
                             />
