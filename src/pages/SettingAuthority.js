@@ -21,7 +21,7 @@ import AuthorityDetailCard from 'components/Card/AuthorityDetailCard';
 
 const SettingAuthority = () => {
   //zustand로 관리할 값들
-  const { setIndex, setTab, index } = useTabState();
+  const { setIndex, setTab, index, tab } = useTabState();
   const { setTableList } = useTableListState();
   const { view, setView } = useDetailCardState();
   const { setPage, setSearch, now_page, setTotalPage } = useCriteria();
@@ -29,22 +29,26 @@ const SettingAuthority = () => {
 
   //화면 초기값 셋팅
   useEffect(() => {
-    setIndex('');
-    setIndex(0);
     axios.get('/dept-list').then((res) => setDeptList(res.data));
     const tabs = [];
-    axios.get('/role-count').then((res) => {
-      for (let i of res.data) {
-        const tab_temp = {
-          id: i.role_level,
-          name: i.role_name,
-          number: i.count,
-          total: Math.floor(i.count / 7) + (i.count % 7) == 0 ? 0 : 1
-        };
-        tabs.push(tab_temp);
-      }
-      setTab(tabs);
-    });
+    axios
+      .get('/role-count')
+      .then((res) => {
+        for (let i of res.data) {
+          const tab_temp = {
+            id: i.role_level,
+            name: i.role_name,
+            number: i.count,
+            total: Math.floor(i.count / 7) + (i.count % 7 == 0 ? 0 : 1)
+          };
+          tabs.push(tab_temp);
+        }
+        setTab(tabs);
+      })
+      .then(() => {
+        setIndex('');
+        setIndex(0);
+      });
     setView(false);
     setSearch('');
   }, []);

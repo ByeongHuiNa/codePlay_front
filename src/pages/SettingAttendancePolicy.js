@@ -8,12 +8,13 @@ import { Grid } from '../../node_modules/@mui/material/index';
 
 //icon import
 import { useCriteria, useDetailCardState, useTabState, useTableListState } from 'store/module';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import axios from '../../node_modules/axios/index';
 import SettingAttendancePolicyTable from 'components/Table/SettingAttendancePolicyTable';
 import SettingTab from 'components/tab/SettingTab';
 import AttendancePolicyDetailCard from 'components/Card/AttendancePolicyDetailCard';
 import InputSearch from 'components/Input/InputSearch';
+import SuccessModal from 'components/Modal/SuccessModal';
 
 //zustand import
 
@@ -79,6 +80,20 @@ const SettingAttendancePolicy = () => {
     setTotalPage(result.headers['x-total-count']);
   }
 
+  // 모달창 1. 결재 대기중인 휴가 삭제 성공
+  const [deleteModal, setDeleteModal] = useState(false);
+  // 모달창 활성화 버튼
+  const handleOpenDeleteModal = () => {
+    setDeleteModal(true);
+    setTimeout(() => {
+      setDeleteModal(false);
+    }, 1500);
+  };
+  // 모달창 취소 버튼
+  const handleCloseDeleteModal = () => {
+    setDeleteModal(false);
+  };
+
   return (
     <>
       <Typography variant="h2" mb={2}>
@@ -91,11 +106,17 @@ const SettingAttendancePolicy = () => {
             <InputSearch isPersonIcon={true} onClick={() => search_user(search)}></InputSearch> */}
             <SettingTab></SettingTab>
             <SettingAttendancePolicyTable />
+            <SuccessModal
+              open={deleteModal}
+              handleClose={handleCloseDeleteModal}
+              color="#52c41a"
+              msg="사용자 출/퇴근 정책이 변경되었습니다."
+            />
           </MainCard>
         </Grid>
         {view == 1 && (
           <Grid item xs={4}>
-            <AttendancePolicyDetailCard />
+            <AttendancePolicyDetailCard handleOpenDeleteModal={handleOpenDeleteModal} />
           </Grid>
         )}
       </Grid>

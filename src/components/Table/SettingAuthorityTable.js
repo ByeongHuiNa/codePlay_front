@@ -143,7 +143,8 @@ export default function SettingAuthorityTable() {
         </TableContainer>
       </Box>
       <Stack alignItems="center" mt={2}>
-        {Object.keys(tab).length > 0 && (
+        {console.log(totalPage)}
+        {Object.keys(tab).length > 0 && totalPage > -1 && (
           <Pagination
             count={totalPage}
             page={now_page}

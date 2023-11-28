@@ -5,7 +5,7 @@ import BasicTimePicker from 'components/DatePicker/BasicTimePicker';
 import dayjs from 'dayjs';
 import axios from '../../../node_modules/axios/index';
 
-const AttendancePolicyDetailCard = () => {
+const AttendancePolicyDetailCard = ({handleOpenDeleteModal}) => {
   const { tab } = useTabState();
   const { content, setView, setContent } = useDetailCardState();
 
@@ -23,7 +23,9 @@ const AttendancePolicyDetailCard = () => {
     setContent(temp);
   };
   const savePolice = () => {
-    axios.post('/user-policy-detail', content);
+    axios.post('/user-policy-detail', content).then(
+      handleOpenDeleteModal()
+    );
     //TODO: post이후 rerendering 안됨.(위의 숫자라도 바뀌게끔)
   };
 

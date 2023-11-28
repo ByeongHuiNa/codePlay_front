@@ -53,7 +53,7 @@ export const useCriteria = create(
     now_page: 1,
     limit: 10,
     search: '',
-    totalPage: 1,
+    totalPage: -1,
     setPage: (new_Page) => set(() => ({ now_page: new_Page })),
     setLimit: (new_limit) => set(() => ({ limit: new_limit })),
     setSearch: (newSearch) => set(() => ({ search: newSearch })),
