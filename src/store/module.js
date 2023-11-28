@@ -406,7 +406,7 @@ export const useAlarm = create(
   devtools((set) => ({
     alarm: [],
     setAlarm: (newAlarm) => set(() => ({ alarm: newAlarm })),
-    addAlarm: (newAlarm) => set((pre) => ({ alarm: [...pre.alarm, newAlarm] }))
+    addAlarm: (newAlarm) => set((pre) => ({ alarm: [newAlarm, ...pre.alarm] }))
   }))
 );
 
