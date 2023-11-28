@@ -222,19 +222,19 @@ export default function AttendanceTable({ month, user_no }) {
   const [bad, setBad] = useState([]); //근태이상 데이터 담을 배열
   const [vaca, setVaca] = useState([]); //휴가 데이터 담을 배열
 
-  const [currentData, setCurrentData] = useState([]);
+  const [currentStatus, setCurrentStatus] = useState([]); //필터링 데이터 담을 배열
 
   // MainCard 컴포넌트 내에서 클릭 이벤트를 통해 상태 변경하는 함수
   const handleCardClick = (selectedData) => {
     // 선택된 데이터에 따라 currentData 업데이트
     if (selectedData === '정상') {
-      setCurrentData(good);
+      setCurrentStatus(good);
     } else if (selectedData === '근태이상') {
-      setCurrentData(bad);
+      setCurrentStatus(bad);
     } else if (selectedData === '휴가') {
-      setCurrentData(vaca);
+      setCurrentStatus(vaca);
     } else if (selectedData === '전체') {
-      setCurrentData(attendance);
+      setCurrentStatus(attendance);
     }
   };
 
@@ -252,7 +252,7 @@ export default function AttendanceTable({ month, user_no }) {
     async function get() {
       const result = await axios.get(`/user-attend-month?user_no=${user_no}&month=${month}`);
       setAttendance(result.data);
-      setCurrentData(result.data);
+      setCurrentStatus(result.data);
       const filteredGood = result.data.filter((item) => item.attend_status === '정상');
       setGood(filteredGood);
 
@@ -384,7 +384,7 @@ export default function AttendanceTable({ month, user_no }) {
         >
           <AttendanceTableHead order={order} orderBy={orderBy} />
           <TableBody>
-            {Object.values(currentData).map((data) => {
+            {Object.values(currentStatus).map((data) => {
               const dateObject = new Date(data.attend_date);
               const dateObject1 = new Date(data.attend_date);
               const formattedDate = dateObject.toLocaleDateString();
