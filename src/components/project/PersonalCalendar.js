@@ -17,7 +17,7 @@ import CalendarWorkModal from './CalendarWorkModal';
 import CalendarWorkModalContent from './CalendarWorkModalContent';
 import VacationDonutChart from 'components/chart/VacationDonutChart';
 import { useNavigate } from '../../../node_modules/react-router-dom/dist/index';
-import 'C:/Users/KOSA/Desktop/finalProject/codePlay_front/src/assets/css/calendar.css';
+import '../../assets/css/calendar.css';
 // eslint-disable-next-line react/prop-types
 const PersonalCalendar = ({ events }) => {
   //token 값을 decode해주는 코드
@@ -37,7 +37,7 @@ const PersonalCalendar = ({ events }) => {
   //이벤트에 표기될 정보
   function renderEventContent(eventInfo) {
     return (
-      <Typography variant="body2" component="div" sx={{ pl: 0.5 }}>
+      <Typography variant="body2" component="div" sx={{ pl: 0.5, fontWeight: 'bold' }}>
         {eventInfo.event.title}
       </Typography>
     );

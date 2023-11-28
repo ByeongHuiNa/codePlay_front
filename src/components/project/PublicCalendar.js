@@ -39,7 +39,7 @@ const PublicCalendar = ({ events }) => {
   //이벤트에 표기될 정보
   function renderEventContent(eventInfo) {
     return (
-      <Typography variant="body2" component="div" sx={{ pl: 0.5 }}>
+      <Typography variant="body2" component="div" sx={{ pl: 0.5, fontWeight: 'bold' }}>
         {eventInfo.event.title}
       </Typography>
     );
