@@ -113,7 +113,6 @@ const SeeAllAttendance = () => {
     }
   };
 
-  
   useEffect(() => {
     // 현재 날짜를 가져오고 그 날짜의 주차를 계산
     const now = new Date();
@@ -153,60 +152,14 @@ const SeeAllAttendance = () => {
     <ComponentSkeleton>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="휴가" />
           <Tab label="출/퇴근" />
+          <Tab label="휴가" />
         </Tabs>
       </Box>
 
+      
+
       <BasicTab value={value} index={0}>
-        <Grid container>
-          <Grid item xs={12}>
-            <MainCard>
-              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Typography variant="h5">{profile.dept_name ? `${profile.dept_name} 휴가보유 현황` : '휴가보유 현황 '}</Typography>
-                {/* <FormControl sx={{ marginLeft: 3 }}>
-                  <NativeSelect
-                    onChange={handleChange4}
-                    inputProps={{
-                      name: 'dept_no',
-                      id: 'uncontrolled-native'
-                    }}
-                  >
-                    {depts.map((dept) => (
-                      <option key={dept.dept_no} value={dept.dept_no}>
-                        {dept.dept_name}
-                      </option>
-                    ))}
-                  </NativeSelect>
-                </FormControl> */}
-              </Grid>
-
-              {/* <TextField
-                value={userInput}
-                onChange={getValue}
-                id="outlined-basic"
-                label="사원명"
-                variant="outlined"
-                InputLabelProps={{
-                  shrink: true
-                }}
-              /> */}
-
-              {/* <IconButton type="submit" sx={{ p: '10px' }} aria-label="search">
-                <SearchIcon />
-              </IconButton> */}
-              <VacationCountTable depts={token.dept_no} />
-            </MainCard>
-          </Grid>
-          {/* <Grid item xs={6}>
-            <MainCard>
-              <VacationBarChart />
-            </MainCard>
-          </Grid> */}
-        </Grid>
-      </BasicTab>
-
-      <BasicTab value={value} index={1}>
         <Typography variant="h3">근태현황</Typography>
         {/* <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={value2} onChange={handleChange3} aria-label="basic tabs example">
@@ -274,6 +227,54 @@ const SeeAllAttendance = () => {
           </Grid>
         )}
         {/* </BasicTab> */}
+      </BasicTab>
+
+      <BasicTab value={value} index={1}>
+        <Grid container>
+          <Grid item xs={12}>
+            <MainCard>
+              <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Typography variant="h5">{profile.dept_name ? `${profile.dept_name} 휴가보유 현황` : '휴가보유 현황 '}</Typography>
+                {/* <FormControl sx={{ marginLeft: 3 }}>
+                  <NativeSelect
+                    onChange={handleChange4}
+                    inputProps={{
+                      name: 'dept_no',
+                      id: 'uncontrolled-native'
+                    }}
+                  >
+                    {depts.map((dept) => (
+                      <option key={dept.dept_no} value={dept.dept_no}>
+                        {dept.dept_name}
+                      </option>
+                    ))}
+                  </NativeSelect>
+                </FormControl> */}
+              </Grid>
+
+              {/* <TextField
+                value={userInput}
+                onChange={getValue}
+                id="outlined-basic"
+                label="사원명"
+                variant="outlined"
+                InputLabelProps={{
+                  shrink: true
+                }}
+              /> */}
+
+              {/* <IconButton type="submit" sx={{ p: '10px' }} aria-label="search">
+                <SearchIcon />
+              </IconButton> */}
+              <VacationCountTable depts={token.dept_no} />
+            </MainCard>
+          </Grid>
+          {/* <Grid item xs={6}>
+            <MainCard>
+              <VacationBarChart />
+            </MainCard>
+          </Grid> */}
+        </Grid>
       </BasicTab>
     </ComponentSkeleton>
   );
