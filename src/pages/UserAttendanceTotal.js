@@ -458,7 +458,7 @@ const UserAttendanceTotalPage = () => {
             </MainCard>
           </Grid>
           <Grid item xs={12}>
-            <MainCard>
+            <MainCard sx={{ height: '600px' }}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <Typography variant="h5">{month3}월 출/퇴근 내역</Typography>
 
