@@ -14,17 +14,7 @@ import MainCard from 'components/MainCard';
 import axios from '../../../node_modules/axios/index';
 import { useNavigate } from '../../../node_modules/react-router-dom/dist/index';
 
-// function createData(name, position, mon, tues, wednes, thurs, fri, weekhours) {
-//   return { name, position, mon, tues, wednes, thurs, fri, weekhours };
-// }
 
-// const rows = [
-//   createData('나병희', '연구원', 0, 0, 0, 0, 0, 40),
-//   createData('홍길동', '선임', 0, 1, 1, 0, 0, 40),
-//   createData('이순신', '주임', 0, 1, 1, 0, 0, 40),
-//   createData('아무개', '팀장', 0, 1, 1, 0, 0, 40),
-//   createData('팀쿡', '사장', 0, 1, 1, 1, 2, 40)
-// ];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {

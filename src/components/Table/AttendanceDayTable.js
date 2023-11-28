@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 
 // material-ui
 import { Box, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
@@ -13,6 +12,7 @@ import Dot from 'components/@extended/Dot';
 import { Grid } from '../../../node_modules/@mui/material/index';
 import axios from '../../../node_modules/axios/index';
 import MainCard from 'components/MainCard';
+import { useNavigate } from '../../../node_modules/react-router-dom/dist/index';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -185,6 +185,29 @@ export default function AttendanceDayTable({ depts, filterDate }) {
   const [attend, setAttend] = useState([]); //근태내역
   const [filterAttend, setFilterAttend] = useState([]); //오늘날짜의 데이터 필터링
 
+  const [good, setGood] = useState([]); //정상 데이터 담을 배열
+  const [bad, setBad] = useState([]); //근태이상 데이터 담을 배열
+  const [vaca, setVaca] = useState([]); //휴가 데이터 담을 배열
+
+  const [currentStatus, setCurrentStatus] = useState([]); //필터링 데이터 담을 배열
+  const handleCardClick = (selectedData) => {
+    // 선택된 데이터에 따라 currentData 업데이트
+    if (selectedData === '정상') {
+      setCurrentStatus(good);
+    } else if (selectedData === '근태이상') {
+      setCurrentStatus(bad);
+    } else if (selectedData === '휴가') {
+      setCurrentStatus(vaca);
+    } else if (selectedData === '전체') {
+      setCurrentStatus(filterAttend);
+    }
+  };
+
+  let navigate = useNavigate();
+
+  function nameClick(user_no) {
+    navigate('/seeUserAttendance', { state: { user_no } });
+  }
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
 
   useEffect(() => {
@@ -214,6 +237,24 @@ export default function AttendanceDayTable({ depts, filterDate }) {
         });
 
         setFilterAttend(filteredData);
+        setCurrentStatus(filteredData);
+
+        const filteredGood = filteredData.filter((item) => item.attend_status === '정상');
+        setGood(filteredGood);
+
+        const filteredBad = filteredData.filter(
+          (item) => item.attend_status === '지각' || item.attend_status === '조퇴' || item.attend_status === '결근'
+        );
+        setBad(filteredBad);
+
+        const filteredVaca = filteredData.filter(
+          (item) =>
+            item.attend_status === '휴가(연차)' ||
+            item.attend_status === '휴가(오전반차)' ||
+            item.attend_status === '휴가(오후반차)' ||
+            item.attend_status === '휴가(공가)'
+        );
+        setVaca(filteredVaca);
 
         // 변수 초기화
         let normalCount = 0;
@@ -247,7 +288,7 @@ export default function AttendanceDayTable({ depts, filterDate }) {
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <Grid container xs={9} rowSpacing={4} columnSpacing={2.75}>
           <Grid item xs={3}>
-            <MainCard>
+            <MainCard onClick={() => handleCardClick('전체')}>
               <Typography variant="h4" style={{ textAlign: 'center' }}>
                 전체
               </Typography>
@@ -257,7 +298,7 @@ export default function AttendanceDayTable({ depts, filterDate }) {
             </MainCard>
           </Grid>
           <Grid item xs={3}>
-            <MainCard>
+            <MainCard onClick={() => handleCardClick('정상')}>
               <Typography variant="h4" style={{ textAlign: 'center' }}>
                 정상
               </Typography>
@@ -267,7 +308,7 @@ export default function AttendanceDayTable({ depts, filterDate }) {
             </MainCard>
           </Grid>
           <Grid item xs={3}>
-            <MainCard>
+            <MainCard onClick={() => handleCardClick('근태이상')}>
               <Typography variant="h4" style={{ textAlign: 'center' }}>
                 근태이상
               </Typography>
@@ -277,7 +318,7 @@ export default function AttendanceDayTable({ depts, filterDate }) {
             </MainCard>
           </Grid>
           <Grid item xs={3}>
-            <MainCard>
+            <MainCard onClick={() => handleCardClick('휴가')}>
               <Typography variant="h4" style={{ textAlign: 'center' }}>
                 휴가
               </Typography>
@@ -311,7 +352,7 @@ export default function AttendanceDayTable({ depts, filterDate }) {
         >
           <AttendanceDayTableHead order={order} orderBy={orderBy} />
           <TableBody>
-            {stableSort(filterAttend, getComparator(order, orderBy)).map((attend, index) => {
+            {stableSort(currentStatus, getComparator(order, orderBy)).map((attend, index) => {
               const isItemSelected = isSelected(attend.date);
               const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -326,7 +367,7 @@ export default function AttendanceDayTable({ depts, filterDate }) {
                   selected={isItemSelected}
                 >
                   <TableCell component="th" id={labelId} scope="row" align="center">
-                    <Link color="secondary" component={RouterLink} to="">
+                    <Link color="secondary" onClick={() => nameClick(attend.user_no)}>
                       {attend.user_name}
                     </Link>
                   </TableCell>

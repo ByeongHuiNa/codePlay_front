@@ -157,8 +157,6 @@ const SeeAllAttendance = () => {
         </Tabs>
       </Box>
 
-      
-
       <BasicTab value={value} index={0}>
         {/* <Typography variant="h3">근태현황</Typography> */}
         {/* <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -170,7 +168,7 @@ const SeeAllAttendance = () => {
         {/* <BasicTab value={value2} index={0}> */}
         {alignment === 'day' && (
           <Grid item xs={12} sm={6} md={5} lg={7}>
-            <MainCard>
+            <MainCard sx={{ height: '700px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ flex: 1, textAlign: 'center', paddingLeft: 100 }}>
                   <Typography variant="h5">{profile.dept_name ? `${profile.dept_name}` : ''} 근태현황</Typography>
@@ -199,7 +197,7 @@ const SeeAllAttendance = () => {
         )}
         {alignment === 'week' && (
           <Grid item xs={12} sm={6} md={5} lg={7}>
-            <MainCard>
+            <MainCard sx={{ height: '700px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ flex: 1, textAlign: 'center', paddingLeft: 100 }}>
                   <Typography variant="h5">{profile.dept_name ? `${profile.dept_name}` : ''} 근태현황</Typography>
@@ -215,7 +213,7 @@ const SeeAllAttendance = () => {
                   <ArrowBackIosNewOutlinedIcon />
                 </IconButton>
                 <Typography variant="h5" sx={{ textAlign: 'center' }}>
-                   {mon} {/*{currentWeek}주 */}
+                  {mon} {/*{currentWeek}주 */}
                 </Typography>
                 <IconButton onClick={handleNextWeek} aria-label="다음 날짜">
                   <ArrowForwardIosOutlinedIcon />
@@ -234,7 +232,9 @@ const SeeAllAttendance = () => {
           <Grid item xs={12}>
             <MainCard>
               <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Typography variant="h5">{profile.dept_name ? `${profile.dept_name} 휴가보유 현황` : '휴가보유 현황 '}</Typography>
+                <div style={{ flex: 1, textAlign: 'center', paddingTop: 14 }}>
+                  <Typography variant="h5">{profile.dept_name ? `${profile.dept_name} 휴가보유 현황` : '휴가보유 현황 '}</Typography>
+                </div>
                 {/* <FormControl sx={{ marginLeft: 3 }}>
                   <NativeSelect
                     onChange={handleChange4}
