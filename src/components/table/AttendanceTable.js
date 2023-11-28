@@ -299,7 +299,7 @@ export default function AttendanceTable({ month, user_no }) {
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <Grid container xs={9} rowSpacing={4} columnSpacing={2.75}>
           <Grid item xs={3}>
-            <MainCard onClick={() => handleCardClick('전체')} style={{ backgroundColor: selectedCard === '전체' ? 'lightblue' : 'white' }}>
+            <MainCard onClick={() => handleCardClick('전체')} style={{ backgroundColor: selectedCard === '전체' ? '#bbdefb' : 'white' }}>
               <Typography variant="h4" style={{ textAlign: 'center' }}>
                 전체
               </Typography>
@@ -309,7 +309,7 @@ export default function AttendanceTable({ month, user_no }) {
             </MainCard>
           </Grid>
           <Grid item xs={3}>
-            <MainCard onClick={() => handleCardClick('정상')} style={{ backgroundColor: selectedCard === '정상' ? 'lightblue' : 'white' }}>
+            <MainCard onClick={() => handleCardClick('정상')} style={{ backgroundColor: selectedCard === '정상' ? '#bbdefb' : 'white' }}>
               <Typography variant="h4" style={{ textAlign: 'center' }}>
                 정상
               </Typography>
@@ -321,7 +321,7 @@ export default function AttendanceTable({ month, user_no }) {
           <Grid item xs={3}>
             <MainCard
               onClick={() => handleCardClick('근태이상')}
-              style={{ backgroundColor: selectedCard === '근태이상' ? 'lightblue' : 'white' }}
+              style={{ backgroundColor: selectedCard === '근태이상' ? '#bbdefb' : 'white' }}
             >
               <Typography variant="h4" style={{ textAlign: 'center' }}>
                 근태이상
@@ -332,7 +332,7 @@ export default function AttendanceTable({ month, user_no }) {
             </MainCard>
           </Grid>
           <Grid item xs={3}>
-            <MainCard onClick={() => handleCardClick('휴가')} style={{ backgroundColor: selectedCard === '휴가' ? 'lightblue' : 'white' }}>
+            <MainCard onClick={() => handleCardClick('휴가')} style={{ backgroundColor: selectedCard === '휴가' ? '#bbdefb' : 'white' }}>
               <Typography variant="h4" style={{ textAlign: 'center' }}>
                 휴가
               </Typography>
