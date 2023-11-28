@@ -102,7 +102,7 @@ const SeeAllAttendance = () => {
     const year = currentDate.getFullYear();
     const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
     const day = currentDate.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    return `${year}.${month}.${day}`;
   };
 
   const [alignment, setAlignment] = useState('day');
@@ -160,7 +160,7 @@ const SeeAllAttendance = () => {
       
 
       <BasicTab value={value} index={0}>
-        <Typography variant="h3">근태현황</Typography>
+        {/* <Typography variant="h3">근태현황</Typography> */}
         {/* <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={value2} onChange={handleChange3} aria-label="basic tabs example">
             <Tab label="일별" />
@@ -173,7 +173,7 @@ const SeeAllAttendance = () => {
             <MainCard>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ flex: 1, textAlign: 'center', paddingLeft: 100 }}>
-                  <Typography variant="h5">{profile.dept_name ? `${profile.dept_name}` : ''}</Typography>
+                  <Typography variant="h5">{profile.dept_name ? `${profile.dept_name}` : ''} 근태현황</Typography>
                 </div>
                 <ToggleButtonGroup color="primary" value={alignment} exclusive onChange={handleChange5} aria-label="Platform">
                   <ToggleButton value="day">일별</ToggleButton>
@@ -202,7 +202,7 @@ const SeeAllAttendance = () => {
             <MainCard>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ flex: 1, textAlign: 'center', paddingLeft: 100 }}>
-                  <Typography variant="h5">{profile.dept_name ? `${profile.dept_name}` : ''}</Typography>
+                  <Typography variant="h5">{profile.dept_name ? `${profile.dept_name}` : ''} 근태현황</Typography>
                 </div>
                 <ToggleButtonGroup color="primary" value={alignment} exclusive onChange={handleChange5} aria-label="Platform">
                   <ToggleButton value="day">일별</ToggleButton>
@@ -215,7 +215,7 @@ const SeeAllAttendance = () => {
                   <ArrowBackIosNewOutlinedIcon />
                 </IconButton>
                 <Typography variant="h5" sx={{ textAlign: 'center' }}>
-                  {mon} {currentWeek}주
+                   {mon} {/*{currentWeek}주 */}
                 </Typography>
                 <IconButton onClick={handleNextWeek} aria-label="다음 날짜">
                   <ArrowForwardIosOutlinedIcon />

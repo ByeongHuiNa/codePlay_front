@@ -252,7 +252,7 @@ export default function AttendanceDayTable({ depts, filterDate }) {
                 전체
               </Typography>
               <Typography variant="h5" style={{ textAlign: 'center' }}>
-                {total}건
+                {total}명
               </Typography>
             </MainCard>
           </Grid>
@@ -262,7 +262,7 @@ export default function AttendanceDayTable({ depts, filterDate }) {
                 정상
               </Typography>
               <Typography variant="h5" style={{ textAlign: 'center' }}>
-                {normal}건
+                {normal}명
               </Typography>
             </MainCard>
           </Grid>
@@ -272,7 +272,7 @@ export default function AttendanceDayTable({ depts, filterDate }) {
                 근태이상
               </Typography>
               <Typography variant="h5" style={{ textAlign: 'center' }}>
-                {odd}건
+                {odd}명
               </Typography>
             </MainCard>
           </Grid>
@@ -282,7 +282,7 @@ export default function AttendanceDayTable({ depts, filterDate }) {
                 휴가
               </Typography>
               <Typography variant="h5" style={{ textAlign: 'center' }}>
-                {leave}건
+                {leave}명
               </Typography>
             </MainCard>
           </Grid>
