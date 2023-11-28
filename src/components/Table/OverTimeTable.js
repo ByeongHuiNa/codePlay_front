@@ -78,12 +78,6 @@ const headCells = [
     align: 'center',
     disablePadding: false,
     label: '결재상태'
-  },
-  {
-    id: 'cancel',
-    align: 'center',
-    disablePadding: false,
-    label: '취소'
   }
 ];
 
@@ -225,9 +219,6 @@ export default function OverTimeTable({ datas }) {
                   <TableCell align="center">{dateFormat(new Date(data.overtime_date))}</TableCell>
                   <TableCell align="center">
                     <OrderStatus status={data.overtimeapp_status} />
-                  </TableCell>
-                  <TableCell align="center">
-                    {data.overtimeapp_status === 2 || data.overtimeapp_status === 0 ? '취소버튼' : '취소버튼없음'}
                   </TableCell>
                 </TableRow>
               );

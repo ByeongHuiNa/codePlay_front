@@ -87,7 +87,9 @@ const Notification = () => {
     setAlarm(alarm.filter((item) => item.alarm_no !== alarm_no));
   };
   const updateState = (alarm_no) => {
-    setAlarm((alarm.filter((item) => item.alarm_no == alarm_no).status = 1));
+    const temp = alarm.slice();
+    temp.filter((item) => item.alarm_no == alarm_no)[0].status = 1;
+    setAlarm(temp);
   };
 
   const anchorRef = useRef(null);

@@ -24,7 +24,7 @@ const SettingAuthority = () => {
   const { setIndex, setTab, index } = useTabState();
   const { setTableList } = useTableListState();
   const { view, setView } = useDetailCardState();
-  const { setPage, setSearch } = useCriteria();
+  const { setPage, setSearch, now_page, setTotalPage } = useCriteria();
   const { setDeptList } = useDeptListState();
 
   //화면 초기값 셋팅
@@ -56,10 +56,24 @@ const SettingAuthority = () => {
       const result = await axios.get(`/role-query-list?role_level=${index + 1}&page=1&limit=7`);
       setTableList(result.data);
       setView(false);
+      if (Object.keys(tab).length > 0) {
+        setTotalPage(tab[index].total);
+      }
     }
     get();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index]);
+
+  //index 값(탭) 변경시 테이블 변경 셋팅
+  useEffect(() => {
+    async function get() {
+      const result = await axios.get(`/role-query-list?role_level=${index + 1}&page=${(now_page - 1) * 7 + 1}&limit=7`);
+      setTableList(result.data);
+      setView(false);
+    }
+    get();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [now_page]);
 
   return (
     <>
