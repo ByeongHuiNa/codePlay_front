@@ -102,7 +102,7 @@ const SeeAllAttendance = () => {
     const year = currentDate.getFullYear();
     const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
     const day = currentDate.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    return `${year}.${month}.${day}`;
   };
 
   const [alignment, setAlignment] = useState('day');
@@ -113,7 +113,6 @@ const SeeAllAttendance = () => {
     }
   };
 
-  
   useEffect(() => {
     // 현재 날짜를 가져오고 그 날짜의 주차를 계산
     const now = new Date();
@@ -153,12 +152,84 @@ const SeeAllAttendance = () => {
     <ComponentSkeleton>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="휴가" />
           <Tab label="출/퇴근" />
+          <Tab label="휴가" />
         </Tabs>
       </Box>
 
+      
+
       <BasicTab value={value} index={0}>
+        {/* <Typography variant="h3">근태현황</Typography> */}
+        {/* <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Tabs value={value2} onChange={handleChange3} aria-label="basic tabs example">
+            <Tab label="일별" />
+            <Tab label="주간" />
+          </Tabs>
+        </Box> */}
+        {/* <BasicTab value={value2} index={0}> */}
+        {alignment === 'day' && (
+          <Grid item xs={12} sm={6} md={5} lg={7}>
+            <MainCard>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ flex: 1, textAlign: 'center', paddingLeft: 100 }}>
+                  <Typography variant="h5">{profile.dept_name ? `${profile.dept_name}` : ''} 근태현황</Typography>
+                </div>
+                <ToggleButtonGroup color="primary" value={alignment} exclusive onChange={handleChange5} aria-label="Platform">
+                  <ToggleButton value="day">일별</ToggleButton>
+                  <ToggleButton value="week">주별</ToggleButton>
+                </ToggleButtonGroup>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
+                <IconButton onClick={handlePrevDay} aria-label="이전 날짜">
+                  <ArrowBackIosNewOutlinedIcon />
+                </IconButton>
+                <Typography variant="h5" sx={{ textAlign: 'center' }}>
+                  {date}
+                </Typography>
+
+                <IconButton onClick={handleNextDay} aria-label="다음 날짜">
+                  <ArrowForwardIosOutlinedIcon />
+                </IconButton>
+              </div>
+
+              <AttendanceDayTable depts={token.dept_no} filterDate={date} />
+            </MainCard>
+          </Grid>
+        )}
+        {alignment === 'week' && (
+          <Grid item xs={12} sm={6} md={5} lg={7}>
+            <MainCard>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ flex: 1, textAlign: 'center', paddingLeft: 100 }}>
+                  <Typography variant="h5">{profile.dept_name ? `${profile.dept_name}` : ''} 근태현황</Typography>
+                </div>
+                <ToggleButtonGroup color="primary" value={alignment} exclusive onChange={handleChange5} aria-label="Platform">
+                  <ToggleButton value="day">일별</ToggleButton>
+                  <ToggleButton value="week">주별</ToggleButton>
+                </ToggleButtonGroup>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
+                <IconButton onClick={handlePrevWeek} aria-label="이전 날짜">
+                  <ArrowBackIosNewOutlinedIcon />
+                </IconButton>
+                <Typography variant="h5" sx={{ textAlign: 'center' }}>
+                   {mon} {/*{currentWeek}주 */}
+                </Typography>
+                <IconButton onClick={handleNextWeek} aria-label="다음 날짜">
+                  <ArrowForwardIosOutlinedIcon />
+                </IconButton>
+              </div>
+
+              <AttendanceWeekTable depts={token.dept_no} filterDate={mon} />
+            </MainCard>
+          </Grid>
+        )}
+        {/* </BasicTab> */}
+      </BasicTab>
+
+      <BasicTab value={value} index={1}>
         <Grid container>
           <Grid item xs={12}>
             <MainCard>
@@ -204,76 +275,6 @@ const SeeAllAttendance = () => {
             </MainCard>
           </Grid> */}
         </Grid>
-      </BasicTab>
-
-      <BasicTab value={value} index={1}>
-        <Typography variant="h3">근태현황</Typography>
-        {/* <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs value={value2} onChange={handleChange3} aria-label="basic tabs example">
-            <Tab label="일별" />
-            <Tab label="주간" />
-          </Tabs>
-        </Box> */}
-        {/* <BasicTab value={value2} index={0}> */}
-        {alignment === 'day' && (
-          <Grid item xs={12} sm={6} md={5} lg={7}>
-            <MainCard>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div style={{ flex: 1, textAlign: 'center', paddingLeft: 100 }}>
-                  <Typography variant="h5">{profile.dept_name ? `${profile.dept_name}` : ''}</Typography>
-                </div>
-                <ToggleButtonGroup color="primary" value={alignment} exclusive onChange={handleChange5} aria-label="Platform">
-                  <ToggleButton value="day">일별</ToggleButton>
-                  <ToggleButton value="week">주별</ToggleButton>
-                </ToggleButtonGroup>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
-                <IconButton onClick={handlePrevDay} aria-label="이전 날짜">
-                  <ArrowBackIosNewOutlinedIcon />
-                </IconButton>
-                <Typography variant="h5" sx={{ textAlign: 'center' }}>
-                  {date}
-                </Typography>
-
-                <IconButton onClick={handleNextDay} aria-label="다음 날짜">
-                  <ArrowForwardIosOutlinedIcon />
-                </IconButton>
-              </div>
-
-              <AttendanceDayTable depts={token.dept_no} filterDate={date} />
-            </MainCard>
-          </Grid>
-        )}
-        {alignment === 'week' && (
-          <Grid item xs={12} sm={6} md={5} lg={7}>
-            <MainCard>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div style={{ flex: 1, textAlign: 'center', paddingLeft: 100 }}>
-                  <Typography variant="h5">{profile.dept_name ? `${profile.dept_name}` : ''}</Typography>
-                </div>
-                <ToggleButtonGroup color="primary" value={alignment} exclusive onChange={handleChange5} aria-label="Platform">
-                  <ToggleButton value="day">일별</ToggleButton>
-                  <ToggleButton value="week">주별</ToggleButton>
-                </ToggleButtonGroup>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
-                <IconButton onClick={handlePrevWeek} aria-label="이전 날짜">
-                  <ArrowBackIosNewOutlinedIcon />
-                </IconButton>
-                <Typography variant="h5" sx={{ textAlign: 'center' }}>
-                  {mon} {currentWeek}주
-                </Typography>
-                <IconButton onClick={handleNextWeek} aria-label="다음 날짜">
-                  <ArrowForwardIosOutlinedIcon />
-                </IconButton>
-              </div>
-
-              <AttendanceWeekTable depts={token.dept_no} filterDate={mon} />
-            </MainCard>
-          </Grid>
-        )}
-        {/* </BasicTab> */}
       </BasicTab>
     </ComponentSkeleton>
   );
