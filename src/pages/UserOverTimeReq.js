@@ -84,7 +84,7 @@ const UserOverTimeReq = () => {
           overtime_time: dayjs(end).diff(dayjs(start), 'hours') + ':00:00',
           overtime_content: overTimeContent,
           overtime_reason: reason,
-          overtime_user_no: approver
+          overtimeapp_user_no: approver
         },
         attendanceVo: {
           user_no: token.user_no,

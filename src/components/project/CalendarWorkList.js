@@ -60,6 +60,8 @@ export default function CalendarList() {
             currentDate.getDate() <= scheduleEndDay.getDate())
         ) {
           if (value.schedule_cardview) {
+            const diffTime = Math.abs(scheduleStartDay.getTime() - currentDate.getTime());
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             return (
               <ListItem key={value.schedule_no} disablePadding>
                 <ListItemButton role={undefined} onClick={handleToggle(value.schedule_no)} dense>
@@ -81,7 +83,7 @@ export default function CalendarList() {
                     label={
                       scheduleStartDay.getDate() <= currentDate.getDate() && currentDate.getDate() <= scheduleEndDay.getDate()
                         ? 'Today'
-                        : `${scheduleStartDay.getDate() - currentDate.getDate()} day`
+                        : `${diffDays} day`
                     }
                     color="primary"
                     size="small"
