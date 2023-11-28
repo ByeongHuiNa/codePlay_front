@@ -256,12 +256,12 @@ const UserOverTimeReq = () => {
         <Box sx={{ ml: 2, mr: 2, height: '100%' }}>
           <MainCard sx={{ pt: 3, pr: 3, pl: 3, height: '100%' }} content={false}>
             <Grid container direction="column" justifyContent="center" spacing={3}>
-              <Grid item xs={12} sm={12} md={12} lg={12} direction="column">
+              <Grid item xs={12} sm={12} md={12} lg={12}>
                 <Typography variant="h4" mb={2} mt={1}>
                   초과근무 신청
                 </Typography>
               </Grid>
-              <Grid item xs={12} sm={12} md={12} lg={12} direction="column">
+              <Grid item xs={12} sm={12} md={12} lg={12}>
                 <BasicChip label="근무 종류" color="#46a5f3" />
                 <FormControl sx={{ ml: 1 }}>
                   <RadioGroup
@@ -276,22 +276,23 @@ const UserOverTimeReq = () => {
                   </RadioGroup>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={12} md={12} lg={12} direction="column">
+              <Grid item xs={12} sm={12} md={12} lg={12}>
                 {content}
               </Grid>
-              <Grid item xs={12} sm={12} md={12} lg={12} direction="column">
+              <Grid item xs={12} sm={12} md={12} lg={12}>
                 <Stack direction="row">
                   <BasicChip label="결재자" color="#46a5f3" />
-                  <TextField select size="normal" sx={{ width: '25rem' }} value={approver} onChange={(e) => setApprover(e.target.value)}>
-                    {Object.keys(allUsers).length > 0 &&
-                      allUsers.map((user) => {
+                  {Object.keys(allUsers).length > 0 && (
+                    <TextField select size="normal" sx={{ width: '25rem' }} value={approver} onChange={(e) => setApprover(e.target.value)}>
+                      {allUsers.map((user) => {
                         return (
                           <MenuItem key={user.user_no} value={user.user_no}>
                             {user.user_name + ' ' + user.user_position}
                           </MenuItem>
                         );
                       })}
-                  </TextField>
+                    </TextField>
+                  )}
                 </Stack>
               </Grid>
               {/* TODO: 파일 증빙 업로드될때 사용 */}
@@ -302,7 +303,7 @@ const UserOverTimeReq = () => {
                     <VisuallyHiddenInput type="file" />
                   </Button>
                 </Box> */}
-              <Grid item xs={12} sm={12} md={12} lg={12} direction="column">
+              <Grid item xs={12} sm={12} md={12} lg={12}>
                 <Stack direction="row">
                   <BasicChip label="업무내용" color="#46a5f3" />
                   <TextField
@@ -314,7 +315,7 @@ const UserOverTimeReq = () => {
                   />
                 </Stack>
               </Grid>
-              <Grid item xs={12} sm={12} md={12} lg={12} direction="column">
+              <Grid item xs={12} sm={12} md={12} lg={12} >
                 <Stack direction="row">
                   <BasicChip label="근무사유" color="#46a5f3" />
                   <TextField
@@ -328,7 +329,7 @@ const UserOverTimeReq = () => {
                   />
                 </Stack>
               </Grid>
-              <Grid item xs={12} sm={12} md={12} lg={12} direction="column">
+              <Grid item xs={12} sm={12} md={12} lg={12} >
                 <Stack direction="row" justifyContent="flex-end">
                   <Button variant="contained" onClick={submitOverTime} sx={{ width: '6rem', mr: '3rem' }}>
                     신청

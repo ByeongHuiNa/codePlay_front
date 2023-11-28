@@ -163,7 +163,7 @@ export const useLeaveState = create(
     setLeave: (newLeave) => set(() => ({ leave: newLeave }))
   }))
 );
-//사용자의 주간정규근무시간의 합 
+//사용자의 주간정규근무시간의 합
 export const useAttendTotalState = create(
   devtools((set) => ({
     total: {},
@@ -171,7 +171,7 @@ export const useAttendTotalState = create(
   }))
 );
 
-//사용자의 주간초과근무시간의 합 
+//사용자의 주간초과근무시간의 합
 export const useAttendTotalOverState = create(
   devtools((set) => ({
     overTotal: {},
@@ -405,7 +405,8 @@ export const useMemoDetail = create(
 export const useAlarm = create(
   devtools((set) => ({
     alarm: [],
-    setAlarm: (newAlarm) => set(() => ({ alarm: newAlarm }))
+    setAlarm: (newAlarm) => set(() => ({ alarm: newAlarm })),
+    addAlarm: (newAlarm) => set((pre) => ({ alarm: [newAlarm, ...pre.alarm] }))
   }))
 );
 

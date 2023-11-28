@@ -4,6 +4,7 @@ import { Grid, Stack, Typography } from '@mui/material';
 // project import
 import BasicContainer from 'components/container/BasicContainer';
 import {
+  Alert,
   Box,
   Button,
   Card,
@@ -33,7 +34,6 @@ import axios from '../../node_modules/axios/index';
 import { useFormatter, useLeaveCnt } from 'store/module';
 import UserAttendOriginInfoTable from 'components/Table/UserAttendOriginInfoTable';
 import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
-import LeaveAppDonutChart from 'components/chart/LeaveAppDonutChart';
 import { Progress } from 'react-sweet-progress';
 import 'react-sweet-progress/lib/style.css';
 import AdminAppOvertimeTable from 'components/Table/AdminAppOvertimeTable';
@@ -47,7 +47,8 @@ const ApprovalAttendance = () => {
   const { leaveCnt, setLeaveCnt } = useLeaveCnt();
   const location = useLocation();
   const [deptLeaveCnt, setDeptLeaveCnt] = useState({});
-  // const memoizedSeries = useMemo(() => [leaveCnt.leave_use, leaveCnt.leave_remain], [leaveCnt]);
+  const [total, setTotal] = useState({}); //한주의 정규근무시간 불러오기
+  const [overTotal, setOverTotal] = useState({}); //한주의 정규근무시간 불러오기
 
   useEffect(() => {
     if (location.state && location.state.val === 0) {
@@ -58,38 +59,42 @@ const ApprovalAttendance = () => {
 
   const LeaveInfo = (data) => {
     console.log(data);
-    // 선택한 휴가의 첨부파일 가져오기
-    axios.get(`/file-list?attached_app_no=${data.leaveapp_no}&attached_kind=1`).then((res) => {
-      setSelectLeaveFileData(res.data);
-      console.log(res.data);
-    });
-    // 신청자의 휴가 보유 현황 가져오기
-    axios.get(`/user-leave?user_no=${data.user_no}`).then((res) => {
-      setLeaveCnt(res.data);
-    });
-    // 신청자의 휴가 신청일에 같은 부서 사원들의 휴가 사용율 가져오기
-    axios
-      .post(`/dept-leave`, {
-        user_no: data.user_no,
-        leaveapp_start: new Date(data.leaveapp_start).toLocaleDateString('ko-KR', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit'
-        }),
-        leaveapp_end: new Date(data.leaveapp_end).toLocaleDateString('ko-KR', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit'
-        }),
-        leaveapp_status: data.leaveapp_status,
-        leaveapp_type: data.leaveapp_type,
-        leaveapp_total: data.leaveapp_total
-      })
-      .then((res) => {
-        setDeptLeaveCnt(res.data);
+    if (Object.keys(data).length > 0) {
+      // 선택한 휴가의 첨부파일 가져오기
+      axios.get(`/file-list?attached_app_no=${data.leaveapp_no}&attached_kind=1`).then((res) => {
+        setSelectLeaveFileData(res.data);
+        console.log(res.data);
       });
-    setSelectLeaveData(data);
-    console.log(data);
+      // 신청자의 휴가 보유 현황 가져오기
+      axios.get(`/user-leave?user_no=${data.user_no}`).then((res) => {
+        setLeaveCnt(res.data);
+        console.log(res.data);
+      });
+      // 신청자의 휴가 신청일에 같은 부서 사원들의 휴가 사용율 가져오기
+      axios
+        .post(`/dept-leave`, {
+          user_no: data.user_no,
+          leaveapp_start: new Date(data.leaveapp_start).toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+          }),
+          leaveapp_end: new Date(data.leaveapp_end).toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+          }),
+          leaveapp_status: data.leaveapp_status,
+          leaveapp_type: data.leaveapp_type,
+          leaveapp_total: data.leaveapp_total
+        })
+        .then((res) => {
+          setDeptLeaveCnt(res.data);
+          console.log(res.data);
+        });
+      setSelectLeaveData(data);
+      console.log(data);
+    }
   };
 
   const downloadFile = async (attached_name) => {
@@ -110,18 +115,6 @@ const ApprovalAttendance = () => {
       console.error('Error downloading file: ', error);
     }
   };
-
-  // const Item = styled(Paper)(({ theme }) => ({
-  //   ...theme.typography.body2,
-  //   textAlign: 'center',
-  //   color: theme.palette.text.secondary,
-  //   height: 290,
-  //   marginTop: '20px',
-  //   paddingTop: '15px',
-  //   borderRadius: '0px'
-  // }));
-
-  // const lightTheme = createTheme({ palette: { mode: 'light' } });
 
   const [value1, setValue1] = useState(0); // 전체 Tab
   const handleChange1 = (event, newValue) => {
@@ -149,12 +142,12 @@ const ApprovalAttendance = () => {
     setValue2(newValue);
     setReason('');
 
-    if (newValue === 0) {
+    if (newValue === 0 && leaveAppDatas.length > 0) {
       LeaveInfo(leaveAppDatas[0]);
-    } else if (newValue === 1) {
+    } else if (newValue === 1 && leaveAppDatas.length > 0) {
       LeaveInfo(leaveAppDatas.filter((data) => data.leaveappln_status === 2)[0]);
-    } else {
-      setSelectLeaveData(leaveAppDatas.filter((data) => data.leaveappln_status === 0 || data.leaveappln_status === 1)[0]);
+    } else if (newValue === 2 && leaveAppDatas.length > 0) {
+      LeaveInfo(leaveAppDatas.filter((data) => data.leaveappln_status === 0 || data.leaveappln_status === 1)[0]);
     }
   };
 
@@ -162,16 +155,29 @@ const ApprovalAttendance = () => {
   // 출/퇴근 부분 Tab
   const handleChange3 = (event, newValue) => {
     setValue3(newValue);
-    setSelectAttendData({});
     setReason('');
+
+    if (newValue === 0 && attendAppDatas.length > 0) {
+      setSelectAttendData(attendAppDatas[0]);
+    } else if (newValue === 1 && attendAppDatas.length > 0) {
+      setSelectAttendData(attendAppDatas.filter((data) => data.attendapp_status === 2)[0]);
+    } else if (newValue === 2 && attendAppDatas.length > 0) {
+      setSelectAttendData(attendAppDatas.filter((data) => data.attendapp_status === 0 || data.attendapp_status === 1)[0]);
+    }
   };
 
   const [value4, setValue4] = useState(0); // 초과근무 부분 Tab
-  // 출/퇴근 부분 Tab
   const handleChange4 = (event, newValue) => {
     setValue4(newValue);
-    setSelectOvertimeData({});
     setReason('');
+
+    if (newValue === 0 && overtimeAppDatas.length > 0) {
+      setSelectOvertimeData(overtimeAppDatas[0]);
+    } else if (newValue === 1 && overtimeAppDatas.length > 0) {
+      setSelectOvertimeData(overtimeAppDatas.filter((data) => data.overtimeapp_status === 2)[0]);
+    } else if (newValue === 2 && overtimeAppDatas.length > 0) {
+      setSelectOvertimeData(overtimeAppDatas.filter((data) => data.overtimeapp_status === 0 || data.overtimeapp_status === 1)[0]);
+    }
   };
 
   const [checked, setChecked] = useState(false);
@@ -186,7 +192,9 @@ const ApprovalAttendance = () => {
       if (location.state && location.state.val === 0 && location.state.index === 0) {
         LeaveInfo(res.data.find((data) => data.leaveapp_no === location.state.data_no));
       } else {
-        LeaveInfo(res.data[0]);
+        if (res.data.length > 0) {
+          LeaveInfo(res.data[0]);
+        }
       }
     });
     // 로그인 한 근태담당의 출퇴근 전체 결재 내역
@@ -195,7 +203,9 @@ const ApprovalAttendance = () => {
       if (location.state && location.state.val === 0 && location.state.index === 1) {
         setSelectAttendData(res.data.find((data) => data.attendapp_no === location.state.data_no));
       } else {
-        setSelectAttendData(res.data[0]);
+        if (res.data.length > 0) {
+          setSelectAttendData(res.data[0]);
+        }
       }
     });
     // 로그인 한 근태담당자의 초과근무 전체 결재 내역
@@ -313,7 +323,56 @@ const ApprovalAttendance = () => {
   }, [selectAttendData]);
 
   useEffect(() => {
+    console.log(selectOvertimeData);
     setAppOvertimeStatus('');
+    async function get() {
+      try {
+        if (selectOvertimeData && Object.keys(selectOvertimeData).length > 0) {
+          axios
+            .get(`/user-attend-total-week?user_no=${selectOvertimeData.user_no}`)
+            .then((response) => {
+              console.log(response.data);
+              const result2 = response.data;
+              const defaultObject = {
+                attend_total: '00:00:00'
+              };
+              setTotal(result2 || defaultObject);
+            })
+            .catch((error) => {
+              console.error('Error fetching data:', error);
+            });
+        }
+      } catch (error) {
+        console.error('데이터를 불러오는 중 오류 발생:', error);
+      }
+    }
+
+    async function get1() {
+      try {
+        if (selectOvertimeData && Object.keys(selectOvertimeData).length > 0) {
+          axios
+            .get(`/user-attend-total-week-over?user_no=${selectOvertimeData.user_no}`)
+            .then((response) => {
+              console.log(response.data);
+              const result2 = response.data;
+              const defaultObject = {
+                attend_total: '00:00:00'
+              };
+              setOverTotal(result2 || defaultObject);
+            })
+            .catch((error) => {
+              console.error('Error fetching data:', error);
+            });
+        }
+      } catch (error) {
+        console.error('데이터를 불러오는 중 오류 발생:', error);
+      }
+    }
+
+    if (selectOvertimeData && Object.keys(selectOvertimeData).length > 0) {
+      get();
+      get1();
+    }
   }, [selectOvertimeData]);
 
   // 휴가 부분 Tab 커스텀
@@ -467,7 +526,7 @@ const ApprovalAttendance = () => {
   const progressColor = (percent) => {
     if (percent >= 0 && percent <= 30) {
       return '#00c642'; // 초록색
-    } else if (percent > 30 && percent <= 70) {
+    } else if (percent > 30 && percent <= 99) {
       return '#29abe2'; // 파란색
     } else {
       return 'red'; // 기본값, 에러 상태 등에 사용될 색상
@@ -678,7 +737,7 @@ const ApprovalAttendance = () => {
                   }}
                 >
                   {Object.keys(selectLeaveData).length !== 0 && (
-                    <Grid container spacing={1} justifyContent="center">
+                    <Grid container spacing={1} justifyContent="center" sx={{ overflow: 'hidden' }}>
                       <Grid item xs={11} sm={11} md={11} lg={12}>
                         <Grid container alignItems="center" justifyContent="space-between">
                           <Grid item>
@@ -875,70 +934,74 @@ const ApprovalAttendance = () => {
                           </>
                         )}
                         {selectLeaveData.leaveappln_status === 2 && selectLeaveData.leaveapp_type !== 4 && (
-                          <>
-                            <Grid container spacing={1.5}>
-                              <Grid item xs={6} sm={6} md={6} lg={12}>
-                                {/* <ThemeProvider theme={lightTheme}> */}
-                                {/* <Item key={2} elevation={2}> */}
-                                <Box sx={{ display: 'flex', justifyContent: 'center' }} mt={3}>
-                                  <Box>
-                                    <Typography variant="h5" mb={1}>
-                                      {selectLeaveData.user_name}님의 잔여 휴가일수&#128197;
+                          <Box mr={2}>
+                            <Box mt={2}>
+                              <Alert severity="info">
+                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                  {selectLeaveData.user_name}님의 휴가 신청일 중 {selectLeaveData.dept_name} 사원들의 최고 휴가 사용일 :
+                                  &nbsp;
+                                  <Typography variant="h5">{deptLeaveCnt[0]}</Typography>
+                                </Box>
+                                <Box my={1} sx={{ display: 'flex', width: '500px' }}>
+                                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                    <Typography variant="h5">
+                                      {deptLeaveCnt[1]}/{deptLeaveCnt[2]}
                                     </Typography>
-                                    <LeaveAppDonutChart series={[leaveCnt.leave_use, leaveCnt.leave_remain]} />
+                                    명 휴가 사용
                                   </Box>
-                                  <Box>
-                                    <Typography variant="h5">{selectLeaveData.dept_name}</Typography>중 휴가 사용율이 가장 높은 휴가 신청일
-                                    <Typography sx={{ fontSize: '18px', mt: 1, mb: 2 }}>{deptLeaveCnt[0]}</Typography>
-                                    <Box mx={2} my={2} sx={{ display: 'flex', justifyContent: 'center' }}>
-                                      <Progress
-                                        percent={(deptLeaveCnt[1] * 100) / deptLeaveCnt[2]}
-                                        theme={{
-                                          active: {
-                                            color: progressColor(25)
-                                          }
-                                        }}
-                                      />
-                                    </Box>
-                                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                      <Typography variant="h5">{deptLeaveCnt[2]}</Typography>명 중{' '}
-                                      <Typography variant="h5">{deptLeaveCnt[1]}</Typography>명 휴가 사용
-                                    </Box>
+                                  <Box sx={{ width: '350px', ml: 3 }}>
+                                    <Progress
+                                      percent={(deptLeaveCnt[1] * 100) / deptLeaveCnt[2]}
+                                      theme={{
+                                        active: {
+                                          color: progressColor((deptLeaveCnt[1] * 100) / deptLeaveCnt[2])
+                                        }
+                                      }}
+                                    />
                                   </Box>
                                 </Box>
-                                {/* </Item> */}
-                                {/* </ThemeProvider> */}
-                              </Grid>
-                              {/* <Grid item xs={6} sm={6} md={6} lg={6}>
-                                <ThemeProvider theme={lightTheme}>
-                                  <Item key={2} elevation={2}>
-                                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                      {selectLeaveData.dept_name}
-                                      <Typography variant="h6">&#128202;</Typography>
-                                    </Box>
-                                    휴가 신청일 중 휴가 사용율이 가장 높은 날
-                                    <Typography sx={{ fontSize: '18px', mt: 1, mb: 2 }}>{deptLeaveCnt[0]}</Typography>
-                                    <Box mx={2} my={2}>
-                                      <Progress
-                                        percent={25}
-                                        theme={{
-                                          active: {
-                                            color: progressColor(25)
-                                          }
-                                        }}
-                                      />
-                                    </Box>
-                                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                      <Typography variant="h5">{deptLeaveCnt[2]}</Typography>명 중{' '}
-                                      <Typography variant="h5">{deptLeaveCnt[1]}</Typography>명 휴가 사용
-                                    </Box>
-                                  </Item>
-                                </ThemeProvider>
-                              </Grid> */}
-                              <Box mt={2} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <Typography variant="h5">&#128161; sdfsfsdfsdfsdfsdfsdfdsf</Typography>
-                              </Box>
-                            </Grid>
+                              </Alert>
+                              <Alert severity="info">
+                                {selectLeaveData.user_name}의 휴가 사용율
+                                <Box my={1} sx={{ display: 'flex', width: '550px' }}>
+                                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                    <Typography variant="h5">
+                                      {leaveCnt.leave_use}/{leaveCnt.leave_total}
+                                    </Typography>
+                                    일 휴가 사용
+                                  </Box>
+                                  <Box sx={{ width: '350px', ml: 3 }}>
+                                    <Progress
+                                      percent={((leaveCnt.leave_use * 100) / leaveCnt.leave_total).toFixed(0)}
+                                      theme={{
+                                        active: {
+                                          color: progressColor((leaveCnt.leave_use * 100) / leaveCnt.leave_total)
+                                        }
+                                      }}
+                                    />
+                                  </Box>
+                                </Box>
+                              </Alert>
+                            </Box>
+                            <Box mt={1}>
+                              {deptLeaveCnt[1] / deptLeaveCnt[2] >= 0.6 &&
+                              (leaveCnt.leave_total / 12) * (new Date().getMonth() + 1) < leaveCnt.leave_use ? (
+                                <Alert severity="error">
+                                  {selectLeaveData.user_name}님의 휴가 사용율이 높고 휴가 신청일에 휴가를 사용한 사원이 많아 휴가 반려를
+                                  추천합니다.
+                                </Alert>
+                              ) : deptLeaveCnt[1] / deptLeaveCnt[2] >= 0.6 ? (
+                                <Alert severity="error">
+                                  {selectLeaveData.user_name}님의 휴가 신청일에 휴가를 사용한 사원이 많아 휴가 반려를 추천합니다.
+                                </Alert>
+                              ) : (leaveCnt.leave_total / 12) * (new Date().getMonth() + 1) < leaveCnt.leave_use ? (
+                                <Alert severity="error">{selectLeaveData.user_name}님의 휴가 사용율이 높아 휴가 반려를 추천합니다.</Alert>
+                              ) : (
+                                <Alert severity="success">
+                                  {selectLeaveData.user_name}님의 휴가 사용율과 부서 휴가 사용율이 적당하여 휴가 승인을 추천합니다
+                                </Alert>
+                              )}
+                            </Box>
                             <Box clone mt={2}>
                               <BasicChip label={`${selectLeaveData.leaveappln_order}차 결재`} color="#46a5f3" />
                               <FormControl sx={{ ml: 1 }}>
@@ -968,12 +1031,12 @@ const ApprovalAttendance = () => {
                                 </Box>
                               )}
                             </Box>
-                            <Stack direction="row" justifyContent="flex-end" mt={2} mr={1}>
+                            <Stack direction="row" justifyContent="flex-end" mt={2}>
                               <Button variant="contained" onClick={submitLeaveApproval}>
                                 결재완료
                               </Button>
                             </Stack>
-                          </>
+                          </Box>
                         )}
                       </Grid>
                     </Grid>
@@ -985,89 +1048,96 @@ const ApprovalAttendance = () => {
         </Box>
       </BasicTab>
       <BasicTab value={value1} index={1}>
-        <Box clone mx={1}>
-          <BasicContainer>
-            <Grid container spacing={2}>
-              <Grid item xs={2.5} sm={2.5} md={2.5} lg={2.5}>
-                <MyCardAll
-                  onClick={() => {
-                    setValue3(0);
-                    setSelectAttendData({});
-                  }}
-                >
-                  <CardContent sx={{ textAlign: 'center' }}>
-                    <Typography variant="h4">전체 결재</Typography>
-                    <Typography variant="text">{attendWaitapp + attendUnapp + attendApp}건</Typography>
-                  </CardContent>
-                </MyCardAll>
-              </Grid>
-              <Grid item xs={2.5} sm={2.5} md={2.5} lg={2.5}>
-                <MyCardM
-                  onClick={() => {
-                    setValue3(1);
-                    setSelectAttendData({});
-                  }}
-                >
-                  <CardContent sx={{ textAlign: 'center' }}>
-                    <Typography variant="h4">결재 대기</Typography>
-                    <Typography variant="text">{attendWaitapp}건</Typography>
-                  </CardContent>
-                </MyCardM>
-              </Grid>
-              <Grid item xs={7} sm={7} md={7} lg={7}>
-                <MyCardL
-                  onClick={() => {
-                    setValue3(2);
-                    setSelectAttendData({});
-                  }}
-                >
-                  <CardContent sx={{ textAlign: 'center' }}>
-                    <Grid container spacing={2}>
-                      <Grid
-                        item
-                        xs={4}
-                        sm={4}
-                        md={4}
-                        lg={4}
-                        sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center'
-                        }}
-                      >
-                        <Box>
-                          <Typography variant="h4">결재 완료 </Typography>
-                          <Typography variant="text">총 {attendApp + attendUnapp}건</Typography>
-                        </Box>
-                      </Grid>
-                      <Grid item xs={4} sm={4} md={4} lg={4}>
-                        <MyCardS>
-                          <CardContent>
-                            <Typography variant="h5">결재 승인 </Typography>
-                            <Typography variant="text">{attendApp}건</Typography>
-                          </CardContent>
-                        </MyCardS>
-                      </Grid>
-                      <Grid item xs={4} sm={4} md={4} lg={4}>
-                        <MyCardS>
-                          <CardContent>
-                            <Typography variant="h5">결재 반려</Typography>
-                            <Typography variant="text">{attendUnapp}건</Typography>
-                          </CardContent>
-                        </MyCardS>
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-                </MyCardL>
-              </Grid>
-            </Grid>
-          </BasicContainer>
+        <Box sx={{ display: 'flex', justifyContent: 'right' }}>
+          <FormControlLabel control={<Switch checked={checked} onChange={handleCheckedChange} />} label="총 결재 수" />
         </Box>
+        {checked && (
+          <Fade in={checked}>
+            <Box clone mx={1}>
+              <BasicContainer>
+                <Grid container spacing={2}>
+                  <Grid item xs={2.5} sm={2.5} md={2.5} lg={2.5}>
+                    <MyCardAll
+                      onClick={() => {
+                        setValue3(0);
+                        setSelectAttendData({});
+                      }}
+                    >
+                      <CardContent sx={{ textAlign: 'center' }}>
+                        <Typography variant="h4">전체 결재</Typography>
+                        <Typography variant="text">{attendWaitapp + attendUnapp + attendApp}건</Typography>
+                      </CardContent>
+                    </MyCardAll>
+                  </Grid>
+                  <Grid item xs={2.5} sm={2.5} md={2.5} lg={2.5}>
+                    <MyCardM
+                      onClick={() => {
+                        setValue3(1);
+                        setSelectAttendData({});
+                      }}
+                    >
+                      <CardContent sx={{ textAlign: 'center' }}>
+                        <Typography variant="h4">결재 대기</Typography>
+                        <Typography variant="text">{attendWaitapp}건</Typography>
+                      </CardContent>
+                    </MyCardM>
+                  </Grid>
+                  <Grid item xs={7} sm={7} md={7} lg={7}>
+                    <MyCardL
+                      onClick={() => {
+                        setValue3(2);
+                        setSelectAttendData({});
+                      }}
+                    >
+                      <CardContent sx={{ textAlign: 'center' }}>
+                        <Grid container spacing={2}>
+                          <Grid
+                            item
+                            xs={4}
+                            sm={4}
+                            md={4}
+                            lg={4}
+                            sx={{
+                              display: 'flex',
+                              justifyContent: 'center',
+                              alignItems: 'center'
+                            }}
+                          >
+                            <Box>
+                              <Typography variant="h4">결재 완료 </Typography>
+                              <Typography variant="text">총 {attendApp + attendUnapp}건</Typography>
+                            </Box>
+                          </Grid>
+                          <Grid item xs={4} sm={4} md={4} lg={4}>
+                            <MyCardS>
+                              <CardContent>
+                                <Typography variant="h5">결재 승인 </Typography>
+                                <Typography variant="text">{attendApp}건</Typography>
+                              </CardContent>
+                            </MyCardS>
+                          </Grid>
+                          <Grid item xs={4} sm={4} md={4} lg={4}>
+                            <MyCardS>
+                              <CardContent>
+                                <Typography variant="h5">결재 반려</Typography>
+                                <Typography variant="text">{attendUnapp}건</Typography>
+                              </CardContent>
+                            </MyCardS>
+                          </Grid>
+                        </Grid>
+                      </CardContent>
+                    </MyCardL>
+                  </Grid>
+                </Grid>
+              </BasicContainer>
+            </Box>
+          </Fade>
+        )}
         <Box clone mx={1} my={1}>
-          <BasicContainer>
-            <Grid item xs={12} md={12} lg={12}>
-              <Grid container alignItems="center" justifyContent="space-between">
-                <Grid item xs={5} md={5} lg={5}>
+          <Grid item xs={12} md={12} lg={12}>
+            <Grid container alignItems="center" justifyContent="space-between" spacing={1}>
+              <Grid item xs={5} md={5} lg={5}>
+                <BasicContainer>
                   <Box sx={{ borderBottom: 1, border: '0px' }}>
                     <MyTabs value={value3} onChange={handleChange3} aria-label="basic tabs example">
                       <MyTab label="전체" index="0" />
@@ -1102,20 +1172,30 @@ const ApprovalAttendance = () => {
                       />
                     </Box>
                   </ApprovalTab>
-                </Grid>
-                <Grid item xs={7} md={7} lg={7}>
+                </BasicContainer>
+              </Grid>
+              <Grid item xs={7} md={7} lg={7}>
+                <BasicContainer>
                   <Box
                     sx={{
-                      marginTop: '36px',
-                      marginLeft: '5px',
-                      border: '1px solid #e6ebf1',
-                      height: '740px',
-                      py: 3
+                      height: '775px',
+                      p: 2,
+                      overflow: 'auto',
+                      '&::-webkit-scrollbar': {
+                        width: 5
+                      },
+                      '&::-webkit-scrollbar-track': {
+                        backgroundColor: 'white'
+                      },
+                      '&::-webkit-scrollbar-thumb': {
+                        backgroundColor: 'gray',
+                        borderRadius: 2
+                      }
                     }}
                   >
                     {Object.keys(selectAttendData).length !== 0 && (
                       <Grid container spacing={1} justifyContent="center">
-                        <Grid item xs={11} sm={11} md={11} lg={11}>
+                        <Grid item xs={11} sm={11} md={11} lg={12}>
                           <Grid container alignItems="center" justifyContent="space-between">
                             <Grid item>
                               <Typography variant="h5">출/퇴근 수정 상세 조회</Typography>
@@ -1138,7 +1218,7 @@ const ApprovalAttendance = () => {
                               defaultValue={dateFormat(new Date(selectAttendData.attend_date))}
                               key={selectAttendData.attend_date}
                               InputProps={{ readOnly: true, style: { borderRadius: 0 } }}
-                              sx={{ width: '40%' }}
+                              sx={{ width: '25%' }}
                             />
                           </Box>
                           <Box clone mt={2}>
@@ -1158,7 +1238,7 @@ const ApprovalAttendance = () => {
                               defaultValue={selectAttendData.user_name}
                               key={selectAttendData.user_name}
                               InputProps={{ readOnly: true, style: { borderRadius: 0 } }}
-                              sx={{ width: '20%' }}
+                              sx={{ width: '25%' }}
                             />
                           </Box>
                           {selectAttendData.attendedit_kind !== 2 && (
@@ -1284,96 +1364,103 @@ const ApprovalAttendance = () => {
                       </Grid>
                     )}
                   </Box>
-                </Grid>
+                </BasicContainer>
               </Grid>
             </Grid>
-          </BasicContainer>
+          </Grid>
         </Box>
       </BasicTab>
       <BasicTab value={value1} index={2}>
-        <Box clone mx={1}>
-          <BasicContainer>
-            <Grid container spacing={2}>
-              <Grid item xs={2.5} sm={2.5} md={2.5} lg={2.5}>
-                <MyCardAll
-                  onClick={() => {
-                    setValue4(0);
-                    setSelectOvertimeData({});
-                  }}
-                >
-                  <CardContent sx={{ textAlign: 'center' }}>
-                    <Typography variant="h4">전체 결재</Typography>
-                    <Typography variant="text">{overtimeWaitapp + overtimeUnapp + overtimeApp}건</Typography>
-                  </CardContent>
-                </MyCardAll>
-              </Grid>
-              <Grid item xs={2.5} sm={2.5} md={2.5} lg={2.5}>
-                <MyCardM
-                  onClick={() => {
-                    setValue4(1);
-                    setSelectOvertimeData({});
-                  }}
-                >
-                  <CardContent sx={{ textAlign: 'center' }}>
-                    <Typography variant="h4">결재 대기</Typography>
-                    <Typography variant="text">{overtimeWaitapp}건</Typography>
-                  </CardContent>
-                </MyCardM>
-              </Grid>
-              <Grid item xs={7} sm={7} md={7} lg={7}>
-                <MyCardL
-                  onClick={() => {
-                    setValue4(2);
-                    setSelectOvertimeData({});
-                  }}
-                >
-                  <CardContent sx={{ textAlign: 'center' }}>
-                    <Grid container spacing={2}>
-                      <Grid
-                        item
-                        xs={4}
-                        sm={4}
-                        md={4}
-                        lg={4}
-                        sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center'
-                        }}
-                      >
-                        <Box>
-                          <Typography variant="h4">결재 완료 </Typography>
-                          <Typography variant="text">총 {overtimeApp + overtimeUnapp}건</Typography>
-                        </Box>
-                      </Grid>
-                      <Grid item xs={4} sm={4} md={4} lg={4}>
-                        <MyCardS>
-                          <CardContent>
-                            <Typography variant="h5">결재 승인 </Typography>
-                            <Typography variant="text">{overtimeApp}건</Typography>
-                          </CardContent>
-                        </MyCardS>
-                      </Grid>
-                      <Grid item xs={4} sm={4} md={4} lg={4}>
-                        <MyCardS>
-                          <CardContent>
-                            <Typography variant="h5">결재 반려</Typography>
-                            <Typography variant="text">{overtimeUnapp}건</Typography>
-                          </CardContent>
-                        </MyCardS>
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-                </MyCardL>
-              </Grid>
-            </Grid>
-          </BasicContainer>
+        <Box sx={{ display: 'flex', justifyContent: 'right' }}>
+          <FormControlLabel control={<Switch checked={checked} onChange={handleCheckedChange} />} label="총 결재 수" />
         </Box>
+        {checked && (
+          <Fade in={checked}>
+            <Box clone mx={1}>
+              <BasicContainer>
+                <Grid container spacing={2}>
+                  <Grid item xs={2.5} sm={2.5} md={2.5} lg={2.5}>
+                    <MyCardAll
+                      onClick={() => {
+                        setValue4(0);
+                        setSelectOvertimeData({});
+                      }}
+                    >
+                      <CardContent sx={{ textAlign: 'center' }}>
+                        <Typography variant="h4">전체 결재</Typography>
+                        <Typography variant="text">{overtimeWaitapp + overtimeUnapp + overtimeApp}건</Typography>
+                      </CardContent>
+                    </MyCardAll>
+                  </Grid>
+                  <Grid item xs={2.5} sm={2.5} md={2.5} lg={2.5}>
+                    <MyCardM
+                      onClick={() => {
+                        setValue4(1);
+                        setSelectOvertimeData({});
+                      }}
+                    >
+                      <CardContent sx={{ textAlign: 'center' }}>
+                        <Typography variant="h4">결재 대기</Typography>
+                        <Typography variant="text">{overtimeWaitapp}건</Typography>
+                      </CardContent>
+                    </MyCardM>
+                  </Grid>
+                  <Grid item xs={7} sm={7} md={7} lg={7}>
+                    <MyCardL
+                      onClick={() => {
+                        setValue4(2);
+                        setSelectOvertimeData({});
+                      }}
+                    >
+                      <CardContent sx={{ textAlign: 'center' }}>
+                        <Grid container spacing={2}>
+                          <Grid
+                            item
+                            xs={4}
+                            sm={4}
+                            md={4}
+                            lg={4}
+                            sx={{
+                              display: 'flex',
+                              justifyContent: 'center',
+                              alignItems: 'center'
+                            }}
+                          >
+                            <Box>
+                              <Typography variant="h4">결재 완료 </Typography>
+                              <Typography variant="text">총 {overtimeApp + overtimeUnapp}건</Typography>
+                            </Box>
+                          </Grid>
+                          <Grid item xs={4} sm={4} md={4} lg={4}>
+                            <MyCardS>
+                              <CardContent>
+                                <Typography variant="h5">결재 승인 </Typography>
+                                <Typography variant="text">{overtimeApp}건</Typography>
+                              </CardContent>
+                            </MyCardS>
+                          </Grid>
+                          <Grid item xs={4} sm={4} md={4} lg={4}>
+                            <MyCardS>
+                              <CardContent>
+                                <Typography variant="h5">결재 반려</Typography>
+                                <Typography variant="text">{overtimeUnapp}건</Typography>
+                              </CardContent>
+                            </MyCardS>
+                          </Grid>
+                        </Grid>
+                      </CardContent>
+                    </MyCardL>
+                  </Grid>
+                </Grid>
+              </BasicContainer>
+            </Box>
+          </Fade>
+        )}
         <Box clone mx={1} my={1}>
-          <BasicContainer>
-            <Grid item xs={12} md={12} lg={12}>
-              <Grid container alignItems="center" justifyContent="space-between">
-                <Grid item xs={5} md={5} lg={5}>
+          <Grid item xs={12} md={12} lg={12}>
+            <Grid container alignItems="center" justifyContent="space-between" spacing={1}>
+              <Grid item xs={5} md={5} lg={5}>
+                <BasicContainer>
                   <Box sx={{ borderBottom: 1, border: '0px' }}>
                     <MyTabs value={value4} onChange={handleChange4} aria-label="basic tabs example">
                       <MyTab label="전체" index="0" />
@@ -1383,7 +1470,13 @@ const ApprovalAttendance = () => {
                   </Box>
                   <ApprovalTab value={value4} index={0}>
                     <Box pb={3}>
-                      {overtimeAppDatas && <AdminAppOvertimeTable datas={overtimeAppDatas} setSelectOvertimeData={setSelectOvertimeData} />}
+                      {overtimeAppDatas && (
+                        <AdminAppOvertimeTable
+                          datas={overtimeAppDatas}
+                          setSelectOvertimeData={setSelectOvertimeData}
+                          selectOvertimeData={selectOvertimeData}
+                        />
+                      )}
                     </Box>
                   </ApprovalTab>
                   <ApprovalTab value={value4} index={1}>
@@ -1392,6 +1485,7 @@ const ApprovalAttendance = () => {
                         <AdminAppOvertimeTable
                           datas={overtimeAppDatas.filter((data) => data.overtimeapp_status === 2)}
                           setSelectOvertimeData={setSelectOvertimeData}
+                          selectOvertimeData={selectOvertimeData}
                         />
                       )}
                     </Box>
@@ -1402,27 +1496,38 @@ const ApprovalAttendance = () => {
                         <AdminAppOvertimeTable
                           datas={overtimeAppDatas.filter((data) => data.overtimeapp_status === 0 || data.overtimeapp_status === 1)}
                           setSelectOvertimeData={setSelectOvertimeData}
+                          selectOvertimeData={selectOvertimeData}
                         />
                       )}
                     </Box>
                   </ApprovalTab>
-                </Grid>
-                <Grid item xs={7} md={7} lg={7}>
+                </BasicContainer>
+              </Grid>
+              <Grid item xs={7} md={7} lg={7}>
+                <BasicContainer>
                   <Box
                     sx={{
-                      marginTop: '36px',
-                      marginLeft: '5px',
-                      border: '1px solid #e6ebf1',
-                      height: '740px',
-                      py: 3
+                      height: '775px',
+                      p: 2,
+                      overflow: 'auto',
+                      '&::-webkit-scrollbar': {
+                        width: 5
+                      },
+                      '&::-webkit-scrollbar-track': {
+                        backgroundColor: 'white'
+                      },
+                      '&::-webkit-scrollbar-thumb': {
+                        backgroundColor: 'gray',
+                        borderRadius: 2
+                      }
                     }}
                   >
                     {selectOvertimeData && (
                       <Grid container spacing={1} justifyContent="center">
-                        <Grid item xs={11} sm={11} md={11} lg={11}>
+                        <Grid item xs={11} sm={11} md={11} lg={12}>
                           <Grid container alignItems="center" justifyContent="space-between">
                             <Grid item>
-                              <Typography variant="h5">출/퇴근 수정 상세 조회</Typography>
+                              <Typography variant="h5">초과근무 상세 조회</Typography>
                             </Grid>
                           </Grid>
                           <Box clone mt={2}>
@@ -1432,7 +1537,7 @@ const ApprovalAttendance = () => {
                               defaultValue={selectOvertimeData.overtime_content}
                               key={selectOvertimeData.overtime_content}
                               InputProps={{ readOnly: true, style: { borderRadius: 0 } }}
-                              sx={{ width: '80%' }}
+                              sx={{ width: '70%' }}
                             />
                           </Box>
                           <Box clone mt={2}>
@@ -1444,7 +1549,7 @@ const ApprovalAttendance = () => {
                               InputProps={{ readOnly: true, style: { borderRadius: 0 } }}
                               multiline
                               rows={2}
-                              sx={{ width: '80%' }}
+                              sx={{ width: '70%' }}
                             />
                           </Box>
                           <Box clone mt={2}>
@@ -1454,7 +1559,7 @@ const ApprovalAttendance = () => {
                               defaultValue={selectOvertimeData.user_name}
                               key={selectOvertimeData.user_name}
                               InputProps={{ readOnly: true, style: { borderRadius: 0 } }}
-                              sx={{ width: '15%' }}
+                              sx={{ width: '35%' }}
                             />
                             <Box clone mt={2}>
                               <BasicChip label="초과근무종류" color="#46a5f3" />
@@ -1463,7 +1568,7 @@ const ApprovalAttendance = () => {
                                 defaultValue={selectOvertimeData.overtime_type === 0 ? '주말 근무' : '연장 근무'}
                                 key={`status-${selectOvertimeData.overtime_type}`}
                                 InputProps={{ readOnly: true, style: { borderRadius: 0 } }}
-                                sx={{ width: '20%', mr: 2 }}
+                                sx={{ width: '35%', mr: 2 }}
                               />
                             </Box>
                             <Box clone mt={2}>
@@ -1473,7 +1578,7 @@ const ApprovalAttendance = () => {
                                 defaultValue={dateFormat(new Date(selectOvertimeData.attend_date))}
                                 key={selectOvertimeData.attend_date}
                                 InputProps={{ readOnly: true, style: { borderRadius: 0 } }}
-                                sx={{ width: '20%' }}
+                                sx={{ width: '35%' }}
                               />
                             </Box>
                           </Box>
@@ -1503,7 +1608,7 @@ const ApprovalAttendance = () => {
                                 }
                                 key={`status-${selectOvertimeData.overtimeapp_status}`}
                                 InputProps={{ readOnly: true, style: { borderRadius: 0 } }}
-                                sx={{ width: '20%', mr: 2 }}
+                                sx={{ width: '35%', mr: 2 }}
                               />
                             </Box>
                           )}
@@ -1515,24 +1620,49 @@ const ApprovalAttendance = () => {
                                 defaultValue={selectOvertimeData.overtimeapp_reason}
                                 key={selectOvertimeData.overtimeapp_reason}
                                 InputProps={{ readOnly: true, style: { borderRadius: 0 } }}
-                                sx={{ width: '20%', mr: 2 }}
+                                sx={{ width: '70%', mr: 2 }}
                               />
                             </Box>
                           )}
                           {selectOvertimeData.overtimeapp_status === 2 && (
                             <Box clone mt={2}>
-                              <BasicChip label="결재" color="#46a5f3" />
-                              <FormControl sx={{ ml: 1 }}>
-                                <RadioGroup
-                                  row
-                                  sx={{ justifyContent: 'center', alignItems: 'center' }}
-                                  value={appOvertimeStatus}
-                                  onChange={handleOvertimeRadioChange}
-                                >
-                                  <FormControlLabel value="overtimeApp" control={<Radio size="small" />} label="승인" />
-                                  <FormControlLabel value="overtimeUnapp" control={<Radio size="small" />} label="반려" />
-                                </RadioGroup>
-                              </FormControl>
+                              {Object.keys(total).length > 0 && Object.keys(overTotal).length > 0 && (
+                                <Alert severity="info">
+                                  {selectOvertimeData.user_name}님의 금주 총 근무 시간 : {parseInt(total.attend_total.split(':')[0])}시간{' '}
+                                  {parseInt(total.attend_total.split(':')[1])}분 {parseInt(total.attend_total.split(':')[2])}초 근무
+                                  <Box my={1} sx={{ display: 'flex', width: '550px' }}>
+                                    <Box sx={{ width: '350px', ml: 3 }}>
+                                      <Progress
+                                        percent={(
+                                          (parseInt(total.attend_total.split(':')[0]) * 60 +
+                                            parseInt(total.attend_total.split(':')[1]) +
+                                            parseInt(total.attend_total.split(':')[2]) / 60) /
+                                          31.2
+                                        ).toFixed(1)}
+                                        theme={{
+                                          active: {
+                                            color: progressColor(25)
+                                          }
+                                        }}
+                                      />
+                                    </Box>
+                                  </Box>
+                                </Alert>
+                              )}
+                              <Box mt={2}>
+                                <BasicChip label="결재" color="#46a5f3" />
+                                <FormControl sx={{ ml: 1 }}>
+                                  <RadioGroup
+                                    row
+                                    sx={{ justifyContent: 'center', alignItems: 'center' }}
+                                    value={appOvertimeStatus}
+                                    onChange={handleOvertimeRadioChange}
+                                  >
+                                    <FormControlLabel value="overtimeApp" control={<Radio size="small" />} label="승인" />
+                                    <FormControlLabel value="overtimeUnapp" control={<Radio size="small" />} label="반려" />
+                                  </RadioGroup>
+                                </FormControl>
+                              </Box>
                               {appOvertimeStatus == 'overtimeUnapp' && (
                                 <Box clone mt={2}>
                                   <BasicChip label="반려 사유" color="#1890ff" />
@@ -1559,10 +1689,10 @@ const ApprovalAttendance = () => {
                       </Grid>
                     )}
                   </Box>
-                </Grid>
+                </BasicContainer>
               </Grid>
             </Grid>
-          </BasicContainer>
+          </Grid>
         </Box>
       </BasicTab>
     </>

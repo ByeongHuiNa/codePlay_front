@@ -51,7 +51,7 @@ const actionSX = {
 // ==============================|| HEADER CONTENT - NOTIFICATION ||============================== //
 
 const Notification = () => {
-  const { alarm, setAlarm } = useAlarm();
+  const { alarm, setAlarm, addAlarm } = useAlarm();
   const token = jwtDecode(localStorage.getItem('token').slice(7));
   let navigate = useNavigate();
 
@@ -64,7 +64,7 @@ const Notification = () => {
     eventSource.onmessage = (event) => {
       //0번은 커넥션 이벤트
       if (event.lastEventId != '0') {
-        setAlarm([...alarm, JSON.parse(event.data)]);
+        addAlarm(JSON.parse(event.data));
       }
     };
 
@@ -87,8 +87,7 @@ const Notification = () => {
     setAlarm(alarm.filter((item) => item.alarm_no !== alarm_no));
   };
   const updateState = (alarm_no) => {
-    // TODO:state 업데이트 되게 수정
-    // alarm.filter((item) => item.alarm_no == alarm_no).status = 1;
+    setAlarm((alarm.filter((item) => item.alarm_no == alarm_no).status = 1));
   };
 
   const anchorRef = useRef(null);
@@ -119,7 +118,7 @@ const Notification = () => {
         aria-haspopup="true"
         onClick={handleToggle}
       >
-        <Badge badgeContent={alarm.filter((item) => item.status == 0).length} color="primary">
+        <Badge badgeContent={Object.keys(alarm).length > 0 ? alarm.filter((item) => item.status == 0).length : 0} color="primary">
           <BellOutlined />
         </Badge>
       </IconButton>
@@ -226,7 +225,7 @@ const Notification = () => {
                           </ListItemButton>
                         );
                       })}
-                    <ListItemButton key={'view-all'} sx={{ textAlign: 'center', py: `${12}px !important` }}>
+                    {/* <ListItemButton key={'view-all'} sx={{ textAlign: 'center', py: `${12}px !important` }}>
                       <ListItemText
                         primary={
                           <Typography variant="h6" color="primary">
@@ -234,7 +233,7 @@ const Notification = () => {
                           </Typography>
                         }
                       />
-                    </ListItemButton>
+                    </ListItemButton> */}
                   </List>
                 </MainCard>
               </ClickAwayListener>

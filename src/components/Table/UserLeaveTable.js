@@ -77,6 +77,7 @@ function UserLeaveTableHead({ order, orderBy }) {
             align={headCell.align}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
+            sx={{ width: `300px`, backgroundColor: '#f9f9f9' }}
           >
             {headCell.label}
           </TableCell>
@@ -214,7 +215,7 @@ export default function UserLeaveTable({ user_no }) {
           <UserLeaveTableHead order={order} orderBy={orderBy} />
           <TableBody>
             {Object.values(app)
-              //.slice(0, 5)
+              .slice(0, 5)
               .map((app) => (
                 <TableRow
                   hover

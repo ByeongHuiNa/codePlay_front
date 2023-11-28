@@ -138,10 +138,14 @@ export default function CalendarDrawer() {
         val: 1,
         selectedValue: leaveType ? 'half' : 'annual',
         start: start.setHours(0, 0, 0, 0),
-        end: end.setHours(0, 0, 0, 0)
+        end: end.setHours(0, 0, 0, 0),
+        selectedHalfValue: leaveHalfType ? 'pm' : 'am'
       }
     });
     setView(false);
+    setScheduleType('');
+    setLeaveType(false);
+    setLeaveHalfType(false);
   };
 
   //AddEventOnClick

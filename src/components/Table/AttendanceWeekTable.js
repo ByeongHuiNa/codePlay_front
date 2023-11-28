@@ -113,13 +113,19 @@ const headCells = [
     id: 'weekhours',
     align: 'center',
     disablePadding: false,
-    label: '주간근무시간'
+    label: '정규근무시간'
   },
   {
     id: 'overtimehours',
     align: 'center',
     disablePadding: false,
     label: '연장근무시간'
+  },
+  {
+    id: 'overtimehours',
+    align: 'center',
+    disablePadding: false,
+    label: '총근무시간'
   }
 ];
 
@@ -352,6 +358,7 @@ export default function AttendanceWeekTable({ depts, filterDate }) {
                     <AttendanceWeekStatus status={attend.sunday_status} />
                   </TableCell>
                   <TableCell align="center">{attend.total_time}</TableCell>
+                  <TableCell align="center"></TableCell>
                   <TableCell align="center"></TableCell>
                 </TableRow>
               );

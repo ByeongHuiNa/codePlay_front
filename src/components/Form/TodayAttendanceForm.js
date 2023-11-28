@@ -1,5 +1,16 @@
 import { useEffect, useState } from 'react';
-import { Box, Button, Grid, Typography } from '../../../node_modules/@mui/material/index';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  Typography
+} from '../../../node_modules/@mui/material/index';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import MainCard from 'components/MainCard';
 import { useTodayState } from 'store/module';
 import axios from '../../../node_modules/axios/index';
@@ -13,7 +24,38 @@ const TodayAttendancdForm = ({ user_no }) => {
 
   const [policy, setPolicy] = useState({});
 
-  //const [ip, setIp] = useState();
+  const [openModal1, setOpenModal1] = useState(false);
+  const [openModal2, setOpenModal2] = useState(false);
+  const [openModal3, setOpenModal3] = useState(false);
+  const [openModal4, setOpenModal4] = useState(false);
+
+  // const startSubmit = (e) => {
+  //   e.preventDefault();
+  //   // 출근 버튼 눌렀을 때 모달을 열도록 설정
+  //   setOpenModal(true);
+  //   // ... 나머지 코드
+  // };
+
+  const handleClose1 = () => {
+    // 출근 모달 닫기
+    setOpenModal1(false);
+  };
+
+  const handleClose2 = () => {
+    // 퇴근 모달 닫기
+    setOpenModal2(false);
+  };
+  const handleClose3 = () => {
+    // 출근 모달 닫기
+    setOpenModal3(false);
+  };
+
+  const handleClose4 = () => {
+    // 퇴근 모달 닫기
+    setOpenModal4(false);
+  };
+
+  //const [ip, setIp] = useState('');
 
   const formData = {};
 
@@ -59,6 +101,10 @@ const TodayAttendancdForm = ({ user_no }) => {
       const result = await axios.get(`/user-policy-detail?user_no=${user_no}`);
       setPolicy(result.data[0]);
       console.log('사용자정책: ' + policy.policy_no);
+
+      // const ipData = await fetch('https://geolocation-db.com/json/');
+      // const locationIp = await ipData.json();
+      // console.log('ip:'  + locationIp.IPv4);
     }
     get();
 
@@ -72,7 +118,7 @@ const TodayAttendancdForm = ({ user_no }) => {
     e.preventDefault();
 
     if (attend && attend.attend_date) {
-      alert('이미 출근을 기록하였습니다.');
+      setOpenModal3(true);
       return; // 이미 출근한 경우 함수를 종료합니다.
     }
     //console.log('아이피주소는: ' + ip);
@@ -80,7 +126,7 @@ const TodayAttendancdForm = ({ user_no }) => {
     axios
       .post(`/user-attend-today?user_no=${user_no}`, formData)
       .then(() => {
-        alert('출근을 기록하였습니다.');
+        setOpenModal1(true);
         getAttendanceData();
       })
       .catch((error) => {
@@ -95,7 +141,7 @@ const TodayAttendancdForm = ({ user_no }) => {
     e.preventDefault();
 
     if (attend && attend.attend_end) {
-      alert('이미 퇴근을 기록하였습니다.');
+      setOpenModal4(true);
       return; // 이미 퇴근한 경우 함수를 종료합니다.
     }
 
@@ -117,7 +163,7 @@ const TodayAttendancdForm = ({ user_no }) => {
       .patch(`/user-attend-today?user_no=${user_no}`, formData)
       .then(() => {
         // 퇴근을 기록한 후 성공적으로 완료됐을 때 실행할 코드
-        alert('퇴근을 기록하였습니다.');
+        setOpenModal2(true);
         getAttendanceData();
       })
       .catch((error) => {
@@ -208,6 +254,44 @@ const TodayAttendancdForm = ({ user_no }) => {
             </form>
           </Grid>
         </Grid>
+        <Dialog open={openModal1} onClose={handleClose1}>
+          <DialogTitle style={{ textAlign: 'center' }}>
+            <CheckCircleOutlineIcon color="primary" sx={{ fontSize: 80 }} />
+          </DialogTitle>
+          <DialogContent>출근이 기록되었습니다!</DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose1}>확인</Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog open={openModal3} onClose={handleClose3}>
+          <DialogTitle style={{ textAlign: 'center' }}>
+            <ErrorOutlineIcon color="primary" sx={{ fontSize: 80 }} />
+          </DialogTitle>
+          <DialogContent>이미 출근을 기록하였습니다!</DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose3}>확인</Button>
+          </DialogActions>
+        </Dialog>
+
+        <Dialog open={openModal2} onClose={handleClose2}>
+          <DialogTitle style={{ textAlign: 'center' }}>
+            <CheckCircleOutlineIcon color="primary" sx={{ fontSize: 80 }} />
+          </DialogTitle>
+          <DialogContent>퇴근이 기록되었습니다!</DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose2}>확인</Button>
+          </DialogActions>
+        </Dialog>
+
+        <Dialog open={openModal4} onClose={handleClose4}>
+          <DialogTitle style={{ textAlign: 'center' }}>
+            <ErrorOutlineIcon color="primary" sx={{ fontSize: 80 }} />
+          </DialogTitle>
+          <DialogContent>이미 퇴근을 기록하였습니다!</DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose4}>확인</Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     </MainCard>
   );

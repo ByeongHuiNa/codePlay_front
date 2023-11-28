@@ -94,7 +94,14 @@ const headCells = [
 
 function OrderTableHead({ order, orderBy }) {
   return (
-    <TableHead>
+    <TableHead
+      sx={{
+        position: 'sticky',
+        top: 0,
+        backgroundColor: '#f9f9f9',
+        zIndex: 1 // 다른 요소 위에 표시되도록 설정
+      }}
+    >
       <TableRow>
         {headCells.map((headCell) => (
           <TableCell
@@ -102,6 +109,7 @@ function OrderTableHead({ order, orderBy }) {
             align={headCell.align}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
+            sx={{ backgroundColor: '#f9f9f9' }}
           >
             {headCell.label}
           </TableCell>
@@ -222,11 +230,7 @@ export default function AppLeaveTotalTable({ month, handleOpen, user_no }) {
     get();
   }, [month]);
 
- 
-
   const isSelected = (trackingNo) => selected.indexOf(trackingNo) !== -1;
-
-  
 
   return (
     <Box>
@@ -237,7 +241,18 @@ export default function AppLeaveTotalTable({ month, handleOpen, user_no }) {
           position: 'relative',
           display: 'block',
           maxWidth: '100%',
-          '& td, & th': { whiteSpace: 'nowrap' }
+          overflowY: 'auto',
+          '& td, & th': { whiteSpace: 'nowrap' },
+          '&::-webkit-scrollbar': {
+            width: 5
+          },
+          '&::-webkit-scrollbar-track': {
+            backgroundColor: 'white'
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: 'gray',
+            borderRadius: 2
+          }
         }}
       >
         <Table
@@ -285,9 +300,16 @@ export default function AppLeaveTotalTable({ month, handleOpen, user_no }) {
                     <OrderStatus status={app.leaveapp_status} />
                   </TableCell>
                   <TableCell align="center">
-                    <Button variant="contained" size="small" onClick={cancelClick}>
-                      취소신청
-                    </Button>
+                    {app.leaveapp_status === 0 && (
+                      <Button variant="contained" size="small" onClick={cancelClick}>
+                        취소신청
+                      </Button>
+                    )}
+                    {app.leaveapp_status !== 0 && (
+                      <Button variant="contained" color="secondary" size="small" disabled>
+                        취소신청
+                      </Button>
+                    )}
                   </TableCell>
                 </TableRow>
               );
