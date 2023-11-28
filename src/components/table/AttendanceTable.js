@@ -224,8 +224,10 @@ export default function AttendanceTable({ month, user_no }) {
 
   const [currentStatus, setCurrentStatus] = useState([]); //필터링 데이터 담을 배열
 
+  const [selectedCard, setSelectedCard] = useState('전체');
   // MainCard 컴포넌트 내에서 클릭 이벤트를 통해 상태 변경하는 함수
   const handleCardClick = (selectedData) => {
+    setSelectedCard(selectedData);
     // 선택된 데이터에 따라 currentData 업데이트
     if (selectedData === '정상') {
       setCurrentStatus(good);
@@ -238,21 +240,12 @@ export default function AttendanceTable({ month, user_no }) {
     }
   };
 
-  // let normal = 0;
-  // let notnormal = 0;
-  // let leave = 0;
-
-  // const [total, setTotal] = useState(0); //출퇴근현황 개수
-  // const [normal, setNormal] = useState(0); //정상 출퇴근 개수
-  // const [problem, setProblem] = useState(0); //근태이상 개수
-  // const [leave, setLeave] = useState(0); //휴가 개수
-
   useEffect(() => {
-    
     async function get() {
       const result = await axios.get(`/user-attend-month?user_no=${user_no}&month=${month}`);
       setAttendance(result.data);
       setCurrentStatus(result.data);
+
       const filteredGood = result.data.filter((item) => item.attend_status === '정상');
       setGood(filteredGood);
 
@@ -270,7 +263,6 @@ export default function AttendanceTable({ month, user_no }) {
       );
       setVaca(filteredVaca);
 
-      
       console.log('attendance: ' + attendance);
       console.log('zzzz: ' + result.data.length);
 
@@ -307,7 +299,7 @@ export default function AttendanceTable({ month, user_no }) {
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <Grid container xs={9} rowSpacing={4} columnSpacing={2.75}>
           <Grid item xs={3}>
-            <MainCard onClick={() => handleCardClick('전체')}>
+            <MainCard onClick={() => handleCardClick('전체')} style={{ backgroundColor: selectedCard === '전체' ? 'lightblue' : 'white' }}>
               <Typography variant="h4" style={{ textAlign: 'center' }}>
                 전체
               </Typography>
@@ -317,7 +309,7 @@ export default function AttendanceTable({ month, user_no }) {
             </MainCard>
           </Grid>
           <Grid item xs={3}>
-            <MainCard onClick={() => handleCardClick('정상')}>
+            <MainCard onClick={() => handleCardClick('정상')} style={{ backgroundColor: selectedCard === '정상' ? 'lightblue' : 'white' }}>
               <Typography variant="h4" style={{ textAlign: 'center' }}>
                 정상
               </Typography>
@@ -327,7 +319,10 @@ export default function AttendanceTable({ month, user_no }) {
             </MainCard>
           </Grid>
           <Grid item xs={3}>
-            <MainCard onClick={() => handleCardClick('근태이상')}>
+            <MainCard
+              onClick={() => handleCardClick('근태이상')}
+              style={{ backgroundColor: selectedCard === '근태이상' ? 'lightblue' : 'white' }}
+            >
               <Typography variant="h4" style={{ textAlign: 'center' }}>
                 근태이상
               </Typography>
@@ -337,7 +332,7 @@ export default function AttendanceTable({ month, user_no }) {
             </MainCard>
           </Grid>
           <Grid item xs={3}>
-            <MainCard onClick={() => handleCardClick('휴가')}>
+            <MainCard onClick={() => handleCardClick('휴가')} style={{ backgroundColor: selectedCard === '휴가' ? 'lightblue' : 'white' }}>
               <Typography variant="h4" style={{ textAlign: 'center' }}>
                 휴가
               </Typography>
