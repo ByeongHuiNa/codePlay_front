@@ -168,7 +168,7 @@ export default function CalendarDrawer() {
       const end = new Date(endDate);
 
       // 날짜를 비교하여 start와 end 값이 같지 않은 경우에만 +1을 적용
-      if (start.getDate() !== end.getDate()) {
+      if (start.getDate() !== end.getDate() && allDayType) {
         end.setDate(end.getDate() + 1);
       }
       const scheduleListAdd = {

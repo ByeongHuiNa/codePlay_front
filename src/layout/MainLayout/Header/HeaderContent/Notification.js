@@ -178,7 +178,6 @@ const Notification = () => {
                   >
                     {Object.keys(alarm).length > 0 &&
                       alarm.map((item) => {
-                        console.log(item);
                         return (
                           <ListItemButton
                             key={item.alarm_no}

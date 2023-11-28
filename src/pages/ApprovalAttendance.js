@@ -59,40 +59,42 @@ const ApprovalAttendance = () => {
 
   const LeaveInfo = (data) => {
     console.log(data);
-    // 선택한 휴가의 첨부파일 가져오기
-    axios.get(`/file-list?attached_app_no=${data.leaveapp_no}&attached_kind=1`).then((res) => {
-      setSelectLeaveFileData(res.data);
-      console.log(res.data);
-    });
-    // 신청자의 휴가 보유 현황 가져오기
-    axios.get(`/user-leave?user_no=${data.user_no}`).then((res) => {
-      setLeaveCnt(res.data);
-      console.log(res.data);
-    });
-    // 신청자의 휴가 신청일에 같은 부서 사원들의 휴가 사용율 가져오기
-    axios
-      .post(`/dept-leave`, {
-        user_no: data.user_no,
-        leaveapp_start: new Date(data.leaveapp_start).toLocaleDateString('ko-KR', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit'
-        }),
-        leaveapp_end: new Date(data.leaveapp_end).toLocaleDateString('ko-KR', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit'
-        }),
-        leaveapp_status: data.leaveapp_status,
-        leaveapp_type: data.leaveapp_type,
-        leaveapp_total: data.leaveapp_total
-      })
-      .then((res) => {
-        setDeptLeaveCnt(res.data);
+    if (Object.keys(data).length > 0) {
+      // 선택한 휴가의 첨부파일 가져오기
+      axios.get(`/file-list?attached_app_no=${data.leaveapp_no}&attached_kind=1`).then((res) => {
+        setSelectLeaveFileData(res.data);
         console.log(res.data);
       });
-    setSelectLeaveData(data);
-    console.log(data);
+      // 신청자의 휴가 보유 현황 가져오기
+      axios.get(`/user-leave?user_no=${data.user_no}`).then((res) => {
+        setLeaveCnt(res.data);
+        console.log(res.data);
+      });
+      // 신청자의 휴가 신청일에 같은 부서 사원들의 휴가 사용율 가져오기
+      axios
+        .post(`/dept-leave`, {
+          user_no: data.user_no,
+          leaveapp_start: new Date(data.leaveapp_start).toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+          }),
+          leaveapp_end: new Date(data.leaveapp_end).toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+          }),
+          leaveapp_status: data.leaveapp_status,
+          leaveapp_type: data.leaveapp_type,
+          leaveapp_total: data.leaveapp_total
+        })
+        .then((res) => {
+          setDeptLeaveCnt(res.data);
+          console.log(res.data);
+        });
+      setSelectLeaveData(data);
+      console.log(data);
+    }
   };
 
   const downloadFile = async (attached_name) => {
@@ -140,12 +142,12 @@ const ApprovalAttendance = () => {
     setValue2(newValue);
     setReason('');
 
-    if (newValue === 0) {
+    if (newValue === 0 && leaveAppDatas.length > 0) {
       LeaveInfo(leaveAppDatas[0]);
-    } else if (newValue === 1) {
+    } else if (newValue === 1 && leaveAppDatas.length > 0) {
       LeaveInfo(leaveAppDatas.filter((data) => data.leaveappln_status === 2)[0]);
-    } else {
-      setSelectLeaveData(leaveAppDatas.filter((data) => data.leaveappln_status === 0 || data.leaveappln_status === 1)[0]);
+    } else if (newValue === 2 && leaveAppDatas.length > 0) {
+      LeaveInfo(leaveAppDatas.filter((data) => data.leaveappln_status === 0 || data.leaveappln_status === 1)[0]);
     }
   };
 
@@ -155,11 +157,11 @@ const ApprovalAttendance = () => {
     setValue3(newValue);
     setReason('');
 
-    if (newValue === 0) {
+    if (newValue === 0 && attendAppDatas.length > 0) {
       setSelectAttendData(attendAppDatas[0]);
-    } else if (newValue === 1) {
+    } else if (newValue === 1 && attendAppDatas.length > 0) {
       setSelectAttendData(attendAppDatas.filter((data) => data.attendapp_status === 2)[0]);
-    } else {
+    } else if (newValue === 2 && attendAppDatas.length > 0) {
       setSelectAttendData(attendAppDatas.filter((data) => data.attendapp_status === 0 || data.attendapp_status === 1)[0]);
     }
   };
@@ -169,11 +171,11 @@ const ApprovalAttendance = () => {
     setValue4(newValue);
     setReason('');
 
-    if (newValue === 0) {
+    if (newValue === 0 && overtimeAppDatas.length > 0) {
       setSelectOvertimeData(overtimeAppDatas[0]);
-    } else if (newValue === 1) {
+    } else if (newValue === 1 && overtimeAppDatas.length > 0) {
       setSelectOvertimeData(overtimeAppDatas.filter((data) => data.overtimeapp_status === 2)[0]);
-    } else {
+    } else if (newValue === 2 && overtimeAppDatas.length > 0) {
       setSelectOvertimeData(overtimeAppDatas.filter((data) => data.overtimeapp_status === 0 || data.overtimeapp_status === 1)[0]);
     }
   };
@@ -190,7 +192,9 @@ const ApprovalAttendance = () => {
       if (location.state && location.state.val === 0 && location.state.index === 0) {
         LeaveInfo(res.data.find((data) => data.leaveapp_no === location.state.data_no));
       } else {
-        LeaveInfo(res.data[0]);
+        if (res.data.length > 0) {
+          LeaveInfo(res.data[0]);
+        }
       }
     });
     // 로그인 한 근태담당의 출퇴근 전체 결재 내역
@@ -199,7 +203,9 @@ const ApprovalAttendance = () => {
       if (location.state && location.state.val === 0 && location.state.index === 1) {
         setSelectAttendData(res.data.find((data) => data.attendapp_no === location.state.data_no));
       } else {
-        setSelectAttendData(res.data[0]);
+        if (res.data.length > 0) {
+          setSelectAttendData(res.data[0]);
+        }
       }
     });
     // 로그인 한 근태담당자의 초과근무 전체 결재 내역
@@ -321,19 +327,21 @@ const ApprovalAttendance = () => {
     setAppOvertimeStatus('');
     async function get() {
       try {
-        axios
-          .get(`/user-attend-total-week?user_no=${selectOvertimeData.user_no}`)
-          .then((response) => {
-            console.log(response.data);
-            const result2 = response.data;
-            const defaultObject = {
-              attend_total: '00:00:00'
-            };
-            setTotal(result2 || defaultObject);
-          })
-          .catch((error) => {
-            console.error('Error fetching data:', error);
-          });
+        if (selectOvertimeData && Object.keys(selectOvertimeData).length > 0) {
+          axios
+            .get(`/user-attend-total-week?user_no=${selectOvertimeData.user_no}`)
+            .then((response) => {
+              console.log(response.data);
+              const result2 = response.data;
+              const defaultObject = {
+                attend_total: '00:00:00'
+              };
+              setTotal(result2 || defaultObject);
+            })
+            .catch((error) => {
+              console.error('Error fetching data:', error);
+            });
+        }
       } catch (error) {
         console.error('데이터를 불러오는 중 오류 발생:', error);
       }
@@ -341,26 +349,30 @@ const ApprovalAttendance = () => {
 
     async function get1() {
       try {
-        axios
-          .get(`/user-attend-total-week-over?user_no=${selectOvertimeData.user_no}`)
-          .then((response) => {
-            console.log(response.data);
-            const result2 = response.data;
-            const defaultObject = {
-              attend_total: '00:00:00'
-            };
-
-            setOverTotal(result2 || defaultObject);
-          })
-          .catch((error) => {
-            console.error('Error fetching data:', error);
-          });
+        if (selectOvertimeData && Object.keys(selectOvertimeData).length > 0) {
+          axios
+            .get(`/user-attend-total-week-over?user_no=${selectOvertimeData.user_no}`)
+            .then((response) => {
+              console.log(response.data);
+              const result2 = response.data;
+              const defaultObject = {
+                attend_total: '00:00:00'
+              };
+              setOverTotal(result2 || defaultObject);
+            })
+            .catch((error) => {
+              console.error('Error fetching data:', error);
+            });
+        }
       } catch (error) {
         console.error('데이터를 불러오는 중 오류 발생:', error);
       }
     }
-    get();
-    get1();
+
+    if (selectOvertimeData && Object.keys(selectOvertimeData).length > 0) {
+      get();
+      get1();
+    }
   }, [selectOvertimeData]);
 
   // 휴가 부분 Tab 커스텀
