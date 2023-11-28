@@ -192,14 +192,14 @@ export default function CalendarWorkModalContent({ handleClose }) {
                       />
                     </ListItemIcon>
                   </Grid>
-                  <Grid item xs={6.5} sx={{ ml: -1 }}>
+                  <Grid item xs={5.5} sx={{ ml: -1 }}>
                     <ListItemText
                       id={labelId}
                       primary={<Typography variant="h6">{`${value.schedule_title}`}</Typography>}
                       sx={{ ml: 2, overflow: 'auto' }}
                     />
                   </Grid>
-                  <Grid item xs={4} sx={{ ml: -1 }}>
+                  <Grid item xs={5} sx={{ ml: -1 }}>
                     <ListItemText
                       primary={<Typography variant="h6">{`${formattedStartDate} ~ ${formattedEndDate}`}</Typography>}
                       sx={{ mr: -2, overflow: 'auto' }}
