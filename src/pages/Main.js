@@ -226,7 +226,7 @@ const Main = () => {
         <MainCard>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px 15px' }}>
             <Typography align="left" variant="h5">
-              금주 근무 시간
+              일별 근무 시간
             </Typography>
           </div>
           <AttendChart
