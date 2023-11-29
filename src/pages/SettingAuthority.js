@@ -8,12 +8,13 @@ import { Grid } from '../../node_modules/@mui/material/index';
 //icon import
 
 import { useCriteria, useDeptListState, useDetailCardState, useTabState, useTableListState } from 'store/module';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import axios from '../../node_modules/axios/index';
 import SettingAuthorityTable from 'components/Table/SettingAuthorityTable';
 import SettingTab from 'components/tab/SettingTab';
 
 import AuthorityDetailCard from 'components/Card/AuthorityDetailCard';
+import SuccessModal from 'components/Modal/SuccessModal';
 
 //zustand import
 
@@ -79,6 +80,20 @@ const SettingAuthority = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [now_page]);
 
+  // 모달창 1. 결재 대기중인 휴가 삭제 성공
+  const [deleteModal, setDeleteModal] = useState(false);
+  // 모달창 활성화 버튼
+  const handleOpenDeleteModal = () => {
+    setDeleteModal(true);
+    setTimeout(() => {
+      setDeleteModal(false);
+    }, 1500);
+  };
+  // 모달창 취소 버튼
+  const handleCloseDeleteModal = () => {
+    setDeleteModal(false);
+  };
+
   return (
     <>
       <Typography variant="h2" mb={2}>
@@ -91,11 +106,18 @@ const SettingAuthority = () => {
             <InputSeach isPersonIcon={true}></InputSeach> */}
             <SettingTab />
             <SettingAuthorityTable />
+            <SuccessModal
+              open={deleteModal}
+              handleClose={handleCloseDeleteModal}
+              color="#52c41a"
+              msg="권한이 변경되었습니다."
+              msg1="다음 로그인부터 적용됩니다."
+            />
           </MainCard>
         </Grid>
         {view == 1 && (
           <Grid item xs={4}>
-            <AuthorityDetailCard></AuthorityDetailCard>
+            <AuthorityDetailCard handleOpenDeleteModal={handleOpenDeleteModal}></AuthorityDetailCard>
           </Grid>
         )}
       </Grid>

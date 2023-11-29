@@ -92,7 +92,8 @@ const UserOverTimeReq = () => {
           //정책 퇴근시간 + 1시간으로 수정해야됨.
           attend_start: overTimeKind == 'weekend' ? end.toTimeString().substring(0, 8) : '19:00:00',
           attend_end: end.toTimeString().substring(0, 8),
-          attend_status: '초과근무'
+          attend_status: '초과근무',
+          attend_total: overTimeKind == 'weekend' ? dayjs(end).diff(dayjs(start), 'hours') + ':00:00' : dayjs(end).$H - 19 + ':00:00'
         }
       };
       console.log(temp);
@@ -226,7 +227,7 @@ const UserOverTimeReq = () => {
           </Stack>
           {endDatePicker && (
             <StaticDateTimePicker
-              sx={{ mt: 1, width: '25rem', border: 1, borderRadius: 2 }}
+              sx={{ mt: 1, width: '25rem', border: 1, borderRadius: 2, position: 'absolute', left: '28rem', zIndex: 900 }}
               value={dayjs(`${end}`)}
               onAccept={handleEndDateFieldOnAccept}
               onClose={() => setEndDatePicker(false)}
@@ -315,7 +316,7 @@ const UserOverTimeReq = () => {
                   />
                 </Stack>
               </Grid>
-              <Grid item xs={12} sm={12} md={12} lg={12} >
+              <Grid item xs={12} sm={12} md={12} lg={12}>
                 <Stack direction="row">
                   <BasicChip label="근무사유" color="#46a5f3" />
                   <TextField
@@ -329,7 +330,7 @@ const UserOverTimeReq = () => {
                   />
                 </Stack>
               </Grid>
-              <Grid item xs={12} sm={12} md={12} lg={12} >
+              <Grid item xs={12} sm={12} md={12} lg={12}>
                 <Stack direction="row" justifyContent="flex-end">
                   <Button variant="contained" onClick={submitOverTime} sx={{ width: '6rem', mr: '3rem' }}>
                     신청
