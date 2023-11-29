@@ -130,11 +130,11 @@ Type.propTypes = {
 };
 
 const columns = [
-  { field: 'user_name', headerName: '휴가신청자', width: 125, align: 'center', headerAlign: 'center' },
+  { field: 'user_name', headerName: '휴가신청자', width: 110, align: 'center', headerAlign: 'center' },
   {
     field: 'leaveapp_type',
     headerName: '휴가 종류',
-    width: 125,
+    width: 110,
     align: 'center',
     headerAlign: 'center',
     renderCell: (params) => <Type type={params.value} />
@@ -142,7 +142,7 @@ const columns = [
   {
     field: 'leaveappln_status',
     headerName: '나의결재상태',
-    width: 125,
+    width: 110,
     align: 'center',
     headerAlign: 'center',
     renderCell: (params) => <MyOrderStatus status={params.value} />
@@ -150,30 +150,30 @@ const columns = [
   {
     field: 'leaveapp_status',
     headerName: '최종결재상태',
-    width: 125,
+    width: 110,
     align: 'center',
     headerAlign: 'center',
     renderCell: (params) => <AllOrderStatus status={params.value} />
   }
 ];
 
-export default function DataTable({ datas, LeaveInfo }) {
+export default function AdminUnAppLeaveTable({ datas, LeaveInfo }) {
   const getRowId = (row) => row.leaveapp_no;
   const handleCellClick = (params) => {
     LeaveInfo(params.row);
   };
   return (
-    <div style={{ height: '837px', width: '100%', fontSize: 18 }}>
+    <div style={{ height: '837px', width: '100%' }}>
       <DataGrid
         rows={datas}
         columns={columns}
         initialState={{
           pagination: {
-            paginationModel: { page: 0, pageSize: 13 }
+            paginationModel: { page: 0, pageSize: 10 }
           }
         }}
-        pageSizeOptions={[10, 15]}
-        // checkboxSelection
+        pageSizeOptions={[5, 10]}
+        checkboxSelection
         getRowId={getRowId}
         onCellClick={handleCellClick}
       />
