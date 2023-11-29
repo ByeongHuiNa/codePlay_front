@@ -395,7 +395,9 @@ const ApprovalAttendance = () => {
   // 모달창 취소 버튼
   const handleCloseSuccessModal = () => {
     setSuccessModal(false);
-    setIndex(0);
+    setValue2(2);
+    setValue3(2);
+    setValue4(2);
   };
 
   // 휴가 부분 Tab 커스텀

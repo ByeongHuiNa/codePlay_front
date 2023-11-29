@@ -450,15 +450,6 @@ const ModifyAttendance = () => {
                                   </RadioGroup>
                                 </FormControl>
                                 {attendStartDefault == 'other' && <TimePicker2 label={'출근수정시간'} setTime={setUpdateStartTime} />}
-                                {attendStartDefault == 'default' && (
-                                  <TextField
-                                    size="small"
-                                    defaultValue="09:00:00"
-                                    key={attendStartDefault}
-                                    inputProps={{ readOnly: true }}
-                                    sx={{ width: '30%' }}
-                                  />
-                                )}
                               </Box>
                             )}
                             {endChecked === true && (
@@ -476,15 +467,6 @@ const ModifyAttendance = () => {
                                   </RadioGroup>
                                 </FormControl>
                                 {attendEndDefault == 'other' && <TimePicker2 label={'퇴근수정시간'} setTime={setUpdateEndTime} />}
-                                {attendEndDefault == 'default' && (
-                                  <TextField
-                                    size="small"
-                                    defaultValue="18:00:00"
-                                    key={attendEndDefault}
-                                    inputProps={{ readOnly: true }}
-                                    sx={{ width: '30%' }}
-                                  />
-                                )}
                               </Box>
                             )}
                             <Box clone mt={2.5} mr={1}>
