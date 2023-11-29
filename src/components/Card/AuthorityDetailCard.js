@@ -7,7 +7,7 @@ import { useDeptListState, useDetailCardState, useTabState, useTableListState } 
 import { v4 as uuidv4 } from 'uuid';
 import axios from '../../../node_modules/axios/index';
 
-const AuthorityDetailCard = () => {
+const AuthorityDetailCard = ({handleOpenDeleteModal}) => {
   //권한 고정(사용자, 근태담당자, 관리자, 메인관리자 추가 불가능)
   const { setView, content, setContent, id } = useDetailCardState();
   const { tableContentList } = useTableListState();
@@ -74,7 +74,7 @@ const AuthorityDetailCard = () => {
       setTab(tab);
       setIndex(res.data.postRoleLevel[0] - 1);
     });
-    alert('권한변경 되었습니다.');
+    handleOpenDeleteModal();
   }
 
   return (
