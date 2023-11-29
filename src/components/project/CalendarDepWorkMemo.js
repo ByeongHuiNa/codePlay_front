@@ -58,7 +58,7 @@ export default function CalendarDepWorkMemo() {
   };
   return (
     <>
-      <List sx={{ width: '90%', maxWidth: 360, bgcolor: 'background.paper', height: 280, maxHeight: 280, overflow: 'auto' }}>
+      <List sx={{ width: '95%', maxWidth: 360, bgcolor: 'background.paper', height: 280, maxHeight: 280, overflow: 'auto' }}>
         {Object.keys(memoList).length > 0 &&
           memoList
             .sort((a, b) => new Date(b.schedule_memo_create) - new Date(a.schedule_memo_create))
