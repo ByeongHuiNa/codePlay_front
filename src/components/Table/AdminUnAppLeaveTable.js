@@ -130,11 +130,11 @@ Type.propTypes = {
 };
 
 const columns = [
-  { field: 'user_name', headerName: '휴가신청자', width: 110, align: 'center', headerAlign: 'center' },
+  { field: 'user_name', headerName: '휴가신청자', width: 100, align: 'center', headerAlign: 'center' },
   {
     field: 'leaveapp_type',
     headerName: '휴가 종류',
-    width: 110,
+    width: 100,
     align: 'center',
     headerAlign: 'center',
     renderCell: (params) => <Type type={params.value} />
@@ -142,7 +142,7 @@ const columns = [
   {
     field: 'leaveappln_status',
     headerName: '나의결재상태',
-    width: 110,
+    width: 120,
     align: 'center',
     headerAlign: 'center',
     renderCell: (params) => <MyOrderStatus status={params.value} />
@@ -150,12 +150,16 @@ const columns = [
   {
     field: 'leaveapp_status',
     headerName: '최종결재상태',
-    width: 110,
+    width: 120,
     align: 'center',
     headerAlign: 'center',
     renderCell: (params) => <AllOrderStatus status={params.value} />
   }
 ];
+
+const dataGridStyle = {
+  fontSize: '14px'
+};
 
 export default function AdminUnAppLeaveTable({ datas, LeaveInfo }) {
   const getRowId = (row) => row.leaveapp_no;
@@ -176,6 +180,8 @@ export default function AdminUnAppLeaveTable({ datas, LeaveInfo }) {
         checkboxSelection
         getRowId={getRowId}
         onCellClick={handleCellClick}
+        onFocus={(event) => event.stopPropagation()}
+        style={dataGridStyle}
       />
     </div>
   );
