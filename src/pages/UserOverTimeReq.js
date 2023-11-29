@@ -81,7 +81,7 @@ const UserOverTimeReq = () => {
       const temp = {
         overtimeVo: {
           overtime_type: overTimeKind == 'weekend' ? 0 : 1,
-          overtime_time: dayjs(end).diff(dayjs(start), 'hours') + ':00:00',
+          overtime_time: overTimeKind == 'weekend' ? dayjs(end).diff(dayjs(start), 'hours') + ':00:00' : dayjs(end).$H - 19 + ':00:00',
           overtime_content: overTimeContent,
           overtime_reason: reason,
           overtimeapp_user_no: approver
