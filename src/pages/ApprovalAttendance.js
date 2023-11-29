@@ -39,6 +39,8 @@ import 'react-sweet-progress/lib/style.css';
 import AdminAppOvertimeTable from 'components/Table/AdminAppOvertimeTable';
 import { useLocation } from '../../node_modules/react-router-dom/dist/index';
 import { CloudDownload, InsertDriveFile } from '../../node_modules/@mui/icons-material/index';
+import SuccessModal from 'components/Modal/SuccessModal';
+import AdminUnAppLeaveTable from 'components/Table/AdminUnAppLeaveTable';
 
 const ApprovalAttendance = () => {
   //token 값을 decode해주는 코드
@@ -47,8 +49,6 @@ const ApprovalAttendance = () => {
   const { leaveCnt, setLeaveCnt } = useLeaveCnt();
   const location = useLocation();
   const [deptLeaveCnt, setDeptLeaveCnt] = useState({});
-  const [total, setTotal] = useState({}); //한주의 정규근무시간 불러오기
-  const [overTotal, setOverTotal] = useState({}); //한주의 정규근무시간 불러오기
 
   useEffect(() => {
     if (location.state && location.state.val === 0) {
@@ -93,7 +93,18 @@ const ApprovalAttendance = () => {
           console.log(res.data);
         });
       setSelectLeaveData(data);
-      console.log(data);
+    }
+  };
+
+  const AttendInfo = (data) => {
+    console.log(data);
+    if (Object.keys(data).length > 0) {
+      // 선택한 휴가의 첨부파일 가져오기
+      axios.get(`/file-list?attached_app_no=${data.attendapp_no}&attached_kind=0`).then((res) => {
+        setSelectAttendFileData(res.data);
+        console.log(res.data);
+      });
+      setSelectAttendData(data);
     }
   };
 
@@ -120,9 +131,9 @@ const ApprovalAttendance = () => {
   const handleChange1 = (event, newValue) => {
     // 전체 Tab
     setValue1(newValue);
-    setValue2(0);
-    setValue3(0);
-    setValue4(0);
+    setValue2(1);
+    setValue3(1);
+    setValue4(1);
     if (newValue === 0) {
       setSelectAttendData({});
       setSelectOvertimeData({});
@@ -144,9 +155,9 @@ const ApprovalAttendance = () => {
 
     if (newValue === 0 && leaveAppDatas.length > 0) {
       LeaveInfo(leaveAppDatas[0]);
-    } else if (newValue === 1 && leaveAppDatas.length > 0) {
+    } else if (newValue === 1 && leaveAppDatas.filter((data) => data.leaveappln_status === 2).length > 0) {
       LeaveInfo(leaveAppDatas.filter((data) => data.leaveappln_status === 2)[0]);
-    } else if (newValue === 2 && leaveAppDatas.length > 0) {
+    } else if (newValue === 2 && leaveAppDatas.filter((data) => data.leaveappln_status === 0 || data.leaveappln_status === 1).length > 0) {
       LeaveInfo(leaveAppDatas.filter((data) => data.leaveappln_status === 0 || data.leaveappln_status === 1)[0]);
     }
   };
@@ -158,11 +169,11 @@ const ApprovalAttendance = () => {
     setReason('');
 
     if (newValue === 0 && attendAppDatas.length > 0) {
-      setSelectAttendData(attendAppDatas[0]);
-    } else if (newValue === 1 && attendAppDatas.length > 0) {
-      setSelectAttendData(attendAppDatas.filter((data) => data.attendapp_status === 2)[0]);
-    } else if (newValue === 2 && attendAppDatas.length > 0) {
-      setSelectAttendData(attendAppDatas.filter((data) => data.attendapp_status === 0 || data.attendapp_status === 1)[0]);
+      AttendInfo(attendAppDatas[0]);
+    } else if (newValue === 1 && attendAppDatas.filter((data) => data.attendapp_status === 2).length > 0) {
+      AttendInfo(attendAppDatas.filter((data) => data.attendapp_status === 2)[0]);
+    } else if (newValue === 2 && attendAppDatas.filter((data) => data.attendapp_status === 0 || data.attendapp_status === 1).length > 0) {
+      AttendInfo(attendAppDatas.filter((data) => data.attendapp_status === 0 || data.attendapp_status === 1)[0]);
     }
   };
 
@@ -173,9 +184,12 @@ const ApprovalAttendance = () => {
 
     if (newValue === 0 && overtimeAppDatas.length > 0) {
       setSelectOvertimeData(overtimeAppDatas[0]);
-    } else if (newValue === 1 && overtimeAppDatas.length > 0) {
+    } else if (newValue === 1 && overtimeAppDatas.filter((data) => data.overtimeapp_status === 2).length > 0) {
       setSelectOvertimeData(overtimeAppDatas.filter((data) => data.overtimeapp_status === 2)[0]);
-    } else if (newValue === 2 && overtimeAppDatas.length > 0) {
+    } else if (
+      newValue === 2 &&
+      overtimeAppDatas.filter((data) => data.overtimeapp_status === 0 || data.overtimeapp_status === 1).length > 0
+    ) {
       setSelectOvertimeData(overtimeAppDatas.filter((data) => data.overtimeapp_status === 0 || data.overtimeapp_status === 1)[0]);
     }
   };
@@ -201,10 +215,10 @@ const ApprovalAttendance = () => {
     axios.get(`/manager-attend-approval?user_no=${token.user_no}`).then((res) => {
       setAttendAppDatas(res.data);
       if (location.state && location.state.val === 0 && location.state.index === 1) {
-        setSelectAttendData(res.data.find((data) => data.attendapp_no === location.state.data_no));
+        AttendInfo(res.data.find((data) => data.attendapp_no === location.state.data_no));
       } else {
         if (res.data.length > 0) {
-          setSelectAttendData(res.data[0]);
+          AttendInfo(res.data[0]);
         }
       }
     });
@@ -245,15 +259,15 @@ const ApprovalAttendance = () => {
       })
       .then((res) => {
         console.log('결재완료 : ' + res.data);
-        alert('결재완료');
+        handleOpenSuccessModal();
         setSelectLeaveData({});
-        setValue2(2);
       });
   }
 
   // Tab 1. 출퇴근 부분 ================================================
   const [attendAppDatas, setAttendAppDatas] = useState([]); // 전체 출퇴근 결재 데이터
   const [selectAttendData, setSelectAttendData] = useState({}); // 선택한 출/퇴근 데이터 값
+  const [selectAttendFileData, setSelectAttendFileData] = useState([]); // 선택한 출/퇴근 데이터 값
   const [appAttendStatus, setAppAttendStatus] = useState('attendApp'); // 출/퇴근 정정 결재 : 승인, 반려
 
   // 출/퇴근 부분 승인, 반려 라디오 버튼
@@ -280,9 +294,8 @@ const ApprovalAttendance = () => {
       })
       .then((res) => {
         console.log('결재완료 : ' + res.data);
-        alert('결재완료');
+        handleOpenSuccessModal();
         setSelectAttendData({});
-        setValue3(2);
       });
   }
 
@@ -290,6 +303,7 @@ const ApprovalAttendance = () => {
   const [overtimeAppDatas, setOvertimeAppDatas] = useState([]); // 전체 초과근무 결재 데이터
   const [selectOvertimeData, setSelectOvertimeData] = useState({}); // 선택한 초과근무 데이터 값
   const [appOvertimeStatus, setAppOvertimeStatus] = useState('overtimeApp'); // 출/퇴근 정정 결재 : 승인, 반려
+  const [total, setTotal] = useState({}); //한주의 초과근무시간 불러오기
 
   // 출/퇴근 부분 승인, 반려 라디오 버튼
   const handleOvertimeRadioChange = (event) => {
@@ -306,10 +320,9 @@ const ApprovalAttendance = () => {
         overtimeapp_reason: reason
       })
       .then((res) => {
-        alert('결재완료');
         console.log(res);
+        handleOpenSuccessModal();
         setSelectOvertimeData({});
-        setValue4(2);
       });
   }
 
@@ -329,36 +342,29 @@ const ApprovalAttendance = () => {
       try {
         if (selectOvertimeData && Object.keys(selectOvertimeData).length > 0) {
           axios
-            .get(`/user-attend-total-week?user_no=${selectOvertimeData.user_no}`)
+            .get(`/user-attend-total-over?user_no=${selectOvertimeData.user_no}`)
             .then((response) => {
               console.log(response.data);
-              const result2 = response.data;
-              const defaultObject = {
-                attend_total: '00:00:00'
-              };
-              setTotal(result2 || defaultObject);
-            })
-            .catch((error) => {
-              console.error('Error fetching data:', error);
-            });
-        }
-      } catch (error) {
-        console.error('데이터를 불러오는 중 오류 발생:', error);
-      }
-    }
 
-    async function get1() {
-      try {
-        if (selectOvertimeData && Object.keys(selectOvertimeData).length > 0) {
-          axios
-            .get(`/user-attend-total-week-over?user_no=${selectOvertimeData.user_no}`)
-            .then((response) => {
-              console.log(response.data);
-              const result2 = response.data;
-              const defaultObject = {
-                attend_total: '00:00:00'
-              };
-              setOverTotal(result2 || defaultObject);
+              if (response.data.length > 0) {
+                const totalMilliseconds = response.data.reduce((acc, obj) => {
+                  const [hours, minutes, seconds] = obj.attend_total.split(':').map(Number);
+                  return acc + hours * 3600000 + minutes * 60000 + seconds * 1000;
+                }, 0);
+
+                // Convert total milliseconds back to 'HH:mm:ss' format
+                const totalHours = Math.floor(totalMilliseconds / 3600000);
+                const totalMinutes = Math.floor((totalMilliseconds % 3600000) / 60000);
+                const totalSeconds = Math.floor((totalMilliseconds % 60000) / 1000);
+
+                setTotal({
+                  str: `${String(totalHours).padStart(2, '0')}:${String(totalMinutes).padStart(2, '0')}:${String(totalSeconds).padStart(
+                    2,
+                    '0'
+                  )}`,
+                  num: totalHours * 60 + totalMinutes + totalSeconds / 60
+                });
+              }
             })
             .catch((error) => {
               console.error('Error fetching data:', error);
@@ -371,9 +377,26 @@ const ApprovalAttendance = () => {
 
     if (selectOvertimeData && Object.keys(selectOvertimeData).length > 0) {
       get();
-      get1();
     }
   }, [selectOvertimeData]);
+
+  // 모달창 3. 휴가 신청 성공
+  const [successModal, setSuccessModal] = React.useState(false);
+  // 모달창 활성화 버튼
+  const handleOpenSuccessModal = () => {
+    setSuccessModal(true);
+    setTimeout(() => {
+      setSuccessModal(false);
+      setValue2(2);
+      setValue3(2);
+      setValue4(2);
+    }, 1500);
+  };
+  // 모달창 취소 버튼
+  const handleCloseSuccessModal = () => {
+    setSuccessModal(false);
+    setIndex(0);
+  };
 
   // 휴가 부분 Tab 커스텀
   const MyTab = styled(Tab)`
@@ -699,7 +722,7 @@ const ApprovalAttendance = () => {
                 </ApprovalTab>
                 <ApprovalTab value={value2} index={1}>
                   <Box pb={3}>
-                    <AdminAppLeaveTable
+                    <AdminUnAppLeaveTable
                       datas={leaveAppDatas.filter((data) => data.leaveappln_status === 2)}
                       LeaveInfo={LeaveInfo}
                       selectLeaveData={selectLeaveData}
@@ -1042,6 +1065,7 @@ const ApprovalAttendance = () => {
                     </Grid>
                   )}
                 </Box>
+                <SuccessModal open={successModal} handleClose={handleCloseSuccessModal} color="#46a5f3" msg="결재 완료되었습니다." />
               </BasicContainer>
             </Grid>
           </Grid>
@@ -1147,18 +1171,14 @@ const ApprovalAttendance = () => {
                   </Box>
                   <ApprovalTab value={value3} index={0}>
                     <Box pb={3}>
-                      <AdminAppAttendTable
-                        datas={attendAppDatas}
-                        setSelectAttendData={setSelectAttendData}
-                        selectAttendData={selectAttendData}
-                      />
+                      <AdminAppAttendTable datas={attendAppDatas} setSelectAttendData={AttendInfo} selectAttendData={selectAttendData} />
                     </Box>
                   </ApprovalTab>
                   <ApprovalTab value={value3} index={1}>
                     <Box pb={3}>
                       <AdminAppAttendTable
                         datas={attendAppDatas.filter((data) => data.attendapp_status === 2)}
-                        setSelectAttendData={setSelectAttendData}
+                        setSelectAttendData={AttendInfo}
                         selectAttendData={selectAttendData}
                       />
                     </Box>
@@ -1167,7 +1187,7 @@ const ApprovalAttendance = () => {
                     <Box pb={3}>
                       <AdminAppAttendTable
                         datas={attendAppDatas.filter((data) => data.attendapp_status === 0 || data.attendapp_status === 1)}
-                        setSelectAttendData={setSelectAttendData}
+                        setSelectAttendData={AttendInfo}
                         selectAttendData={selectAttendData}
                       />
                     </Box>
@@ -1241,6 +1261,36 @@ const ApprovalAttendance = () => {
                               sx={{ width: '25%' }}
                             />
                           </Box>
+                          {selectAttendFileData.length !== 0 && (
+                            <Box clone mt={2} sx={{ display: 'flex' }}>
+                              <BasicChip label="증빙 파일" color="#46a5f3" />
+                              <Box>
+                                <List>
+                                  {selectAttendFileData.map((file, index) => (
+                                    <ListItem key={index} alignItems="center">
+                                      <ListItemIcon sx={{ mr: 2 }}>
+                                        <InsertDriveFile />
+                                      </ListItemIcon>
+                                      <ListItemText
+                                        primary={file.attached_name}
+                                        secondary={file.attached_type.replace('application/', '') + '파일'}
+                                      />
+                                      <ListItemIcon sx={{ ml: 3 }}>
+                                        <Button
+                                          variant="outlined"
+                                          color="primary"
+                                          sx={{ border: 'none' }}
+                                          onClick={() => downloadFile(file.attached_name)}
+                                        >
+                                          <CloudDownload />
+                                        </Button>
+                                      </ListItemIcon>
+                                    </ListItem>
+                                  ))}
+                                </List>
+                              </Box>
+                            </Box>
+                          )}
                           {selectAttendData.attendedit_kind !== 2 && (
                             <Box clone mt={2}>
                               <BasicChip label="수정 사항" color="#46a5f3" />
@@ -1626,19 +1676,15 @@ const ApprovalAttendance = () => {
                           )}
                           {selectOvertimeData.overtimeapp_status === 2 && (
                             <Box clone mt={2}>
-                              {Object.keys(total).length > 0 && Object.keys(overTotal).length > 0 && (
-                                <Alert severity="info">
-                                  {selectOvertimeData.user_name}님의 금주 총 근무 시간 : {parseInt(total.attend_total.split(':')[0])}시간{' '}
-                                  {parseInt(total.attend_total.split(':')[1])}분 {parseInt(total.attend_total.split(':')[2])}초 근무
-                                  <Box my={1} sx={{ display: 'flex', width: '550px' }}>
-                                    <Box sx={{ width: '350px', ml: 3 }}>
+                              {Object.keys(total).length > 0 && (
+                                <Alert severity="info" sx={{ width: '350px' }}>
+                                  {selectOvertimeData.user_name}님의 금주 총 근무 시간 : {parseInt(total.str.split(':')[0])}시간{' '}
+                                  {parseInt(total.str.split(':')[1])}분 {parseInt(total.str.split(':')[2])}초 근무
+                                  <Box my={1} sx={{ display: 'flex', width: '250px' }}>
+                                    <Box sx={{ width: '250px', ml: 5, mt: 2 }}>
                                       <Progress
-                                        percent={(
-                                          (parseInt(total.attend_total.split(':')[0]) * 60 +
-                                            parseInt(total.attend_total.split(':')[1]) +
-                                            parseInt(total.attend_total.split(':')[2]) / 60) /
-                                          31.2
-                                        ).toFixed(1)}
+                                        type="circle"
+                                        percent={(total.num / 7.2).toFixed(1)}
                                         theme={{
                                           active: {
                                             color: progressColor(25)
