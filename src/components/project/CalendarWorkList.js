@@ -81,14 +81,20 @@ export default function CalendarList() {
                   />
                   <Chip
                     label={
-                      scheduleStartDay.getDate() <= currentDate.getDate() && currentDate.getDate() <= scheduleEndDay.getDate()
+                      scheduleStartDay.getFullYear() == currentDate.getFullYear() &&
+                      scheduleStartDay.getMonth() == currentDate.getMonth() &&
+                      scheduleStartDay.getDate() <= currentDate.getDate() &&
+                      currentDate.getDate() <= scheduleEndDay.getDate()
                         ? 'Today'
                         : `${diffDays} day`
                     }
                     color="primary"
                     size="small"
                     variant={
-                      scheduleStartDay.getDate() <= currentDate.getDate() && currentDate.getDate() <= scheduleEndDay.getDate()
+                      scheduleStartDay.getFullYear() == currentDate.getFullYear() &&
+                      scheduleStartDay.getMonth() == currentDate.getMonth() &&
+                      scheduleStartDay.getDate() <= currentDate.getDate() &&
+                      currentDate.getDate() <= scheduleEndDay.getDate()
                         ? ''
                         : 'outlined'
                     }
