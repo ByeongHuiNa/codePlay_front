@@ -73,7 +73,7 @@ export default function WeekAttendDonutChart() {
         <Grid>
           <ReactApexChart
             options={radialBarChartOptions}
-            series={[(formattedTotal2 / 12).toFixed(2) * 100, (formattedTotal1 / 40).toFixed(2) * 100]}
+            series={[(formattedTotal2 / 12).toFixed(1) * 100, (formattedTotal1 / 40).toFixed(2) * 100]}
             add={formattedTotal1}
             type="radialBar"
             height={400}

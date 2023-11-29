@@ -74,12 +74,6 @@ const headCells = [
     label: '근무시간'
   },
   {
-    id: 'overtime',
-    align: 'center',
-    disablePadding: false,
-    label: '연장근무시간'
-  },
-  {
     id: 'status',
     align: 'center',
     disablePadding: false,
@@ -152,6 +146,10 @@ const AttendanceDayStatus = ({ status }) => {
       color = 'error';
       title = '결근';
       break;
+    case '초과':
+      color = 'success';
+      title = '초과';
+      break;
     default:
       color = 'error';
       title = '결근';
@@ -190,9 +188,13 @@ export default function AttendanceDayTable({ depts, filterDate }) {
   const [vaca, setVaca] = useState([]); //휴가 데이터 담을 배열
 
   const [currentStatus, setCurrentStatus] = useState([]); //필터링 데이터 담을 배열
+  const [selectedCard, setSelectedCard] = useState('전체');
+  
   const handleCardClick = (selectedData) => {
+    setSelectedCard(selectedData);
     // 선택된 데이터에 따라 currentData 업데이트
     if (selectedData === '정상') {
+      
       setCurrentStatus(good);
     } else if (selectedData === '근태이상') {
       setCurrentStatus(bad);
@@ -288,7 +290,7 @@ export default function AttendanceDayTable({ depts, filterDate }) {
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <Grid container xs={9} rowSpacing={4} columnSpacing={2.75}>
           <Grid item xs={3}>
-            <MainCard onClick={() => handleCardClick('전체')}>
+            <MainCard onClick={() => handleCardClick('전체')} style={{ backgroundColor: selectedCard === '전체' ? '#bbdefb' : 'white' }}>
               <Typography variant="h4" style={{ textAlign: 'center' }}>
                 전체
               </Typography>
@@ -298,7 +300,7 @@ export default function AttendanceDayTable({ depts, filterDate }) {
             </MainCard>
           </Grid>
           <Grid item xs={3}>
-            <MainCard onClick={() => handleCardClick('정상')}>
+            <MainCard onClick={() => handleCardClick('정상')} style={{ backgroundColor: selectedCard === '정상' ? '#bbdefb' : 'white' }}>
               <Typography variant="h4" style={{ textAlign: 'center' }}>
                 정상
               </Typography>
@@ -308,7 +310,10 @@ export default function AttendanceDayTable({ depts, filterDate }) {
             </MainCard>
           </Grid>
           <Grid item xs={3}>
-            <MainCard onClick={() => handleCardClick('근태이상')}>
+            <MainCard
+              onClick={() => handleCardClick('근태이상')}
+              style={{ backgroundColor: selectedCard === '근태이상' ? '#bbdefb' : 'white' }}
+            >
               <Typography variant="h4" style={{ textAlign: 'center' }}>
                 근태이상
               </Typography>
@@ -318,7 +323,7 @@ export default function AttendanceDayTable({ depts, filterDate }) {
             </MainCard>
           </Grid>
           <Grid item xs={3}>
-            <MainCard onClick={() => handleCardClick('휴가')}>
+            <MainCard onClick={() => handleCardClick('휴가')} style={{ backgroundColor: selectedCard === '휴가' ? '#bbdefb' : 'white' }}>
               <Typography variant="h4" style={{ textAlign: 'center' }}>
                 휴가
               </Typography>
@@ -375,7 +380,7 @@ export default function AttendanceDayTable({ depts, filterDate }) {
                   <TableCell align="center">{attend.attend_start}</TableCell>
                   <TableCell align="center">{attend.attend_end}</TableCell>
                   <TableCell align="center">{attend.attend_total}</TableCell>
-                  <TableCell align="center"></TableCell>
+
                   <TableCell align="center">
                     <AttendanceDayStatus status={attend.attend_status} />
                   </TableCell>
