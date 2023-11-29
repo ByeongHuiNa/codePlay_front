@@ -267,9 +267,6 @@ export default function VacationCountTable({ depts }) {
                           color: progressColor(allLeave.leave_percent)
                         }
                       }}
-                      style={{
-                        animation: 'none'
-                      }}
                     />
                   </TableCell>
                 </TableRow>

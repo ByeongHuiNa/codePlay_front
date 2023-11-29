@@ -9,8 +9,8 @@ import { Box, Link, Stack, Table, TableBody, TableCell, TableContainer, TableHea
 
 // project import
 import Dot from 'components/@extended/Dot';
-import { Grid } from '../../../node_modules/@mui/material/index';
-import MainCard from 'components/MainCard';
+//import { Grid } from '../../../node_modules/@mui/material/index';
+//import MainCard from 'components/MainCard';
 import axios from '../../../node_modules/axios/index';
 import { useNavigate } from '../../../node_modules/react-router-dom/dist/index';
 
@@ -103,20 +103,20 @@ const headCells = [
     id: 'weekhours',
     align: 'center',
     disablePadding: false,
-    label: '정규근무시간'
-  },
-  {
-    id: 'overtimehours',
-    align: 'center',
-    disablePadding: false,
-    label: '연장근무시간'
-  },
-  {
-    id: 'overtimehours',
-    align: 'center',
-    disablePadding: false,
     label: '총근무시간'
-  }
+   },
+  // {
+  //   id: 'overtimehours',
+  //   align: 'center',
+  //   disablePadding: false,
+  //   label: '연장근무시간'
+  // },
+  // {
+  //   id: 'overtimehours',
+  //   align: 'center',
+  //   disablePadding: false,
+  //   label: '총근무시간'
+  // }
 ];
 
 // ==============================|| ORDER TABLE - HEADER ||============================== //
@@ -239,50 +239,7 @@ export default function AttendanceWeekTable({ depts, filterDate }) {
 
   return (
     <Box>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <Grid container xs={9} rowSpacing={4} columnSpacing={2.75}>
-          <Grid item xs={3}>
-            <MainCard>
-              <Typography variant="h4" style={{ textAlign: 'center' }}>
-                전체
-              </Typography>
-              <Typography variant="h5" style={{ textAlign: 'center' }}>
-                {/* {total}건 */}
-              </Typography>
-            </MainCard>
-          </Grid>
-          <Grid item xs={3}>
-            <MainCard>
-              <Typography variant="h4" style={{ textAlign: 'center' }}>
-                정상
-              </Typography>
-              <Typography variant="h5" style={{ textAlign: 'center' }}>
-                {/* {normal}건 */}
-              </Typography>
-            </MainCard>
-          </Grid>
-          <Grid item xs={3}>
-            <MainCard>
-              <Typography variant="h4" style={{ textAlign: 'center' }}>
-                근태이상
-              </Typography>
-              <Typography variant="h5" style={{ textAlign: 'center' }}>
-                {/* {odd}건 */}
-              </Typography>
-            </MainCard>
-          </Grid>
-          <Grid item xs={3}>
-            <MainCard>
-              <Typography variant="h4" style={{ textAlign: 'center' }}>
-                휴가
-              </Typography>
-              <Typography variant="h5" style={{ textAlign: 'center' }}>
-                {/* {leave}건 */}
-              </Typography>
-            </MainCard>
-          </Grid>
-        </Grid>
-      </div>
+      
       <TableContainer
         sx={{
           width: '100%',
@@ -348,8 +305,8 @@ export default function AttendanceWeekTable({ depts, filterDate }) {
                     <AttendanceWeekStatus status={attend.sunday_status} />
                   </TableCell>
                   <TableCell align="center">{attend.total_time}</TableCell>
-                  <TableCell align="center"></TableCell>
-                  <TableCell align="center"></TableCell>
+                  {/* <TableCell align="center"></TableCell>
+                  <TableCell align="center"></TableCell> */}
                 </TableRow>
               );
             })}

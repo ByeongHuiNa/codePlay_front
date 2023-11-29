@@ -28,6 +28,7 @@ const TodayAttendancdForm = ({ user_no }) => {
   const [openModal2, setOpenModal2] = useState(false);
   const [openModal3, setOpenModal3] = useState(false);
   const [openModal4, setOpenModal4] = useState(false);
+  const [openModal5, setOpenModal5] = useState(false);
 
   // const startSubmit = (e) => {
   //   e.preventDefault();
@@ -53,6 +54,10 @@ const TodayAttendancdForm = ({ user_no }) => {
   const handleClose4 = () => {
     // 퇴근 모달 닫기
     setOpenModal4(false);
+  };
+  const handleClose5 = () => {
+    // 퇴근 모달 닫기
+    setOpenModal5(false);
   };
 
   //const [ip, setIp] = useState('');
@@ -144,6 +149,13 @@ const TodayAttendancdForm = ({ user_no }) => {
       setOpenModal4(true);
       return; // 이미 퇴근한 경우 함수를 종료합니다.
     }
+
+    if (!attend) {
+      setOpenModal5(true);
+      return; // attend가 없는 경우 함수를 종료합니다.
+    }
+
+    
 
     //const currentDate = new Date();
     //const currentHour = currentDate.getHours();
@@ -290,6 +302,16 @@ const TodayAttendancdForm = ({ user_no }) => {
           <DialogContent>이미 퇴근을 기록하였습니다!</DialogContent>
           <DialogActions>
             <Button onClick={handleClose4}>확인</Button>
+          </DialogActions>
+        </Dialog>
+
+        <Dialog open={openModal5} onClose={handleClose5}>
+          <DialogTitle style={{ textAlign: 'center' }}>
+            <ErrorOutlineIcon color="primary" sx={{ fontSize: 80 }} />
+          </DialogTitle>
+          <DialogContent>출근 기록이 없습니다!</DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose5}>확인</Button>
           </DialogActions>
         </Dialog>
       </Box>

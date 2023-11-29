@@ -225,6 +225,7 @@ export default function AttendanceTable({ month, user_no }) {
   const [currentStatus, setCurrentStatus] = useState([]); //필터링 데이터 담을 배열
 
   const [selectedCard, setSelectedCard] = useState('전체');
+
   // MainCard 컴포넌트 내에서 클릭 이벤트를 통해 상태 변경하는 함수
   const handleCardClick = (selectedData) => {
     setSelectedCard(selectedData);
@@ -246,7 +247,7 @@ export default function AttendanceTable({ month, user_no }) {
       setAttendance(result.data);
       setCurrentStatus(result.data);
 
-      const filteredGood = result.data.filter((item) => item.attend_status === '정상');
+      const filteredGood = result.data.filter((item) => item.attend_status === '정상' || item.attend_status === '초과');
       setGood(filteredGood);
 
       const filteredBad = result.data.filter(
@@ -275,7 +276,7 @@ export default function AttendanceTable({ month, user_no }) {
 
       // "attendance" 배열을 반복하여 상태별로 개수 계산
       result.data.forEach((item) => {
-        if (item.attend_status === '정상') {
+        if (item.attend_status === '정상' || item.attend_status === '초과') {
           normalCount++;
         } else if (item.attend_status === '지각' || item.attend_status === '조퇴' || item.attend_status === '결근') {
           oddCount++;

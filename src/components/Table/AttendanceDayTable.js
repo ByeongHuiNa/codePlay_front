@@ -74,12 +74,6 @@ const headCells = [
     label: '근무시간'
   },
   {
-    id: 'overtime',
-    align: 'center',
-    disablePadding: false,
-    label: '연장근무시간'
-  },
-  {
     id: 'status',
     align: 'center',
     disablePadding: false,
@@ -152,6 +146,10 @@ const AttendanceDayStatus = ({ status }) => {
       color = 'error';
       title = '결근';
       break;
+    case '초과':
+      color = 'success';
+      title = '초과';
+      break;
     default:
       color = 'error';
       title = '결근';
@@ -190,7 +188,10 @@ export default function AttendanceDayTable({ depts, filterDate }) {
   const [vaca, setVaca] = useState([]); //휴가 데이터 담을 배열
 
   const [currentStatus, setCurrentStatus] = useState([]); //필터링 데이터 담을 배열
+  const [selectedCard, setSelectedCard] = useState('전체');
+
   const handleCardClick = (selectedData) => {
+    setSelectedCard(selectedData);
     // 선택된 데이터에 따라 currentData 업데이트
     if (selectedData === '정상') {
       setCurrentStatus(good);
@@ -239,7 +240,7 @@ export default function AttendanceDayTable({ depts, filterDate }) {
         setFilterAttend(filteredData);
         setCurrentStatus(filteredData);
 
-        const filteredGood = filteredData.filter((item) => item.attend_status === '정상');
+        const filteredGood = filteredData.filter((item) => item.attend_status === '정상'|| item.attend_status === '초과');
         setGood(filteredGood);
 
         const filteredBad = filteredData.filter(
@@ -263,7 +264,7 @@ export default function AttendanceDayTable({ depts, filterDate }) {
 
         // "attendance" 배열을 반복하여 상태별로 개수 계산
         filteredData.forEach((item) => {
-          if (item.attend_status === '정상') {
+          if (item.attend_status === '정상' || item.attend_status === '초과') {
             normalCount++;
           } else if (item.attend_status === '지각' || item.attend_status === '조퇴' || item.attend_status === '결근') {
             oddCount++;
@@ -288,42 +289,45 @@ export default function AttendanceDayTable({ depts, filterDate }) {
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <Grid container xs={9} rowSpacing={4} columnSpacing={2.75}>
           <Grid item xs={3}>
-            <MainCard onClick={() => handleCardClick('전체')}>
+            <MainCard onClick={() => handleCardClick('전체')} style={{ backgroundColor: selectedCard === '전체' ? '#bbdefb' : 'white' }}>
               <Typography variant="h4" style={{ textAlign: 'center' }}>
                 전체
               </Typography>
               <Typography variant="h5" style={{ textAlign: 'center' }}>
-                {total}명
+                {total}건
               </Typography>
             </MainCard>
           </Grid>
           <Grid item xs={3}>
-            <MainCard onClick={() => handleCardClick('정상')}>
+            <MainCard onClick={() => handleCardClick('정상')} style={{ backgroundColor: selectedCard === '정상' ? '#bbdefb' : 'white' }}>
               <Typography variant="h4" style={{ textAlign: 'center' }}>
                 정상
               </Typography>
               <Typography variant="h5" style={{ textAlign: 'center' }}>
-                {normal}명
+                {normal}건
               </Typography>
             </MainCard>
           </Grid>
           <Grid item xs={3}>
-            <MainCard onClick={() => handleCardClick('근태이상')}>
+            <MainCard
+              onClick={() => handleCardClick('근태이상')}
+              style={{ backgroundColor: selectedCard === '근태이상' ? '#bbdefb' : 'white' }}
+            >
               <Typography variant="h4" style={{ textAlign: 'center' }}>
                 근태이상
               </Typography>
               <Typography variant="h5" style={{ textAlign: 'center' }}>
-                {odd}명
+                {odd}건
               </Typography>
             </MainCard>
           </Grid>
           <Grid item xs={3}>
-            <MainCard onClick={() => handleCardClick('휴가')}>
+            <MainCard onClick={() => handleCardClick('휴가')} style={{ backgroundColor: selectedCard === '휴가' ? '#bbdefb' : 'white' }}>
               <Typography variant="h4" style={{ textAlign: 'center' }}>
                 휴가
               </Typography>
               <Typography variant="h5" style={{ textAlign: 'center' }}>
-                {leave}명
+                {leave}건
               </Typography>
             </MainCard>
           </Grid>
@@ -375,7 +379,7 @@ export default function AttendanceDayTable({ depts, filterDate }) {
                   <TableCell align="center">{attend.attend_start}</TableCell>
                   <TableCell align="center">{attend.attend_end}</TableCell>
                   <TableCell align="center">{attend.attend_total}</TableCell>
-                  <TableCell align="center"></TableCell>
+
                   <TableCell align="center">
                     <AttendanceDayStatus status={attend.attend_status} />
                   </TableCell>
