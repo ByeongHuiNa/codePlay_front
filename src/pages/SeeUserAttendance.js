@@ -340,7 +340,7 @@ const SeeUserAttendance = () => {
         <Grid container spacing={1}>
           {/* row 3 - 휴가현황 그리드 */}
           <Grid item xs={4} sm={4} md={4} lg={4}>
-            <MainCard>
+            <MainCard  style={{ height: '380px' }}>
               <Typography variant="h5">휴가현황</Typography>
               <VacationDonutChart />
             </MainCard>
@@ -412,7 +412,7 @@ const SeeUserAttendance = () => {
           <Grid item xs={8}>
             <MainCard>
               <Typography align="left" variant="h5">
-                금주 근무 시간
+                일별 근무 시간
               </Typography>
               <AttendChart
                 chart={{
@@ -443,10 +443,10 @@ const SeeUserAttendance = () => {
             </MainCard>
           </Grid>
           <Grid item xs={4}>
-            <MainCard>
+            <MainCard sx={{ height: '340px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Typography align="left" variant="h5">
-                  금주근무시간총합
+                  금주 근무 시간
                 </Typography>
               </div>
               {Object.keys(total).length > 0 && Object.keys(overTotal).length > 0 && <WeekAttendDonutChart />}

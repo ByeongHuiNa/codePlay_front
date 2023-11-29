@@ -85,7 +85,14 @@ const headCells = [
 
 function AttendanceDayTableHead({ order, orderBy }) {
   return (
-    <TableHead>
+    <TableHead
+      sx={{
+        position: 'sticky',
+        top: 0,
+        backgroundColor: '#f9f9f9',
+        zIndex: 1 // 다른 요소 위에 표시되도록 설정
+      }}
+    >
       <TableRow>
         {headCells.map((headCell) => (
           <TableCell
@@ -240,7 +247,7 @@ export default function AttendanceDayTable({ depts, filterDate }) {
         setFilterAttend(filteredData);
         setCurrentStatus(filteredData);
 
-        const filteredGood = filteredData.filter((item) => item.attend_status === '정상'|| item.attend_status === '초과');
+        const filteredGood = filteredData.filter((item) => item.attend_status === '정상' || item.attend_status === '초과');
         setGood(filteredGood);
 
         const filteredBad = filteredData.filter(
@@ -340,7 +347,19 @@ export default function AttendanceDayTable({ depts, filterDate }) {
           position: 'relative',
           display: 'block',
           maxWidth: '100%',
-          '& td, & th': { whiteSpace: 'nowrap' }
+          overflowY: 'auto',
+          '& td, & th': { whiteSpace: 'nowrap' },
+          '&::-webkit-scrollbar': {
+            width: 5
+          },
+          '&::-webkit-scrollbar-track': {
+            backgroundColor: 'white'
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: 'gray',
+            borderRadius: 2
+          },
+          maxHeight: '450px'
         }}
       >
         <Table

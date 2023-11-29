@@ -14,8 +14,6 @@ import Dot from 'components/@extended/Dot';
 import axios from '../../../node_modules/axios/index';
 import { useNavigate } from '../../../node_modules/react-router-dom/dist/index';
 
-
-
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -104,7 +102,7 @@ const headCells = [
     align: 'center',
     disablePadding: false,
     label: '총근무시간'
-   },
+  }
   // {
   //   id: 'overtimehours',
   //   align: 'center',
@@ -123,7 +121,14 @@ const headCells = [
 
 function AttendanceWeekTableHead({ order, orderBy }) {
   return (
-    <TableHead>
+    <TableHead
+      sx={{
+        position: 'sticky',
+        top: 0,
+        backgroundColor: '#f9f9f9',
+        zIndex: 1 // 다른 요소 위에 표시되도록 설정
+      }}
+    >
       <TableRow>
         {headCells.map((headCell) => (
           <TableCell
@@ -190,7 +195,7 @@ const AttendanceWeekStatus = ({ status }) => {
       color = 'error';
       title = '결근 ';
       break;
-      case '초과':
+    case '초과':
       color = 'success';
       title = '초과 ';
       break;
@@ -239,7 +244,6 @@ export default function AttendanceWeekTable({ depts, filterDate }) {
 
   return (
     <Box>
-      
       <TableContainer
         sx={{
           width: '100%',
@@ -247,7 +251,20 @@ export default function AttendanceWeekTable({ depts, filterDate }) {
           position: 'relative',
           display: 'block',
           maxWidth: '100%',
-          '& td, & th': { whiteSpace: 'nowrap' }
+          overflowY: 'auto',
+          '& td, & th': { whiteSpace: 'nowrap' },
+          '&::-webkit-scrollbar': {
+            width: 5
+          },
+          '&::-webkit-scrollbar-track': {
+            backgroundColor: 'white'
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: 'gray',
+            borderRadius: 2
+          },
+          // maxHeight를 설정하여 테이블 높이를 제한
+          maxHeight: '600px' // 원하는 높이로 변경하세요
         }}
       >
         <Table

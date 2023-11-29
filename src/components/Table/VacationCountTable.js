@@ -88,7 +88,14 @@ const headCells = [
 
 function VacationCountTableHead({ order, orderBy }) {
   return (
-    <TableHead>
+    <TableHead
+      sx={{
+        position: 'sticky',
+        top: 0,
+        backgroundColor: '#f9f9f9',
+        zIndex: 1 // 다른 요소 위에 표시되도록 설정
+      }}
+    >
       <TableRow>
         {headCells.map((headCell) => (
           <TableCell
@@ -155,6 +162,7 @@ export default function VacationCountTable({ depts }) {
   const { allLeave, setAllLeave } = useAllLeaveState();
   const [search, setSearch] = useState(''); // 검색어 상태 변수
   const [filteredAllLeave, setFilteredAllLeave] = useState([]);
+
   let navigate = useNavigate();
 
   const progressColor = (percent) => {
@@ -212,6 +220,7 @@ export default function VacationCountTable({ depts }) {
           }}
         />
       </div>
+
       <TableContainer
         sx={{
           width: '100%',
@@ -273,41 +282,8 @@ export default function VacationCountTable({ depts }) {
               );
             })}
           </TableBody>
-          {/* <TableBody>
-            {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
-              const isItemSelected = isSelected(row.date);
-              const labelId = `enhanced-table-checkbox-${index}`;
-
-              return (
-                <TableRow
-                  hover
-                  role="checkbox"
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                  aria-checked={isItemSelected}
-                  tabIndex={-1}
-                  key={row.trackingNo}
-                  selected={isItemSelected}
-                >
-                  <TableCell component="th" id={labelId} scope="row" align="center">
-                    <Link color="secondary" component={RouterLink} to="">
-                      {row.name}
-                    </Link>
-                  </TableCell>
-                  <TableCell align="center">{row.position}</TableCell>
-                  <TableCell align="center">{row.total}</TableCell>
-                  <TableCell align="center">{row.use}</TableCell>
-                  <TableCell align="center">{row.remain}</TableCell>
-                  
-                  
-                </TableRow>
-              );
-            })}
-          </TableBody> */}
         </Table>
       </TableContainer>
-      {/* <Stack alignItems="center" mt={2}>
-        <Pagination count={5} variant="outlined" shape="rounded" />
-      </Stack> */}
     </Box>
   );
 }
