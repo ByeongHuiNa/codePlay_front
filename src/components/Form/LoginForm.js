@@ -58,8 +58,13 @@ const LoginForm = () => {
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           axios.post('/login', values).then((res) => {
             console.log(res.headers['authorization']);
-            localStorage.setItem('token', res.headers['authorization']);
-            navigate('/main');
+            if (res.headers['authorization'] == undefined) {
+              alert('로그인 실패');
+              navigate('/auth/login-form');
+            } else {
+              localStorage.setItem('token', res.headers['authorization']);
+              navigate('/main');
+            }
           });
           try {
             setStatus({ success: false });
