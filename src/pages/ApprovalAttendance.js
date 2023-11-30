@@ -1697,7 +1697,7 @@ const ApprovalAttendance = () => {
                             <Box clone mt={2}>
                               {Object.keys(total).length > 0 && (
                                 <Alert severity="info" sx={{ width: '350px' }}>
-                                  {selectOvertimeData.user_name}님의 금주 총 근무 시간 : {parseInt(total.str.split(':')[0])}시간{' '}
+                                  {selectOvertimeData.user_name}님의 금주 초과 근무 시간 : {parseInt(total.str.split(':')[0])}시간{' '}
                                   {parseInt(total.str.split(':')[1])}분 {parseInt(total.str.split(':')[2])}초 근무
                                   <Box my={1} sx={{ display: 'flex', width: '250px' }}>
                                     <Box sx={{ width: '250px', ml: 5, mt: 2 }}>

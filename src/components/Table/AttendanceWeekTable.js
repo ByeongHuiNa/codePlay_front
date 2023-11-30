@@ -295,7 +295,7 @@ export default function AttendanceWeekTable({ depts, filterDate }) {
                   selected={isItemSelected}
                 >
                   <TableCell component="th" id={labelId} scope="row" align="center">
-                    <Link color="secondary" onClick={() => nameClick(attend.user_no)}>
+                    <Link color="secondary" onClick={() => nameClick(attend.user_no)} style={{ cursor: 'pointer' }}>
                       {attend.user_name}
                     </Link>
                   </TableCell>

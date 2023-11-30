@@ -61,7 +61,7 @@ export default function WeekAttendDonutChart() {
     },
 
     labels: ['초과근무시간', '정규근무시간'],
-    colors: ['#FF5733','#3498DB'],
+    colors: ['#FF5733', '#3498DB'],
     legend: {
       show: true
     }
@@ -73,7 +73,7 @@ export default function WeekAttendDonutChart() {
         <Grid>
           <ReactApexChart
             options={radialBarChartOptions}
-            series={[(formattedTotal2 / 12).toFixed(1) * 100, (formattedTotal1 / 40).toFixed(2) * 100]}
+            series={[Math.round((formattedTotal2 / 12) * 100) / 1, Math.round((formattedTotal1 / 40) * 100) / 1]}
             add={formattedTotal1}
             type="radialBar"
             height={400}
