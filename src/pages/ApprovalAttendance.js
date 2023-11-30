@@ -1057,35 +1057,37 @@ const ApprovalAttendance = () => {
                                 </Alert>
                               )}
                             </Box>
-                            <Box clone mt={2}>
-                              <BasicChip label={`${selectLeaveData.leaveappln_order}차 결재`} color="#46a5f3" />
-                              <FormControl sx={{ ml: 1 }}>
-                                <RadioGroup
-                                  row
-                                  sx={{ justifyContent: 'center', alignItems: 'center' }}
-                                  value={appLeaveStatus}
-                                  onChange={handleLeaveRadioChange}
-                                >
-                                  <FormControlLabel value="leaveApp" control={<Radio size="small" />} label="승인" />
-                                  <FormControlLabel value="leaveUnapp" control={<Radio size="small" />} label="반려" />
-                                </RadioGroup>
-                              </FormControl>
-                              {appLeaveStatus == 'leaveUnapp' && (
-                                <Box clone mt={2}>
-                                  <BasicChip label="반려 사유" color="#46a5f3" />
-                                  <TextField
-                                    label="반려 사유"
-                                    size="small"
-                                    sx={{ width: '80%' }}
-                                    multiline
-                                    rows={2}
-                                    onChange={(e) => {
-                                      setReason(e.target.value);
-                                    }}
-                                  />
-                                </Box>
-                              )}
-                            </Box>
+                          </Box>
+                        )}
+                        {selectLeaveData.leaveappln_status === 2 && (
+                          <Box clone mt={2}>
+                            <BasicChip label={`${selectLeaveData.leaveappln_order}차 결재`} color="#46a5f3" />
+                            <FormControl sx={{ ml: 1 }}>
+                              <RadioGroup
+                                row
+                                sx={{ justifyContent: 'center', alignItems: 'center' }}
+                                value={appLeaveStatus}
+                                onChange={handleLeaveRadioChange}
+                              >
+                                <FormControlLabel value="leaveApp" control={<Radio size="small" />} label="승인" />
+                                <FormControlLabel value="leaveUnapp" control={<Radio size="small" />} label="반려" />
+                              </RadioGroup>
+                            </FormControl>
+                            {appLeaveStatus == 'leaveUnapp' && (
+                              <Box clone mt={2}>
+                                <BasicChip label="반려 사유" color="#46a5f3" />
+                                <TextField
+                                  label="반려 사유"
+                                  size="small"
+                                  sx={{ width: '80%' }}
+                                  multiline
+                                  rows={2}
+                                  onChange={(e) => {
+                                    setReason(e.target.value);
+                                  }}
+                                />
+                              </Box>
+                            )}
                             <Stack direction="row" justifyContent="flex-end" mt={2}>
                               <Button variant="contained" onClick={submitLeaveApproval}>
                                 결재완료
