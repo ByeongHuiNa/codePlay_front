@@ -168,7 +168,7 @@ const SeeAllAttendance = () => {
         {/* <BasicTab value={value2} index={0}> */}
         {alignment === 'day' && (
           <Grid item xs={12} sm={6} md={5} lg={7}>
-            <MainCard sx={{ height: '730px' }}>
+            <MainCard sx={{ height: '700px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ flex: 1, textAlign: 'center', paddingLeft: 100 }}>
                   <Typography variant="h5">{profile.dept_name ? `${profile.dept_name}` : ''} 근태현황</Typography>
@@ -197,7 +197,7 @@ const SeeAllAttendance = () => {
         )}
         {alignment === 'week' && (
           <Grid item xs={12} sm={6} md={5} lg={7}>
-            <MainCard sx={{ height: '720px' }}>
+            <MainCard sx={{ height: '700px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ flex: 1, textAlign: 'center', paddingLeft: 100 }}>
                   <Typography variant="h5">{profile.dept_name ? `${profile.dept_name}` : ''} 근태현황</Typography>

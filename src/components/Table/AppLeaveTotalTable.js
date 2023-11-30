@@ -252,7 +252,8 @@ export default function AppLeaveTotalTable({ month, handleOpen, user_no }) {
           '&::-webkit-scrollbar-thumb': {
             backgroundColor: 'gray',
             borderRadius: 2
-          }
+          },
+          maxHeight: '400px'
         }}
       >
         <Table

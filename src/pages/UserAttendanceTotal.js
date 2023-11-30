@@ -367,7 +367,7 @@ const UserAttendanceTotalPage = () => {
 
           {/* row 2 - 결재완료 그리드 */}
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            <MainCard>
+            <MainCard sx={{ height: '370px' }}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <Typography variant="h5">{month2}월 결재 진행/완료내역</Typography>
 
@@ -448,7 +448,7 @@ const UserAttendanceTotalPage = () => {
             </MainCard>
           </Grid>
           <Grid item xs={4}>
-            <MainCard style={{ height: '340px' }}>
+            <MainCard sx={{ height: '340px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Typography align="left" variant="h5">
                   금주 근무 시간
