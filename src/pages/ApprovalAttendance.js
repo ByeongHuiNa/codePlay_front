@@ -154,47 +154,50 @@ const ApprovalAttendance = () => {
   // 휴가 부분 Tab
   const handleChange2 = (event, newValue) => {
     setValue2(newValue);
+    setSelectLeaveData({});
     setReason('');
 
-    if (newValue === 0 && leaveAppDatas.length > 0) {
-      LeaveInfo(leaveAppDatas[0]);
-    } else if (newValue === 1 && leaveAppDatas.filter((data) => data.leaveappln_status === 2).length > 0) {
-      LeaveInfo(leaveAppDatas.filter((data) => data.leaveappln_status === 2)[0]);
-    } else if (newValue === 2 && leaveAppDatas.filter((data) => data.leaveappln_status === 0 || data.leaveappln_status === 1).length > 0) {
-      LeaveInfo(leaveAppDatas.filter((data) => data.leaveappln_status === 0 || data.leaveappln_status === 1)[0]);
-    }
+    // if (newValue === 0 && leaveAppDatas.length > 0) {
+    //   LeaveInfo(leaveAppDatas[0]);
+    // } else if (newValue === 1 && leaveAppDatas.filter((data) => data.leaveappln_status === 2).length > 0) {
+    //   LeaveInfo(leaveAppDatas.filter((data) => data.leaveappln_status === 2)[0]);
+    // } else if (newValue === 2 && leaveAppDatas.filter((data) => data.leaveappln_status === 0 || data.leaveappln_status === 1).length > 0) {
+    //   LeaveInfo(leaveAppDatas.filter((data) => data.leaveappln_status === 0 || data.leaveappln_status === 1)[0]);
+    // }
   };
 
   const [value3, setValue3] = useState(0); // 출/퇴근 부분 Tab
   // 출/퇴근 부분 Tab
   const handleChange3 = (event, newValue) => {
     setValue3(newValue);
+    setSelectAttendData({});
     setReason('');
 
-    if (newValue === 0 && attendAppDatas.length > 0) {
-      AttendInfo(attendAppDatas[0]);
-    } else if (newValue === 1 && attendAppDatas.filter((data) => data.attendapp_status === 2).length > 0) {
-      AttendInfo(attendAppDatas.filter((data) => data.attendapp_status === 2)[0]);
-    } else if (newValue === 2 && attendAppDatas.filter((data) => data.attendapp_status === 0 || data.attendapp_status === 1).length > 0) {
-      AttendInfo(attendAppDatas.filter((data) => data.attendapp_status === 0 || data.attendapp_status === 1)[0]);
-    }
+    // if (newValue === 0 && attendAppDatas.length > 0) {
+    //   AttendInfo(attendAppDatas[0]);
+    // } else if (newValue === 1 && attendAppDatas.filter((data) => data.attendapp_status === 2).length > 0) {
+    //   AttendInfo(attendAppDatas.filter((data) => data.attendapp_status === 2)[0]);
+    // } else if (newValue === 2 && attendAppDatas.filter((data) => data.attendapp_status === 0 || data.attendapp_status === 1).length > 0) {
+    //   AttendInfo(attendAppDatas.filter((data) => data.attendapp_status === 0 || data.attendapp_status === 1)[0]);
+    // }
   };
 
   const [value4, setValue4] = useState(0); // 초과근무 부분 Tab
   const handleChange4 = (event, newValue) => {
     setValue4(newValue);
+    setSelectOvertimeData({});
     setReason('');
 
-    if (newValue === 0 && overtimeAppDatas.length > 0) {
-      setSelectOvertimeData(overtimeAppDatas[0]);
-    } else if (newValue === 1 && overtimeAppDatas.filter((data) => data.overtimeapp_status === 2).length > 0) {
-      setSelectOvertimeData(overtimeAppDatas.filter((data) => data.overtimeapp_status === 2)[0]);
-    } else if (
-      newValue === 2 &&
-      overtimeAppDatas.filter((data) => data.overtimeapp_status === 0 || data.overtimeapp_status === 1).length > 0
-    ) {
-      setSelectOvertimeData(overtimeAppDatas.filter((data) => data.overtimeapp_status === 0 || data.overtimeapp_status === 1)[0]);
-    }
+    // if (newValue === 0 && overtimeAppDatas.length > 0) {
+    //   setSelectOvertimeData(overtimeAppDatas[0]);
+    // } else if (newValue === 1 && overtimeAppDatas.filter((data) => data.overtimeapp_status === 2).length > 0) {
+    //   setSelectOvertimeData(overtimeAppDatas.filter((data) => data.overtimeapp_status === 2)[0]);
+    // } else if (
+    //   newValue === 2 &&
+    //   overtimeAppDatas.filter((data) => data.overtimeapp_status === 0 || data.overtimeapp_status === 1).length > 0
+    // ) {
+    //   setSelectOvertimeData(overtimeAppDatas.filter((data) => data.overtimeapp_status === 0 || data.overtimeapp_status === 1)[0]);
+    // }
   };
 
   const [checked, setChecked] = useState(false);
@@ -208,11 +211,12 @@ const ApprovalAttendance = () => {
       setLeaveAppDatas(res.data);
       if (location.state && location.state.val === 0 && location.state.index === 0) {
         LeaveInfo(res.data.find((data) => data.leaveapp_no === location.state.data_no));
-      } else {
-        if (res.data.length > 0) {
-          LeaveInfo(res.data[0]);
-        }
       }
+      // else {
+      //   if (res.data.length > 0) {
+      //     LeaveInfo(res.data[0]);
+      //   }
+      // }
     });
   }, [value1, value2]);
 
@@ -222,11 +226,12 @@ const ApprovalAttendance = () => {
       setAttendAppDatas(res.data);
       if (location.state && location.state.val === 0 && location.state.index === 1) {
         AttendInfo(res.data.find((data) => data.attendapp_no === location.state.data_no));
-      } else {
-        if (res.data.length > 0) {
-          AttendInfo(res.data[0]);
-        }
       }
+      // else {
+      //   if (res.data.length > 0) {
+      //     AttendInfo(res.data[0]);
+      //   }
+      // }
     });
   }, [value1, value3]);
 
@@ -234,7 +239,15 @@ const ApprovalAttendance = () => {
     // 로그인 한 근태담당자의 초과근무 전체 결재 내역
     axios.get(`/manager-overtime-approval?user_no=${token.user_no}`).then((res) => {
       setOvertimeAppDatas(res.data);
-      setSelectOvertimeData(res.data[0]);
+      // if (Object.keys(selectOvertimeData).length === 0) {
+      //   if (value4 === 1) {
+      //     setSelectOvertimeData(res.data.filter((data) => data.overtimeapp_status === 2)[0]);
+      //   } else if (value4 === 0) {
+      //     setSelectOvertimeData(res.data[0]);
+      //   } else {
+      //     setSelectOvertimeData(res.data.filter((data) => data.overtimeapp_status === 0 || data.overtimeapp_status === 1)[0]);
+      //   }
+      // }
     });
   }, [value1, value4]);
 
@@ -1591,7 +1604,7 @@ const ApprovalAttendance = () => {
                       }
                     }}
                   >
-                    {selectOvertimeData && (
+                    {Object.keys(selectOvertimeData).length !== 0 && (
                       <Grid container spacing={1} justifyContent="center">
                         <Grid item xs={11} sm={11} md={11} lg={12}>
                           <Grid container alignItems="center" justifyContent="space-between">

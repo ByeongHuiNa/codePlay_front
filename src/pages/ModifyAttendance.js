@@ -10,14 +10,10 @@ import {
   Radio,
   RadioGroup,
   Stack,
-  Tab,
-  Tabs,
   TextField,
   Typography
 } from '../../node_modules/@mui/material/index';
 import BasicContainer from 'components/container/BasicContainer';
-import ApprovalTab from 'components/tab/ApprovalTab';
-import styled from 'styled-components';
 import UserAllAttendTable from 'components/Table/UserAllAttendTable';
 import BasicChip from 'components/Chip/BasicChip';
 import MainCard from 'components/MainCard';
@@ -30,6 +26,7 @@ import axios from '../../node_modules/axios/index';
 import SelectUserTable from 'components/Table/SelectUserTable';
 import ModalM from 'components/Modal/ModalM';
 import { jwtDecode } from '../../node_modules/jwt-decode/build/cjs/index';
+import SuccessModal from 'components/Modal/SuccessModal';
 
 const ModifyAttendance = () => {
   //token 값을 decode해주는 코드
@@ -42,19 +39,21 @@ const ModifyAttendance = () => {
     });
   }, []);
 
-  // Tab : 0.출/퇴근, 1.휴가 ========================================
-  const [value, setValue] = useState(0);
-  const handleTab = (event, newValue) => {
-    setValue(newValue);
-    setCheckItems([]);
-    setSelectDate(new Date().setHours(0, 0, 0, 0));
-    setAttendStartDefault('default');
-    setAttendEndDefault('default');
-    setUpdateStartTime('09:00:00');
-    setUpdateEndTime('18:00:00');
-    setSelectAttendData({});
-    setStartChecked(true);
-    setEndChecked(false);
+  // 수정 성공 모달
+  const [successModal, setSuccessModal] = React.useState(false);
+  // 모달창 활성화 버튼
+  const handleOpenSuccessModal = () => {
+    setSuccessModal(true);
+    setTimeout(() => {
+      setSuccessModal(false);
+    }, 1500);
+  };
+  // 모달창 취소 버튼
+  const handleCloseSuccessModal = () => {
+    setSuccessModal(false);
+    setValue2(2);
+    setValue3(2);
+    setValue4(2);
   };
 
   // Tab : 0.출/퇴근 =============================================
@@ -244,85 +243,166 @@ const ModifyAttendance = () => {
       })
       .then((res) => {
         console.log('결재완료 : ' + res.data);
-        alert('결재완료');
+        handleOpenSuccessModal();
         setCheckItems([]);
       });
   }
 
-  // Tab 커스텀
-  const MyTab = styled(Tab)`
-    padding: 3px;
-    height: 37px;
-    min-height: 37px;
-    width: 60px;
-    min-width: 60px;
-    color: ${(props) => {
-      props.index == value ? '#1890ff' : 'black';
-    }};
-  `;
-
-  const MyTabs = styled(Tabs)`
-    padding: 0px;
-    height: 37px;
-    min-height: 37px;
-  `;
-
   return (
     <ComponentSkeleton>
       <Box clone mx={1}>
-        <Box sx={{ borderBottom: 1, border: '0px' }}>
-          <MyTabs value={value} onChange={handleTab} aria-label="basic tabs example">
-            <MyTab label="수정" index="0" />
-            <MyTab label="조회" index="1" />
-          </MyTabs>
-        </Box>
         <BasicContainer>
-          <ApprovalTab value={value} index={0} border={'none'}>
-            <Grid container alignItems="center" justifyContent="space-between">
-              <Grid item>
-                <Typography variant="h4">근태 현황 수정</Typography>
-              </Grid>
+          <Grid container alignItems="center" justifyContent="space-between">
+            <Grid item>
+              <Typography variant="h4">근태 현황 수정</Typography>
             </Grid>
-            <Box mt={2} ml={1}>
-              <Grid container alignItems="center" justifyContent="space-between">
-                <Grid item xs={4} md={4} lg={4}>
-                  <MainCard sx={{ pt: 2, mr: 1, height: '730px', borderRadius: 0 }} content={false}>
-                    <Box
-                      pr={2}
-                      pl={2}
-                      sx={{
-                        display: 'flex',
-                        alignItems: 'center'
-                      }}
-                    >
-                      <BasicChip label="사원선택" color="#46a5f3" />
-                      {/* 자동완성 부분 */}
-                      <BasicAuto
-                        label="이름"
-                        datas={allUsers}
-                        handleSelectUser={handleSelectUser}
-                        searchName={searchName}
-                        setSearchName={setSearchName}
-                      />
-                    </Box>
-                    <SelectUserTable
+          </Grid>
+          <Box mt={2} ml={1}>
+            <Grid container alignItems="center" justifyContent="space-between">
+              <Grid item xs={4} md={4} lg={4}>
+                <MainCard sx={{ pt: 2, mr: 1, height: '730px', borderRadius: 0 }} content={false}>
+                  <Box
+                    pr={2}
+                    pl={2}
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <BasicChip label="사원선택" color="#46a5f3" />
+                    {/* 자동완성 부분 */}
+                    <BasicAuto
+                      label="이름"
                       datas={allUsers}
+                      handleSelectUser={handleSelectUser}
                       searchName={searchName}
-                      handleAllCheck={handleAllCheck}
-                      handleSingleCheck={handleSingleCheck}
-                      checkItems={checkItems}
+                      setSearchName={setSearchName}
                     />
+                  </Box>
+                  <SelectUserTable
+                    datas={allUsers}
+                    searchName={searchName}
+                    handleAllCheck={handleAllCheck}
+                    handleSingleCheck={handleSingleCheck}
+                    checkItems={checkItems}
+                  />
+                </MainCard>
+              </Grid>
+              <Grid item xs={8} md={8} lg={8}>
+                {checkItems.length > 1 && (
+                  <MainCard sx={{ pt: 2, pr: 2, pl: 2, height: '740px' }} content={false}>
+                    <Grid container spacing={1} justifyContent="center">
+                      <Grid item xs={12} sm={12} md={12} lg={12}>
+                        <Typography variant="h4">일괄 출/퇴근 수정</Typography>
+                        <Box clone mt={2.5}>
+                          <BasicChip label="변경 날짜" color="#46a5f3" />
+                          <BasicDatePicker setDate={setSelectDate} val={selectDate} width="22%" />
+                        </Box>
+                        <Box clone mt={2.5}>
+                          <BasicChip label="수정사항" color="#46a5f3" />
+                          <Checkbox size="small" checked={startChecked} onChange={handleStartChange} /> 출근
+                          <Checkbox size="small" checked={endChecked} onChange={handleEndChange} /> 퇴근
+                        </Box>
+                        {startChecked === true && (
+                          <Box clone mt={2.5}>
+                            <BasicChip label="출근수정시간" color="#46a5f3" />
+                            <FormControl sx={{ ml: 1 }}>
+                              <RadioGroup
+                                row
+                                sx={{ justifyContent: 'center', alignItems: 'center' }}
+                                value={attendStartDefault}
+                                onChange={handleDefaultStartChange}
+                              >
+                                <FormControlLabel value="default" control={<Radio size="small" />} label="기본값" />
+                                <FormControlLabel value="other" control={<Radio size="small" />} label="직접입력" />
+                              </RadioGroup>
+                            </FormControl>
+                            {attendStartDefault == 'other' && <TimePicker2 label={'출근수정시간'} setTime={setUpdateStartTime} />}
+                          </Box>
+                        )}
+                        {endChecked === true && (
+                          <Box clone mt={2.5}>
+                            <BasicChip label="퇴근수정시간" color="#46a5f3" />
+                            <FormControl sx={{ ml: 1 }}>
+                              <RadioGroup
+                                row
+                                sx={{ justifyContent: 'center', alignItems: 'center' }}
+                                value={attendEndDefault}
+                                onChange={handleDefaultEndChange}
+                              >
+                                <FormControlLabel value="default" control={<Radio size="small" />} label="기본값" />
+                                <FormControlLabel value="other" control={<Radio size="small" />} label="직접입력" />
+                              </RadioGroup>
+                            </FormControl>
+                            {attendEndDefault == 'other' && <TimePicker2 label={'퇴근수정시간'} setTime={setUpdateEndTime} />}
+                          </Box>
+                        )}
+                        <Box clone mt={2.5} mr={1}>
+                          <BasicChip label="수정사유" color="#46a5f3" />
+                          <TextField multiline rows={5} sx={{ width: '84%' }} />
+                        </Box>
+                        <Stack direction="row" justifyContent="flex-end" mt={2} mr={1.5}>
+                          <Button variant="contained" onClick={submitAttendModify}>
+                            수정완료
+                          </Button>
+                        </Stack>
+                      </Grid>
+                    </Grid>
                   </MainCard>
-                </Grid>
-                <Grid item xs={8} md={8} lg={8}>
-                  {checkItems.length > 1 && (
-                    <MainCard sx={{ pt: 2, pr: 2, pl: 2, height: '740px' }} content={false}>
+                )}
+                {checkItems.length <= 1 && (
+                  <>
+                    <MainCard sx={{ mb: 1, pt: 2, height: '230px', borderRadius: 0 }} content={false}>
+                      <Grid container alignItems="center" direction="row" spacing={1} sx={{ pl: 2 }}>
+                        <Grid item xs={1.5} md={1.5} lg={1.5}>
+                          <Typography variant="h5">날짜 선택</Typography>
+                        </Grid>
+                        <Grid item xs={3} md={3} lg={3}>
+                          <BasicDatePicker setDate={setSelectDate} val={selectDate} />
+                        </Grid>
+                        <Grid item xs={2} md={2} lg={2}>
+                          <Button variant="contained" onClick={searchSelectDate}>
+                            검색
+                          </Button>
+                        </Grid>
+                        <Grid item xs={4} md={4} lg={4}></Grid>
+                        <Grid item xs={1.5} md={1.5} lg={1.5}>
+                          <Button variant="contained" onClick={handleOpenAll}>
+                            전체 조회
+                          </Button>
+                        </Grid>
+                      </Grid>
+                      <Box clone mt={3}>
+                        <UserAttendInfoTable data={selectAttendData} />
+                        {Object.keys(selectAttendData).length === 0 && (
+                          <Box
+                            p={1}
+                            sx={{
+                              display: 'flex',
+                              justifyContent: 'center', // 수평 중앙 정렬
+                              alignItems: 'center' // 수직 중앙 정렬
+                            }}
+                          >
+                            <ErrorOutlineIcon fontSize="medium" color="secondary" sx={{ mx: 1 }} />
+                            <Typography size="small" color="secondary">
+                              선택된 날짜 없음
+                            </Typography>
+                          </Box>
+                        )}
+                      </Box>
+                    </MainCard>
+                    <MainCard sx={{ pt: 2, pr: 2, pl: 2, height: '490px', borderRadius: 0 }} content={false}>
                       <Grid container spacing={1} justifyContent="center">
                         <Grid item xs={12} sm={12} md={12} lg={12}>
-                          <Typography variant="h4">일괄 출/퇴근 수정</Typography>
+                          <Typography variant="h4">출/퇴근 수정</Typography>
                           <Box clone mt={2.5}>
-                            <BasicChip label="변경 날짜" color="#46a5f3" />
-                            <BasicDatePicker setDate={setSelectDate} val={selectDate} width="22%" />
+                            <BasicChip label="제목" color="#46a5f3" />
+                            <TextField
+                              size="small"
+                              onChange={(e) => {
+                                setTitle(e.target.value);
+                              }}
+                            />
                           </Box>
                           <Box clone mt={2.5}>
                             <BasicChip label="수정사항" color="#46a5f3" />
@@ -365,9 +445,16 @@ const ModifyAttendance = () => {
                           )}
                           <Box clone mt={2.5} mr={1}>
                             <BasicChip label="수정사유" color="#46a5f3" />
-                            <TextField multiline rows={5} sx={{ width: '84%' }} />
+                            <TextField
+                              multiline
+                              rows={5}
+                              sx={{ width: '84%' }}
+                              onChange={(e) => {
+                                setReason(e.target.value);
+                              }}
+                            />
                           </Box>
-                          <Stack direction="row" justifyContent="flex-end" mt={2} mr={1.5}>
+                          <Stack direction="row" justifyContent="flex-end" mt={2} mr={3}>
                             <Button variant="contained" onClick={submitAttendModify}>
                               수정완료
                             </Button>
@@ -375,167 +462,46 @@ const ModifyAttendance = () => {
                         </Grid>
                       </Grid>
                     </MainCard>
-                  )}
-                  {checkItems.length <= 1 && (
-                    <>
-                      <MainCard sx={{ mb: 1, pt: 2, height: '230px', borderRadius: 0 }} content={false}>
-                        <Grid container alignItems="center" direction="row" spacing={1} sx={{ pl: 2 }}>
-                          <Grid item xs={1.5} md={1.5} lg={1.5}>
-                            <Typography variant="h5">날짜 선택</Typography>
-                          </Grid>
-                          <Grid item xs={3} md={3} lg={3}>
-                            <BasicDatePicker setDate={setSelectDate} val={selectDate} />
-                          </Grid>
-                          <Grid item xs={2} md={2} lg={2}>
-                            <Button variant="contained" onClick={searchSelectDate}>
-                              검색
-                            </Button>
-                          </Grid>
-                          <Grid item xs={4} md={4} lg={4}></Grid>
-                          <Grid item xs={1.5} md={1.5} lg={1.5}>
-                            <Button variant="contained" onClick={handleOpenAll}>
-                              전체 조회
-                            </Button>
-                          </Grid>
-                        </Grid>
-                        <Box clone mt={3}>
-                          <UserAttendInfoTable data={selectAttendData} />
-                          {Object.keys(selectAttendData).length === 0 && (
-                            <Box
-                              p={1}
-                              sx={{
-                                display: 'flex',
-                                justifyContent: 'center', // 수평 중앙 정렬
-                                alignItems: 'center' // 수직 중앙 정렬
-                              }}
-                            >
-                              <ErrorOutlineIcon fontSize="medium" color="secondary" sx={{ mx: 1 }} />
-                              <Typography size="small" color="secondary">
-                                선택된 날짜 없음
-                              </Typography>
-                            </Box>
-                          )}
-                        </Box>
-                      </MainCard>
-                      <MainCard sx={{ pt: 2, pr: 2, pl: 2, height: '490px', borderRadius: 0 }} content={false}>
-                        <Grid container spacing={1} justifyContent="center">
-                          <Grid item xs={12} sm={12} md={12} lg={12}>
-                            <Typography variant="h4">출/퇴근 수정</Typography>
-                            <Box clone mt={2.5}>
-                              <BasicChip label="제목" color="#46a5f3" />
-                              <TextField
-                                size="small"
-                                onChange={(e) => {
-                                  setTitle(e.target.value);
-                                }}
-                              />
-                            </Box>
-                            <Box clone mt={2.5}>
-                              <BasicChip label="수정사항" color="#46a5f3" />
-                              <Checkbox size="small" checked={startChecked} onChange={handleStartChange} /> 출근
-                              <Checkbox size="small" checked={endChecked} onChange={handleEndChange} /> 퇴근
-                            </Box>
-                            {startChecked === true && (
-                              <Box clone mt={2.5}>
-                                <BasicChip label="출근수정시간" color="#46a5f3" />
-                                <FormControl sx={{ ml: 1 }}>
-                                  <RadioGroup
-                                    row
-                                    sx={{ justifyContent: 'center', alignItems: 'center' }}
-                                    value={attendStartDefault}
-                                    onChange={handleDefaultStartChange}
-                                  >
-                                    <FormControlLabel value="default" control={<Radio size="small" />} label="기본값" />
-                                    <FormControlLabel value="other" control={<Radio size="small" />} label="직접입력" />
-                                  </RadioGroup>
-                                </FormControl>
-                                {attendStartDefault == 'other' && <TimePicker2 label={'출근수정시간'} setTime={setUpdateStartTime} />}
-                              </Box>
-                            )}
-                            {endChecked === true && (
-                              <Box clone mt={2.5}>
-                                <BasicChip label="퇴근수정시간" color="#46a5f3" />
-                                <FormControl sx={{ ml: 1 }}>
-                                  <RadioGroup
-                                    row
-                                    sx={{ justifyContent: 'center', alignItems: 'center' }}
-                                    value={attendEndDefault}
-                                    onChange={handleDefaultEndChange}
-                                  >
-                                    <FormControlLabel value="default" control={<Radio size="small" />} label="기본값" />
-                                    <FormControlLabel value="other" control={<Radio size="small" />} label="직접입력" />
-                                  </RadioGroup>
-                                </FormControl>
-                                {attendEndDefault == 'other' && <TimePicker2 label={'퇴근수정시간'} setTime={setUpdateEndTime} />}
-                              </Box>
-                            )}
-                            <Box clone mt={2.5} mr={1}>
-                              <BasicChip label="수정사유" color="#46a5f3" />
-                              <TextField
-                                multiline
-                                rows={5}
-                                sx={{ width: '84%' }}
-                                onChange={(e) => {
-                                  setReason(e.target.value);
-                                }}
-                              />
-                            </Box>
-                            <Stack direction="row" justifyContent="flex-end" mt={2} mr={3}>
-                              <Button variant="contained" onClick={submitAttendModify}>
-                                수정완료
-                              </Button>
-                            </Stack>
-                          </Grid>
-                        </Grid>
-                      </MainCard>
-                    </>
-                  )}
-                  <ModalM open={openAll} handleClose={handleCloseAll}>
-                    <Grid container alignItems="center" direction="row" spacing={1} sx={{ mb: 2 }}>
-                      <Grid item xs={3.5} md={3.5} lg={4}>
-                        <Typography variant="h5">전체 근태 내역</Typography>
-                      </Grid>
-                      <Grid item xs={3.5} md={3.5} lg={3.5}>
-                        <BasicDatePicker setDate={setSearchStartDate} val={searchStartDate} />
-                      </Grid>
-                      <Grid item xs={3.5} md={3.5} lg={3.5}>
-                        <BasicDatePicker setDate={setSearchEndDate} val={searchEndDate} />
-                      </Grid>
-                      <Grid item xs={1.5} md={1.5} lg={1}>
-                        <Button variant="contained">검색</Button>
-                      </Grid>
+                  </>
+                )}
+                <SuccessModal open={successModal} handleClose={handleCloseSuccessModal} color="#46a5f3" msg="수정 완료되었습니다." />
+
+                <ModalM open={openAll} handleClose={handleCloseAll}>
+                  <Grid container alignItems="center" direction="row" spacing={1} sx={{ mb: 2 }}>
+                    <Grid item xs={3.5} md={3.5} lg={4}>
+                      <Typography variant="h5">전체 근태 내역</Typography>
                     </Grid>
-                    <UserAllAttendTable
-                      datas={attendDatas.filter((data) => data.attend_status !== '초과')}
-                      handleMyCard={setSearchAttendData}
-                      height={'470px'}
-                    />
-                    <Grid container justifyContent="right" spacing={1} sx={{ mt: 2 }}>
-                      <Grid item>
-                        <Button variant="contained" size="medium" onClick={handleCloseAll}>
-                          취소
-                        </Button>
-                      </Grid>
-                      <Grid item>
-                        <Button variant="contained" size="medium" onClick={handleCloseAllSave}>
-                          확인
-                        </Button>
-                      </Grid>
+                    <Grid item xs={3.5} md={3.5} lg={3.5}>
+                      <BasicDatePicker setDate={setSearchStartDate} val={searchStartDate} />
                     </Grid>
-                  </ModalM>
-                </Grid>
+                    <Grid item xs={3.5} md={3.5} lg={3.5}>
+                      <BasicDatePicker setDate={setSearchEndDate} val={searchEndDate} />
+                    </Grid>
+                    <Grid item xs={1.5} md={1.5} lg={1}>
+                      <Button variant="contained">검색</Button>
+                    </Grid>
+                  </Grid>
+                  <UserAllAttendTable
+                    datas={attendDatas.filter((data) => data.attend_status !== '초과')}
+                    handleMyCard={setSearchAttendData}
+                    height={'470px'}
+                  />
+                  <Grid container justifyContent="right" spacing={1} sx={{ mt: 2 }}>
+                    <Grid item>
+                      <Button variant="contained" size="medium" onClick={handleCloseAll}>
+                        취소
+                      </Button>
+                    </Grid>
+                    <Grid item>
+                      <Button variant="contained" size="medium" onClick={handleCloseAllSave}>
+                        확인
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </ModalM>
               </Grid>
-            </Box>
-          </ApprovalTab>
-          <ApprovalTab value={value} index={1} border={'none'}>
-            <MainCard sx={{ pt: 2, pr: 2, pl: 2, height: '690px', borderRadius: 0 }} content={false}>
-              <Grid container alignItems="center" justifyContent="space-between">
-                <Grid item>
-                  <Typography variant="h4">출퇴근 수정 조회</Typography>
-                </Grid>
-              </Grid>
-            </MainCard>
-          </ApprovalTab>
+            </Grid>
+          </Box>
         </BasicContainer>
       </Box>
     </ComponentSkeleton>
