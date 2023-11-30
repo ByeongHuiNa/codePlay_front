@@ -40,7 +40,6 @@ import AdminAppOvertimeTable from 'components/Table/AdminAppOvertimeTable';
 import { useLocation } from '../../node_modules/react-router-dom/dist/index';
 import { CloudDownload, InsertDriveFile } from '../../node_modules/@mui/icons-material/index';
 import SuccessModal from 'components/Modal/SuccessModal';
-import AdminUnAppLeaveTable from 'components/Table/AdminUnAppLeaveTable';
 
 const ApprovalAttendance = () => {
   //token 값을 decode해주는 코드
@@ -54,6 +53,10 @@ const ApprovalAttendance = () => {
     if (location.state && location.state.val === 0) {
       setValue1(location.state.index);
       console.log(location.state);
+    } else {
+      setValue2(1);
+      setValue3(1);
+      setValue4(1);
     }
   }, []);
 
@@ -211,6 +214,9 @@ const ApprovalAttendance = () => {
         }
       }
     });
+  }, [value1, value2]);
+
+  useEffect(() => {
     // 로그인 한 근태담당의 출퇴근 전체 결재 내역
     axios.get(`/manager-attend-approval?user_no=${token.user_no}`).then((res) => {
       setAttendAppDatas(res.data);
@@ -222,12 +228,15 @@ const ApprovalAttendance = () => {
         }
       }
     });
+  }, [value1, value3]);
+
+  useEffect(() => {
     // 로그인 한 근태담당자의 초과근무 전체 결재 내역
     axios.get(`/manager-overtime-approval?user_no=${token.user_no}`).then((res) => {
       setOvertimeAppDatas(res.data);
       setSelectOvertimeData(res.data[0]);
     });
-  }, [value1]);
+  }, [value1, value4]);
 
   // Tab 0. 휴가 부분 =================================================
   const [leaveAppDatas, setLeaveAppDatas] = useState([]); // 전체 휴가 결재 데이터
@@ -558,6 +567,14 @@ const ApprovalAttendance = () => {
     }
   };
 
+  const progressColorDept = (percent) => {
+    if (percent >= 0 && percent < 50) {
+      return '#00c642'; // 초록색
+    } else {
+      return 'red';
+    }
+  };
+
   // 휴가 결재 승인 : leaveApp
   // 휴가 결재 반려 : leaveUnapp
   // 휴가 결재 대기 : leaveWaitapp
@@ -724,7 +741,7 @@ const ApprovalAttendance = () => {
                 </ApprovalTab>
                 <ApprovalTab value={value2} index={1}>
                   <Box pb={3}>
-                    <AdminUnAppLeaveTable
+                    <AdminAppLeaveTable
                       datas={leaveAppDatas.filter((data) => data.leaveappln_status === 2)}
                       LeaveInfo={LeaveInfo}
                       selectLeaveData={selectLeaveData}
@@ -979,7 +996,7 @@ const ApprovalAttendance = () => {
                                       percent={(deptLeaveCnt[1] * 100) / deptLeaveCnt[2]}
                                       theme={{
                                         active: {
-                                          color: progressColor((deptLeaveCnt[1] * 100) / deptLeaveCnt[2])
+                                          color: progressColorDept((deptLeaveCnt[1] * 100) / deptLeaveCnt[2])
                                         }
                                       }}
                                     />
@@ -1009,13 +1026,13 @@ const ApprovalAttendance = () => {
                               </Alert>
                             </Box>
                             <Box mt={1}>
-                              {deptLeaveCnt[1] / deptLeaveCnt[2] >= 0.6 &&
+                              {deptLeaveCnt[1] / deptLeaveCnt[2] >= 0.5 &&
                               (leaveCnt.leave_total / 12) * (new Date().getMonth() + 1) < leaveCnt.leave_use ? (
                                 <Alert severity="error">
                                   {selectLeaveData.user_name}님의 휴가 사용율이 높고 휴가 신청일에 휴가를 사용한 사원이 많아 휴가 반려를
                                   추천합니다.
                                 </Alert>
-                              ) : deptLeaveCnt[1] / deptLeaveCnt[2] >= 0.6 ? (
+                              ) : deptLeaveCnt[1] / deptLeaveCnt[2] >= 0.5 ? (
                                 <Alert severity="error">
                                   {selectLeaveData.user_name}님의 휴가 신청일에 휴가를 사용한 사원이 많아 휴가 반려를 추천합니다.
                                 </Alert>
