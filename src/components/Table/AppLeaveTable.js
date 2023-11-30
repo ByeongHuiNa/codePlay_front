@@ -270,7 +270,7 @@ export default function AppLeaveTable({ requestLeaveCancel, datas, handleOpen })
                     <OrderStatus status={data.leaveapp_status} />
                   </TableCell>
                   <TableCell align="center">
-                    {data.leaveapp_status === 0 && new Date(data.leaveapp_start) >= new Date() ? (
+                    {(data.leaveapp_status === 0 || data.leaveapp_status === 2) && new Date(data.leaveapp_start) >= new Date() ? (
                       <Button
                         variant="contained"
                         size="small"
