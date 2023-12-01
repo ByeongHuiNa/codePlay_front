@@ -153,9 +153,21 @@ VacationStatus.propTypes = {
   status: PropTypes.number
 };
 
+const progressColor = (percent) => {
+  if (percent >= 0 && percent <= 50) {
+    return '#ff0000'; // 빨간색
+  } else if (percent > 50 && percent <= 70) {
+    return '#29abe2'; // 파란색
+  } else {
+    return '#00c642'; // 기본값, 에러 상태 등에 사용될 색상
+  }
+};
 // ==============================|| ORDER TABLE ||============================== //
 
 export default function VacationCountTable({ depts }) {
+
+ 
+
   const [order] = useState('asc');
   const [orderBy] = useState('trackingNo');
   const [selected] = useState([]);
@@ -164,16 +176,6 @@ export default function VacationCountTable({ depts }) {
   const [filteredAllLeave, setFilteredAllLeave] = useState([]);
 
   let navigate = useNavigate();
-
-  const progressColor = (percent) => {
-    if (percent >= 0 && percent <= 30) {
-      return '#ff0000'; // 초록색
-    } else if (percent > 30 && percent <= 70) {
-      return '#29abe2'; // 파란색
-    } else {
-      return '#00c642'; // 기본값, 에러 상태 등에 사용될 색상
-    }
-  };
 
   useEffect(() => {
     async function get() {
@@ -270,7 +272,6 @@ export default function VacationCountTable({ depts }) {
                   <TableCell align="center">
                     <Progress
                       percent={allLeave.leave_percent}
-                      disableShrink
                       theme={{
                         active: {
                           color: progressColor(allLeave.leave_percent)

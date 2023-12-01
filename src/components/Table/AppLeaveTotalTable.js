@@ -301,12 +301,17 @@ export default function AppLeaveTotalTable({ month, handleOpen, user_no }) {
                     <OrderStatus status={app.leaveapp_status} />
                   </TableCell>
                   <TableCell align="center">
-                    {app.leaveapp_status === 0 && (
+                  {app.leaveapp_status === 0 && (
                       <Button variant="contained" size="small" onClick={cancelClick}>
                         취소신청
                       </Button>
                     )}
-                    {app.leaveapp_status !== 0 && (
+                    {app.leaveapp_status === 2 && (
+                      <Button variant="contained" size="small" onClick={cancelClick}>
+                        취소신청
+                      </Button>
+                    )}
+                    {app.leaveapp_status == 1 && (
                       <Button variant="contained" color="secondary" size="small" disabled>
                         취소신청
                       </Button>
